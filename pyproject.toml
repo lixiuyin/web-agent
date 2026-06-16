@@ -1,0 +1,68 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "web-agent"
+version = "0.1.0"
+description = "Autonomous web agent using Vision-Language Models and Playwright browser automation"
+readme = "README.md"
+requires-python = ">=3.13"
+license = { text = "MIT" }
+classifiers = ["License :: OSI Approved :: MIT License"]
+dependencies = [
+    # Document parsing uses the cloud OCR cascade (webagent.parser): Marker /
+    # MinerU / Paddle over HTTP, with a local PyMuPDF fallback. No local ML model
+    # or torch required — configure provider keys via AGENT_*_API_KEY env vars.
+    "playwright>=1.48.0",
+    "beautifulsoup4>=4.12.0",
+    "lxml>=4.9.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "Pillow>=10.0.0",
+    "PyMuPDF>=1.24.0",
+    "httpx[socks]>=0.27.0",
+    "python-dotenv>=1.0.0",
+    "structlog>=24.0.0",
+]
+
+[project.scripts]
+webagent = "webagent.cli:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=9.0.2",
+    "pytest-asyncio>=1.3.0",
+    "pytest-cov>=5.0.0",
+    "mypy>=1.11.0",
+    "ruff>=0.6.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/webagent"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+asyncio_mode = "auto"
+markers = [
+    "integration: marks tests requiring external services (playwright browser)",
+]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B", "SIM", "RUF"]
+ignore = ["E501", "B008", "SIM105", "SIM108", "RUF001", "RUF002", "RUF003", "RUF012"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "pytest-asyncio>=1.3.0",
+    "pytest-cov>=5.0.0",
+    "mypy>=1.11.0",
+    "ruff>=0.6.0",
+]

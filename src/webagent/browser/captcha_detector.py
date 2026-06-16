@@ -1,0 +1,187 @@
+"""Captcha/challenge detection for web automation.
+
+Provides lightweight captcha detection without external dependencies by
+analyzing DOM patterns, page content, and known challenge indicators.
+"""
+
+from __future__ import annotations
+
+import logging
+from typing import Any
+
+from playwright.async_api import Page
+
+logger = logging.getLogger("webagent")
+
+
+class CaptchaDetector:
+    """Detects captcha/challenge pages by analyzing page content.
+
+    This detector identifies common captcha types without requiring
+    external solving services. When a captcha is detected, the agent
+    can pause and notify the user for manual resolution.
+    """
+
+    # CSS selectors for known captcha systems
+    CAPTCHA_PATTERNS: dict[str, list[str]] = {
+        "recaptcha": [
+            'iframe[src*="recaptcha"]',
+            "div.g-recaptcha",
+            ".recaptcha-checkbox",
+            "#recaptcha-anchor",
+            "[data-sitekey]",  # reCAPTCHA v3 marker
+        ],
+        "hcaptcha": [
+            'iframe[src*="hcaptcha"]',
+            ".h-captcha",
+            "#h-captcha",
+            "[data-hcaptcha]",
+        ],
+        "cloudflare": [
+            "div.cf-browser-verification",
+            ".cf-challenge",
+            "#cf-challenge-form",
+            'iframe[src*="challenges.cloudflare"]',
+        ],
+        "image_captcha": [
+            'input[name="captcha"]',
+            'input[name="captcha_code"]',
+            "#captcha",
+            ".captcha",
+            'img[alt*="captcha" i]',
+            'img[src*="captcha" i]',
+        ],
+        "fun_captcha": [
+            'iframe[src*="funcaptcha"]',
+            ".funcaptcha",
+            "#FunCaptcha-Token",
+        ],
+        "arkose": [
+            'iframe[src*="arkose"]',
+            ".arkose-captcha",
+            "#arkose",
+        ],
+    }
+
+    # Keywords that may appear in page title or URL when captcha is present
+    CAPTCHA_KEYWORDS = [
+        "captcha",
+        "challenge",
+        "verification",
+        "verify you are human",
+        "are you human",
+        "security check",
+        "human verification",
+        "prove you're human",
+        "bot check",
+        "i'm not a robot",
+    ]
+
+    def __init__(self) -> None:
+        """Initialize the captcha detector."""
+        self._detected_type: str | None = None
+        self._detected_confidence: float = 0.0
+
+    async def detect_captcha(self, page: Page) -> dict[str, Any]:
+        """Scan page for captcha indicators.
+
+        Args:
+            page: The Playwright page to analyze.
+
+        Returns:
+            Dictionary with detection results:
+                - detected (bool): Whether captcha was detected
+                - type (str): Type of captcha (recaptcha, hcaptcha, etc.)
+                - confidence (float): Detection confidence (0.0-1.0)
+                - reason (str): Human-readable explanation
+                - selectors (list[str]): Matching CSS selectors
+        """
+        url = page.url.lower()
+        title = await page.title() if page else ""
+        title_lower = title.lower()
+
+        # Check URL and title for captcha keywords
+        keyword_matches = []
+        for keyword in self.CAPTCHA_KEYWORDS:
+            if keyword in url or keyword in title_lower:
+                keyword_matches.append(keyword)
+
+        # Check DOM for known captcha patterns
+        dom_matches: dict[str, list[str]] = {}
+        for captcha_type, selectors in self.CAPTCHA_PATTERNS.items():
+            matching_selectors = []
+            for selector in selectors:
+                try:
+                    element = await page.query_selector(selector)
+                    if element is not None:
+                        matching_selectors.append(selector)
+                except Exception:
+                    # Selector might be invalid, skip it
+                    pass
+
+            if matching_selectors:
+                dom_matches[captcha_type] = matching_selectors
+
+        # Determine detection result
+        if dom_matches:
+            # Found DOM patterns - highest confidence
+            captcha_type = next(iter(dom_matches))
+            self._detected_type = captcha_type
+            self._detected_confidence = 0.9
+
+            return {
+                "detected": True,
+                "type": captcha_type,
+                "confidence": 0.9,
+                "reason": f"Detected {captcha_type} via DOM patterns",
+                "selectors": dom_matches[captcha_type],
+            }
+
+        elif keyword_matches:
+            # Found keywords but no DOM patterns - medium confidence
+            self._detected_type = "unknown"
+            self._detected_confidence = 0.5
+
+            return {
+                "detected": True,
+                "type": "unknown",
+                "confidence": 0.5,
+                "reason": f"Detected captcha via keywords: {', '.join(keyword_matches)}",
+                "selectors": [],
+            }
+
+        else:
+            # No captcha detected
+            self._detected_type = None
+            self._detected_confidence = 0.0
+
+            return {
+                "detected": False,
+                "type": None,
+                "confidence": 0.0,
+                "reason": "No captcha indicators found",
+                "selectors": [],
+            }
+
+    @property
+    def detected_type(self) -> str | None:
+        """Get the type of captcha most recently detected."""
+        return self._detected_type
+
+    @property
+    def detected_confidence(self) -> float:
+        """Get the confidence of the most recent detection."""
+        return self._detected_confidence
+
+
+async def check_captcha(page: Page) -> dict[str, Any]:
+    """Convenience function to check a page for captcha.
+
+    Args:
+        page: The Playwright page to analyze.
+
+    Returns:
+        Dictionary with detection results.
+    """
+    detector = CaptchaDetector()
+    return await detector.detect_captcha(page)

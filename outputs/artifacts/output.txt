@@ -1,0 +1,25 @@
+Found the most recent Qwen technical report: 'Qwen3.5-Omni Technical Report' by Qwen Team (published April 17, 2026 on arXiv: 2604.15804).
+
+Figure 1 Interpretation:
+
+Purpose: Figure 1 illustrates the capabilities and deployment scenarios of Qwen3.5-Omni's two model variants - Qwen3.5-Omni-Plus and Qwen3.5-Omni-Plus-Realtime.
+
+Key Findings:
+
+1. Two distinct model configurations are presented:
+   - Qwen3.5-Omni-Plus (left): Represented by a teddy bear at a desk with computer equipment, designed for comprehensive multimodal tasks
+   - Qwen3.5-Omni-Plus-Realtime (right): Represented by a teddy bear with smartphone, optimized for real-time interactions
+
+2. Qwen3.5-Omni-Plus features:
+   - SOTA (State-of-the-Art) Performance
+   - Detailed Audio-Visual Captioning
+   - Native Multimodal capabilities
+   - Extensive Multilingual support
+
+3. Qwen3.5-Omni-Plus-Realtime features:
+   - Voice Control
+   - WebSearch Tool integration
+   - Voice Clone functionality
+   - Semantic Interruption capability
+
+The figure effectively visualizes how the model variants serve different use cases - the Plus version for comprehensive offline/processing-heavy tasks, while the Realtime version focuses on interactive, voice-centric applications.
