@@ -14,6 +14,10 @@ from urllib.parse import parse_qs, urlparse
 STAGE_COUNT = 60
 CUES = {4: "CEDAR", 14: "ORBIT", 24: "LANTERN", 34: "DELTA"}
 RECALLS = {44: "CEDAR", 49: "ORBIT", 54: "LANTERN", 59: "DELTA"}
+CUE_SOURCE_STAGES = {
+    recall_stage: next(stage for stage, cue in CUES.items() if cue == expected)
+    for recall_stage, expected in RECALLS.items()
+}
 TRANSIENT_STAGE = 21
 
 
@@ -78,9 +82,10 @@ def _stage_page(stage: int, *, error: bool = False) -> bytes:
         '<p id="action-error">That action was rejected; inspect and retry.</p>' if error else ""
     )
     if stage in RECALLS:
+        source_stage = CUE_SOURCE_STAGES[stage]
         body = f"""
         <h1>Mission stage {stage} of {STAGE_COUNT}</h1>{warning}
-        <p>Enter the durable cue introduced at stage {stage - 40}, then continue.</p>
+        <p>Enter the durable cue introduced at stage {source_stage}, then continue.</p>
         <form method="post" action="/advance">
           <input type="hidden" name="stage" value="{stage}">
           <label>Remembered cue <input id="recall-answer" name="answer" autocomplete="off"></label>
@@ -220,4 +225,4 @@ def long_horizon_site() -> Iterator[str]:
         thread.join(timeout=5)
 
 
-__all__ = ["CUES", "RECALLS", "STAGE_COUNT", "long_horizon_site"]
+__all__ = ["CUES", "CUE_SOURCE_STAGES", "RECALLS", "STAGE_COUNT", "long_horizon_site"]

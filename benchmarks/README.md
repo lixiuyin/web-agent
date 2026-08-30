@@ -200,7 +200,7 @@ policy is enabled only after both origins have been verified as loopback sandbox
 ## Long-horizon and cross-session recovery
 
 The controlled long-horizon suite is a 60-stage stateful workflow. It contains
-four cues that must survive 40-step delays, an HTTP 503 interruption, independent
+four cues that must survive 25–40-stage delays, an HTTP 503 interruption, independent
 terminal JSON assertions, and an optional browser-session restart at step 35:
 
 ```bash

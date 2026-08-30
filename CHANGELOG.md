@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   ordinary tool traffic cannot evict long-delay memory cues after resume.
 - Prioritize visible retry/reload controls, refresh, or bounded waits when the observed page itself
   declares a transient interruption, reducing navigation churn into blank/history pages.
+- Correct long-horizon recall instructions to identify each cue's actual source stage instead of
+  incorrectly describing every recall as a fixed 40-stage delay.
 - Preflight requested study endpoints with a minimal real inference and exclude fully unavailable
   provider/transport cells from performance aggregates while retaining auditable evidence.
 

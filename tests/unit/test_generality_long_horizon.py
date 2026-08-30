@@ -6,6 +6,12 @@ from datetime import date
 from pathlib import Path
 
 import pytest
+from benchmarks.environments.controlled_web.long_horizon_site import (
+    CUE_SOURCE_STAGES,
+    CUES,
+    RECALLS,
+    _stage_page,
+)
 
 from webagent.agent.loop import _checkpoint_planning_state
 from webagent.agent.state import PlanningState
@@ -32,6 +38,15 @@ _SCENARIOS = (
     "sandbox_transaction",
     "recovery",
 )
+
+
+def test_long_horizon_recall_instructions_name_the_actual_cue_source_stage() -> None:
+    for recall_stage, source_stage in CUE_SOURCE_STAGES.items():
+        assert RECALLS[recall_stage] == CUES[source_stage]
+        page = _stage_page(recall_stage).decode()
+        assert f"introduced at stage {source_stage}" in page
+
+    assert CUE_SOURCE_STAGES == {44: 4, 49: 14, 54: 24, 59: 34}
 
 
 def _evaluation(
