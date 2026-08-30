@@ -30,6 +30,8 @@ class PortfolioInput(BaseModel):
     provider: str
     model: str
     task_count: int = Field(ge=0)
+    agent_source_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    benchmark_source_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
 
 
 class PortfolioCell(BaseModel):
@@ -55,12 +57,14 @@ class PortfolioCell(BaseModel):
 class EmpiricalPortfolio(BaseModel):
     """Fail-closed evidence status for a multi-model, multi-date agent portfolio."""
 
-    schema_version: int = 2
+    schema_version: int = 3
     status: Literal["ready", "insufficient"]
     input_reports: list[PortfolioInput]
     requested_endpoint_count: int = Field(ge=0)
     endpoint_count: int = Field(ge=0)
     excluded_endpoints: list[str]
+    agent_source_sha256s: list[str]
+    benchmark_source_sha256s: list[str]
     distinct_dates: list[str]
     common_complete_dates: list[str]
     cells: list[PortfolioCell]
@@ -115,6 +119,14 @@ def load_empirical_portfolio(
             provider=provider,
             model=model,
             task_count=len(report.tasks),
+            agent_source_sha256=_known_sha256(
+                metadata.get("agent_source_sha256"), "agent_source_sha256", resolved
+            ),
+            benchmark_source_sha256=_known_sha256(
+                metadata.get("benchmark_source_sha256"),
+                "benchmark_source_sha256",
+                resolved,
+            ),
         )
         runs.append((evidence, report.tasks))
     return analyze_empirical_portfolio(
@@ -194,10 +206,24 @@ def analyze_empirical_portfolio(
         )
     missing: list[str] = []
     endpoints = sorted(available_endpoints)
+    comparable_inputs = [
+        evidence
+        for evidence, _tasks in runs
+        if (evidence.provider, evidence.model) in available_endpoints
+        and cell_endpoint_status[(evidence.provider, evidence.model, evidence.date)] == "available"
+    ]
+    agent_source_sha256s = sorted({item.agent_source_sha256 for item in comparable_inputs})
+    benchmark_source_sha256s = sorted({item.benchmark_source_sha256 for item in comparable_inputs})
     if len(endpoints) < minimum_models:
         missing.append(f"requires at least {minimum_models} provider/model endpoints")
     if len(endpoints) > 3:
         missing.append("allows at most 3 provider/model endpoints")
+    if len(agent_source_sha256s) != 1:
+        missing.append("requires one immutable agent source fingerprint across comparable cells")
+    if len(benchmark_source_sha256s) != 1:
+        missing.append(
+            "requires one immutable benchmark source fingerprint across comparable cells"
+        )
     common_dates = (
         sorted(set.intersection(*(complete_dates[endpoint] for endpoint in endpoints)))
         if endpoints and all(endpoint in complete_dates for endpoint in endpoints)
@@ -227,6 +253,8 @@ def analyze_empirical_portfolio(
             for provider, model in requested_endpoints
             if (provider, model) not in available_endpoints
         ],
+        agent_source_sha256s=agent_source_sha256s,
+        benchmark_source_sha256s=benchmark_source_sha256s,
         distinct_dates=sorted({item.date for item, _tasks in runs}),
         common_complete_dates=common_dates,
         cells=cells,
@@ -260,6 +288,13 @@ def _known(value: object, field: str, path: Path) -> str:
     text = str(value or "").strip()
     if not text or text == "unknown":
         raise ValueError(f"{path}: empirical portfolio requires known metadata.{field}")
+    return text
+
+
+def _known_sha256(value: object, field: str, path: Path) -> str:
+    text = _known(value, field, path)
+    if len(text) != 64 or any(character not in "0123456789abcdef" for character in text):
+        raise ValueError(f"{path}: empirical portfolio metadata.{field} must be a SHA-256")
     return text
 
 

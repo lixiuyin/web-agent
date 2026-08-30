@@ -248,7 +248,10 @@ offline-harness option. Re-run on three
 actual UTC dates; there is no date override. A portfolio becomes `ready` only
 when every comparable provider/model/date cell contains all three complementary suites,
 passes the coverage floor, includes a 50+-action trajectory, and the same two or
-three endpoints share at least three complete dates. Failed tasks remain valid
+three endpoints share at least three complete dates. Comparable dates must also
+share one immutable agent-source fingerprint and one immutable benchmark-source
+fingerprint. After changing either source tree, start a new campaign root rather
+than appending to an earlier longitudinal condition. Failed tasks remain valid
 empirical outcomes when planning was actually available; scripted harness
 reports are rejected as model evidence.
 

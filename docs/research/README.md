@@ -42,8 +42,9 @@ remain organized by system responsibility.  Research concepts live in
   checkpoint-resume diagnostics from observable steps and events.
 - `portfolio.py` combines content-hashed agent reports into complete
   provider/model/date cells, rejects scripted baselines as empirical model
-  evidence, and separates provider/transport unavailability from zero model
-  performance.
+  evidence, separates provider/transport unavailability from zero model
+  performance, and rejects comparable cells that mix agent or benchmark source
+  fingerprints across dates.
 - `endpoints.py` performs a minimal credential-redacted availability probe so an
   expensive campaign does not turn a provider privacy-policy rejection into 30
   apparent task failures.

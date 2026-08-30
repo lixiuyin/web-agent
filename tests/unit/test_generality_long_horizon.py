@@ -239,6 +239,8 @@ def test_empirical_portfolio_requires_complete_common_model_date_cells() -> None
                 provider="openrouter",
                 model=model,
                 task_count=len(tasks),
+                agent_source_sha256="c" * 64,
+                benchmark_source_sha256="d" * 64,
             )
             # Three complementary reports are required per cell; split the task
             # landscape without duplicating task identities.
@@ -269,6 +271,29 @@ def test_empirical_portfolio_requires_complete_common_model_date_cells() -> None
         cell.transfer is not None and cell.transfer.status == "available" for cell in report.cells
     )
 
+    drifted_runs = list(runs)
+    evidence, tasks = drifted_runs[-1]
+    drifted_runs[-1] = (
+        evidence.model_copy(
+            update={
+                "agent_source_sha256": "e" * 64,
+                "benchmark_source_sha256": "f" * 64,
+            }
+        ),
+        tasks,
+    )
+    drifted_report = analyze_empirical_portfolio(drifted_runs)
+
+    assert drifted_report.status == "insufficient"
+    assert (
+        "requires one immutable agent source fingerprint across comparable cells"
+        in drifted_report.missing_requirements
+    )
+    assert (
+        "requires one immutable benchmark source fingerprint across comparable cells"
+        in drifted_report.missing_requirements
+    )
+
 
 def test_empirical_portfolio_excludes_transport_unavailable_endpoint() -> None:
     runs = []
@@ -289,6 +314,8 @@ def test_empirical_portfolio_excludes_transport_unavailable_endpoint() -> None:
                             provider="openrouter",
                             model=model,
                             task_count=len(chunk),
+                            agent_source_sha256="c" * 64,
+                            benchmark_source_sha256="d" * 64,
                         ),
                         chunk,
                     )
@@ -322,6 +349,8 @@ def test_empirical_portfolio_excludes_transport_unavailable_endpoint() -> None:
                     provider="openrouter",
                     model="model-unavailable",
                     task_count=1,
+                    agent_source_sha256="e" * 64,
+                    benchmark_source_sha256="f" * 64,
                 ),
                 [task],
             )

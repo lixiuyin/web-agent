@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- Empirical portfolios now fail closed when comparable model/date cells mix agent or benchmark
+  source fingerprints, preventing post-fix runs from being merged into an ostensibly unchanged
+  multi-date condition.
 - Reserve a bounded planner-context slice for explicit checkpoint-safe durable notes, so recent
   ordinary tool traffic cannot evict long-delay memory cues after resume.
 - Prioritize visible retry/reload controls, refresh, or bounded waits when the observed page itself
