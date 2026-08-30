@@ -54,6 +54,7 @@ class MockBrowser:
             "success": True,
             "links": filtered_links[:max_res],
             "count": len(filtered_links[:max_res]),
+            "total_count": len(filtered_links),
         }
 
     async def get_search_results(self, max_results=10):

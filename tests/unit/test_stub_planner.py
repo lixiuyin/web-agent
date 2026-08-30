@@ -105,3 +105,10 @@ async def test_stub_analyze_image(planner):
     """Image analysis also requires LLM."""
     result = await planner.analyze_image(None, "What is this?")
     assert "LLM" in result
+
+
+@pytest.mark.asyncio
+async def test_stub_load_unload_are_noops(planner):
+    """Lifecycle hooks exist and do nothing (no backend to manage)."""
+    assert await planner.load() is None
+    assert await planner.unload() is None

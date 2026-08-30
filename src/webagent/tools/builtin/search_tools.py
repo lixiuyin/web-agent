@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+from datetime import UTC, datetime
 from typing import Any
+from urllib.parse import unquote, urlsplit
 
 from webagent.core.models import ToolResult
+from webagent.tools.builtin._base import BrowserToolBase
 from webagent.tools.registry import tool
 
 # Search engine configurations
@@ -19,9 +22,14 @@ _SEARCH_ENGINES = {
         "input_selector": 'input[name="q"]',
         "wait_selector": 'div[id="b_content"]',
     },
+    "yahoo": {
+        "url": "https://search.yahoo.com",
+        "input_selector": 'input[name="p"]',
+        "wait_selector": 'div[id="web"]',
+    },
     "duckduckgo": {
         "url": "https://duckduckgo.com",
-        "input_selector": 'input[name="q"]',
+        "input_selector": 'textarea[name="q"], input[name="q"]',
         "wait_selector": 'div[id="links"]',
     },
 }
@@ -41,20 +49,64 @@ _SEARCH_ERROR_MARKERS = (
 # Ordered engines tried automatically after the primary engine fails. A single
 # engine is often bot-blocked, so cascading through all three maximizes the
 # chance of getting real results before the agent has to work around it.
-_FALLBACK_ORDER = ("google", "bing", "duckduckgo")
+_FALLBACK_ORDER = ("bing", "yahoo", "duckduckgo", "google")
 
 
-def _fallback_chain(primary: str) -> list[str]:
+def _classify_search_failure(reason: str) -> str:
+    lowered = reason.casefold()
+    if "captcha" in lowered or "verification" in lowered or "blocked" in lowered:
+        return "challenge_or_block"
+    if "selector" in lowered or "structured results" in lowered:
+        return "selector_drift"
+    if "no results" in lowered or "empty" in lowered:
+        return "empty_results"
+    if "navigate" in lowered:
+        return "navigation_failure"
+    if "submit" in lowered or "type query" in lowered:
+        return "interaction_failure"
+    return "unknown"
+
+
+def _failure_data(query: str, engines: list[str], reason: str) -> dict[str, Any]:
+    return {
+        "query": query,
+        "attempted_engines": engines,
+        "failure_category": _classify_search_failure(reason),
+        "search_attempts": [{"engine": engine, "outcome": "failed"} for engine in engines],
+    }
+
+
+def _unwrap_search_redirect(url: str) -> str:
+    """Expose Yahoo's destination URL instead of treating its click tracker as evidence."""
+    parsed = urlsplit(url)
+    if parsed.hostname and parsed.hostname.endswith("search.yahoo.com"):
+        marker = "/RU="
+        if marker in parsed.path:
+            encoded = parsed.path.split(marker, 1)[1].split("/", 1)[0]
+            destination = unquote(encoded)
+            if urlsplit(destination).scheme in {"http", "https"}:
+                return destination
+    return url
+
+
+def _fallback_chain(primary: str, *, allow_google: bool) -> list[str]:
     """Remaining fallback engines to try, in order, after ``primary`` failed."""
-    return [engine for engine in _FALLBACK_ORDER if engine != primary]
+    return [
+        engine
+        for engine in _FALLBACK_ORDER
+        if engine != primary and (engine != "google" or allow_google)
+    ]
 
 
 @tool(
     "search",
-    "Search the web. params: query (string), engine=google|bing|duckduckgo (default: google), recency=week|month|year|latest. "
-    "For Qwen technical-report/PDF queries, blocked search engines may return direct arXiv candidates.",
+    "Search the web without opening Google by default (automated Google sessions often "
+    "hit human verification). params: query (string), engine=bing|yahoo|duckduckgo|google "
+    "(default: bing; Google requires AGENT_ALLOW_GOOGLE_SEARCH=true), "
+    "recency=week|month|year|latest. For latest technical reports, use github_search too "
+    "only when it is listed as an available tool; arXiv alone can lag behind.",
 )
-class SearchTool:
+class SearchTool(BrowserToolBase):
     """Perform a web search using the specified search engine.
 
     This tool abstracts the multi-step process of:
@@ -68,21 +120,23 @@ class SearchTool:
     - "latest", "recent", "newest" -> week
     - "2024", "2025", "2026" -> year
 
-    Note: DuckDuckGo is recommended for automated agents as it's more bot-friendly
-    and less likely to trigger CAPTCHAs than Google/Bing.
+    Bing is the default. DuckDuckGo is the automatic fallback. Google is opt-in
+    because repeated automated sessions commonly trigger human verification.
     """
 
     # Query keywords that suggest recency
     RECENCY_KEYWORDS = {
-        "week": ["latest", "recent", "newest", "last week", "this week"],
+        "latest": ["latest", "newest", "most recent"],
+        "week": ["recent", "last week", "this week"],
         "month": ["this month", "past month"],
         "year": ["this year", "past year", "2024", "2025", "2026"],
     }
 
-    def __init__(self, browser: Any = None, **kw: Any) -> None:
-        self.browser = browser
+    def __init__(self, browser: Any = None, config: Any = None, **kw: Any) -> None:
+        super().__init__(browser=browser, **kw)
+        self._allow_google = bool(getattr(config, "allow_google_search", False))
 
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         """Validate search parameters."""
         if not isinstance(params.get("query"), str) or not params["query"].strip():
             raise ValueError("'query' parameter is required and must be non-empty")
@@ -106,14 +160,13 @@ class SearchTool:
                     return recency
 
         # Also check for explicit year mentions (e.g., "2026 technical report")
-        import datetime
         import re
 
         years = re.findall(r"(20\d{2})", query)
         if years:
             # Use the most recent year mentioned to calculate date range
             year_int = max(int(y) for y in years)
-            current_year = datetime.date.today().year
+            current_year = datetime.now(UTC).year
             # For historical years, use year-based filtering
             # For recent/current years, use month-based filtering
             return "year" if year_int < current_year else "month"
@@ -123,39 +176,14 @@ class SearchTool:
     def _add_date_filter(
         self, query: str, engine: str, recency: str | None, custom_date: str | None
     ) -> str:
-        """Add date filter to query based on recency parameter."""
-        import datetime
+        """Keep engine-specific date syntax out of the user's query text.
 
-        if not recency:
-            return query
-
-        # Map recency to days
-        recency_map = {
-            "week": 7,
-            "month": 30,
-            "year": 365,
-            "latest": 7,  # latest = week
-        }
-
-        days = recency_map.get(recency)
-        if not days:
-            return query
-
-        today = datetime.date.today()
-        start_date = today - datetime.timedelta(days=days)
-
-        if engine == "google":
-            return f"{query} after:{start_date.strftime('%Y/%m/%d')}"
-        elif engine == "bing":
-            if days <= 7:
-                return f"{query} dt:w"
-            elif days <= 30:
-                return f"{query} dt:m"
-            else:
-                return f"{query} dt:y"
-        # DuckDuckGo does not support after: query syntax; date filtering is
-        # handled via df= URL parameter in _get_sorted_url instead.
-
+        Date filters belong in URL parameters. Injecting ``dt:y`` into a Bing
+        query made the literal token appear in results and harmed relevance; the
+        previous implementation also applied a second filter to the result URL.
+        ``custom_date`` is retained in the signature for API compatibility.
+        """
+        del engine, recency, custom_date
         return query
 
     def _get_sorted_url(self, engine: str, base_url: str, recency: str) -> str:
@@ -165,7 +193,10 @@ class SearchTool:
             "week": ("w", "week"),
             "month": ("m", "month"),
             "year": ("y", "year"),
-            "latest": ("w", "week"),
+            # "latest" means rank/compare all candidates, not "published in the
+            # last week". A hard one-week filter can exclude the actual latest
+            # report when a project has not published recently.
+            "latest": (None, "latest"),
         }
 
         param, _ = recency_map.get(recency, (None, None))
@@ -176,12 +207,11 @@ class SearchTool:
             # Google: tbs=qdr: w=week, m=month, y=year
             if "?" in base_url:
                 return f"{base_url}&tbs=qdr:{param}"
-            else:
-                return f"{base_url}?tbs=qdr:{param}"
-        elif engine == "bing":
+            return f"{base_url}?tbs=qdr:{param}"
+        if engine == "bing":
             # Bing: filters
             return f"{base_url}&filt=custom&sc=0-{param}-0"
-        elif engine == "duckduckgo":
+        if engine == "duckduckgo":
             # DuckDuckGo: use df= URL parameter (d=day, w=week, m=month, y=year)
             ddg_param = {"w": "w", "m": "m", "y": "y"}.get(param, "w")
             sep = "&" if "?" in base_url else "?"
@@ -189,11 +219,96 @@ class SearchTool:
 
         return base_url
 
-    async def execute(self, params: dict) -> ToolResult:
+    async def _navigate(self, config: dict[str, str], engine: str) -> ToolResult | None:
+        """Step 1: navigate to the engine. Returns an error result, or None if OK."""
+        nav_result = await self.browser.goto(config["url"])
+        if not nav_result.get("success"):
+            return ToolResult(
+                success=False,
+                tool_name="search",
+                error=f"Failed to navigate to {engine}: {nav_result.get('error', 'Unknown error')}",
+            )
+        return None
+
+    async def _type_query(self, config: dict[str, str], query: str) -> ToolResult | None:
+        """Step 2: type the query into the search box. Error result, or None if OK."""
+        type_result = await self.browser.type_text(
+            selector=config["input_selector"],
+            text=query,
+            delay=50,
+            clear_first=True,
+        )
+        if not type_result.get("success"):
+            return ToolResult(
+                success=False,
+                tool_name="search",
+                error=f"Failed to type query: {type_result.get('error', 'Unknown error')}",
+            )
+        return None
+
+    async def _submit_and_wait(self, config: dict[str, str]) -> ToolResult | None:
+        """Steps 3-4: submit the search and wait for results. Error result, or None."""
+        press_result = await self.browser.press_key("Enter")
+        if not press_result.get("success"):
+            return ToolResult(
+                success=False,
+                tool_name="search",
+                error=f"Failed to submit search: {press_result.get('error', 'Unknown error')}",
+            )
+
+        wait_result = await self.browser.wait_for_selector(
+            selector=config["wait_selector"],
+            state="visible",
+            timeout=10000,
+        )
+        # Don't fail hard if wait fails - search may have still worked
+        del wait_result
+        return None
+
+    async def _apply_date_sort(self, engine: str, config: dict[str, str], recency: str) -> None:
+        """Step 5: re-sort by date via URL when a recency filter is active."""
+        # Get current URL (search results page) instead of base config URL
+        current_url = self.browser.page.url
+        sorted_url = self._get_sorted_url(engine, current_url, recency)
+        if sorted_url != current_url:
+            await self.browser.goto(sorted_url)
+            await self.browser.wait_for_selector(
+                selector=config["wait_selector"],
+                state="visible",
+                timeout=10000,
+            )
+
+    async def _recover_step_error(
+        self,
+        error: ToolResult,
+        *,
+        query: str,
+        recency: str | None,
+        custom_date: str | None,
+        engine: str,
+        reason: str | None = None,
+    ) -> ToolResult:
+        failure_reason = reason or error.error or f"Search interaction failed on {engine}"
+        fallbacks = _fallback_chain(engine, allow_google=self._allow_google)
+        if fallbacks:
+            return await self._try_fallback_engine(
+                query,
+                recency,
+                custom_date,
+                engine,
+                fallbacks,
+                failure_reason,
+            )
+        return error.model_copy(update={"data": _failure_data(query, [engine], failure_reason)})
+
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         """Execute the search operation."""
         query = params["query"].strip()
         original_query = query  # unfiltered — fallback engines use different date syntax
-        engine = params.get("engine", "google")  # Default to Google for best result quality
+        requested_engine = params.get("engine", "bing")
+        engine = requested_engine
+        if engine == "google" and not self._allow_google:
+            engine = "bing"
         recency = params.get("recency")
         custom_date = params.get("custom_date")
 
@@ -208,120 +323,138 @@ class SearchTool:
         config = _SEARCH_ENGINES[engine]
 
         try:
-            # Step 1: Navigate to search engine
-            nav_result = await self.browser.goto(config["url"])
-            if not nav_result.get("success"):
-                return ToolResult(
-                    success=False,
-                    tool_name="search",
-                    error=f"Failed to navigate to {engine}: {nav_result.get('error', 'Unknown error')}",
+            nav_error = await self._navigate(config, engine)
+            if nav_error:
+                return await self._recover_step_error(
+                    nav_error,
+                    query=original_query,
+                    recency=recency,
+                    custom_date=custom_date,
+                    engine=engine,
                 )
 
-            # Step 2: Type query into search box
-            type_result = await self.browser.type_text(
-                selector=config["input_selector"],
-                text=query,
-                delay=50,
-                clear_first=True,
-            )
-            if not type_result.get("success"):
-                # Input selector not found - might be CAPTCHA or page changed.
-                # Cascade through the remaining engines before giving up.
-                fallbacks = _fallback_chain(engine)
-                if fallbacks:
-                    return await self._try_fallback_engine(
-                        original_query,
-                        recency,
-                        custom_date,
-                        engine,
-                        fallbacks,
-                        f"Input selector not found on {engine} (possibly CAPTCHA)",
-                    )
-                return ToolResult(
-                    success=False,
-                    tool_name="search",
-                    error=f"Failed to type query: {type_result.get('error', 'Unknown error')}",
+            type_error = await self._type_query(config, query)
+            if type_error:
+                return await self._recover_step_error(
+                    type_error,
+                    query=original_query,
+                    recency=recency,
+                    custom_date=custom_date,
+                    engine=engine,
+                    reason=f"Input selector not found on {engine} (possibly CAPTCHA)",
                 )
 
-            # Step 3: Press Enter to submit search
-            press_result = await self.browser.press_key("Enter")
-            if not press_result.get("success"):
-                return ToolResult(
-                    success=False,
-                    tool_name="search",
-                    error=f"Failed to submit search: {press_result.get('error', 'Unknown error')}",
+            submit_error = await self._submit_and_wait(config)
+            if submit_error:
+                return await self._recover_step_error(
+                    submit_error,
+                    query=original_query,
+                    recency=recency,
+                    custom_date=custom_date,
+                    engine=engine,
                 )
 
-            # Step 4: Wait for results to load
-            wait_result = await self.browser.wait_for_selector(
-                selector=config["wait_selector"],
-                state="visible",
-                timeout=10000,
-            )
-            if not wait_result.get("success"):
-                # Don't fail hard if wait fails - search may have still worked
-                pass
-
-            # Step 5: Apply date sort via URL if recency specified
+            # Apply date sort via URL if recency specified
             if recency:
-                # Get current URL (search results page) instead of base config URL
-                current_url = self.browser.page.url
-                sorted_url = self._get_sorted_url(engine, current_url, recency)
-                if sorted_url != current_url:
-                    await self.browser.goto(sorted_url)
-                    await self.browser.wait_for_selector(
-                        selector=config["wait_selector"],
-                        state="visible",
-                        timeout=10000,
-                    )
+                await self._apply_date_sort(engine, config, recency)
 
-            # Verify results actually loaded. Engines show an error/empty/bot-block
-            # page (no results selector) on which the agent would otherwise loop.
-            if not await self._results_present(config):
-                fallbacks = _fallback_chain(engine)
-                if fallbacks:
-                    return await self._try_fallback_engine(
-                        original_query,
-                        recency,
-                        custom_date,
-                        engine,
-                        fallbacks,
-                        f"{engine} returned no results (error or blocked page)",
-                    )
-                direct = _direct_paper_candidates(original_query)
-                if direct:
-                    return direct
-                return ToolResult(
-                    success=False,
-                    tool_name="search",
-                    error=(
-                        f"{engine} returned no results (error/blocked page). "
-                        "Try navigating directly to a known site (e.g. arxiv.org) instead of searching."
-                    ),
-                )
-
-            return ToolResult(
-                success=True,
-                tool_name="search",
-                data={
-                    "query": query,
-                    "engine": engine,
-                    "url": self.browser.page.url,
-                    "title": await self.browser.page.title(),
-                },
+            return await self._collect_results(
+                original_query,
+                recency,
+                custom_date,
+                engine,
+                query,
+                config,
+                requested_engine=requested_engine,
             )
 
         except Exception as e:
-            direct = _direct_paper_candidates(original_query)
-            if direct:
-                return direct
+            reason = f"Search failed: {e}"
             return ToolResult(
                 success=False,
                 tool_name="search",
-                error=f"Search failed: {e}",
+                error=reason,
+                data=_failure_data(original_query, [engine], reason),
             )
 
-    async def _results_present(self, config: dict) -> bool:
+    async def _collect_results(
+        self,
+        original_query: str,
+        recency: str | None,
+        custom_date: str | None,
+        engine: str,
+        query: str,
+        config: dict[str, str],
+        *,
+        requested_engine: str,
+    ) -> ToolResult:
+        """Verify results loaded on the current engine and build the success result.
+
+        Falls back to the engine cascade (then direct paper candidates) when the
+        page is an error/empty/bot-block page.
+        """
+        if not await self._results_present(config):
+            fallbacks = _fallback_chain(engine, allow_google=self._allow_google)
+            if fallbacks:
+                return await self._try_fallback_engine(
+                    original_query,
+                    recency,
+                    custom_date,
+                    engine,
+                    fallbacks,
+                    f"{engine} returned no results (error or blocked page)",
+                )
+            return ToolResult(
+                success=False,
+                tool_name="search",
+                error=(
+                    f"{engine} returned no results (error/blocked page). "
+                    "Use only a URL already observed in prior evidence, or report the search failure."
+                ),
+                data=_failure_data(original_query, [engine], f"{engine} returned no results"),
+            )
+
+        results = await self._extract_results()
+        if not results:
+            fallbacks = _fallback_chain(engine, allow_google=self._allow_google)
+            if fallbacks:
+                return await self._try_fallback_engine(
+                    original_query,
+                    recency,
+                    custom_date,
+                    engine,
+                    fallbacks,
+                    f"{engine} page loaded but no structured results could be extracted",
+                )
+            return ToolResult(
+                success=False,
+                tool_name="search",
+                error=f"{engine} page loaded but no structured results could be extracted",
+                data=_failure_data(
+                    original_query, [engine], "no structured results could be extracted"
+                ),
+            )
+
+        data: dict[str, Any] = {
+            "query": query,
+            "engine": engine,
+            "url": self.browser.page.url,
+            "title": await self.browser.page.title(),
+            "results": results,
+            "search_attempts": [{"engine": engine, "outcome": "success"}],
+        }
+        if requested_engine != engine:
+            data["requested_engine"] = requested_engine
+            data["engine_notice"] = (
+                "Google automation is disabled; used Bing to avoid human verification."
+            )
+        return ToolResult(
+            success=True,
+            tool_name="search",
+            data=data,
+        )
+
+    async def _results_present(self, config: dict[str, str]) -> bool:
         """Return True only if the current page actually shows search results.
 
         Guards against engines returning an error / zero-results / bot-block page
@@ -335,9 +468,91 @@ class SearchTool:
             if await page.locator(config["wait_selector"]).count() > 0:
                 return True
             # Generic fallback: a real results page links out to many sites.
-            return await page.locator("a[href^='http']").count() > 5
+            return bool(await page.locator("a[href^='http']").count() > 5)
         except Exception:
             return False
+
+    async def _extract_results(self, limit: int = 10) -> list[dict[str, str]]:
+        """Extract top SERP result items (title, url, date) for recency comparison.
+
+        Engine-agnostic and best-effort: reads the result containers common to
+        Google/Bing/DuckDuckGo and pulls each result's heading link plus any
+        date-like text in its block. Never raises — a failed extraction returns
+        an empty list, which the caller treats as an unusable search page.
+        """
+        js = r"""
+        (limit) => {
+          const out = [];
+          const seen = new Set();
+          const containers = [
+            'li.b_algo', 'div.b_algo',           // Bing
+            'div.g', 'div.MjjYud',               // Google
+            'article[data-testid="result"]',     // DuckDuckGo
+            'div.result',                        // DuckDuckGo legacy
+            'div#web div.algo-sr',               // Yahoo
+          ];
+          const datePatterns = [
+            /\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2},?\s+\d{4}\b/i,
+            /\b20\d{2}[-/]\d{1,2}[-/]\d{1,2}\b/,
+            /\b\d+\s+(?:day|days|hour|hours|week|weeks|month|months|year|years)\s+ago\b/i,
+          ];
+          for (const sel of containers) {
+            for (const block of document.querySelectorAll(sel)) {
+              const a = block.querySelector('a[href^="http"]');
+              if (!a) continue;
+              const title = (a.innerText || a.getAttribute('title') || '').trim();
+              const url = a.href;
+              if (!title || seen.has(url)) continue;
+              seen.add(url);
+              let date = '';
+              const text = block.innerText || '';
+              for (const re of datePatterns) {
+                const m = text.match(re);
+                if (m) { date = m[0]; break; }
+              }
+              out.push({ title: title.slice(0, 180), url, date });
+              if (out.length >= limit) return out.slice(0, limit);
+            }
+          }
+          return out.slice(0, limit);
+        }
+        """
+        try:
+            results: list[dict[str, str]] = await self.browser.page.evaluate(js, limit)
+            if results:
+                for item in results:
+                    if isinstance(item.get("url"), str):
+                        item["url"] = _unwrap_search_redirect(item["url"])
+                return results
+        except Exception:
+            pass
+
+        # Reuse the controller's independently tested per-engine parsers as a
+        # second extraction path. They cover alternate DOM layouts and return
+        # ``link`` rather than ``url``.
+        get_results = getattr(self.browser, "get_search_results", None)
+        if not callable(get_results):
+            return []
+        try:
+            response = await get_results(max_results=limit)
+        except Exception:
+            return []
+        normalized: list[dict[str, str]] = []
+        for item in response.get("results", []) if response.get("success") else []:
+            if not isinstance(item, dict):
+                continue
+            url = item.get("url") or item.get("link")
+            title = item.get("title")
+            if isinstance(url, str) and isinstance(title, str) and url and title.strip():
+                normalized.append(
+                    {
+                        "title": title.strip()[:180],
+                        "url": _unwrap_search_redirect(url),
+                        "date": str(item.get("date") or ""),
+                        "snippet": str(item.get("snippet") or "")[:500],
+                    }
+                )
+        return normalized[:limit]
 
     async def _try_fallback_engine(
         self,
@@ -368,6 +583,14 @@ class SearchTool:
         logger = logging.getLogger("webagent")
 
         prev_engine, prev_reason = failed_engine, reason
+        attempts: list[dict[str, str]] = [
+            {
+                "engine": failed_engine,
+                "outcome": "failed",
+                "failure_category": _classify_search_failure(reason),
+                "error": reason,
+            }
+        ]
         for fallback_engine in fallback_engines:
             logger.warning(
                 "Search engine '%s' failed: %s. Trying fallback engine '%s'.",
@@ -379,23 +602,39 @@ class SearchTool:
                 query, recency, custom_date, fallback_engine, failed_engine, prev_reason
             )
             if result.success:
+                result.data["search_attempts"] = [
+                    *attempts,
+                    {"engine": fallback_engine, "outcome": "success"},
+                ]
                 return result
+            attempts.append(
+                {
+                    "engine": fallback_engine,
+                    "outcome": "failed",
+                    "failure_category": _classify_search_failure(result.error or ""),
+                    "error": result.error or "unknown search failure",
+                }
+            )
             prev_engine = fallback_engine
             prev_reason = result.error or f"{fallback_engine} returned no usable results"
 
-        # Every engine in the cascade failed — try structured candidates, else
-        # tell the agent to stop searching and navigate directly.
-        direct = _direct_paper_candidates(query)
-        if direct:
-            return direct
+        # Every engine in the cascade failed — tell the agent to stop searching
+        # and navigate directly to the target site.
         tried = ", ".join([failed_engine, *fallback_engines])
         return ToolResult(
             success=False,
             tool_name="search",
             error=(
                 f"All search engines ({tried}) returned no results (error/blocked "
-                "pages). Try navigating directly to the target site."
+                "pages). Use only a URL already observed in prior evidence, or report the failure. "
+                f"Last failure: {prev_reason}"
             ),
+            data={
+                "query": query,
+                "attempted_engines": [failed_engine, *fallback_engines],
+                "failure_category": _classify_search_failure(prev_reason),
+                "search_attempts": attempts,
+            },
         )
 
     async def _attempt_engine(
@@ -472,6 +711,14 @@ class SearchTool:
                     error=f"{engine} returned no results (error or blocked page)",
                 )
 
+            results = await self._extract_results()
+            if not results:
+                return ToolResult(
+                    success=False,
+                    tool_name="search",
+                    error=f"{engine} page loaded but no structured results could be extracted",
+                )
+
             return ToolResult(
                 success=True,
                 tool_name="search",
@@ -480,6 +727,7 @@ class SearchTool:
                     "engine": engine,
                     "url": self.browser.page.url,
                     "title": await self.browser.page.title(),
+                    "results": results,
                     "fallback_from": failed_engine,
                     "fallback_reason": reason,
                 },
@@ -491,32 +739,3 @@ class SearchTool:
                 tool_name="search",
                 error=f"Fallback search on {engine} also failed: {e}",
             )
-
-
-def _direct_paper_candidates(query: str) -> ToolResult | None:
-    """Return direct structured paper candidates when browser search is blocked."""
-    try:
-        from webagent.tools.builtin.arxiv_tools import known_arxiv_results
-
-        results = known_arxiv_results(query, max_results=5)
-    except Exception:
-        results = []
-    if not results:
-        return None
-
-    top = results[0]
-    return ToolResult(
-        success=True,
-        tool_name="search",
-        data={
-            "query": query,
-            "engine": "direct_arxiv_fallback",
-            "url": top["abs_url"],
-            "title": top["title"],
-            "results": results,
-            "warning": (
-                "Browser search engines returned no usable results; returned direct "
-                "arXiv candidates. Use the top result's pdf_url with download_pdf."
-            ),
-        },
-    )

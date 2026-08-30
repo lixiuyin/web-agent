@@ -1,9 +1,14 @@
-"""Regression tests for enhanced (structured-output) response parsing."""
+"""Regression tests for structured-output response parsing.
 
-from webagent.planner.enhanced_base import parse_enhanced_response
+Structured output reuses the shared ``parse_llm_response`` parser; these cases
+guard the response shapes emitted when ``use_structured_output`` is enabled.
+"""
+
+from webagent.core.models import ToolCall
+from webagent.planner.base import parse_llm_response
 
 
-def test_parse_enhanced_json_in_code_fence():
+def test_parse_structured_json_in_code_fence():
     """Regression: ```json fenced blocks must parse without dropping lines."""
     raw = (
         "```json\n"
@@ -17,17 +22,18 @@ def test_parse_enhanced_json_in_code_fence():
         "}\n"
         "```"
     )
-    call = parse_enhanced_response(raw)
+    call = parse_llm_response(raw)
     assert call is not None
+    assert isinstance(call, ToolCall)
     assert call.tool_name == "click"
     assert call.parameters["selector"]["value"] == "Submit"
 
 
-def test_parse_enhanced_bare_json():
-    call = parse_enhanced_response('{"tool": "done", "parameters": {"summary": "ok"}}')
+def test_parse_structured_bare_json():
+    call = parse_llm_response('{"tool": "done", "parameters": {"summary": "ok"}}')
     assert call is not None
     assert call.tool_name == "done"
 
 
-def test_parse_enhanced_invalid_returns_none():
-    assert parse_enhanced_response("not json at all") is None
+def test_parse_structured_invalid_returns_none():
+    assert parse_llm_response("not json at all") is None

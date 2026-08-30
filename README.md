@@ -6,7 +6,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.13+](https://img.shields.io/badge/python-3.13%2B-blue.svg)](pyproject.toml)
-[![Tests](https://img.shields.io/badge/tests-186%20passing-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/tests-900%2B%20passing-brightgreen.svg)](tests/)
 [![Lint: ruff](https://img.shields.io/badge/lint-ruff-261230.svg)](https://github.com/astral-sh/ruff)
 [![Typed: mypy](https://img.shields.io/badge/typed-mypy-blue.svg)](https://mypy-lang.org/)
 
@@ -20,7 +20,7 @@
 
 `webagent` is a research-grade autonomous agent that drives a real Chromium browser to accomplish open-ended web tasks described in plain language — e.g. *"Find the most recent Qwen technical report and interpret Figure 1."* It fuses a **Vision-Language Model** (the screenshot it sees) with a **structured DOM snapshot** (the page it reads) to decide, step by step, which browser action to take next.
 
-It is **model-agnostic** (any OpenAI-compatible endpoint, with automatic vision detection and adapters for OpenAI / Azure / Claude / Gemini / MiniMax, plus a local vLLM path) and ships a **document-intelligence pipeline** that parses PDFs through a cloud-OCR cascade, resolves *"Figure N"* by its real caption, and analyzes the figure with vision.
+It is **model-agnostic** across OpenAI-compatible endpoints (with automatic vision detection and a local vLLM path) and ships a **document-intelligence pipeline** that parses PDFs through a cloud-OCR cascade, resolves *"Figure N"* by its real caption, and analyzes the figure with vision.
 
 > A natural-language task in → a browser driven autonomously → a cited answer, the analyzed figure, and the extracted content out.
 
@@ -32,12 +32,13 @@ It is **model-agnostic** (any OpenAI-compatible endpoint, with automatic vision 
 |------|---------------------------|
 | **Agentic core** | A clean **Observe → Think → Act → Record** loop built on `typing.Protocol` interfaces (`Planner`, `Tool`, `AgentHook`) — components are structurally typed and hot-swappable, no inheritance required. |
 | **Multimodal planning** | Each step sends a JPEG-compressed screenshot **and** an ad-filtered DOM-to-Markdown snapshot. The planner **auto-probes** the endpoint for real vision support and silently degrades to text-only when a model can't see. |
-| **Structured reasoning** | An optional enhanced mode forces the LLM to emit explicit `thinking / memory / next_goal / tool / parameters / reasoning` JSON, parsed into a typed `EnhancedToolCall`. |
-| **Robustness engineering** | Four-signal **loop detection** (action-repeat, page-stagnation, URL-oscillation, no-progress), a **hard wall-clock timeout** that bounds trickling LLM responses, consecutive-failure aborts, and captcha detection. |
-| **Resilient web search** | A `search` tool that cascades **Google → Bing → DuckDuckGo**, detects bot-block / zero-result pages, and falls back to direct arXiv candidates. |
-| **Document intelligence** | A quality-gated OCR cascade — **Marker → MinerU → PaddleOCR → local PyMuPDF** — that produces structured Markdown, tables, sections, and **caption-aware figures**, so *"Figure 1"* resolves to the real labeled figure, not the first stray logo. |
-| **Anti-detection browser** | Playwright Chromium with a stealth profile (randomized UA, CDP-injected anti-fingerprinting) and CDP-based interactive-element extraction. |
-| **Engineering quality** | ~13.5k LOC, **50+ built-in tools**, **186 tests**, fully type-checked (`mypy`), `ruff`-linted/formatted. |
+| **Structured actions** | Provider-native function tools are the default. `auto` falls back only on an explicit capability error through provider JSON Schema and, finally, prompt JSON; all 60+ exposed tools have machine-readable parameter schemas. |
+| **Robustness engineering** | Five-signal **loop detection**, bounded strategy switching/replanning, atomic resumable checkpoints, request/tool/task timeouts, malformed-output retries, consecutive-failure aborts, and per-attempt token/finish metadata. |
+| **Resilient web search** | Browser search defaults to **Bing → Yahoo → DuckDuckGo**, records per-engine failures (`challenge`, selector drift, empty results, navigation), unwraps Yahoo result redirects, and cascades without inventing results. Direct arXiv/GitHub discovery APIs are hidden by default and require explicit `--discovery-mode hybrid` opt-in. |
+| **Document intelligence** | A caption-grounded local vector/raster Figure fast path (with conservative cloud fallback), plus a quality-gated OCR cascade and optional content-addressed parse cache. |
+| **Isolated browser/evaluation** | Persistent profiles remain available for signed-in work; temporary profiles and `--strict-eval` eliminate prior-session and PDF-cache state. Every run writes an auditable `trajectory/trace.json`. |
+| **Evidence-grounded benchmarks** | A dated 30-task public-web suite includes real search discovery; a two-origin loopback suite covers a hydrated SPA, login state, cross-site forms, download/upload handoff, and sandbox checkout. Longitudinal gates require 2–3 models on three real common dates. |
+| **Engineering quality** | **60+ built-in tools**, branch coverage gated at **85%**, strict type-checking (`mypy`), and `ruff` linting/formatting. |
 
 ---
 
@@ -67,16 +68,16 @@ flowchart TB
         APIP["APIPlanner<br/>OpenAI-compatible + vision auto-detect"]
         STUB["StubPlanner"]
     end
-    APIP --> ADP["Adapters: OpenAI · Azure · Claude · Gemini · MiniMax · local vLLM"]
+    APIP --> ADP["Provider transport: native tools<br/>→ JSON Schema → prompt JSON"]
 
-    subgraph BROWSER["Browser — Playwright + stealth + CDP"]
+    subgraph BROWSER["Browser — native Playwright + CDP (stealth opt-in)"]
         CTRL["BrowserController"]
         SNAP["DOM Snapshot → Markdown"]
     end
 
-    subgraph TOOLS["Tool registry &nbsp;(@tool · 50+)"]
+    subgraph TOOLS["Tool registry &nbsp;(@tool · 60+)"]
         NAV["navigate · click · type · scroll"]
-        SRCH["search → Google·Bing·DuckDuckGo"]
+        SRCH["search → Bing·DuckDuckGo<br/>official_report_search → arXiv + GitHub"]
         DOC["PDF suite: download · parse · figures · QA"]
     end
 
@@ -87,7 +88,7 @@ flowchart TB
     end
 ```
 
-### Layout
+### Repository layout
 
 ```
 src/webagent/
@@ -97,8 +98,18 @@ src/webagent/
 ├── planner/     # Stub & API planners, multi-provider adapters, prompt builders
 ├── parser/      # Cloud-OCR cascade (Marker/MinerU/Paddle) + local PyMuPDF, quality gate
 ├── tools/       # @tool registry + built-in tools (browser, search, pdf, file, task…)
+├── evaluation/  # terminal-state assertions, runner, aggregate benchmark metrics
 ├── utils/       # PDF/image helpers, path containment
 └── cli.py       # Entry point  →  `webagent`
+
+benchmarks/
+├── core/                         # Shared benchmark layout and helpers
+├── environments/controlled_web/  # Reproducible local web environments
+├── suites/                        # Open-web, controlled-web, and document suites
+└── studies/                       # Repeated, multi-model, longitudinal studies
+
+docs/research/     # Experiment lifecycle, evidence rules, and failure taxonomy
+outputs/           # Gitignored workspace: runs/, studies/, and legacy/
 ```
 
 ---
@@ -124,11 +135,43 @@ sequenceDiagram
     Note over A: repeat until done / max_steps / timeout / too many failures
 ```
 
-On completion the agent persists, automatically:
+Without `--output`, the CLI allocates a unique run below
+`outputs/runs/<UTC-date>/<model>/<task>-<run-id>/`. With `--output`, that path is the
+exact run root. A run separates claims, evidence, controller state, and external
+judgment:
 
-- **`artifacts/output.txt`** — the final LLM analysis (the `done` summary)
-- **`artifacts/figure.<ext>`** — the exact figure the agent analyzed
-- **`artifacts/pdf/`** — everything the OCR cascade extracted
+```text
+<run>/
+├── manifest.json
+├── trajectory/
+│   ├── trace.json
+│   ├── verification.json          # strict evaluation only
+│   └── turns/turn-NNN.json        # immutable ordinary-session turn snapshots
+├── observations/screenshots/
+├── control/checkpoints/
+│   ├── latest.json
+│   └── latest.json.bak
+├── artifacts/
+│   ├── downloads/                 # acquired PDFs and other downloads
+│   ├── documents/<doc-id>/        # content-addressed parse output
+│   ├── figures/
+│   └── files/
+├── result/
+│   ├── summary.txt
+│   ├── attachments/
+│   └── turns/turn-NNN/
+│       ├── summary.txt
+│       └── attachments/
+└── evaluation/
+```
+
+`trajectory/` is observable execution evidence; `control/` is resumable state;
+`artifacts/` contains acquired or derived task files; `result/` is the agent's claim;
+and `evaluation/` is independent judgment. See
+[the research workflow](docs/research/README.md) for the full artifact contract.
+An ordinary interactive session keeps one owned run: the canonical trace/result represent
+the latest turn, while `trajectory/turns/` and `result/turns/` preserve immutable per-turn
+snapshots with monotonic step numbers. Strict/search-only evaluation forbids multi-turn runs.
 
 ---
 
@@ -167,6 +210,10 @@ cp .env.example .env
 webagent --task "Find the most recent Qwen technical report and interpret Figure 1" --headless
 ```
 
+The installable distribution is named `lixiuyin-webagent`; its Python import package and
+command-line entry point remain `webagent`. The editable source install above is the development
+path before a release is published.
+
 Any OpenAI-compatible endpoint works (DeepSeek, OpenRouter, MiniMax, ZAI/GLM, Azure, …). Vision capability is detected automatically — vision models analyze screenshots and figures; text-only models fall back to DOM + OCR text. You can also point at a **local vLLM** server with `--use-vllm`.
 
 ```bash
@@ -176,32 +223,144 @@ webagent --task "…" --model "qwen/qwen3.5-flash" \
 
 # Interactive session
 webagent --interactive --headless
+
+# Optional API-augmented discovery (explicit opt-in; not a browser-search evaluation)
+webagent --task "…" --discovery-mode hybrid --headless
+
+# Auditable benchmark run: fresh profile/output, browser search only, no persistent PDF cache
+webagent --task "…" --strict-eval --headless
+
+# Equivalent explicit spelling of the browser-search benchmark mode
+webagent --task "…" --search-engine-only --headed
+
+# Force one planner transport when diagnosing provider compatibility
+webagent --task "…" --planner-output-mode native-tools --headless
+
+# Continue an interrupted ordinary run; repeat the task so its hash can be verified
+webagent --task "…" \
+  --resume outputs/runs/2026-08-30/model/task-runid/control/checkpoints/latest.json
+
+# If a headed ordinary/strict run encounters a challenge, wait for manual clearance
+webagent --task "…" --strict-eval --headed \
+  --captcha-handling wait_for_human --captcha-wait-timeout 180
+
+# Verify that one completed run satisfies the anti-shortcut contract
+python -m webagent.evaluation.trace_verifier \
+  outputs/runs/2026-08-30/model/task-runid/trajectory/trace.json
 ```
+
+Ordinary runs default to isolated `browser-grounded`: the planner cannot see or execute
+`official_report_search`, `github_search`, or `arxiv_search`. Discovery tasks without a
+user-provided URL or loaded HTTP(S) page must begin with browser search, and latest/newest web discovery tasks must satisfy
+the recency and official-source evidence gates. The planner receives the complete
+latest-evidence checklist up front, and any denial returns every remaining item in
+one structured list instead of exposing one prerequisite per retry. Use
+`--discovery-mode hybrid` only when API-augmented retrieval is intended; the selected
+mode is recorded in `trajectory/trace.json` so hybrid output cannot be mistaken for browser-only
+evidence.
+
+`--strict-eval` and `--search-engine-only` enforce the same stronger discovery contract;
+there is no “strict but direct-API” loophole. They create an isolated output and
+temporary browser profile, disable persistent PDF caches and direct GitHub/arXiv
+discovery tools, and require `search` as the first successful action. A URL can
+authorize `goto`/`download_pdf` only if it occurred in the exact tool-result JSON
+shown to the planner or was the current URL in the planner's browser observation.
+Unexposed DOM anchors cannot launder a guessed URL into policy evidence.
+
+For latest/newest tasks it also requires two distinct searches with extractable
+results, including one broad current-year query and one current-year release/model/
+version-landscape query, neither restricted to a paper index or one candidate. The
+landscape result itself must contain subject-relevant version/release evidence, so
+putting every policy keyword only in the query does not satisfy the gate. A
+higher dotted subject version observed anywhere in a SERP—even on a third-party
+page—must receive a successful exact-version follow-up before download or completion.
+The agent must first search for the subject's official website/repository and then
+run an independent identity-bound scope query. Repository scope can use an owner
+path (`site:github.com/QwenLM`) or a plain host+owner query (`GitHub QwenLM …`) when
+an engine rejects path-scoped operators. The scope query must include the current
+year as literal query text and the selected candidate name, and the returned result
+must remain under the previously endorsed owner and cover the ultimately selected
+repository/host.
+If the final candidate is hosted in a repository, the preceding non-site identity
+search must itself return that repository host and owner; finding only the vendor's
+homepage does not endorse a later GitHub owner.
+Bare `site:github.com` is insufficient. The scope
+query must include the current year and the subject; a version-qualified subject is
+accepted only after the independent official-identity search endorsed that owner.
+This is search-evidence binding, not a legal proof of domain ownership.
+
+After each successful search, the remaining checklist (or its completed state) is
+included in planner history. If an action is still attempted too early, one denial
+returns all unmet prerequisites in both text and structured audit data. A denied
+`done` action remains a failed step and can never mark the run completed.
+
+Downloads are accepted only when their bytes contain a PDF header. An HTML preview
+is deleted and `download_pdf` does not inspect it for hidden retry URLs. The agent
+must open the preview and call `inspect_download_links`, whose DOM/declared-metadata
+download targets, visible datetime metadata, and file-history links are explicitly
+shown to the planner before a raw URL can be authorized or an exact file date claimed.
+Every strict run writes `trajectory/trace.json` plus a SHA-256-bound
+`trajectory/verification.json`. The
+verifier rejects incomplete runs, mixed run IDs, direct-source successes, hidden URL
+provenance, missing search/PDF/figure stages required by the task, and missing latest-
+source evidence. An unresolved CAPTCHA event also invalidates the certificate. The
+trace uses the packaged v8 JSON Schema and records its producer version/source hash;
+legacy v7 traces are migrated deterministically before verification, while unknown
+versions fail closed. Resume/checkpoint metadata is explicit, and a resumed run cannot
+qualify as one continuous strict-evaluation trace. The agent never solves or bypasses
+challenges: strict/headless runs fail closed, while a
+headed run may explicitly wait for a human. This does not prove that the final
+natural-language interpretation is scientifically correct, so retain and inspect the
+PDF and figure as well.
+
+Ordinary runs write an atomic, checksummed `control/checkpoints/latest.json` after every
+step and before executing a potentially ambiguous action. The checkpoint stores only
+the task SHA-256, so `--resume` requires the original `--task` and verifies its hash;
+it never persists the task text. Resume also validates behavior-affecting config, source
+fingerprint, browser coordinates, policy/loop state, and referenced artifact hashes. Free
+page text, model rationale, form input, URL queries/credentials, absolute local paths,
+cookies, and local storage are intentionally absent. It never silently replays an
+unresolved form, click, upload, or other possibly state-changing interaction. Use an
+explicitly persistent browser profile when trusted signed-in state must survive a process
+restart. Completed/blocked runs cannot be resumed. Strict/search-engine-only evaluation
+runs disable checkpoints entirely because their traces must be single and uninterrupted.
+
+The dated open-web runner checks for at least 512 MiB on the selected artifact
+volume before launching. Its temporary Chromium profile is rooted under that output
+directory, so a large/external `--output` volume also isolates runtime profile data.
 
 ---
 
 ## 🧪 End-to-end walkthrough
 
+The optional hybrid fast path below is efficient, but it is **not** a search-engine
+benchmark because step 1 uses structured source APIs. It must be enabled explicitly
+with `--discovery-mode hybrid`. Default runs hide these tools; use `--strict-eval` for
+an isolated, certificate-backed browser-search evaluation.
+
 **Task:** `Find the most recent Qwen technical report and interpret Figure 1`
 
 | Step | Tool | What happened |
 |-----:|------|---------------|
-| 1 | `arxiv_search` | Found *Qwen3.5-Omni Technical Report* (most recent) |
-| 2 | `click_link` → `download_pdf` | Opened the arXiv page, downloaded the PDF |
-| 3 | `pdf_parse` | Cloud OCR cascade → structured Markdown + 6 images |
-| 4 | `pdf_analyze_figure("1")` | Resolved **Figure 1** *by caption* (not the cover logo) and analyzed it with vision |
-| 5 | `done` | Reported the interpretation |
+| 1 | `official_report_search` | Compared title-matched arXiv leads with exact-owner GitHub report files and their commit timestamps |
+| 2 | `download_pdf` | Downloaded the direct raw GitHub PDF |
+| 3 | `pdf_analyze_figure("1")` | Parsed once, resolved **Figure 1** *by caption* (not the cover logo), and analyzed it with vision |
+| 4 | `done` | Reported the interpretation |
 
-**Resulting `outputs/run/artifacts/`:**
+**Relevant files below the allocated run root:**
 
-```
+```text
+trajectory/
+└── trace.json                                      # planner/tool/evidence trace
 artifacts/
-├── qwen3.5-omni-technical-report.pdf   # downloaded source
-├── pdf/
-│   ├── parsed.md                       # OCR-extracted Markdown
-│   └── images/ …                       # extracted figures
-├── output.txt                          # the final analysis
-└── figure.jpg                          # ← the real Figure 1, byte-identical to the source image
+├── downloads/latest-first-party-technical-report.pdf
+└── documents/latest-first-party-technical-report-<content-sha>/
+    ├── parsed.md                                   # OCR-extracted Markdown
+    ├── parsed_content_list.json                    # when supplied by the provider
+    └── figures/                                    # local/extracted Figure crops
+result/
+├── summary.txt                                     # final analysis
+└── attachments/figure.jpg                          # selected Figure 1
 ```
 
 ---
@@ -215,30 +374,130 @@ Configuration is centralized in `core/config.py` (`pydantic-settings`); every ke
 | `model_api_url` / `model_api_key` / `model_name` | — | LLM backend (OpenAI-compatible) |
 | `api_timeout` | `60` | Per-read HTTP timeout for planner calls |
 | `api_hard_timeout` | `300` | Hard wall-clock cap per call — bounds trickling/hung responses |
+| `planner_max_tokens` / `vision_max_tokens` | `4096` / `2000` | Separate output budgets for tool planning and detailed figure analysis |
+| `history_context_length` / `history_full_result_steps` | `10` / `2` | Keep ten actions but replay full tool payloads only for the newest two; older evidence is summarized |
+| `planner_reasoning_effort` | — | Optional `none`–`max` reasoning budget for compatible planner providers; omitted by default |
+| `vision_brief_max_tokens` / `vision_max_words` | `1200` / `350` | Bound probe/brief vision output and request concise evidence |
+| `planner_max_attempts` | `2` | Repair attempts for empty/malformed planner output per logical step |
+| `checkpoint_enabled` / `checkpoint_filename` | `True` / `latest.json` | Atomic non-secret controller recovery state below `control/checkpoints/` |
+| `strategy_enabled` | `True` | Switch and replan from planner failures, policy denials, loops, and repeated no-progress signals |
 | `use_vllm` / `vllm_api_url` | `False` | Local vLLM fallback |
 | `max_steps` | `100` | Loop iteration limit |
 | `task_timeout` | `1200` | Seconds before the task times out |
 | `tool_timeout` | `600` | Per-tool wall-clock timeout |
-| `use_structured_output` | `False` | Enhanced `EnhancedToolCall` planning mode |
-| `stealth_mode` | `True` | Anti-bot-detection browser profile |
+| `planner_output_mode` | `auto` | Prefer provider-native tools; explicit alternatives are `json-schema` and `prompt-json` |
+| `stealth_mode` | `False` | Explicit compatibility opt-in; strict evaluation always disables it |
+| `browser_slow_mo_ms` / `browser_humanize_delays` | `0` / `False` | Fixed operation delay plus explicit randomized-wait compatibility opt-in |
+| `browser_locale` / `browser_timezone_id` | — / — | Preserve native browser/system values unless explicitly overridden |
+| `browser_ignore_https_errors` | `False` | Validate TLS by default; unsafe bypass is explicit |
+| `allow_google_search` | `False` | Opt in to automated Google search; default avoids human verification |
+| `captcha_handling` | `report` | Headed `report` waits for manual clearance; timeout/headless blocks and closes the browser. Strict fails immediately; no mode bypasses a challenge |
+| `captcha_wait_timeout_seconds` | `180` | Maximum headed wait for manual challenge clearance |
+| `github_token` | — | Optional higher GitHub API rate limit for official report discovery |
+| `official_report_source_timeout_seconds` | `15` | Independent arXiv/GitHub cap so one slow source cannot delay usable evidence |
+| `discovery_mode` | `browser-grounded` | Hide direct-source APIs by default; set `hybrid` only for explicit API-augmented discovery |
+| `high_risk_action_policy` | `deny` | Deny externally consequential actions; `prompt` asks in the terminal and `allow` is explicit opt-in |
+| `browser_profile_mode` | `temporary` | Isolated per-process profile; persistent session state is an explicit opt-in |
+| `browser_stale_profile_max_age_seconds` | `3600` | Reap only marked temporary profiles older than this whose owner PID is gone |
+| `browser_upload_root` | `./uploads` | Constrain files that the approved `upload_file` action may disclose |
+| `persistent_pdf_cache` | `False` | Cross-run parse reuse is an explicit opt-in |
+| `strict_eval_mode` | `False` | Force temporary state, search-only discovery, no persistent PDF cache, and a verification certificate |
+| `search_engine_only` | `False` | Require browser search and reject direct-source tools/unobserved URLs |
 | `use_cdp` | `True` | CDP-enhanced element detection |
-| `enable_loop_detection` | `True` | Four-signal loop detector |
+| `enable_loop_detection` | `True` | Five-signal loop detector including scroll churn |
 | `ocr_provider` | `marker` | Soft routing hint for the OCR cascade |
-| `output_dir` | `./outputs` | Base output directory |
+| `local_figure_fast_path` | `True` | Locally render unambiguous exact-numbered figures before cloud parsing |
+| `local_figure_min_confidence` / `local_figure_render_dpi` | `0.9` / `144` | Safe-bypass threshold and crop resolution |
+| `output_dir` | `./outputs` | CLI workspace root when `--output` is omitted; explicit `--output` is one exact run root |
 
 See [`.env.example`](.env.example) for the full template including the OCR-cascade provider keys.
+
+---
+
+## 🔬 Research workflow
+
+The repository is organized to support three connected lines of work:
+
+- **Long-horizon evaluation and failure analysis:** retain verifiable trajectories, locate failure
+  onset/recovery, measure recurring observable patterns, and test whether an intervention transfers
+  to held-out tasks and settings.
+- **Agent systems and evaluation harnesses:** study how planning, memory/context, tool exposure,
+  retrieved evidence, feedback, and execution control interact. The evaluator judges terminal state
+  and evidence independently from the agent's `done` claim.
+- **Controlled environments and interaction data:** use deterministic sites and targeted failure
+  scenarios for reproducibility, then use dated open-web suites to test external validity rather than
+  treating either setting as universally representative.
+
+Failure reports distinguish directly `observed` events from `candidate` subsystem attribution and
+human/controlled `adjudicated` conclusions. Calibration reports first state confidence coverage;
+missing task-success probabilities are not silently imputed. Transfer reports keep development,
+held-out-task, and held-out-setting results separate and fail unavailable when required evidence is
+missing or split leakage is detected. See [docs/research/](docs/research/README.md) for the experiment
+lifecycle and [benchmarks/README.md](benchmarks/README.md) for executable suites.
 
 ---
 
 ## 🛠️ Development
 
 ```bash
-ruff check src/ tests/          # lint
-ruff format src/ tests/         # format
-mypy src/                       # type-check
+ruff check src/ benchmarks/ tests/          # lint
+ruff format src/ benchmarks/ tests/         # format
+mypy src/ benchmarks/                       # type-check
 pytest tests/unit/ -v           # unit tests (no browser)
-pytest tests/integration/ -v    # integration tests (real browser)
+pytest tests/integration/ -v --no-cov  # integration tests (real browser)
+python -m benchmarks.suites.document_figures.fast_path
+python -m benchmarks.suites.controlled_web.general \
+  --mode scripted-harness-baseline --tool-set browser-only
+python -m benchmarks.suites.open_web.parallel \
+  --manifest benchmarks/manifests/open_web_general.json \
+  --model z-ai/glm-5.3-flash --shards 3
 ```
+
+The canonical Figure command is
+`python -m benchmarks.suites.document_figures.fast_path`; the old flat benchmark
+module names remain thin compatibility wrappers for one release cycle. The
+`scripted-harness-baseline` mode calibrates infrastructure rather than model quality. Use
+`--mode agent` with an API/vLLM planner for an actual agent score. The dated
+open-web runner requires a configured planner, a temporary profile, source URLs and
+validity windows; it appends a local, report-bound summary to `ledger/time-slices.jsonl`. This
+detects local evidence drift but does not independently attest wall-clock time. Browser/server
+terminal state and explicit final-answer facts/URLs are judged independently of the
+model's `done` claim. A single run is not a general success-rate claim. See
+[benchmarks/README.md](benchmarks/README.md) for metrics and ablations.
+
+Without benchmark `--output`, the runner allocates a non-overwriting execution at
+`outputs/studies/<suite>/executions/<UTC-date>/<model>/<condition>/<execution-id>/`;
+each task lives under that execution's `runs/<task-id>/`. An explicit `--output`
+names one exact execution directory and refuses to replace prior run evidence. Use `benchmarks.studies.*` for repeated/model/date
+matrices and `benchmarks.suites.*` for one suite execution.
+An execution separates declared/generated `inputs/`, task `runs/`, append-only
+`ledger/time-slices.jsonl`, retained `evidence/`, derived `artifacts/`, aggregate `analysis/`,
+and the complete `results.json` report.
+
+Historical top-level output trees can be inventoried and moved without rewriting
+their bytes:
+
+```bash
+python -m webagent.evaluation.migration outputs --label pre-workspace-v1
+python -m webagent.evaluation.migration outputs --label pre-workspace-v1 --apply
+```
+
+The first command is a dry run. The second verifies every file by size and SHA-256,
+moves complete legacy entries below `outputs/legacy/pre-workspace-v1/tree/`, and
+writes `migration-manifest.json`; it does not invent missing research metadata.
+
+The normal runtime also supports tabs, iframes, open Shadow DOM, guarded uploads,
+and captured downloads. Browser-grounded URL provenance and high-risk denial are
+executor-enforced, not prompt-only conventions. Use the repeated real-model matrix
+and at least three dated open-web slices before making a maturity claim.
+
+For long-horizon research, the harness includes a 60-stage controlled workflow,
+checkpoint restoration into a fresh temporary browser session, bounded durable
+controller memory, trajectory-collapse/recovery metrics, and a fail-closed
+cross-suite portfolio. The portfolio requires 30 open-web tasks plus SPA,
+authentication, cross-origin form, file, sandbox-transaction, and 50+-action
+evidence for every model/date cell across at least three real dates. Implemented
+collectors are not presented as completed empirical results.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) to add tools or planners.
 
@@ -258,7 +517,7 @@ The original agent began as a team project for **STAT7008A — Programming for D
 
 > The original repository credits my work as *"Local vLLM function, compatible local/API mode implementation, function testing and improving"* — it does **not** record the parallel implementation route (the independent simplification of `browser-use`), which was a major part of my workload, **though it was presented in the submitted course report**.
 
-The post-course rewrite (this repo) goes further: it replaces the original *local-only* model + OCR stack with a provider-agnostic, cloud-cascade design and adds the four-signal loop detector, hard request timeouts, the Google→Bing→DuckDuckGo search cascade, structured planning, and caption-aware figure resolution.
+The post-course rewrite (this repo) goes further: it replaces the original *local-only* model + OCR stack with a provider-agnostic, cloud-cascade design and adds the five-signal loop detector, hard request timeouts, a Bing→Yahoo→DuckDuckGo browser-search cascade plus structured GitHub discovery, structured planning, and caption-aware figure resolution.
 
 ---
 

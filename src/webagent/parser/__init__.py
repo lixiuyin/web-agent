@@ -12,11 +12,15 @@ Configure providers via ``AgentConfig`` (env: ``AGENT_OCR_PROVIDER``,
 ``AGENT_MINERU_API_KEY``, ``AGENT_MARKER_API_KEY``, ``AGENT_PADDLEOCR_*``, …).
 """
 
-from ._errors import AllParsersFailedError, FailureReason, ParserProviderError
-from ._profile import DocumentProfile, profile_document
-from ._router import select_parsers
-from .cascade import parse_pdf, parse_structured_async
-from .models import (
+from webagent.parser._errors import (
+    AllParsersFailedError,
+    FailureReason,
+    ParserProviderError,
+)
+from webagent.parser._profile import DocumentProfile, profile_document
+from webagent.parser._router import select_parsers
+from webagent.parser.cascade import parse_pdf, parse_structured_async
+from webagent.parser.models import (
     ImageInfo,
     PDFParseResult,
     TableInfo,
@@ -25,7 +29,6 @@ from .models import (
     find_section_by_title,
     find_tables_by_keyword,
     generate_content_summary,
-    get_element_at_position,
 )
 
 __all__ = [
@@ -41,7 +44,6 @@ __all__ = [
     "find_section_by_title",
     "find_tables_by_keyword",
     "generate_content_summary",
-    "get_element_at_position",
     "parse_pdf",
     "parse_structured_async",
     "profile_document",

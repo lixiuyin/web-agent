@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from webagent.parser.models import PDFParseResult, TextBlock
-from webagent.tools.builtin.pdf_mining_tools import extract_paper_metadata
+from webagent.tools.builtin._pdf_analysis import extract_paper_metadata
 
 
 def _result(blocks: list[TextBlock]) -> PDFParseResult:

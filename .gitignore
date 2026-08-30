@@ -22,12 +22,16 @@ env/
 .ruff_cache/
 .benchmarks/
 .coverage
+coverage.json
+coverage.xml
 htmlcov/
 .ralph/
 
 # ── Runtime / generated artifacts ────────────────────────────────────
 # Agent run output: screenshots, downloaded PDFs, extracted content, figures.
 browser_profile/
+uploads/
+outputs/
 *.log
 
 # ── Model weights / local symlinks ───────────────────────────────────
@@ -35,6 +39,7 @@ weights/
 *.pdf
 
 # ── IDE / editor ─────────────────────────────────────────────────────
+.obsidian/
 .idea/
 .vscode/
 *.swp

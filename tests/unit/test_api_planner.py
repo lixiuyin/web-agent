@@ -78,6 +78,28 @@ async def test_post_returns_choice_content(monkeypatch):
     assert out == '{"tool": "done"}'
 
 
+async def test_post_captures_usage_finish_reason_and_response_length(monkeypatch):
+    planner = _planner()
+    content = '{"tool": "done"}'
+    _patch_response(
+        monkeypatch,
+        {
+            "choices": [{"message": {"content": content}, "finish_reason": "stop"}],
+            "usage": {"prompt_tokens": 12, "completion_tokens": 7, "total_tokens": 19},
+        },
+    )
+
+    await planner._post({})
+
+    assert planner.last_call_metadata == {
+        "response_length": len(content),
+        "finish_reason": "stop",
+        "prompt_tokens": 12,
+        "completion_tokens": 7,
+        "total_tokens": 19,
+    }
+
+
 async def test_post_falls_back_to_reasoning_content(monkeypatch):
     # DeepSeek-style: content empty, the answer is in reasoning_content.
     _patch_response(
@@ -188,6 +210,92 @@ async def test_plan_action_sends_dom_without_blank_screenshot():
     assert isinstance(user_content, str)
     assert "PAGE:\n<body>blank browser shell</body>" in user_content
     assert "image_url" not in user_content
+
+
+async def test_plan_action_sends_configured_reasoning_effort_without_reasoning_content():
+    planner = APIPlanner(
+        api_url="https://openrouter.example/v1/chat/completions",
+        api_key="k",
+        model_name="reasoning-model",
+        reasoning_effort="low",
+    )
+    planner._supports_vision = False
+    payloads: list[dict] = []
+
+    async def capture_post(payload: dict) -> str:
+        payloads.append(payload)
+        return '{"tool": "done", "parameters": {"summary": "ok"}}'
+
+    planner._post = capture_post  # type: ignore[method-assign]
+    await planner.plan_action(
+        task="task",
+        browser_state=BrowserState(
+            dom_summary="<body></body>",
+            url="about:blank",
+            title="",
+            timestamp="2024-01-01",
+        ),
+        history_text="",
+        available_tools="done",
+    )
+
+    assert payloads[0]["reasoning"] == {"effort": "low", "exclude": True}
+
+
+async def test_plan_action_omits_redundant_local_pdf_preview():
+    planner = _planner()
+    planner._supports_vision = True
+    payloads: list[dict] = []
+
+    async def capture_post(payload: dict) -> str:
+        payloads.append(payload)
+        return '{"tool": "pdf_analyze_figure", "parameters": {"path": "paper.pdf"}}'
+
+    planner._post = capture_post  # type: ignore[method-assign]
+    state = BrowserState(
+        screenshot=Image.new("RGB", (20, 20), "red"),
+        dom_summary="PDF viewer",
+        url="file:///run/artifacts/paper.pdf",
+        title="paper.pdf",
+        timestamp="2024-01-01",
+    )
+
+    await planner.plan_action(
+        task="analyze Figure 1",
+        browser_state=state,
+        history_text='Step 1: download_pdf({"url":"https://example.test/paper.pdf"}) -> success',
+        available_tools="pdf_analyze_figure, done",
+    )
+
+    assert isinstance(payloads[0]["messages"][1]["content"], str)
+
+
+async def test_plan_action_keeps_local_html_screenshot_without_artifact_history():
+    planner = _planner()
+    planner._supports_vision = True
+    payloads: list[dict] = []
+
+    async def capture_post(payload: dict) -> str:
+        payloads.append(payload)
+        return '{"tool": "click", "parameters": {}}'
+
+    planner._post = capture_post  # type: ignore[method-assign]
+    state = BrowserState(
+        screenshot=Image.new("RGB", (20, 20), "red"),
+        dom_summary="<button>Run</button>",
+        url="file:///fixtures/app.html",
+        title="fixture",
+        timestamp="2024-01-01",
+    )
+
+    await planner.plan_action(
+        task="click Run",
+        browser_state=state,
+        history_text="No previous actions.",
+        available_tools="click, done",
+    )
+
+    assert isinstance(payloads[0]["messages"][1]["content"], list)
 
 
 # ── _bounded_post hard wall-clock timeout (trickle/hang guard) ───────────────

@@ -11,14 +11,14 @@ cd web-agent
 pip install -e ".[dev]"
 playwright install chromium
 
-# Run tests (186 unit + integration tests)
+# Run unit and real-browser integration tests
 pytest tests/unit/ -v
-pytest tests/integration/ -v   # requires a browser
+pytest tests/integration/ -v --no-cov   # requires a browser
 
 # Lint, format, and type-check
-ruff check src/ tests/
-ruff format --check src/ tests/
-mypy src/
+ruff check src/ benchmarks/ tests/
+ruff format --check src/ benchmarks/ tests/
+mypy src/ benchmarks/
 ```
 
 > New to the codebase? See [README.md](README.md) for the architecture overview.
@@ -29,7 +29,7 @@ mypy src/
 2. Make your changes following the existing code style
 3. Add tests for new functionality
 4. Ensure all tests pass: `pytest tests/unit/ -v`
-5. Ensure linting passes: `ruff check src/ tests/`
+5. Ensure linting passes: `ruff check src/ benchmarks/ tests/`
 6. Submit a pull request with a clear description
 
 ## Adding a New Tool
@@ -74,3 +74,20 @@ class MyPlanner:
 - Use `ruff` for linting and formatting
 - Type hints are encouraged
 - Follow existing patterns for consistency
+
+## Release validation
+
+Release tags use the package version with a `v` prefix (for example, `v0.2.0`). Before tagging,
+move the corresponding changelog entry out of `Unreleased`, make sure the working tree is clean,
+and run the same artifact checks as CI:
+
+```bash
+python -m webagent.release state --root . --tag v0.2.0 --require-clean
+python -m build --outdir dist
+python -m webagent.release artifacts dist
+twine check dist/*
+```
+
+The release workflow rebuilds wheel and sdist twice from the tagged source epoch, compares their
+SHA-256 digests, smoke-tests both distributions in isolated environments, creates a provenance
+attestation, and publishes through a protected `pypi` environment using trusted publishing.

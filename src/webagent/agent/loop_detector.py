@@ -81,7 +81,7 @@ class LoopDetector:
         # History tracking
         self.recent_actions: list[str] = []  # Action signatures
         self.recent_pages: list[str] = []  # Page signatures
-        self.action_counts: Counter = Counter()  # Action frequency
+        self.action_counts: Counter[str] = Counter()  # Action frequency
 
         # For detecting page stagnation
         self.page_hash_history: list[str] = []
@@ -170,65 +170,133 @@ class LoopDetector:
         self._in_loop = False
         self._loop_type = ""
 
+    def export_state(self) -> dict[str, Any]:
+        """Return the bounded detector window for checkpoint/resume."""
+        return {
+            "schema_version": 1,
+            "window_size": self.window_size,
+            "threshold": self.threshold,
+            "recent_actions": list(self.recent_actions),
+            "recent_pages": list(self.recent_pages),
+            "page_hash_history": list(self.page_hash_history),
+            "url_history": list(self.url_history),
+            "in_loop": self._in_loop,
+            "loop_type": self._loop_type,
+        }
+
+    def import_state(self, state: dict[str, Any]) -> None:
+        """Restore only a state produced by :meth:`export_state`."""
+        if (
+            state.get("schema_version") != 1
+            or state.get("window_size") != self.window_size
+            or state.get("threshold") != self.threshold
+        ):
+            raise ValueError("loop detector checkpoint configuration mismatch")
+        keys = ("recent_actions", "recent_pages", "page_hash_history", "url_history")
+        values: dict[str, list[str]] = {}
+        for key in keys:
+            value = state.get(key)
+            if not isinstance(value, list) or not all(isinstance(item, str) for item in value):
+                raise ValueError(f"loop detector checkpoint field {key} is invalid")
+            if len(value) > self.window_size:
+                raise ValueError(f"loop detector checkpoint field {key} exceeds its window")
+            values[key] = list(value)
+        lengths = {len(value) for value in values.values()}
+        if len(lengths) != 1:
+            raise ValueError("loop detector checkpoint history lengths differ")
+        in_loop = state.get("in_loop")
+        loop_type = state.get("loop_type")
+        if not isinstance(in_loop, bool) or not isinstance(loop_type, str):
+            raise ValueError("loop detector checkpoint status is invalid")
+        self.recent_actions = values["recent_actions"]
+        self.recent_pages = values["recent_pages"]
+        self.page_hash_history = values["page_hash_history"]
+        self.url_history = values["url_history"]
+        self.action_counts = Counter(self.recent_actions)
+        self._in_loop = in_loop
+        self._loop_type = loop_type
+
     def _check_for_loops(self) -> None:
         """Internal method to detect loop patterns."""
         if len(self.recent_actions) < self.threshold:
             self._in_loop = False
             return
 
-        # Priority 1: Action repetition on the SAME page (most specific)
-        # Only count as a loop if the same action is repeated on the same page
-        if len(self.recent_actions) >= self.threshold:
-            # Check if same action + same page is repeating
-            action_page_pairs = list(zip(self.recent_actions, self.recent_pages, strict=True))
-            for pair in set(action_page_pairs):
-                if action_page_pairs.count(pair) >= self.threshold:
-                    self._in_loop = True
-                    self._loop_type = "action_repeat"
-                    return
-
-        # Priority 2: Page stagnation (different actions, same page)
-        # This triggers when you're trying different things but stuck on same page
-        if len(self.page_hash_history) >= self.threshold:
-            recent_hashes = self.page_hash_history[-self.threshold :]
-            if len(set(recent_hashes)) == 1:
-                if self._recently_all_non_navigation():
-                    logger.debug(
-                        "Skipping page_stagnation: all recent actions are non-navigation tools (%s)",
-                        [a.split(":")[0] for a in self.recent_actions],
-                    )
-                    # Don't flag as loop — non-navigation tools don't change pages by design
-                    pass
-                else:
-                    self._in_loop = True
-                    self._loop_type = "page_stagnation"
-                    return
-
-        # Priority 3: URL oscillation (bouncing between ≤2 pages)
-        if len(self.url_history) >= self.threshold:
-            recent_urls = self.url_history[-self.threshold :]
-            # Genuine oscillation = the recent window visits ≤2 distinct URLs
-            # with real back-and-forth (≥2 transitions), e.g. A→B→A or A→B→A→B.
-            # A single A→B move (1 transition) or stagnation on one URL (0) is excluded.
-            if len(set(recent_urls)) == 2:
-                transitions = sum(1 for a, b in pairwise(recent_urls) if a != b)
-                if transitions >= 2:
-                    self._in_loop = True
-                    self._loop_type = "url_oscillation"
-                    return
-
-        # Priority 4: Action variety but no progress (lowest priority)
-        if len(self.recent_actions) >= self.window_size:
-            unique_actions = len(set(self.recent_actions))
-            if unique_actions >= self.threshold:
-                # Many different actions but still looping
-                unique_pages = len(set(self.recent_pages))
-                if unique_pages <= 2:
-                    self._in_loop = True
-                    self._loop_type = "action_variety_no_progress"
-                    return
+        # Detectors in priority order (most specific first).
+        detectors = (
+            ("action_repeat", self._is_action_repeat),
+            ("scroll_churn", self._is_scroll_churn),
+            ("page_stagnation", self._is_page_stagnation),
+            ("url_oscillation", self._is_url_oscillation),
+            ("action_variety_no_progress", self._is_action_variety_no_progress),
+        )
+        for loop_type, detector in detectors:
+            if detector():
+                self._in_loop = True
+                self._loop_type = loop_type
+                return
 
         self._in_loop = False
+
+    def _is_scroll_churn(self) -> bool:
+        """Detect repeated viewport traversal on one URL despite changing snapshots."""
+        if len(self.recent_actions) < self.threshold:
+            return False
+        actions = self.recent_actions[-self.threshold :]
+        urls = self.url_history[-self.threshold :]
+        return (
+            all(action.split(":", 1)[0] == "scroll" for action in actions) and len(set(urls)) == 1
+        )
+
+    def _is_action_repeat(self) -> bool:
+        """Priority 1: the same action repeated on the same page."""
+        action_page_pairs = list(zip(self.recent_actions, self.recent_pages, strict=True))
+        return any(
+            action_page_pairs.count(pair) >= self.threshold for pair in set(action_page_pairs)
+        )
+
+    def _is_page_stagnation(self) -> bool:
+        """Priority 2: different actions but stuck on the same page.
+
+        Skipped when all recent actions are non-navigation tools (they don't
+        change pages by design, so stagnation is expected).
+        """
+        if len(self.page_hash_history) < self.threshold:
+            return False
+        recent_hashes = self.page_hash_history[-self.threshold :]
+        if len(set(recent_hashes)) != 1:
+            return False
+
+        if self._recently_all_non_navigation():
+            logger.debug(
+                "Skipping page_stagnation: all recent actions are non-navigation tools (%s)",
+                [a.split(":")[0] for a in self.recent_actions],
+            )
+            return False
+        return True
+
+    def _is_url_oscillation(self) -> bool:
+        """Priority 3: bouncing between exactly 2 URLs.
+
+        Genuine oscillation = the recent window visits 2 distinct URLs with real
+        back-and-forth (≥2 transitions), e.g. A→B→A or A→B→A→B. A single A→B
+        move (1 transition) or stagnation on one URL (0) is excluded.
+        """
+        if len(self.url_history) < self.threshold:
+            return False
+        recent_urls = self.url_history[-self.threshold :]
+        if len(set(recent_urls)) != 2:
+            return False
+        transitions = sum(1 for a, b in pairwise(recent_urls) if a != b)
+        return transitions >= 2
+
+    def _is_action_variety_no_progress(self) -> bool:
+        """Priority 4: many different actions but still only ≤2 distinct pages."""
+        if len(self.recent_actions) < self.window_size:
+            return False
+        if len(set(self.recent_actions)) < self.threshold:
+            return False
+        return len(set(self.recent_pages)) <= 2
 
     def _is_research_loop(self) -> bool:
         """Return True if recent actions are research/extraction tools (not navigation)."""
@@ -257,6 +325,13 @@ class LoopDetector:
                 "caption, textual descriptions, and any key findings from the PDF."
             )
 
+        if self._loop_type == "scroll_churn":
+            return (
+                "You have scrolled the same page repeatedly. Do not keep traversing the viewport. "
+                "Use 'extract_text' once with a semantic container such as body, main, or article, "
+                "or call 'done' now if the visible evidence already answers the task."
+            )
+
         if self._loop_type == "action_repeat":
             most_common = self.action_counts.most_common(1)[0][0]
             tool_name = most_common.split(":")[0]
@@ -267,7 +342,7 @@ class LoopDetector:
                 f"call 'done' with a summary of your findings."
             )
 
-        elif self._loop_type == "page_stagnation":
+        if self._loop_type == "page_stagnation":
             return (
                 f"You have been on the same page for {self.threshold}+ steps. "
                 f"Consider: 1) Looking for different elements, 2) Using different selectors, "
@@ -275,14 +350,14 @@ class LoopDetector:
                 f"5) If you have gathered enough information, call 'done' with your findings."
             )
 
-        elif self._loop_type == "url_oscillation":
+        if self._loop_type == "url_oscillation":
             return (
                 "You are bouncing between pages. This suggests a navigation issue. "
                 "Consider: 1) Waiting for page loads, 2) Checking if elements are ready, "
                 "3) Using more specific selectors, 4) Reviewing your overall strategy."
             )
 
-        elif self._loop_type == "action_variety_no_progress":
+        if self._loop_type == "action_variety_no_progress":
             return (
                 "You have tried many actions but are not making progress. "
                 "If you have already gathered useful information, call 'done' with a summary. "

@@ -17,6 +17,7 @@ class TaskStatus(Enum):
     FAILED = "failed"
     INTERRUPTED = "interrupted"
     MAX_STEPS_REACHED = "max_steps_reached"
+    BLOCKED = "blocked"
 
 
 class ToolCall(BaseModel):
@@ -34,6 +35,10 @@ class ToolResult(BaseModel):
     tool_name: str
     error: str | None = None
     data: dict[str, Any] = Field(default_factory=dict)
+    audit: dict[str, Any] = Field(
+        default_factory=dict,
+        description="Execution-policy evidence excluded from planner-facing tool data",
+    )
 
 
 class BrowserState(BaseModel):
@@ -57,6 +62,26 @@ class AgentStep(BaseModel):
     tool_call: ToolCall
     tool_result: ToolResult
     duration_seconds: float
+    tool_duration_seconds: float | None = None
+
+
+class PlannerAttempt(BaseModel):
+    """Auditable record of one planner API/parse attempt."""
+
+    step_number: int
+    attempt_number: int
+    timestamp: str
+    duration_seconds: float
+    success: bool
+    error: str | None = None
+    response_length: int | None = None
+    finish_reason: str | None = None
+    prompt_tokens: int | None = None
+    completion_tokens: int | None = None
+    total_tokens: int | None = None
+    requested_output_mode: str | None = None
+    effective_output_mode: str | None = None
+    structured_fallbacks: list[str] = Field(default_factory=list)
 
 
 class AgentResult(BaseModel):
@@ -68,3 +93,5 @@ class AgentResult(BaseModel):
     total_duration: float
     final_result: dict[str, Any] = Field(default_factory=dict)
     history: list[AgentStep] = Field(default_factory=list)
+    planner_attempts: list[PlannerAttempt] = Field(default_factory=list)
+    events: list[dict[str, Any]] = Field(default_factory=list)

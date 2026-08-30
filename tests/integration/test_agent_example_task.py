@@ -55,7 +55,7 @@ async def test_example_task_completes_gracefully(artifacts_dir, output_dir):
     planner = StubPlanner()
     await planner.load()
 
-    browser = BrowserController(headless=True)
+    browser = BrowserController(headless=True, temporary_profile=True)
     await browser.start()
 
     try:
@@ -94,7 +94,7 @@ async def test_example_task_does_not_loop(artifacts_dir, output_dir):
     )
 
     planner = StubPlanner()
-    browser = BrowserController(headless=True)
+    browser = BrowserController(headless=True, temporary_profile=True)
     await browser.start()
 
     try:

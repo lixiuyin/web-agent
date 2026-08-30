@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import asyncio
+from typing import Any
 
 import pytest
 
 from webagent.core.models import ToolCall, ToolResult
+from webagent.core.protocols import Tool
 from webagent.tools.executor import ToolExecutor
 from webagent.tools.registry import ToolRegistry
 
@@ -15,7 +17,10 @@ class _SlowTool:
     _tool_name = "slow"
     _tool_description = "sleeps"
 
-    async def execute(self, params: dict) -> ToolResult:
+    def validate_params(self, params: dict[str, Any]) -> None:
+        del params
+
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         await asyncio.sleep(5)
         return ToolResult(success=True, tool_name="slow")
 
@@ -24,7 +29,10 @@ class _FastTool:
     _tool_name = "fast"
     _tool_description = "instant"
 
-    async def execute(self, params: dict) -> ToolResult:
+    def validate_params(self, params: dict[str, Any]) -> None:
+        del params
+
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         return ToolResult(success=True, tool_name="fast", data={"ok": True})
 
 
@@ -32,11 +40,14 @@ class _BoomTool:
     _tool_name = "boom"
     _tool_description = "raises"
 
-    async def execute(self, params: dict) -> ToolResult:
+    def validate_params(self, params: dict[str, Any]) -> None:
+        del params
+
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         raise RuntimeError("kaboom")
 
 
-def _executor(tool: object, timeout: float = 0.05) -> ToolExecutor:
+def _executor(tool: Tool, timeout: float = 0.05) -> ToolExecutor:
     reg = ToolRegistry()
     reg.register(tool)
     return ToolExecutor(reg, tool_timeout=timeout)
@@ -68,6 +79,28 @@ async def test_unknown_tool_returns_error():
     result = await ex.execute(ToolCall(tool_name="nonexistent", parameters={}))
     assert result.success is False
     assert "unknown tool" in result.error.lower()
+
+
+async def test_allowed_tools_restrict_descriptions_and_execution():
+    registry = ToolRegistry()
+    registry.register(_FastTool())
+    registry.register(_BoomTool())
+    executor = ToolExecutor(registry, allowed_tools={"fast"})
+
+    assert executor.get_tool_descriptions() == "fast: instant"
+    denied = await executor.execute(ToolCall(tool_name="boom", parameters={}))
+    assert denied.success is False
+    assert "not allowed" in denied.error.lower()
+
+
+async def test_empty_allowed_tools_denies_everything():
+    registry = ToolRegistry()
+    registry.register(_FastTool())
+    executor = ToolExecutor(registry, allowed_tools=set())
+
+    assert executor.get_tool_descriptions() == ""
+    denied = await executor.execute(ToolCall(tool_name="fast"))
+    assert denied.success is False
 
 
 if __name__ == "__main__":

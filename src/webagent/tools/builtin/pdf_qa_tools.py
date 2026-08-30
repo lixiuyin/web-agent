@@ -1,10 +1,12 @@
 """PDF Question-Answering tools with context-aware retrieval.
 
 This module provides intelligent Q&A capabilities for PDF documents by:
-1. Parsing PDF with MinerU to get structured content
+1. Parsing PDFs through the configured provider cascade
 2. Implementing semantic search across document sections
 3. Retrieving relevant context based on user questions
 4. Supporting both text-only and vision-enhanced Q&A
+
+Retrieval scoring and context assembly live in ``_pdf_retrieval``.
 """
 
 from __future__ import annotations
@@ -12,357 +14,26 @@ from __future__ import annotations
 import asyncio
 import logging
 import re
+import time
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from webagent.core.models import ToolResult
-from webagent.tools.registry import tool
-from webagent.utils.chandra_pdf import (
-    ImageInfo,
-    PDFParseResult,
-    TableInfo,
-    TextBlock,
-    find_images_by_keyword,
-    find_tables_by_keyword,
-    parse_pdf_with_chandra,
+from webagent.parser import ImageInfo, PDFParseResult, find_images_by_keyword
+from webagent.tools.builtin._pdf_analysis import parse_table_html
+from webagent.tools.builtin._pdf_common import PdfToolBase, load_pdf_result
+from webagent.tools.builtin._pdf_retrieval import (
+    figure_sort_key as _figure_sort_key,
 )
-from webagent.utils.paths import get_artifacts_dir, get_pdf_extract_dir
+from webagent.tools.builtin._pdf_retrieval import (
+    retrieve_relevant_sections as _retrieve_relevant_sections,
+)
+from webagent.tools.registry import tool
+from webagent.utils.paths import get_pdf_extract_dir
 from webagent.utils.paths import resolve_pdf_path as _resolve_pdf_path
-
-if TYPE_CHECKING:
-    from webagent.core.config import AgentConfig
+from webagent.utils.pdf_figures import detect_and_render_local_figure
 
 logger = logging.getLogger("webagent.pdf_qa")
-
-
-def _figure_sort_key(figure_number: str) -> tuple[int, str]:
-    """Order figures by their number (``"1"`` < ``"2"`` < ``"3a"`` < ``"3b"``)."""
-    match = re.match(r"(\d+)([a-z]?)", figure_number.strip(), re.IGNORECASE)
-    if not match:
-        return (10**9, figure_number)
-    return (int(match.group(1)), match.group(2).lower())
-
-
-class _PdfResultCache(dict[str, PDFParseResult]):
-    """PDF parse cache that refuses to store degraded results.
-
-    Errored parses and the local PyMuPDF fallback (used only when every cloud
-    provider was unavailable) are never cached, so a later run with the cloud
-    cascade reachable isn't served stale, lower-quality text. Single-point guard
-    covering every ``_pdf_cache[key] = result`` site across the PDF tools.
-    """
-
-    _DEGRADED_BACKENDS = frozenset({"pymupdf", "local"})
-
-    def __setitem__(self, key: str, value: PDFParseResult) -> None:
-        if value.error or value.backend in self._DEGRADED_BACKENDS:
-            return
-        super().__setitem__(key, value)
-
-
-# Global cache for parsed PDF results to enable multi-turn conversations
-_pdf_cache: dict[str, PDFParseResult] = _PdfResultCache()
-
-
-def _get_cache_key(path: Path) -> str:
-    """Generate a cache key for a PDF path."""
-    return str(path.resolve())
-
-
-def _resolve_pdf_input(
-    path_str: str, artifacts_dir: Path, tool_name: str
-) -> tuple[Path | None, ToolResult | None]:
-    """Resolve a PDF input path and reject reads outside the current output root."""
-    path, _was_fallback, error = _resolve_pdf_path(path_str, artifacts_dir, use_fallback=False)
-    if error:
-        return None, ToolResult(success=False, tool_name=tool_name, error=error)
-    return path, None
-
-
-def _split_text_into_chunks(text: str, max_chars: int = 1000, overlap: int = 100) -> list[str]:
-    """Split text into overlapping chunks for semantic search.
-
-    Args:
-        text: The text to split
-        max_chars: Maximum characters per chunk
-        overlap: Number of overlapping characters between chunks
-
-    Returns:
-        List of text chunks
-    """
-    if len(text) <= max_chars:
-        return [text]
-
-    chunks = []
-    start = 0
-    while start < len(text):
-        end = start + max_chars
-        # Try to break at a sentence boundary
-        if end < len(text):
-            # Look for sentence endings near the end
-            for sep in [". ", "\n", "! ", "? "]:
-                last_sep = text.rfind(sep, start + max_chars // 2, end + 50)
-                if last_sep > start + max_chars // 2:
-                    end = last_sep + len(sep)
-                    break
-
-        chunks.append(text[start:end].strip())
-        start = end - overlap if end < len(text) else len(text)
-
-    return [c for c in chunks if c]
-
-
-def _compute_relevance_score(chunk: str, query: str) -> float:
-    """Compute a simple relevance score between chunk and query.
-
-    Uses keyword matching with position weighting for better results.
-    """
-    query_lower = query.lower()
-    chunk_lower = chunk.lower()
-
-    # Extract key terms from query (remove common words)
-    stop_words = {
-        "the",
-        "a",
-        "an",
-        "is",
-        "are",
-        "was",
-        "were",
-        "be",
-        "been",
-        "being",
-        "have",
-        "has",
-        "had",
-        "do",
-        "does",
-        "did",
-        "will",
-        "would",
-        "could",
-        "should",
-        "may",
-        "might",
-        "must",
-        "can",
-        "what",
-        "which",
-        "where",
-        "when",
-        "how",
-        "who",
-        "why",
-        "in",
-        "on",
-        "at",
-        "to",
-        "for",
-        "of",
-        "with",
-        "by",
-        "from",
-        "about",
-        "and",
-        "or",
-        "but",
-        "not",
-        "this",
-        "that",
-        "these",
-        "those",
-        "it",
-        "its",
-        "pdf",
-        "document",
-        "paper",
-    }
-
-    query_words = [w for w in re.findall(r"\w+", query_lower) if w not in stop_words and len(w) > 2]
-
-    if not query_words:
-        return 0.0
-
-    score = 0.0
-    for word in query_words:
-        # Exact phrase match gets highest score
-        if word in chunk_lower:
-            # Count occurrences with position weighting (earlier = higher)
-            occurrences = chunk_lower.count(word)
-            first_pos = chunk_lower.find(word)
-            pos_weight = 1.0 - (first_pos / len(chunk_lower)) * 0.3  # Up to 30% reduction
-            score += occurrences * pos_weight
-
-    # Bonus for partial phrase matches (2+ consecutive words)
-    query_bigrams = [" ".join(query_words[i : i + 2]) for i in range(len(query_words) - 1)]
-    for bigram in query_bigrams:
-        if bigram in chunk_lower:
-            score += 2.0
-
-    return score
-
-
-def _retrieve_relevant_sections(
-    result: PDFParseResult,
-    query: str,
-    max_chunks: int = 5,
-    max_context_chars: int = 3000,
-) -> dict[str, Any]:
-    """Retrieve the most relevant sections from the document for a query.
-
-    Args:
-        result: Parsed MinerU result
-        query: User's question
-        max_chunks: Maximum number of chunks to retrieve
-        max_context_chars: Maximum total characters to return
-
-    Returns:
-        Dictionary with relevant context and metadata
-    """
-    # Build full text from text blocks
-    all_text_blocks: list[tuple[str, TextBlock]] = []
-    for block in result.text_blocks:
-        all_text_blocks.append((block.text, block))
-
-    # Initialize scored list
-    scored: list[tuple[str, TextBlock | None, float]] = []
-
-    if not all_text_blocks:
-        # Fallback to markdown
-        md_path = result.markdown_path
-        if md_path and Path(md_path).exists():
-            text = Path(md_path).read_text(encoding="utf-8", errors="replace")
-            chunks = _split_text_into_chunks(text, max_chars=800, overlap=50)
-            scored = [(chunk, None, _compute_relevance_score(chunk, query)) for chunk in chunks]
-        else:
-            return {"context": "", "sources": [], "found_figures": [], "found_tables": []}
-    else:
-        # Score text blocks by relevance
-        for block_text, block in all_text_blocks:
-            score = _compute_relevance_score(block_text, query)
-            if score > 0:
-                scored.append((block_text, block, score))
-
-    # Sort by relevance score
-    scored.sort(key=lambda x: x[2], reverse=True)
-
-    # Take top chunks
-    top_chunks = scored[:max_chunks]
-
-    # Build context with character limit
-    context_parts = []
-    sources = []
-    total_chars = 0
-
-    for chunk_text, block, _score in top_chunks:  # type: ignore[assignment]
-        if total_chars >= max_context_chars:
-            break
-
-        # Truncate if needed
-        remaining = max_context_chars - total_chars
-        if len(chunk_text) > remaining:
-            chunk_text = chunk_text[:remaining] + "..."
-
-        context_parts.append(chunk_text)
-        total_chars += len(chunk_text)
-
-        # Track source info
-        if block:
-            sources.append(
-                {
-                    "type": "text_block",
-                    "page": block.page_idx + 1,
-                    "level": block.level,
-                    "preview": block.text[:100] + "..." if len(block.text) > 100 else block.text,
-                }
-            )
-
-    context = "\n\n---\n\n".join(context_parts)
-
-    # Check for relevant figures and tables
-    query_lower = query.lower()
-    found_figures: list[dict[str, Any]] = []
-    found_tables: list[dict[str, Any]] = []
-
-    # Look for figure mentions
-    figure_keywords = ["figure", "chart", "graph", "plot", "diagram", "image"]
-    if any(kw in query_lower for kw in figure_keywords):
-        # Try to find by number mentioned in query
-        fig_match = re.search(r"figure\s+(\d+)", query_lower, re.IGNORECASE)
-        if fig_match:
-            fig_num = fig_match.group(1)
-            for img in result.images:
-                if img.figure_number == fig_num or str(fig_num) in img.caption.lower():
-                    found_figures.append(
-                        {
-                            "path": img.path,
-                            "page": img.page_idx + 1,
-                            "caption": img.caption,
-                            "figure_number": img.figure_number,
-                        }
-                    )
-        else:
-            # Search by keyword in captions
-            search_kw = query_lower.split()[-1] if query_lower.split() else ""
-            if search_kw and len(search_kw) > 3:
-                matching_images: list[ImageInfo] = find_images_by_keyword(
-                    result, search_kw, case_sensitive=False
-                )
-                found_figures = [
-                    {
-                        "path": img.path,
-                        "page": img.page_idx + 1,
-                        "caption": img.caption,
-                        "figure_number": img.figure_number,
-                    }
-                    for img in matching_images[:3]
-                ]
-
-    # Look for table mentions
-    table_keywords = ["table", "data", "comparison", "results"]
-    if any(kw in query_lower for kw in table_keywords):
-        table_match = re.search(r"table\s+(\d+)", query_lower, re.IGNORECASE)
-        if table_match:
-            table_num = table_match.group(1)
-            for table in result.tables:
-                if table.table_number == table_num or str(table_num) in table.caption.lower():
-                    found_tables.append(
-                        {
-                            "path": table.path,
-                            "page": table.page_idx + 1,
-                            "caption": table.caption,
-                            "table_number": table.table_number,
-                            "html_body": table.html_body[:500] + "..."
-                            if len(table.html_body) > 500
-                            else table.html_body,
-                        }
-                    )
-        else:
-            # Search by keyword
-            search_kw = query_lower.split()[-1] if query_lower.split() else ""
-            if search_kw and len(search_kw) > 3:
-                matching_tables: list[TableInfo] = find_tables_by_keyword(
-                    result, search_kw, case_sensitive=False
-                )
-                found_tables = [
-                    {
-                        "path": table.path,
-                        "page": table.page_idx + 1,
-                        "caption": table.caption,
-                        "table_number": table.table_number,
-                        "html_body": table.html_body[:500] + "..."
-                        if len(table.html_body) > 500
-                        else table.html_body,
-                    }
-                    for table in matching_tables[:3]
-                ]
-
-    return {
-        "context": context,
-        "sources": sources,
-        "found_figures": found_figures,
-        "found_tables": found_tables,
-    }
 
 
 @tool(
@@ -371,26 +42,20 @@ def _retrieve_relevant_sections(
     "Use this for Q&A on academic papers, reports, or any PDF. "
     "params: path (string), question (string)",
 )
-class PdfQATool:
+class PdfQATool(PdfToolBase):
     """Intelligent PDF Q&A with context-aware retrieval."""
 
-    def __init__(
-        self,
-        browser: Any = None,
-        artifacts_dir: Path | None = None,
-        config: AgentConfig | None = None,
-        **kw: Any,
-    ) -> None:
+    def __init__(self, browser: Any = None, **kw: Any) -> None:
+        super().__init__(**kw)
         self.browser = browser
-        self.artifacts_dir = artifacts_dir or get_artifacts_dir(config)
 
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         if not isinstance(params.get("path"), str) or not params["path"].strip():
             raise ValueError("'path' required - PDF file path")
         if not isinstance(params.get("question"), str) or not params["question"].strip():
             raise ValueError("'question' required - Your question about the PDF")
 
-    async def execute(self, params: dict) -> ToolResult:
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         path_str = params["path"].strip()
         question = params["question"].strip()
 
@@ -412,31 +77,12 @@ class PdfQATool:
                 error=warning or f"PDF not found: {path}",
             )
 
-        # Check cache first
-        cache_key = _get_cache_key(path)
-        result = _pdf_cache.get(cache_key)
-
-        if result is None or result.error:
-            # Parse the PDF
-            try:
-                result = await asyncio.to_thread(
-                    parse_pdf_with_chandra, path, get_pdf_extract_dir(self.artifacts_dir)
-                )
-                if not result.error:
-                    _pdf_cache[cache_key] = result
-            except Exception as e:
-                return ToolResult(
-                    success=False,
-                    tool_name="pdf_qa",
-                    error=f"Failed to parse PDF: {e}",
-                )
-
-        if result.error:
-            return ToolResult(
-                success=False,
-                tool_name="pdf_qa",
-                error=result.error,
-            )
+        result, parse_error = await load_pdf_result(
+            path, self.artifacts_dir, "pdf_qa", config=self.config
+        )
+        if parse_error:
+            return parse_error
+        assert result is not None
 
         # Retrieve relevant sections
         retrieval = _retrieve_relevant_sections(result, question)
@@ -482,59 +128,27 @@ class PdfQATool:
     "Returns relevant text chunks with sources. "
     "params: path (string), query (string), max_results? (number, default 5)",
 )
-class PdfSearchTool:
+class PdfSearchTool(PdfToolBase):
     """Semantic search within PDF documents."""
 
-    def __init__(
-        self,
-        browser: Any = None,
-        artifacts_dir: Path | None = None,
-        config: AgentConfig | None = None,
-        **kw: Any,
-    ) -> None:
+    def __init__(self, browser: Any = None, **kw: Any) -> None:
+        super().__init__(**kw)
         self.browser = browser
-        self.artifacts_dir = artifacts_dir or get_artifacts_dir(config)
 
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         if not isinstance(params.get("path"), str) or not params["path"].strip():
             raise ValueError("'path' required")
         if not isinstance(params.get("query"), str) or not params["query"].strip():
             raise ValueError("'query' required")
 
-    async def execute(self, params: dict) -> ToolResult:
-        path_str = params["path"].strip()
-        path, path_error = _resolve_pdf_input(path_str, self.artifacts_dir, "pdf_search")
-        if path_error:
-            return path_error
-        assert path is not None
-
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         query = params["query"].strip()
         max_results = params.get("max_results", 5)
 
-        # Check cache
-        cache_key = _get_cache_key(path)
-        result = _pdf_cache.get(cache_key)
-
-        if result is None or result.error:
-            try:
-                result = await asyncio.to_thread(
-                    parse_pdf_with_chandra, path, get_pdf_extract_dir(self.artifacts_dir)
-                )
-                if not result.error:
-                    _pdf_cache[cache_key] = result
-            except Exception as e:
-                return ToolResult(
-                    success=False,
-                    tool_name="pdf_search",
-                    error=f"Failed to parse PDF: {e}",
-                )
-
-        if result.error:
-            return ToolResult(
-                success=False,
-                tool_name="pdf_search",
-                error=result.error,
-            )
+        result, error = await self._load_pdf(params, "pdf_search")
+        if error:
+            return error
+        assert result is not None
 
         # Retrieve relevant sections
         retrieval = _retrieve_relevant_sections(result, query, max_chunks=max_results)
@@ -571,54 +185,22 @@ class PdfSearchTool:
     "decorations are kept separately in 'unlabeled_images' and are NOT numbered figures. "
     "To analyze 'Figure N', prefer pdf_analyze_figure with that number. params: path (string)",
 )
-class PdfListFiguresTool:
+class PdfListFiguresTool(PdfToolBase):
     """List all figures in a PDF document."""
 
-    def __init__(
-        self,
-        browser: Any = None,
-        artifacts_dir: Path | None = None,
-        config: AgentConfig | None = None,
-        **kw: Any,
-    ) -> None:
+    def __init__(self, browser: Any = None, **kw: Any) -> None:
+        super().__init__(**kw)
         self.browser = browser
-        self.artifacts_dir = artifacts_dir or get_artifacts_dir(config)
 
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         if not isinstance(params.get("path"), str) or not params["path"].strip():
             raise ValueError("'path' required")
 
-    async def execute(self, params: dict) -> ToolResult:
-        path_str = params["path"].strip()
-        path, path_error = _resolve_pdf_input(path_str, self.artifacts_dir, "pdf_list_figures")
-        if path_error:
-            return path_error
-        assert path is not None
-
-        # Check cache
-        cache_key = _get_cache_key(path)
-        result = _pdf_cache.get(cache_key)
-
-        if result is None or result.error:
-            try:
-                result = await asyncio.to_thread(
-                    parse_pdf_with_chandra, path, get_pdf_extract_dir(self.artifacts_dir)
-                )
-                if not result.error:
-                    _pdf_cache[cache_key] = result
-            except Exception as e:
-                return ToolResult(
-                    success=False,
-                    tool_name="pdf_list_figures",
-                    error=f"Failed to parse PDF: {e}",
-                )
-
-        if result.error:
-            return ToolResult(
-                success=False,
-                tool_name="pdf_list_figures",
-                error=result.error,
-            )
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
+        result, error = await self._load_pdf(params, "pdf_list_figures")
+        if error:
+            return error
+        assert result is not None
 
         # Separate real captioned figures (e.g. "Figure 1: ...") from uncaptioned
         # images (logos, cover art, decorations). Without this split, an
@@ -660,7 +242,7 @@ class PdfListFiguresTool:
             },
         )
 
-    async def _open_first_figure(self, figures: list[dict]) -> str | None:
+    async def _open_first_figure(self, figures: list[dict[str, Any]]) -> str | None:
         if not self.browser or not figures:
             return None
         first_path = figures[0].get("path")
@@ -681,52 +263,18 @@ class PdfListFiguresTool:
     "Use this to get an overview of tabular data. "
     "params: path (string)",
 )
-class PdfListTablesTool:
+class PdfListTablesTool(PdfToolBase):
     """List all tables in a PDF document."""
 
-    def __init__(
-        self,
-        artifacts_dir: Path | None = None,
-        config: AgentConfig | None = None,
-        **kw: Any,
-    ) -> None:
-        self.artifacts_dir = artifacts_dir or get_artifacts_dir(config)
-
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         if not isinstance(params.get("path"), str) or not params["path"].strip():
             raise ValueError("'path' required")
 
-    async def execute(self, params: dict) -> ToolResult:
-        path_str = params["path"].strip()
-        path, path_error = _resolve_pdf_input(path_str, self.artifacts_dir, "pdf_list_tables")
-        if path_error:
-            return path_error
-        assert path is not None
-
-        # Check cache
-        cache_key = _get_cache_key(path)
-        result = _pdf_cache.get(cache_key)
-
-        if result is None or result.error:
-            try:
-                result = await asyncio.to_thread(
-                    parse_pdf_with_chandra, path, get_pdf_extract_dir(self.artifacts_dir)
-                )
-                if not result.error:
-                    _pdf_cache[cache_key] = result
-            except Exception as e:
-                return ToolResult(
-                    success=False,
-                    tool_name="pdf_list_tables",
-                    error=f"Failed to parse PDF: {e}",
-                )
-
-        if result.error:
-            return ToolResult(
-                success=False,
-                tool_name="pdf_list_tables",
-                error=result.error,
-            )
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
+        result, error = await self._load_pdf(params, "pdf_list_tables")
+        if error:
+            return error
+        assert result is not None
 
         # Build table list
         tables = []
@@ -760,52 +308,18 @@ class PdfListTablesTool:
     "Use this to navigate the document structure. "
     "params: path (string)",
 )
-class PdfListSectionsTool:
+class PdfListSectionsTool(PdfToolBase):
     """List all sections in a PDF document."""
 
-    def __init__(
-        self,
-        artifacts_dir: Path | None = None,
-        config: AgentConfig | None = None,
-        **kw: Any,
-    ) -> None:
-        self.artifacts_dir = artifacts_dir or get_artifacts_dir(config)
-
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         if not isinstance(params.get("path"), str) or not params["path"].strip():
             raise ValueError("'path' required")
 
-    async def execute(self, params: dict) -> ToolResult:
-        path_str = params["path"].strip()
-        path, path_error = _resolve_pdf_input(path_str, self.artifacts_dir, "pdf_list_sections")
-        if path_error:
-            return path_error
-        assert path is not None
-
-        # Check cache
-        cache_key = _get_cache_key(path)
-        result = _pdf_cache.get(cache_key)
-
-        if result is None or result.error:
-            try:
-                result = await asyncio.to_thread(
-                    parse_pdf_with_chandra, path, get_pdf_extract_dir(self.artifacts_dir)
-                )
-                if not result.error:
-                    _pdf_cache[cache_key] = result
-            except Exception as e:
-                return ToolResult(
-                    success=False,
-                    tool_name="pdf_list_sections",
-                    error=f"Failed to parse PDF: {e}",
-                )
-
-        if result.error:
-            return ToolResult(
-                success=False,
-                tool_name="pdf_list_sections",
-                error=result.error,
-            )
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
+        result, error = await self._load_pdf(params, "pdf_list_sections")
+        if error:
+            return error
+        assert result is not None
 
         # Build section list
         sections = []
@@ -845,27 +359,23 @@ class PdfListSectionsTool:
 @tool(
     "pdf_analyze_figure",
     "Analyze a specific NUMBERED figure (e.g. Figure 1) from a PDF using vision. "
-    "Resolves the figure by its number/caption from the parsed content and analyzes the "
+    "First tries a conservative local vector/raster render, then falls back to the structured "
+    "parser when the caption-to-graphic match is ambiguous. Resolves the figure by its "
+    "number/caption and analyzes the "
     "correct image automatically — prefer this over manually picking an image path when the "
-    "task names a figure number. "
+    "task names a figure number. It parses and caches the PDF itself: call it directly after "
+    "download_pdf; do not call pdf_parse/pdf_list_figures first unless their separate output is needed. "
     "params: path (string - PDF path), figure_number_or_caption (string, e.g. '1'), question? (string)",
 )
-class PdfAnalyzeFigureTool:
+class PdfAnalyzeFigureTool(PdfToolBase):
     """Analyze a figure using vision capabilities."""
 
-    def __init__(
-        self,
-        artifacts_dir: Path | None = None,
-        config: AgentConfig | None = None,
-        browser: Any = None,
-        planner: Any = None,
-        **kw: Any,
-    ) -> None:
-        self.artifacts_dir = artifacts_dir or get_artifacts_dir(config)
+    def __init__(self, browser: Any = None, planner: Any = None, **kw: Any) -> None:
+        super().__init__(**kw)
         self.browser = browser
         self._planner = planner  # Store planner for vision analysis
 
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         if not isinstance(params.get("path"), str) or not params["path"].strip():
             raise ValueError("'path' required")
         if (
@@ -874,57 +384,81 @@ class PdfAnalyzeFigureTool:
         ):
             raise ValueError("'figure_number_or_caption' required - e.g., '1' or 'architecture'")
 
-    async def execute(self, params: dict) -> ToolResult:
-        path_str = params["path"].strip()
-        path, path_error = _resolve_pdf_input(path_str, self.artifacts_dir, "pdf_analyze_figure")
-        if path_error:
-            return path_error
-        assert path is not None
+    async def _try_local_figure(
+        self,
+        path: Path,
+        figure_ref: str,
+    ) -> tuple[ImageInfo | None, dict[str, Any]]:
+        metadata: dict[str, Any] = {"used": False}
+        exact_number = _exact_figure_number(figure_ref)
+        if not exact_number or not bool(getattr(self.config, "local_figure_fast_path", False)):
+            return None, metadata
+        started = time.monotonic()
+        rendered = await asyncio.to_thread(
+            detect_and_render_local_figure,
+            path,
+            exact_number,
+            get_pdf_extract_dir(self.artifacts_dir, path) / "figures" / "local",
+            dpi=int(getattr(self.config, "local_figure_render_dpi", 144)),
+            min_confidence=float(getattr(self.config, "local_figure_min_confidence", 0.9)),
+        )
+        metadata["duration_seconds"] = time.monotonic() - started
+        if rendered is None:
+            return None, metadata
+        region = rendered.region
+        metadata.update(
+            {
+                "used": True,
+                "confidence": region.confidence,
+                "caption_position": region.caption_position,
+                "visual_kind": region.visual_kind,
+                "bbox": list(region.bbox),
+                "render_width": rendered.width,
+                "render_height": rendered.height,
+            }
+        )
+        return (
+            ImageInfo(
+                path=str(rendered.image_path),
+                page_idx=region.page_idx,
+                bbox=(
+                    round(region.bbox[0]),
+                    round(region.bbox[1]),
+                    round(region.bbox[2]),
+                    round(region.bbox[3]),
+                ),
+                caption=region.caption,
+                figure_number=region.figure_number,
+            ),
+            metadata,
+        )
 
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         figure_ref = params["figure_number_or_caption"].strip()
         question = params.get("question", "Describe this figure in detail.").strip()
 
-        # Check cache
-        cache_key = _get_cache_key(path)
-        result = _pdf_cache.get(cache_key)
+        path, error = self._resolve_pdf(params, "pdf_analyze_figure")
+        if error:
+            return error
+        assert path is not None
 
-        if result is None or result.error:
-            try:
-                result = await asyncio.to_thread(
-                    parse_pdf_with_chandra, path, get_pdf_extract_dir(self.artifacts_dir)
-                )
-                if not result.error:
-                    _pdf_cache[cache_key] = result
-            except Exception as e:
-                return ToolResult(
-                    success=False,
-                    tool_name="pdf_analyze_figure",
-                    error=f"Failed to parse PDF: {e}",
-                )
+        result: PDFParseResult | None = None
+        target_figure, local_metadata = await self._try_local_figure(path, figure_ref)
 
-        if result.error:
-            return ToolResult(
-                success=False,
-                tool_name="pdf_analyze_figure",
-                error=result.error,
+        if target_figure is None:
+            result, error = await load_pdf_result(
+                path,
+                self.artifacts_dir,
+                "pdf_analyze_figure",
+                config=self.config,
             )
+            if error:
+                return error
+            assert result is not None
 
-        # Find the figure — resolve "Figure 1", "fig 1", "1", "1a" to a number
-        # and match it against the parsed figure numbers (NOT extraction order).
-        target_figure = None
-        ref = figure_ref.strip()
-        num = ref if ref.isdigit() else ""
-        if not num:
-            match = re.search(r"(\d+[a-z]?)", ref, re.IGNORECASE)
-            num = match.group(1) if match else ""
-        if num:
-            target_figure = next((img for img in result.images if img.figure_number == num), None)
-
-        # Fall back to caption keyword match (e.g. figure_ref='architecture').
-        if not target_figure:
-            matching = find_images_by_keyword(result, figure_ref, case_sensitive=False)
-            if matching:
-                target_figure = matching[0]
+            # Find the figure — resolve "Figure 1", "fig 1", "1", "1a" to a number
+            # and match it against parsed figure numbers (NOT extraction order).
+            target_figure = _resolve_figure(result, figure_ref)
 
         if not target_figure:
             return ToolResult(
@@ -933,12 +467,13 @@ class PdfAnalyzeFigureTool:
                 data={
                     "found": False,
                     "message": f"Figure '{figure_ref}' not found. Use pdf_list_figures to see available figures.",
-                    "available_figures": len(result.images),
+                    "available_figures": len(result.images) if result is not None else 0,
+                    "local_figure_fast_path": local_metadata,
                 },
             )
 
         # Check if image file exists
-        img_path = Path(target_figure.path)
+        img_path = _pick_higher_res_image(Path(target_figure.path))
         if not img_path.exists():
             return ToolResult(
                 success=False,
@@ -946,68 +481,23 @@ class PdfAnalyzeFigureTool:
                 error=f"Image file not found: {img_path}",
             )
 
-        # Try to open in browser for vision analysis
-        browser_url = None
-        vision_analysis = None
-        pil_img = None
-
-        # Try to get a better image: check for higher-res version in same directory
-        img_dir = img_path.parent
-        img_stem = img_path.stem
-
-        # Look for larger version (sometimes MinerU saves multiple sizes)
-        possible_sizes = ["", "_high", "_full", "_original"]
-        for suffix in possible_sizes:
-            larger_path = img_dir / f"{img_stem}{suffix}.png"
-            if larger_path.exists() and larger_path.stat().st_size > img_path.stat().st_size:
-                img_path = larger_path
-                break
-
-        # Open image
-        try:
-            from PIL import Image as PILImage
-
-            pil_img = PILImage.open(img_path)
-            logger.info(
-                "Vision: opened image %s, size=%dx%d", img_path, pil_img.width, pil_img.height
-            )
-        except Exception as e:
-            logger.warning("Failed to open image: %s", e)
+        # Open the image locally (best effort) for vision analysis
+        pil_img = _open_image(img_path)
 
         # Use browser to view the image
+        browser_url = None
         if self.browser:
             open_result = await self.browser.open_local_file(str(img_path))
             if open_result.get("success"):
                 browser_url = open_result.get("url")
 
-        # Check if vision is available before attempting analysis
-        vision_unavailable = bool(
-            self._planner
-            and hasattr(self._planner, "vision_actually_works")
-            and not self._planner.vision_actually_works
+        caption = target_figure.caption or "(no source caption extracted)"
+        vision_question = f"Source figure caption:\n{caption}\n\nRequested analysis:\n{question}"
+        vision_started = time.monotonic()
+        vision_unavailable, vision_analysis, vision_metadata = await self._analyze_with_vision(
+            pil_img, vision_question
         )
-
-        # Perform vision analysis if planner supports it and image is large enough
-        if (
-            not vision_unavailable
-            and pil_img
-            and self._planner
-            and hasattr(self._planner, "analyze_image")
-        ):
-            # Check if image is too small for meaningful analysis
-            if pil_img.width < 100 or pil_img.height < 100:
-                logger.warning("Image too small for analysis: %dx%d", pil_img.width, pil_img.height)
-                vision_analysis = f"Image resolution too low for detailed analysis. The extracted figure is only {pil_img.width}x{pil_img.height} pixels."
-            else:
-                try:
-                    vision_analysis = await self._planner.analyze_image(pil_img, question)
-                except Exception as e:
-                    logger.warning("Vision analysis failed: %s", e)
-
-            # Check if the vision analysis indicates failure
-            if vision_analysis and "vision api is not functioning" in vision_analysis.lower():
-                vision_unavailable = True
-                vision_analysis = None
+        vision_duration = time.monotonic() - vision_started
 
         fig_page = target_figure.page_idx + 1
 
@@ -1016,7 +506,8 @@ class PdfAnalyzeFigureTool:
                 success=False,
                 tool_name="pdf_analyze_figure",
                 error=(
-                    f"Vision API is not available to analyze Figure {target_figure.figure_number}. "
+                    f"Vision analysis failed or is not available for Figure "
+                    f"{target_figure.figure_number}. "
                     f"The figure is on page {fig_page} with caption: '{target_figure.caption}'. "
                     f"Use 'pdf_extract_text' with pages={fig_page}-{fig_page + 1} "
                     f"to read the surrounding text and interpret the figure from its textual description. "
@@ -1035,31 +526,158 @@ class PdfAnalyzeFigureTool:
                 "image_path": str(img_path),
                 "browser_url": browser_url,
                 "vision_analysis": vision_analysis,
+                "vision_duration_seconds": vision_duration,
+                "vision_metadata": vision_metadata,
+                "local_figure_fast_path": local_metadata,
+                "related_tables": (
+                    _tables_on_page(result, target_figure.page_idx) if result is not None else []
+                ),
             },
         )
 
+    async def _analyze_with_vision(
+        self, pil_img: Any, question: str
+    ) -> tuple[bool, str | None, dict[str, Any]]:
+        """Run vision analysis and return availability, answer, and call metadata."""
+        vision_analysis: str | None = None
+        vision_metadata: dict[str, Any] = {}
 
-def clear_pdf_cache(path: Path | None = None) -> None:
-    """Clear the PDF cache.
+        # Check if vision is available before attempting analysis
+        vision_unavailable = bool(
+            not pil_img
+            or not self._planner
+            or not hasattr(self._planner, "analyze_image")
+            or (
+                hasattr(self._planner, "vision_actually_works")
+                and not self._planner.vision_actually_works
+            )
+        )
 
-    Args:
-        path: If provided, only clear cache for this specific PDF.
+        # Perform vision analysis if planner supports it and image is large enough
+        if (
+            not vision_unavailable
+            and pil_img
+            and self._planner
+            and hasattr(self._planner, "analyze_image")
+        ):
+            # Check if image is too small for meaningful analysis
+            if pil_img.width < 100 or pil_img.height < 100:
+                logger.warning("Image too small for analysis: %dx%d", pil_img.width, pil_img.height)
+                vision_analysis = (
+                    f"Image resolution too low for detailed analysis. "
+                    f"The extracted figure is only {pil_img.width}x{pil_img.height} pixels."
+                )
+            else:
+                try:
+                    vision_analysis = await self._planner.analyze_image(pil_img, question)
+                    raw_metadata = getattr(self._planner, "last_call_metadata", {})
+                    if isinstance(raw_metadata, dict):
+                        vision_metadata = raw_metadata
+                except Exception as e:
+                    logger.warning("Vision analysis failed: %s", e)
+                    vision_unavailable = True
+
+            # Check if the vision analysis indicates failure
+            if vision_analysis and "vision api is not functioning" in vision_analysis.lower():
+                vision_unavailable = True
+                vision_analysis = None
+            elif not vision_analysis:
+                vision_unavailable = True
+
+        return vision_unavailable, vision_analysis, vision_metadata
+
+
+def _exact_figure_number(figure_ref: str) -> str:
+    """Return a number only when the whole reference names one exact figure."""
+    match = re.fullmatch(
+        r"\s*(?:(?:figure|fig\.?)\s*)?(\d+[a-z]?)\s*",
+        figure_ref,
+        re.IGNORECASE,
+    )
+    return match.group(1) if match else ""
+
+
+def _resolve_figure(result: PDFParseResult, figure_ref: str) -> ImageInfo | None:
+    """Resolve a figure reference to a parsed image.
+
+    Tries, in order: "Figure 1"/"fig 1"/"1"/"1a" resolved to a figure number,
+    then caption keyword match (e.g. figure_ref='architecture'). When several
+    images share the same figure number (e.g. a mislabelled cover logo), the
+    highest-resolution one is returned rather than blindly the first in
+    extraction order.
     """
-    if path:
-        cache_key = _get_cache_key(path)
-        _pdf_cache.pop(cache_key, None)
-    else:
-        _pdf_cache.clear()
+    ref = figure_ref.strip()
+    num = ref if ref.isdigit() else ""
+    if not num:
+        match = re.search(r"(\d+[a-z]?)", ref, re.IGNORECASE)
+        num = match.group(1) if match else ""
+    if num:
+        by_number = [img for img in result.images if img.figure_number == num]
+        if by_number:
+            return max(by_number, key=lambda im: _image_pixel_area(im.path))
+
+    matching = find_images_by_keyword(result, figure_ref, case_sensitive=False)
+    return matching[0] if matching else None
 
 
-def get_cached_pdf_result(path: Path) -> PDFParseResult | None:
-    """Get a cached PDF result if available.
+def _image_pixel_area(path: str) -> int:
+    """Return width*height for an image file, or 0 if it can't be read."""
+    try:
+        from PIL import Image as PILImage
 
-    Args:
-        path: Path to the PDF file.
+        with PILImage.open(path) as im:
+            return int(im.width) * int(im.height)
+    except Exception:
+        return 0
 
-    Returns:
-        Cached PDFParseResult or None.
+
+def _tables_on_page(result: PDFParseResult, page_idx: int) -> list[dict[str, Any]]:
+    """Return structured table data for tables on a given page.
+
+    Surfacing the extracted table next to the vision analysis of a benchmark
+    chart gives the planner ground-truth numbers to cross-check the vision
+    model's reading (a highlighted bar is not necessarily the tallest one).
     """
-    cache_key = _get_cache_key(path)
-    return _pdf_cache.get(cache_key)
+    out: list[dict[str, Any]] = []
+    for table in result.tables:
+        if table.page_idx != page_idx:
+            continue
+        parsed = parse_table_html(table.html_body or "")
+        out.append(
+            {
+                "table_number": table.table_number,
+                "caption": table.caption,
+                "page": table.page_idx + 1,
+                "headers": parsed["headers"],
+                "rows": parsed["rows"],
+            }
+        )
+    return out
+
+
+def _pick_higher_res_image(img_path: Path) -> Path:
+    """Prefer a higher-resolution sibling of the same image if one exists.
+
+    MinerU sometimes saves multiple sizes (``_high``, ``_full``, ``_original``).
+    """
+    if not img_path.exists():
+        return img_path
+    possible_sizes = ["", "_high", "_full", "_original"]
+    for suffix in possible_sizes:
+        larger_path = img_path.parent / f"{img_path.stem}{suffix}.png"
+        if larger_path.exists() and larger_path.stat().st_size > img_path.stat().st_size:
+            return larger_path
+    return img_path
+
+
+def _open_image(img_path: Path) -> Any:
+    """Open an image with PIL, returning None (and logging) on failure."""
+    from PIL import Image as PILImage
+
+    try:
+        pil_img = PILImage.open(img_path)
+        logger.info("Vision: opened image %s, size=%dx%d", img_path, pil_img.width, pil_img.height)
+        return pil_img
+    except Exception as e:
+        logger.warning("Failed to open image: %s", e)
+        return None

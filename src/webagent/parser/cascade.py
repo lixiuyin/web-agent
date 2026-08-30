@@ -19,6 +19,8 @@ import time
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+import httpx
+
 from ._errors import MAX_RETRIES, AllParsersFailedError, FailureReason, ParserProviderError
 from ._http import build_client
 from ._profile import DocumentProfile, profile_document
@@ -134,7 +136,7 @@ async def parse_structured_async(
 
 
 async def _run_cascade(
-    client,
+    client: httpx.AsyncClient,
     order: tuple[str, ...],
     pdf_path: Path,
     profile: DocumentProfile,

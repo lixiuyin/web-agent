@@ -14,7 +14,6 @@ MAX_RETRIES = 2
 class FailureReason(enum.StrEnum):
     """Categorised reason for a parser failure."""
 
-    QUALITY_GATE = "quality_gate"
     NETWORK_TIMEOUT = "network_timeout"
     AUTH_FAILED = "auth_failed"
     RATE_LIMITED = "rate_limited"

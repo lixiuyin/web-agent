@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 
 from webagent.tools.builtin import arxiv_tools
-from webagent.tools.builtin.arxiv_tools import ArxivSearchTool
+from webagent.tools.builtin.arxiv_tools import ArxivSearchTool, _build_search_query
 
 _ATOM = """<?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
@@ -67,6 +67,15 @@ def test_parse_extracts_fields():
     assert "large language models" in r["abstract"]
 
 
+def test_technical_report_query_is_title_scoped():
+    query = _build_search_query("Qwen3 technical report")
+    assert query == "ti:Qwen3 AND ti:technical AND ti:report"
+
+
+def test_general_query_remains_all_field_scoped():
+    assert _build_search_query("sparse attention") == "all:sparse AND all:attention"
+
+
 async def test_successful_search(monkeypatch):
     _patch(monkeypatch, _Resp(200, _ATOM))
     tool = ArxivSearchTool()
@@ -76,20 +85,14 @@ async def test_successful_search(monkeypatch):
     assert result.data["results"][0]["pdf_url"].endswith("2401.00001v1")
 
 
-async def test_qwen_query_uses_direct_known_reports_without_api(monkeypatch):
-    class _UnexpectedClient:
-        def __init__(self, *args, **kwargs) -> None:
-            raise AssertionError("Qwen known-report fallback should not call arXiv API")
-
-    monkeypatch.setattr(arxiv_tools.httpx, "AsyncClient", _UnexpectedClient)
-
+async def test_qwen_query_uses_live_api(monkeypatch):
+    """Qwen queries are not special-cased — they hit the arXiv export API like any other."""
+    _patch(monkeypatch, _Resp(200, _ATOM))
     result = await ArxivSearchTool().execute({"query": "Qwen", "max_results": 2})
 
     assert result.success is True
-    assert result.data["source"] == "direct_arxiv_known_reports"
-    assert result.data["count"] == 2
-    assert result.data["results"][0]["title"] == "Qwen3.5-Omni Technical Report"
-    assert result.data["results"][0]["pdf_url"] == "https://arxiv.org/pdf/2604.15804"
+    assert result.data["count"] == 1
+    assert result.data["results"][0]["title"] == "Qwen Technical Report"
 
 
 async def test_rate_limited_returns_clear_error(monkeypatch):

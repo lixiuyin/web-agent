@@ -1,0 +1,82 @@
+{
+  "schema_version": 2,
+  "suite": "open-web-smoke-v1",
+  "tasks": [
+    {
+      "id": "example_domain_purpose",
+      "category": "open_web_fact",
+      "goal": "Read this page and report what the domain may be used for. Cite the page URL in your answer.",
+      "start_url": "https://example.com/",
+      "source_urls": ["https://example.com/"],
+      "snapshot_id": "example-domain-2026-08",
+      "valid_from": "2026-08-01",
+      "valid_until": "2027-08-31",
+      "network_required": true,
+      "split": "validation",
+      "task_family": "stable_public_fact_retrieval",
+      "setting_id": "stable_public_document",
+      "leakage_group": "host_example_com",
+      "target_failure_modes": ["information_extraction", "tool_use", "answer_grounding"],
+      "feedback": {"kind": "verifiable"},
+      "expected_horizon": "short",
+      "assertions": [
+        {"kind": "text_contains", "expected": "Example Domain"},
+        {"kind": "answer_contains", "expected": "documentation examples"},
+        {"kind": "answer_contains", "expected": "https://example.com/"},
+        {"kind": "history_url_observed", "expected": "https://example.com/"}
+      ],
+      "tags": ["public-web", "stable-page", "answer-grounding"]
+    },
+    {
+      "id": "iana_reserved_domains",
+      "category": "open_web_fact",
+      "goal": "From IANA's example-domains page, identify the two example domains explicitly named there, state their documented purpose, and cite the source URL.",
+      "start_url": "https://www.iana.org/help/example-domains",
+      "source_urls": ["https://www.iana.org/help/example-domains"],
+      "snapshot_id": "iana-example-domains-explicit-pair-2026-08",
+      "valid_from": "2026-08-01",
+      "valid_until": "2027-08-31",
+      "network_required": true,
+      "split": "validation",
+      "task_family": "multi_fact_source_synthesis",
+      "setting_id": "stable_official_reference",
+      "leakage_group": "host_www_iana_org",
+      "target_failure_modes": ["multi_fact_synthesis", "tool_use", "answer_grounding"],
+      "feedback": {"kind": "verifiable"},
+      "expected_horizon": "short",
+      "assertions": [
+        {"kind": "answer_contains", "expected": "example.com"},
+        {"kind": "answer_contains", "expected": "example.org"},
+        {"kind": "answer_contains", "expected": "documentation"},
+        {"kind": "answer_contains", "expected": "https://www.iana.org/help/example-domains"},
+        {"kind": "history_url_observed", "expected": "https://www.iana.org/help/example-domains"}
+      ],
+      "tags": ["public-web", "multi-fact", "citation"]
+    },
+    {
+      "id": "python_creator_faq",
+      "category": "open_web_fact",
+      "goal": "Use the official Python FAQ to report who created Python and cite the exact page URL.",
+      "start_url": "https://docs.python.org/3/faq/general.html",
+      "source_urls": ["https://docs.python.org/3/faq/general.html"],
+      "snapshot_id": "python-faq-2026-08",
+      "valid_from": "2026-08-01",
+      "valid_until": "2027-08-31",
+      "network_required": true,
+      "split": "validation",
+      "task_family": "official_document_fact_retrieval",
+      "setting_id": "versioned_official_documentation",
+      "leakage_group": "host_docs_python_org",
+      "target_failure_modes": ["entity_disambiguation", "tool_use", "answer_grounding"],
+      "feedback": {"kind": "verifiable"},
+      "expected_horizon": "short",
+      "assertions": [
+        {"kind": "answer_contains", "expected": "Guido van Rossum"},
+        {"kind": "answer_contains", "expected": "https://docs.python.org/3/faq/general.html"},
+        {"kind": "answer_not_contains", "expected": "Monty Python created the language"},
+        {"kind": "history_url_observed", "expected": "https://docs.python.org/3/faq/general.html"}
+      ],
+      "tags": ["public-web", "official-docs", "answer-grounding"]
+    }
+  ]
+}

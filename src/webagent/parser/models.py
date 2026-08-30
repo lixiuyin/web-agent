@@ -1,7 +1,7 @@
 """Structured data models for document parsing + pure query helpers.
 
 These dataclasses are the public output contract of the parser cascade and are
-re-exported by ``webagent.utils.chandra_pdf`` for backward compatibility, so the
+used by both parser providers and PDF tools, so the
 PDF tool modules keep working unchanged.
 """
 
@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
-from typing import Any
 
 _FIGURE_PATTERN = re.compile(r"Figure\s+(\d+[a-z]?)", re.IGNORECASE)
 _TABLE_PATTERN = re.compile(r"Table\s+(\d+[a-z]?)", re.IGNORECASE)
@@ -73,18 +72,8 @@ class PDFParseResult:
 
 
 # ---------------------------------------------------------------------------
-# Pure helpers — bbox normalisation + content queries (preserved API).
+# Pure content-query helpers.
 # ---------------------------------------------------------------------------
-
-
-def normalize_bbox(bbox: Any) -> BBox:
-    """Normalize a bbox-like value to a 4-tuple of ints."""
-    if isinstance(bbox, (list, tuple)) and len(bbox) >= 4:
-        try:
-            return (int(bbox[0]), int(bbox[1]), int(bbox[2]), int(bbox[3]))
-        except (TypeError, ValueError):
-            return (0, 0, 0, 0)
-    return (0, 0, 0, 0)
 
 
 def extract_figure_number(text: str) -> str:
@@ -140,28 +129,6 @@ def find_section_by_title(
                 section_title = section_title.lower()
             if title in section_title or section_title in title:
                 return blocks
-    return None
-
-
-def get_element_at_position(
-    result: PDFParseResult, page_idx: int, x: int, y: int
-) -> dict[str, Any] | None:
-    """Find the element (image, table, or text) at the given page position."""
-    for img in result.images:
-        if img.page_idx == page_idx:
-            x0, y0, x1, y1 = img.bbox
-            if x0 <= x <= x1 and y0 <= y <= y1:
-                return {"type": "image", "data": img}
-    for table in result.tables:
-        if table.page_idx == page_idx:
-            x0, y0, x1, y1 = table.bbox
-            if x0 <= x <= x1 and y0 <= y <= y1:
-                return {"type": "table", "data": table}
-    for block in result.text_blocks:
-        if block.page_idx == page_idx:
-            x0, y0, x1, y1 = block.bbox
-            if x0 <= x <= x1 and y0 <= y <= y1:
-                return {"type": "text", "data": block}
     return None
 
 

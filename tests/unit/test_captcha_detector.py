@@ -20,12 +20,6 @@ def mock_page():
 class TestCaptchaDetector:
     """Tests for CaptchaDetector class."""
 
-    def test_init(self):
-        """Test detector initialization."""
-        detector = CaptchaDetector()
-        assert detector.detected_type is None
-        assert detector.detected_confidence == 0.0
-
     @pytest.mark.asyncio
     async def test_no_captcha(self, mock_page):
         """Test detection when no captcha is present."""
@@ -48,6 +42,7 @@ class TestCaptchaDetector:
 
         # Mock finding reCAPTCHA iframe
         mock_element = MagicMock()
+        mock_element.is_visible = AsyncMock(return_value=True)
         mock_page.query_selector = AsyncMock(return_value=mock_element)
 
         detector = CaptchaDetector()
@@ -66,6 +61,7 @@ class TestCaptchaDetector:
 
         # Mock finding hCaptcha element
         mock_element = MagicMock()
+        mock_element.is_visible = AsyncMock(return_value=True)
         mock_page.query_selector = AsyncMock(return_value=mock_element)
 
         detector = CaptchaDetector()
@@ -82,6 +78,7 @@ class TestCaptchaDetector:
 
         # Mock finding Cloudflare element
         mock_element = MagicMock()
+        mock_element.is_visible = AsyncMock(return_value=True)
         mock_page.query_selector = AsyncMock(return_value=mock_element)
 
         detector = CaptchaDetector()
@@ -117,19 +114,29 @@ class TestCaptchaDetector:
         assert result["type"] == "unknown"
 
     @pytest.mark.asyncio
-    async def test_detector_state_updates(self, mock_page):
-        """Test that detector state updates after detection."""
+    async def test_detection_reports_type_and_confidence(self, mock_page):
+        """A positive detection returns a non-null type and positive confidence."""
         mock_page.title = AsyncMock(return_value="Login")
         mock_element = MagicMock()
+        mock_element.is_visible = AsyncMock(return_value=True)
         mock_page.query_selector = AsyncMock(return_value=mock_element)
 
-        detector = CaptchaDetector()
-        assert detector.detected_type is None
+        result = await CaptchaDetector().detect_captcha(mock_page)
 
-        await detector.detect_captcha(mock_page)
+        assert result["detected"] is True
+        assert result["type"] is not None
+        assert result["confidence"] > 0
 
-        assert detector.detected_type is not None
-        assert detector.detected_confidence > 0
+    @pytest.mark.asyncio
+    async def test_hidden_captcha_integration_marker_does_not_block_page(self, mock_page):
+        mock_page.title = AsyncMock(return_value="FastAPI documentation")
+        hidden = MagicMock()
+        hidden.is_visible = AsyncMock(return_value=False)
+        mock_page.query_selector = AsyncMock(return_value=hidden)
+
+        result = await CaptchaDetector().detect_captcha(mock_page)
+
+        assert result["detected"] is False
 
 
 @pytest.mark.asyncio

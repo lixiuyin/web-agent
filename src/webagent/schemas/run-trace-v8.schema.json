@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/lixiuyin/web-agent/main/src/webagent/schemas/run-trace-v8.schema.json",
+  "title": "web-agent run trace v8",
+  "description": "Auditable, screenshot-free trace for one continuous web-agent run.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "$schema",
+    "producer",
+    "run_id",
+    "run_kind",
+    "task",
+    "status",
+    "success",
+    "evaluation",
+    "steps"
+  ],
+  "properties": {
+    "schema_version": {"const": 8},
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/lixiuyin/web-agent/main/src/webagent/schemas/run-trace-v8.schema.json"
+    },
+    "producer": {"$ref": "#/$defs/producer"},
+    "created_at": {"type": ["string", "null"]},
+    "run_id": {"type": "string", "minLength": 1},
+    "run_kind": {"const": "agent_e2e"},
+    "task": {"type": "string"},
+    "status": {"type": "string"},
+    "success": {"type": "boolean"},
+    "steps_taken": {"type": "integer", "minimum": 0, "default": 0},
+    "total_duration": {"type": "number", "minimum": 0, "default": 0},
+    "final_result": {},
+    "evaluation": {"$ref": "#/$defs/evaluation"},
+    "planner_attempts": {
+      "type": "array",
+      "items": {"type": "object"},
+      "default": []
+    },
+    "events": {"type": "array", "default": []},
+    "resume_count": {"type": "integer", "minimum": 0, "default": 0},
+    "checkpoint_schema_version": {
+      "type": ["integer", "null"],
+      "minimum": 1,
+      "default": null
+    },
+    "resumed_from_checkpoint": {"type": "boolean", "default": false},
+    "steps": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/step"}
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"resumed_from_checkpoint": {"const": true}},
+        "required": ["resumed_from_checkpoint"]
+      },
+      "then": {
+        "properties": {
+          "resume_count": {"minimum": 1},
+          "checkpoint_schema_version": {"type": "integer", "minimum": 1}
+        },
+        "required": ["resume_count", "checkpoint_schema_version"]
+      },
+      "else": {"properties": {"resume_count": {"const": 0}}}
+    }
+  ],
+  "$defs": {
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "source_sha256"],
+      "properties": {
+        "name": {"const": "lixiuyin-webagent"},
+        "version": {"type": "string", "minLength": 1},
+        "source_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "evaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "agent_source_sha256",
+        "mode",
+        "discovery_mode",
+        "direct_source_tools_enabled",
+        "high_risk_action_policy",
+        "stealth_mode",
+        "anti_shortcut_contract",
+        "certificate_required",
+        "strict_eval_mode",
+        "search_engine_only",
+        "browser_profile_mode",
+        "persistent_pdf_cache"
+      ],
+      "properties": {
+        "agent_source_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "mode": {"type": "string"},
+        "discovery_mode": {"type": "string"},
+        "direct_source_tools_enabled": {"type": "boolean"},
+        "high_risk_action_policy": {"type": "string"},
+        "stealth_mode": {"type": "boolean"},
+        "anti_shortcut_contract": {"type": ["string", "null"]},
+        "certificate_required": {"type": "boolean"},
+        "strict_eval_mode": {"type": "boolean"},
+        "search_engine_only": {"type": "boolean"},
+        "browser_profile_mode": {"type": "string"},
+        "persistent_pdf_cache": {"type": "boolean"}
+      }
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["step_number", "run_id", "tool", "success"],
+      "properties": {
+        "step_number": {"type": "integer", "minimum": 1},
+        "run_id": {"type": "string", "minLength": 1},
+        "timestamp": {"type": ["string", "null"]},
+        "tool": {"type": "string", "minLength": 1},
+        "parameters": {"type": "object", "default": {}},
+        "reasoning": {"type": "string", "default": ""},
+        "success": {"type": "boolean"},
+        "error": {"type": ["string", "null"]},
+        "result": {},
+        "planner_visible_result": {"type": "string", "default": ""},
+        "policy": {"type": "object", "default": {}},
+        "duration_seconds": {"type": ["number", "null"], "minimum": 0},
+        "tool_duration_seconds": {"type": ["number", "null"], "minimum": 0}
+      }
+    }
+  }
+}

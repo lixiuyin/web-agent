@@ -3,7 +3,6 @@
 from webagent.browser.priority import (
     _extract_label,
     calculate_priority,
-    get_top_elements_summary,
     sort_elements_by_priority,
 )
 
@@ -264,24 +263,3 @@ class TestExtractLabel:
         }
         label = _extract_label(element)
         assert len(label) == 100
-
-
-class TestGetTopElementsSummary:
-    """Test summary generation for hidden elements."""
-
-    def test_empty_elements_returns_empty_string(self):
-        """Empty list returns empty string."""
-        summary = get_top_elements_summary([])
-        assert summary == ""
-
-    def test_returns_count_of_remaining(self):
-        """Summary includes count of elements not shown."""
-        elements = [{"tag": "a"} for _ in range(5)]
-        summary = get_top_elements_summary(elements, shown_count=10)
-        assert "5 more" in summary
-
-    def test_format_is_correct(self):
-        """Summary format is 'and X more element(s)'."""
-        elements = [{"tag": "a"} for _ in range(3)]
-        summary = get_top_elements_summary(elements, shown_count=7)
-        assert summary == "... and 3 more element(s)"

@@ -56,6 +56,31 @@ class TestLoopDetector:
         assert "same page" in nudge.lower()
         assert detector.loop_type == "page_stagnation"
 
+    def test_scroll_churn_ignores_changing_viewport_hashes(self):
+        detector = LoopDetector(window_size=5, threshold=3)
+
+        detector.add_action("scroll", "https://example.com/article", "top", {"amount": 800})
+        detector.add_action("scroll", "https://example.com/article", "middle", {"amount": 900})
+        detector.add_action("scroll", "https://example.com/article", "bottom", {"amount": 700})
+
+        is_looping, nudge = detector.is_looping()
+
+        assert is_looping is True
+        assert detector.loop_type == "scroll_churn"
+        assert "extract_text" in nudge
+
+    def test_scroll_across_distinct_urls_is_not_churn(self):
+        detector = LoopDetector(window_size=5, threshold=3)
+        for index in range(3):
+            detector.add_action(
+                "scroll",
+                f"https://example.com/article/{index}",
+                f"hash-{index}",
+                {"amount": 800},
+            )
+
+        assert detector.is_looping()[0] is False
+
     def test_url_oscillation_detection(self):
         """Test detection of bouncing between URLs."""
         detector = LoopDetector(window_size=7, threshold=3)

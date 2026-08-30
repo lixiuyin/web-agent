@@ -1,11 +1,11 @@
-"""Marker API client — datalab.to cloud document parsing.
+"""Datalab Convert API client backed by Marker/Chandra document parsing.
 
 Task-based flow:
-  1. ``POST`` multipart to the marker endpoint → ``request_check_url``.
+  1. ``POST /api/v1/convert`` multipart → ``request_check_url``.
   2. Poll the check URL until ``status == "complete"``.
   3. Map markdown + paginated text + images into a ``PDFParseResult``.
 
-API docs: https://documentation.datalab.to/api-reference/marker
+API docs: https://documentation.datalab.to/api-reference/convert-document
 """
 
 from __future__ import annotations
@@ -17,6 +17,7 @@ import logging
 import re
 import time
 from pathlib import Path
+from typing import Any
 
 import httpx
 
@@ -44,7 +45,7 @@ _MIME_MAP = {
 
 
 class MarkerAPIParser:
-    """HTTP client for the datalab.to Marker cloud API."""
+    """HTTP client for Datalab's document-conversion API."""
 
     name = "marker"
 
@@ -78,6 +79,9 @@ class MarkerAPIParser:
             raise_for_status(resp, "marker", "submit")
 
             body = resp.json()
+            if not isinstance(body, dict):
+                msg = "Marker submit response must be a JSON object"
+                raise ParserProviderError(provider="marker", retryable=False, cause=TypeError(msg))
             if not body.get("success", True):
                 raise ParserProviderError(
                     provider="marker",
@@ -95,7 +99,14 @@ class MarkerAPIParser:
         except Exception as exc:
             raise ParserProviderError(provider="marker", retryable=True, cause=exc) from exc
 
-    async def _poll(self, client, check_url, headers, req: ParseRequest, request_id: str) -> dict:
+    async def _poll(
+        self,
+        client: httpx.AsyncClient,
+        check_url: str,
+        headers: dict[str, str],
+        req: ParseRequest,
+        request_id: str,
+    ) -> dict[str, Any]:
         interval = float(req.config.parser_poll_interval_seconds)
         deadline = time.monotonic() + req.config.marker_max_wait_seconds
         while time.monotonic() < deadline:
@@ -104,6 +115,9 @@ class MarkerAPIParser:
             # "not done yet" and polling until the deadline.
             raise_for_status(resp, "marker", "poll")
             body = resp.json()
+            if not isinstance(body, dict):
+                msg = "Marker poll response must be a JSON object"
+                raise ParserProviderError(provider="marker", retryable=False, cause=TypeError(msg))
             status = str(body.get("status", "")).lower()
             if status in {"complete", "completed", "processed", "success", "done"}:
                 return body
@@ -118,14 +132,17 @@ class MarkerAPIParser:
             await asyncio.sleep(interval)
         raise ParserProviderError(
             provider="marker",
-            retryable=True,
+            # A completed max-wait polling window is not a transient request
+            # failure. Resubmitting the same document creates duplicate remote
+            # jobs and can outlive the cascade/tool budget.
+            retryable=False,
             reason=FailureReason.NETWORK_TIMEOUT,
             cause=TimeoutError(
                 f"task {request_id} timed out after {req.config.marker_max_wait_seconds}s"
             ),
         )
 
-    def _build(self, body: dict, req: ParseRequest) -> PDFParseResult:
+    def _build(self, body: dict[str, Any], req: ParseRequest) -> PDFParseResult:
         markdown = body.get("markdown") or ""
         metadata = body.get("metadata") or {}
         page_count = body.get("page_count") or metadata.get("page_count") or 1
@@ -145,7 +162,11 @@ class MarkerAPIParser:
         return result
 
     def _save_images(
-        self, result: PDFParseResult, images: dict, req: ParseRequest, page_texts: list[str]
+        self,
+        result: PDFParseResult,
+        images: dict[str, Any],
+        req: ParseRequest,
+        page_texts: list[str],
     ) -> None:
         """Persist base64 images and attach each to its figure caption/number.
 

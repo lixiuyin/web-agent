@@ -5,12 +5,13 @@ from __future__ import annotations
 from typing import Any
 
 from webagent.core.models import ToolResult
+from webagent.tools.builtin._base import BrowserToolBase
 from webagent.tools.builtin.browser_tools import _resolve_selector, _validate_selector
 from webagent.tools.registry import tool
 
 
 @tool("hover", "Hover over element. params: selector={type:'text'|'css', value:(string)}")
-class HoverTool:
+class HoverTool(BrowserToolBase):
     """Hover over an element to trigger dropdowns, tooltips, or other hover effects.
 
     Examples:
@@ -18,13 +19,10 @@ class HoverTool:
     - Hover by CSS: {"selector": {"type": "css", "value": ".dropdown-trigger"}}
     """
 
-    def __init__(self, browser: Any = None, **kw: Any) -> None:
-        self.browser = browser
-
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         _validate_selector(params.get("selector"))
 
-    async def execute(self, params: dict) -> ToolResult:
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         selector = _resolve_selector(params["selector"])
         resp = await self.browser.hover(selector)
         if resp.get("success"):
@@ -38,7 +36,7 @@ class HoverTool:
     "select_dropdown",
     "Select from dropdown. params: selector={type:'text'|'css', value:(string)}, value?, label?, index?",
 )
-class SelectDropdownTool:
+class SelectDropdownTool(BrowserToolBase):
     """Select an option from a <select> dropdown element.
 
     Examples:
@@ -52,10 +50,7 @@ class SelectDropdownTool:
     - index: The 0-based index of the option
     """
 
-    def __init__(self, browser: Any = None, **kw: Any) -> None:
-        self.browser = browser
-
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         _validate_selector(params.get("selector"))
 
         # At least one selection method must be provided
@@ -67,7 +62,7 @@ class SelectDropdownTool:
             if not isinstance(idx, int) or idx < 0:
                 raise ValueError("'index' must be a non-negative integer")
 
-    async def execute(self, params: dict) -> ToolResult:
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         selector = _resolve_selector(params["selector"])
         resp = await self.browser.select_option(
             selector,
@@ -90,7 +85,7 @@ class SelectDropdownTool:
     "wait_for_element",
     "Wait for element state. params: selector={type:'text'|'css', value:(string)}, state=visible|hidden|attached|detached, timeout_ms=30000",
 )
-class WaitForElementTool:
+class WaitForElementTool(BrowserToolBase):
     """Wait for an element to reach a specific state.
 
     Examples:
@@ -105,10 +100,7 @@ class WaitForElementTool:
     - detached: Element is removed from the DOM
     """
 
-    def __init__(self, browser: Any = None, **kw: Any) -> None:
-        self.browser = browser
-
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         _validate_selector(params.get("selector"))
 
         state = params.get("state", "visible")
@@ -119,7 +111,7 @@ class WaitForElementTool:
         if not isinstance(timeout, int) or timeout < 0 or timeout > 120000:
             raise ValueError("'timeout_ms' must be between 0 and 120000")
 
-    async def execute(self, params: dict) -> ToolResult:
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         selector = _resolve_selector(params["selector"])
         state = params.get("state", "visible")
         timeout = params.get("timeout_ms", 30000)
@@ -142,7 +134,7 @@ class WaitForElementTool:
     "get_attribute",
     "Get element attribute. params: selector={type:'text'|'css', value:(string)}, attribute (string)",
 )
-class GetAttributeTool:
+class GetAttributeTool(BrowserToolBase):
     """Get the value of an element's attribute (e.g., href, src, data-*, id, class, etc.).
 
     Examples:
@@ -151,15 +143,16 @@ class GetAttributeTool:
     - Get data attribute: {"selector": {"type": "css", "value": "[data-id]"}, "attribute": "data-id"}
     """
 
-    def __init__(self, browser: Any = None, **kw: Any) -> None:
-        self.browser = browser
-
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         _validate_selector(params.get("selector"))
         if not isinstance(params.get("attribute"), str) or not params["attribute"].strip():
             raise ValueError("'attribute' must be a non-empty string")
+        if params["attribute"].strip().casefold() in {"innertext", "textcontent"}:
+            raise ValueError(
+                "innerText/textContent are DOM properties, not attributes; use extract_text"
+            )
 
-    async def execute(self, params: dict) -> ToolResult:
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         selector = _resolve_selector(params["selector"])
         attribute = params["attribute"].strip()
 
@@ -185,7 +178,7 @@ class GetAttributeTool:
     "get_all_links",
     "Extract all links from page. params: skip_anchors=false, skip_javascript=false, filter_external_only=false, max_results=100",
 )
-class GetAllLinksTool:
+class GetAllLinksTool(BrowserToolBase):
     """Extract all links (hrefs and text) from the current page with optional filtering.
 
     Filter options:
@@ -195,10 +188,7 @@ class GetAllLinksTool:
     - max_results: Maximum number of links to return (default 100)
     """
 
-    def __init__(self, browser: Any = None, **kw: Any) -> None:
-        self.browser = browser
-
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         # Validate boolean parameters
         for param in ("skip_anchors", "skip_javascript", "filter_external_only"):
             if param in params and not isinstance(params[param], bool):
@@ -210,7 +200,7 @@ class GetAllLinksTool:
             if not isinstance(max_res, int) or max_res < 0 or max_res > 1000:
                 raise ValueError("'max_results' must be between 0 and 1000")
 
-    async def execute(self, params: dict) -> ToolResult:
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         resp = await self.browser.get_all_links(
             skip_anchors=params.get("skip_anchors", False),
             skip_javascript=params.get("skip_javascript", False),
@@ -222,7 +212,11 @@ class GetAllLinksTool:
             return ToolResult(
                 success=True,
                 tool_name="get_all_links",
-                data={"links": links, "total_count": resp.get("count", 0), "returned": len(links)},
+                data={
+                    "links": links,
+                    "total_count": resp.get("total_count", resp.get("count", 0)),
+                    "returned": len(links),
+                },
             )
         return ToolResult(
             success=False,
@@ -232,16 +226,13 @@ class GetAllLinksTool:
 
 
 @tool("get_url", "Get current page URL. params: none")
-class GetUrlTool:
+class GetUrlTool(BrowserToolBase):
     """Get the current page URL."""
 
-    def __init__(self, browser: Any = None, **kw: Any) -> None:
-        self.browser = browser
-
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         pass
 
-    async def execute(self, params: dict) -> ToolResult:
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         try:
             url = self.browser.page.url
             return ToolResult(success=True, tool_name="get_url", data={"url": url})
@@ -250,16 +241,13 @@ class GetUrlTool:
 
 
 @tool("get_title", "Get current page title. params: none")
-class GetTitleTool:
+class GetTitleTool(BrowserToolBase):
     """Get the current page title."""
 
-    def __init__(self, browser: Any = None, **kw: Any) -> None:
-        self.browser = browser
-
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         pass
 
-    async def execute(self, params: dict) -> ToolResult:
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         try:
             title = await self.browser.page.title()
             return ToolResult(success=True, tool_name="get_title", data={"title": title})
@@ -268,16 +256,13 @@ class GetTitleTool:
 
 
 @tool("refresh", "Refresh current page. params: none")
-class RefreshTool:
+class RefreshTool(BrowserToolBase):
     """Refresh/reload the current page."""
 
-    def __init__(self, browser: Any = None, **kw: Any) -> None:
-        self.browser = browser
-
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         pass
 
-    async def execute(self, params: dict) -> ToolResult:
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         resp = await self.browser.refresh()
         if resp.get("success"):
             return ToolResult(
@@ -294,7 +279,7 @@ class RefreshTool:
     "scroll_to_element",
     "Scroll element into view. params: selector={type:'text'|'css', value:(string)}",
 )
-class ScrollToElementTool:
+class ScrollToElementTool(BrowserToolBase):
     """Scroll a specific element into view.
 
     Examples:
@@ -302,13 +287,10 @@ class ScrollToElementTool:
     - Scroll by CSS: {"selector": {"type": "css", "value": "#comments-section"}}
     """
 
-    def __init__(self, browser: Any = None, **kw: Any) -> None:
-        self.browser = browser
-
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         _validate_selector(params.get("selector"))
 
-    async def execute(self, params: dict) -> ToolResult:
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         selector = _resolve_selector(params["selector"])
         resp = await self.browser.scroll_to_element(selector)
         if resp.get("success"):
@@ -323,7 +305,7 @@ class ScrollToElementTool:
 @tool(
     "get_search_results", "Extract search results from page. params: max_results=10, show_all=false"
 )
-class GetSearchResultsTool:
+class GetSearchResultsTool(BrowserToolBase):
     """Extract structured search results from search engines (Google, Bing, DuckDuckGo).
 
     Automatically detects the search engine and extracts results with:
@@ -336,26 +318,7 @@ class GetSearchResultsTool:
     For non-search engine pages, falls back to filtered link extraction.
     """
 
-    # Keywords that indicate the user needs to compare multiple results
-    COMPARISON_KEYWORDS = [
-        "most recent",
-        "latest",
-        "newest",
-        "compare",
-        "best",
-        "top",
-        "which",
-        "what is",
-        "find the",
-        "all",
-        "list",
-        "options",
-    ]
-
-    def __init__(self, browser: Any = None, **kw: Any) -> None:
-        self.browser = browser
-
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         max_res = params.get("max_results", 10)
         if not isinstance(max_res, int) or max_res < 1 or max_res > 100:
             raise ValueError("'max_results' must be between 1 and 100")
@@ -364,7 +327,7 @@ class GetSearchResultsTool:
         if not isinstance(show_all, bool):
             raise ValueError("'show_all' must be a boolean")
 
-    async def execute(self, params: dict) -> ToolResult:
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         max_results = params.get("max_results", 10)
         show_all = params.get("show_all", False)
         resp = await self.browser.get_search_results(max_results=max_results)

@@ -7,13 +7,13 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from PIL import Image
 
 from webagent.parser.models import ImageInfo, PDFParseResult
-from webagent.tools.builtin import pdf_qa_tools
+from webagent.tools.builtin._pdf_common import pdf_cache_key, pdf_result_cache
 from webagent.tools.builtin.pdf_qa_tools import (
     PdfListFiguresTool,
     _figure_sort_key,
-    _get_cache_key,
 )
 
 
@@ -30,7 +30,7 @@ def _seed_result(artifacts: Path) -> tuple[Path, PDFParseResult]:
 
     def _img(name: str) -> str:
         p = images_dir / name
-        p.write_bytes(b"\xff\xd8\xff")  # minimal jpeg-ish bytes
+        Image.new("RGB", (120, 120), "blue").save(p)
         return str(p)
 
     result = PDFParseResult(
@@ -67,7 +67,7 @@ async def test_pdf_list_figures_separates_logos_and_sorts_by_number(tmp_path):
     artifacts = tmp_path / "outputs" / "artifacts"
     artifacts.mkdir(parents=True)
     pdf, result = _seed_result(artifacts)
-    pdf_qa_tools._pdf_cache[_get_cache_key(pdf.resolve())] = result
+    pdf_result_cache[pdf_cache_key(pdf, artifacts)] = result
 
     tool = PdfListFiguresTool(artifacts_dir=artifacts)
     res = await tool.execute({"path": "paper.pdf"})
@@ -82,7 +82,7 @@ async def test_pdf_list_figures_separates_logos_and_sorts_by_number(tmp_path):
     assert res.data["unlabeled_image_count"] == 2
     assert all("figure_number" not in img for img in res.data["unlabeled_images"])
 
-    pdf_qa_tools._pdf_cache.clear()
+    pdf_result_cache.clear()
 
 
 @pytest.mark.asyncio
@@ -90,7 +90,7 @@ async def test_pdf_analyze_figure_resolves_number_not_extraction_order(tmp_path)
     artifacts = tmp_path / "outputs" / "artifacts"
     artifacts.mkdir(parents=True)
     pdf, result = _seed_result(artifacts)
-    pdf_qa_tools._pdf_cache[_get_cache_key(pdf.resolve())] = result
+    pdf_result_cache[pdf_cache_key(pdf, artifacts)] = result
 
     class _StubPlanner:
         vision_actually_works = True
@@ -109,4 +109,4 @@ async def test_pdf_analyze_figure_resolves_number_not_extraction_order(tmp_path)
     assert res.data["figure_number"] == "1"
     assert res.data["image_path"].endswith("fig1.jpg")
 
-    pdf_qa_tools._pdf_cache.clear()
+    pdf_result_cache.clear()

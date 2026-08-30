@@ -84,7 +84,7 @@ def test_build_from_markdown_extracts_table():
     html = result.tables[0].html_body
     assert "<table>" in html and "<th>a</th>" in html
     # Round-trip through the actual downstream consumer (rank 2 regression).
-    from webagent.tools.builtin.pdf_mining_tools import parse_table_html
+    from webagent.tools.builtin._pdf_analysis import parse_table_html
 
     parsed = parse_table_html(html)
     assert parsed["headers"] == ["a", "b"]
@@ -93,9 +93,9 @@ def test_build_from_markdown_extracts_table():
 
 def test_degraded_results_are_not_cached():
     """Local/error results must not poison the cross-run PDF cache (rank 12)."""
-    from webagent.tools.builtin.pdf_qa_tools import _PdfResultCache
+    from webagent.tools.builtin._pdf_common import PdfResultCache
 
-    cache = _PdfResultCache()
+    cache = PdfResultCache()
     cloud = PDFParseResult(None, None, "i", "o", backend="mineru")
     local = PDFParseResult(None, None, "i", "o", backend="pymupdf")
     errored = PDFParseResult(None, None, "i", "o", backend="marker", error="boom")
@@ -171,6 +171,20 @@ def test_image_caption_from_alt_text():
     assert caption.startswith("Figure 1:")
 
 
+def test_source_caption_overrides_generated_same_number_alt_and_duplicate():
+    pages = [
+        "![Figure 1: Overview of the wrong legacy model.](fig1.jpg)\n\n"
+        "Figure 1: Overview of the wrong legacy model.\n\n"
+        "Figure 1: **ProjectX-Next architecture.** Three recurrent layers alternate "
+        "with one sparse-attention layer."
+    ]
+    mapping = image_captions_from_pages(pages)
+    assert mapping["fig1.jpg"][1] == (
+        "Figure 1: **ProjectX-Next architecture.** Three recurrent layers alternate "
+        "with one sparse-attention layer."
+    )
+
+
 def test_image_caption_from_nearby_line():
     # When the alt text is just a description, the caption is the nearest
     # "Figure N:" line on the page (e.g. the Transformer architecture diagram).
@@ -200,6 +214,36 @@ def test_image_caption_picks_nearest_of_multiple_figures():
 def test_image_without_caption_maps_to_empty():
     mapping = image_captions_from_pages(["![logo](brand.png)\n\njust prose, no figures here"])
     assert mapping["brand.png"] == (0, "")
+
+
+def test_logo_does_not_inherit_figure_caption():
+    # Regression: a cover logo must not be labelled "Figure 1" just because it
+    # shares a page with the real figure.
+    pages = [
+        "Alibaba Token Hub ![Alibaba Token Hub logo](logo.jpg), Alibaba Group\n\n"
+        "![GitHub logo](github.jpg)\n\n"
+        "![Figure 1: Performance bar charts across six benchmarks.](fig1.jpg)\n\n"
+        "Figure 1: Performance bar charts across six benchmarks.\n\n"
+    ]
+    mapping = image_captions_from_pages(pages)
+    assert mapping["logo.jpg"] == (0, "")
+    assert mapping["github.jpg"] == (0, "")
+    page_idx, caption = mapping["fig1.jpg"]
+    assert page_idx == 0
+    assert caption.startswith("Figure 1:")
+    assert "](fig1.jpg)" not in caption
+
+
+def test_nearby_image_does_not_inherit_inline_figure_alt():
+    # A descriptive image next to an inline figure must not steal the figure's
+    # alt text as its own caption.
+    pages = [
+        "![Overview diagram of the system.](overview.jpg)\n\n"
+        "![Figure 2: Results chart.](chart.jpg)\n\n"
+    ]
+    mapping = image_captions_from_pages(pages)
+    assert mapping["overview.jpg"][1] == ""
+    assert mapping["chart.jpg"][1].startswith("Figure 2:")
 
 
 # ── Quality gate ────────────────────────────────────────────────────────────

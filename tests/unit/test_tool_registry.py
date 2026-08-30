@@ -1,21 +1,30 @@
 """Tests for the tool registry system."""
 
+from typing import Any
+
 import pytest
 
 from webagent.core.models import ToolResult
-from webagent.tools.registry import _TOOL_REGISTRY, ToolRegistry, tool
+from webagent.tools.registry import (
+    _TOOL_REGISTRY,
+    ToolRegistrationError,
+    ToolRegistry,
+    ToolSpec,
+    tool,
+)
+from webagent.tools.schemas import TOOL_PARAMETER_SCHEMAS, validate_parameter_schema
 
 
 @tool("test_echo", "Echo tool for testing")
 class EchoTool:
-    def __init__(self, **kw):
-        pass
+    def __init__(self, **kwargs: Any) -> None:
+        self.kwargs = kwargs
 
-    def validate_params(self, params):
+    def validate_params(self, params: dict[str, Any]) -> None:
         if "message" not in params:
             raise ValueError("'message' required")
 
-    async def execute(self, params):
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         return ToolResult(success=True, tool_name="test_echo", data={"echo": params["message"]})
 
 
@@ -27,6 +36,29 @@ def test_registry_auto_discover():
     reg = ToolRegistry()
     reg.auto_discover()
     assert "test_echo" in reg.names()
+
+
+def test_auto_discover_preserves_constructor_failure() -> None:
+    @tool("broken_constructor", "Raises a TypeError during initialization")
+    class BrokenConstructorTool:
+        def __init__(self, **kwargs: Any) -> None:
+            del kwargs
+            raise TypeError("internal constructor failure")
+
+        def validate_params(self, params: dict[str, Any]) -> None:
+            del params
+
+        async def execute(self, params: dict[str, Any]) -> ToolResult:
+            del params
+            return ToolResult(success=True, tool_name="broken_constructor")
+
+    try:
+        reg = ToolRegistry()
+        with pytest.raises(ToolRegistrationError, match="broken_constructor") as error:
+            reg.auto_discover()
+        assert isinstance(error.value.__cause__, TypeError)
+    finally:
+        _TOOL_REGISTRY.pop("broken_constructor")
 
 
 @pytest.mark.asyncio
@@ -61,3 +93,32 @@ def test_registry_descriptions():
     desc = reg.descriptions()
     assert "test_echo" in desc
     assert "Echo tool" in desc
+
+
+def test_registry_specs_are_filtered_and_isolated() -> None:
+    reg = ToolRegistry()
+    reg.auto_discover()
+
+    specs = reg.specs({"test_echo"})
+
+    assert len(specs) == 1
+    assert isinstance(specs[0], ToolSpec)
+    assert specs[0].name == "test_echo"
+    assert specs[0].parameters["type"] == "object"
+    assert specs[0].parameters["additionalProperties"] is True
+    specs[0].parameters["properties"]["mutated"] = {"type": "string"}
+    assert "mutated" not in reg.specs({"test_echo"})[0].parameters["properties"]
+
+
+def test_every_builtin_tool_has_a_valid_compact_schema() -> None:
+    import webagent.tools.builtin  # noqa: F401
+
+    builtin_names = {
+        name
+        for name, definition in _TOOL_REGISTRY.items()
+        if definition.implementation.__module__.startswith("webagent.tools.builtin")
+    }
+
+    assert builtin_names == set(TOOL_PARAMETER_SCHEMAS)
+    for name in builtin_names:
+        validate_parameter_schema(TOOL_PARAMETER_SCHEMAS[name])

@@ -4,9 +4,10 @@ from __future__ import annotations
 
 import json
 import logging
-from pathlib import Path
+from typing import Any
 
-from webagent.core.models import AgentStep, ToolCall, ToolResult
+from webagent.agent.context import planner_context
+from webagent.core.models import ToolCall, ToolResult
 
 logger = logging.getLogger("webagent")
 
@@ -18,7 +19,7 @@ class LoggingHook:
         """Initialize with optional verbose output."""
         self.verbose = verbose
 
-    def _format_params(self, params: dict) -> str:
+    def _format_params(self, params: dict[str, Any]) -> str:
         """Format parameters for display."""
         if not params:
             return "{}"
@@ -31,10 +32,11 @@ class LoggingHook:
                 formatted[k] = v
         return json.dumps(formatted, ensure_ascii=False)
 
-    def _format_data(self, data: dict) -> str:
+    def _format_data(self, data: dict[str, Any], tool_name: str = "") -> str:
         """Format result data for display."""
         if not data:
             return "{}"
+        data = planner_context(tool_name, data)
         # Limit output size
         formatted = {}
         for k, v in data.items():
@@ -42,7 +44,8 @@ class LoggingHook:
                 formatted[k] = v[:100] + "..."
             else:
                 formatted[k] = v
-        return json.dumps(formatted, ensure_ascii=False)
+        rendered = json.dumps(formatted, ensure_ascii=False)
+        return rendered[:5000] + ("...[truncated]" if len(rendered) > 5000 else "")
 
     async def on_task_start(self, task: str) -> None:
         logger.info("Starting task: %s", task)
@@ -71,36 +74,18 @@ class LoggingHook:
             logger.info("  └─ Parameters: %s", self._format_params(tool_call.parameters))
 
         if tool_result.success and tool_result.data:
-            logger.info("  └─ Result: %s", self._format_data(tool_result.data))
+            logger.info(
+                "  └─ Result: %s",
+                self._format_data(tool_result.data, tool_call.tool_name),
+            )
 
         if not tool_result.success and tool_result.error:
             logger.info("  └─ Error: %s", tool_result.error)
+            if tool_result.data:
+                logger.info(
+                    "  └─ Failure details: %s",
+                    self._format_data(tool_result.data, tool_call.tool_name),
+                )
 
     async def on_task_end(self, status: str, steps: int) -> None:
         logger.info("Task finished: status=%s, steps=%d", status, steps)
-
-
-class FileLoggingHook:
-    """Persists session history to a JSON file when the task ends."""
-
-    def __init__(self, log_dir: Path, session_id: str) -> None:
-        self._log_dir = log_dir
-        self._log_dir.mkdir(parents=True, exist_ok=True)
-        self._session_id = session_id
-        self._steps: list[AgentStep] = []
-
-    async def on_task_start(self, task: str) -> None:
-        pass
-
-    async def on_step_complete(
-        self, step_number: int, tool_call: ToolCall, tool_result: ToolResult
-    ) -> None:
-        pass
-
-    async def on_task_end(self, status: str, steps: int) -> None:
-        pass
-
-    def save_history(self, steps: list[AgentStep]) -> None:
-        path = self._log_dir / f"{self._session_id}_history.json"
-        data = [s.model_dump(exclude={"browser_state": {"screenshot"}}) for s in steps]
-        path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")

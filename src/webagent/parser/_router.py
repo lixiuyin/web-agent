@@ -9,13 +9,11 @@ emergency fallback when every cloud API is unavailable (see ``cascade``).
 
 from __future__ import annotations
 
-from typing import Literal, cast
+from typing import Literal
 
 from ._profile import IMAGE_EXTS, SCANNED_TEXT_THRESHOLD, DocumentProfile
 
 ParserName = Literal["marker", "mineru", "paddle"]
-
-ALL_PARSERS: tuple[ParserName, ...] = ("marker", "mineru", "paddle")
 
 
 def select_parsers(profile: DocumentProfile, user_hint: str = "") -> tuple[ParserName, ...]:
@@ -48,6 +46,5 @@ def _apply_hint(order: tuple[ParserName, ...], hint: str) -> tuple[ParserName, .
     hint = (hint or "").strip().lower()
     if not hint or hint not in order:
         return order
-    hint_typed = cast(ParserName, hint)
-    remaining = tuple(p for p in order if p != hint_typed)
-    return (hint_typed, *remaining)
+    remaining = tuple(p for p in order if p != hint)
+    return (hint, *remaining)

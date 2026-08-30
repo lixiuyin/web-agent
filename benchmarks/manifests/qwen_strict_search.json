@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "suite": "qwen-strict-search-v1",
+  "tasks": [
+    {
+      "id": "qwen_latest_report_figure1",
+      "category": "strict_search_pdf_figure",
+      "goal": "Find the most recent official Qwen technical report PDF as of today using browser search only. Compare candidates and dates, explicitly state the selected report's exact publication or file date from first-party page/file-history evidence on a separate line labeled 'Selected report date:', cite the exact official PDF page URL, download the PDF, then interpret Figure 1 by explaining its purpose and key architectural findings.",
+      "start_url": "about:blank",
+      "source_urls": [
+        "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf"
+      ],
+      "snapshot_id": "qwen-latest-report-2026-08-29",
+      "valid_from": "2026-08-26",
+      "valid_until": "2026-09-30",
+      "network_required": true,
+      "discovery_required": true,
+      "scenario": "search_discovery",
+      "environment": "public_web",
+      "entry_mode": "search",
+      "risk_scope": "read_only",
+      "split": "held_out_setting",
+      "task_family": "latest_official_report_figure_interpretation",
+      "setting_id": "search_to_first_party_pdf",
+      "leakage_group": "qwen_official_report_landscape_2026_08",
+      "target_failure_modes": [
+        "search_recency",
+        "source_grounding",
+        "document_download",
+        "figure_detection",
+        "figure_interpretation",
+        "false_completion"
+      ],
+      "feedback": {"kind": "verifiable"},
+      "expected_horizon": "long",
+      "max_steps": 25,
+      "assertions": [
+        {"kind": "answer_contains", "expected": "Qwen3.8-Flash-Next"},
+        {"kind": "answer_labeled_date", "expected": {"label": "Selected report date", "date": "2026-08-26"}},
+        {"kind": "answer_contains", "expected": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf"},
+        {"kind": "answer_contains", "expected": "GDN"},
+        {"kind": "answer_contains", "expected": "QSA"},
+        {"kind": "answer_contains", "expected": "Gated Residual"},
+        {"kind": "answer_contains", "expected": "n-gram"},
+        {"kind": "answer_contains", "expected": "MTP"},
+        {"kind": "history_url_observed", "expected": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf"},
+        {"kind": "certificate_valid", "expected": true}
+      ],
+      "tags": [
+        "public-web",
+        "search-discovery",
+        "strict-e2e",
+        "pdf",
+        "figure",
+        "answer-grounding"
+      ]
+    }
+  ]
+}

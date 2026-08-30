@@ -1,0 +1,123 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing v-prefixed tag to validate and publish
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  verify-and-build:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.tag || github.ref }}
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          python-version: "3.13"
+      - run: uv sync --locked --extra dev --python 3.13
+      - id: version
+        shell: bash
+        run: |
+          tag="${{ inputs.tag || github.ref_name }}"
+          uv run python -m webagent.release state --root . --tag "$tag" --require-clean
+          echo "version=${tag#v}" >> "$GITHUB_OUTPUT"
+      - run: uv run ruff check src/ benchmarks/ tests/
+      - run: uv run ruff format --check src/ benchmarks/ tests/
+      - run: uv run mypy src/ benchmarks/
+      - run: uv run pytest tests/unit/ -v
+      - run: uv run playwright install --with-deps chromium
+      - run: uv run pytest tests/integration/ -v --no-cov
+      - name: Build and prove reproducibility
+        shell: bash
+        run: |
+          export SOURCE_DATE_EPOCH="$(git log -1 --format=%ct)"
+          uv run python -m build --outdir dist
+          uv run python -m build --outdir dist-rebuild
+          uv run python -m webagent.release artifacts dist
+          uv run python -m webagent.release repro dist dist-rebuild
+          uv run twine check dist/*
+      - name: Smoke-test wheel and source distribution
+        shell: bash
+        run: |
+          uv venv .wheel-smoke --python 3.13
+          uv pip install --python .wheel-smoke/bin/python dist/*.whl
+          cd /tmp
+          "$GITHUB_WORKSPACE/.wheel-smoke/bin/python" -c "from benchmarks.core import packaged_manifest_path; assert packaged_manifest_path('open_web_general.json').is_file()"
+          "$GITHUB_WORKSPACE/.wheel-smoke/bin/python" -m benchmarks.suites.open_web.runner --help
+          cd "$GITHUB_WORKSPACE"
+          .wheel-smoke/bin/webagent --help
+          uv venv .sdist-smoke --python 3.13
+          uv pip install --python .sdist-smoke/bin/python dist/*.tar.gz
+          cd /tmp
+          "$GITHUB_WORKSPACE/.sdist-smoke/bin/python" -c "from benchmarks.core import packaged_manifest_path; assert packaged_manifest_path('open_web_general.json').is_file()"
+          "$GITHUB_WORKSPACE/.sdist-smoke/bin/python" -m benchmarks.suites.open_web.runner --help
+          cd "$GITHUB_WORKSPACE"
+          .sdist-smoke/bin/webagent --help
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-distributions
+          path: dist/*
+          if-no-files-found: error
+
+  attest:
+    needs: verify-and-build
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      attestations: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-distributions
+          path: dist
+      - uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: "dist/*"
+
+  publish-pypi:
+    needs: [verify-and-build, attest]
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/lixiuyin-webagent/${{ needs.verify-and-build.outputs.version }}/
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-distributions
+          path: dist
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
+
+  github-release:
+    needs: [verify-and-build, attest]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-distributions
+          path: dist
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+        run: gh release create "$RELEASE_TAG" dist/* --verify-tag --generate-notes

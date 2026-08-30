@@ -13,6 +13,97 @@ from typing import Any
 logger = logging.getLogger("webagent")
 
 
+# Tag-based scores: search/entry boxes matter most, links least.
+_TAG_SCORES = {
+    "input": 35,
+    "textarea": 30,
+    "select": 28,
+    "button": 25,
+    "a": 15,
+}
+_DEFAULT_TAG_SCORE = 8
+
+# id/class substrings that mark a primary interactive element.
+_PRIORITY_INDICATORS = ("search", "submit", "primary", "main", "important")
+# id/class/role substrings that mark chrome (navigation, footer, etc.).
+_NEGATIVE_INDICATORS = ("footer", "header", "nav", "sidebar", "cookie")
+
+
+def _position_score(element: dict[str, Any], viewport_height: int, viewport_width: int) -> float:
+    """Vertical position dominates; left edge is slightly more prominent."""
+    bbox = element.get("bbox", {})
+    x_pos = bbox.get("x", 99999)
+    y_pos = bbox.get("y", 99999)
+    score = 0.0
+
+    if y_pos < viewport_height:
+        # In viewport: higher score for elements near top
+        score += max(0, 25 - (y_pos / viewport_height) * 25)
+    else:
+        # Below fold: lower base score
+        score += 3
+
+    if x_pos < viewport_width:
+        score += max(0, 10 - (x_pos / viewport_width) * 10)
+    return score
+
+
+def _size_score(element: dict[str, Any]) -> float:
+    """Prefer reasonably sized elements (100px to 50000px area)."""
+    bbox = element.get("bbox", {})
+    area = bbox.get("width", 0) * bbox.get("height", 0)
+    if 100 < area < 50000:
+        return 5
+    if area > 0:
+        return 2
+    return 0
+
+
+def _text_score(element: dict[str, Any]) -> float:
+    """Meaningful text (not single character or very long) scores higher."""
+    text = element.get("text", "").strip()
+    if not text:
+        return 0
+    if 2 < len(text) < 100:
+        return 8
+    if len(text) >= 2:
+        return 4
+    return 0
+
+
+def _task_relevance_score(element: dict[str, Any], task: str) -> float:
+    """Boost elements whose label contains task keywords."""
+    if not task:
+        return 0
+    label = _extract_label(element).lower()
+    task_words = set(re.findall(r"\w+", task.lower()))
+    matches = sum(1 for word in task_words if len(word) > 2 and word in label)
+    if matches > 0:
+        return min(25, matches * 8)
+    return 0
+
+
+def _attribute_score(element: dict[str, Any]) -> float:
+    """Score id/class/role indicator substrings (positive then negative)."""
+    attrs_value = element.get("attrs", {})
+    attrs = attrs_value if isinstance(attrs_value, dict) else {}
+    score = 0.0
+
+    for key in ("id", "class"):
+        value = str(attrs.get(key, "")).lower()
+        if any(indicator in value for indicator in _PRIORITY_INDICATORS):
+            score += 10
+            break
+
+    for key in ("id", "class", "role"):
+        value = str(attrs.get(key, "")).lower()
+        if any(indicator in value for indicator in _NEGATIVE_INDICATORS):
+            score -= 5
+            break
+
+    return score
+
+
 def calculate_priority(
     element: dict[str, Any],
     task: str = "",
@@ -37,90 +128,16 @@ def calculate_priority(
     Returns:
         Priority score from 0-100 (higher = more important)
     """
-    score = 0.0
-
-    # 1. Position score (viewport top-left = higher score)
-    bbox = element.get("bbox", {})
-    x_pos = bbox.get("x", 99999)
-    y_pos = bbox.get("y", 99999)
-
-    if y_pos < viewport_height:
-        # In viewport: higher score for elements near top
-        position_score = max(0, 25 - (y_pos / viewport_height) * 25)
-        score += position_score
-    else:
-        # Below fold: lower base score
-        score += 3
-
-    # Horizontal position (left side is more prominent)
-    if x_pos < viewport_width:
-        horizontal_score = max(0, 10 - (x_pos / viewport_width) * 10)
-        score += horizontal_score
-
-    # 2. Element type score
     tag = element.get("tag", "").lower()
-    type_scores = {
-        "input": 35,  # Search/entry boxes are most important
-        "textarea": 30,  # Text areas
-        "select": 28,  # Dropdowns
-        "button": 25,  # Buttons
-        "a": 15,  # Links
-    }
-    score += type_scores.get(tag, 8)
 
-    # 3. Size score (elements too small or too large get lower scores)
-    width = bbox.get("width", 0)
-    height = bbox.get("height", 0)
-    area = width * height
-
-    # Prefer reasonable sized elements (100px to 50000px area)
-    if 100 < area < 50000:
-        score += 5
-    elif area > 0:
-        score += 2
-
-    # 4. Visibility score
+    score = _position_score(element, viewport_height, viewport_width)
+    score += _TAG_SCORES.get(tag, _DEFAULT_TAG_SCORE)
+    score += _size_score(element)
     if element.get("is_visible", True):
         score += 10
-
-    # 5. Text content quality score
-    text = element.get("text", "").strip()
-    if text:
-        # Meaningful text (not single character or very long)
-        if 2 < len(text) < 100:
-            score += 8
-        elif len(text) >= 2:
-            score += 4
-
-    # 6. Task relevance score
-    if task:
-        task_lower = task.lower()
-        label = _extract_label(element).lower()
-        task_words = set(re.findall(r"\w+", task_lower))
-
-        # Count matching words
-        matches = sum(1 for word in task_words if len(word) > 2 and word in label)
-        if matches > 0:
-            score += min(25, matches * 8)
-
-    # 7. Attribute-based priority
-    attrs = element.get("attrs", {})
-
-    # Priority classes/IDs
-    priority_indicators = ["search", "submit", "primary", "main", "important"]
-    for key in ["id", "class"]:
-        value = str(attrs.get(key, "")).lower()
-        if any(indicator in value for indicator in priority_indicators):
-            score += 10
-            break
-
-    # Negative indicators (navigation, footer, etc.)
-    negative_indicators = ["footer", "header", "nav", "sidebar", "cookie"]
-    for key in ["id", "class", "role"]:
-        value = str(attrs.get(key, "")).lower()
-        if any(indicator in value for indicator in negative_indicators):
-            score -= 5
-            break
+    score += _text_score(element)
+    score += _task_relevance_score(element, task)
+    score += _attribute_score(element)
 
     return max(0, min(100, score))
 
@@ -142,7 +159,8 @@ def _extract_label(element: dict[str, Any]) -> str:
             return str(attrs[key])
 
     # Try text content
-    text = element.get("text", "").strip()
+    text_value = element.get("text", "")
+    text = text_value.strip() if isinstance(text_value, str) else str(text_value).strip()
     if text:
         return text[:100]
 
@@ -152,7 +170,7 @@ def _extract_label(element: dict[str, Any]) -> str:
         return str(title)
 
     # Fallback to tag name
-    tag = element.get("tag", "")
+    tag = str(element.get("tag", ""))
     if tag == "input":
         input_type = attrs.get("type", "")
         return f"{input_type} input" if input_type else "input"
@@ -193,22 +211,3 @@ def sort_elements_by_priority(
     # Sort by priority (descending) and limit to max_elements
     scored.sort(key=lambda e: e.get("_priority", 0), reverse=True)
     return scored[:max_elements]
-
-
-def get_top_elements_summary(
-    elements: list[dict[str, Any]],
-    shown_count: int = 10,
-) -> str:
-    """Generate a summary string for elements not shown.
-
-    Args:
-        elements: List of elements that were not shown
-        shown_count: Number of elements already shown
-
-    Returns:
-        Summary string like "and 15 more elements"
-    """
-    remaining = len(elements)
-    if remaining == 0:
-        return ""
-    return f"... and {remaining} more element(s)"

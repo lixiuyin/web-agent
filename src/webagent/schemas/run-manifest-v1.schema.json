@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/lixiuyin/web-agent/main/src/webagent/schemas/run-manifest-v1.schema.json",
+  "title": "web-agent run manifest v1",
+  "description": "Ownership and reproducibility metadata for one isolated web-agent run directory.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "format",
+    "layout_version",
+    "run_id",
+    "created_at",
+    "task_sha256",
+    "model"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/lixiuyin/web-agent/main/src/webagent/schemas/run-manifest-v1.schema.json"
+    },
+    "schema_version": {"const": 1},
+    "format": {"const": "webagent-run"},
+    "layout_version": {"const": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string", "format": "date-time"},
+    "task_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "model": {"type": "string", "minLength": 1}
+  }
+}

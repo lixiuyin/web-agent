@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
+from typing import Any
 
 import fitz  # type: ignore[import-untyped]
 
@@ -15,6 +16,54 @@ def extract_text(pdf_path: str) -> str:
         raise FileNotFoundError(f"PDF not found: {pdf_path}")
     with fitz.open(path) as doc:
         return "\n".join(page.get_text("text") for page in doc).strip()
+
+
+def _normalise_caption(text: str) -> str:
+    return " ".join(text.split())
+
+
+def _keep_longest(captions: dict[str, str], figure_num: str, caption_text: str) -> None:
+    """Record a caption, keeping the longest variant seen for that figure."""
+    if not caption_text:
+        return
+    figure_key = f"figure {figure_num}"
+    if figure_key not in captions or len(caption_text) > len(captions[figure_key]):
+        captions[figure_key] = caption_text
+
+
+def _captions_from_lines(lines: list[str]) -> dict[str, str]:
+    """Extract captions line-by-line (handles captions wrapped across lines)."""
+    captions: dict[str, str] = {}
+    start_re = re.compile(r"^(?:Figure|Fig\.?)\s+(\d+)\s*[:.\-]?\s*(.*)$", re.IGNORECASE)
+    stop_re = re.compile(r"^(?:Figure|Fig\.?|Table)\s+\d+\s*[:.\-]", re.IGNORECASE)
+
+    for idx, line in enumerate(lines):
+        match = start_re.match(line)
+        if not match:
+            continue
+        parts = [match.group(2).strip()] if match.group(2).strip() else []
+
+        for next_line in lines[idx + 1 : idx + 8]:
+            if stop_re.match(next_line):
+                break
+            parts.append(next_line)
+            caption_so_far = _normalise_caption(" ".join(parts))
+            if len(caption_so_far) >= 120 and caption_so_far.endswith((".", "!", "?")):
+                break
+
+        _keep_longest(captions, match.group(1), _normalise_caption(" ".join(parts)))
+
+    return captions
+
+
+def _captions_from_regex(full_text: str, captions: dict[str, str]) -> None:
+    """Fallback extraction for PDFs whose captions are not line-start aligned.
+
+    Merges into *captions*, keeping the longest caption per figure.
+    """
+    pattern = r"(?:Figure|Fig\.?)\s+(\d+)\s*[:.\-]\s*([^\n]{10,500})"
+    for match in re.finditer(pattern, full_text, re.IGNORECASE):
+        _keep_longest(captions, match.group(1), _normalise_caption(match.group(2)))
 
 
 def extract_figure_captions(pdf_path: str) -> dict[str, str]:
@@ -34,55 +83,64 @@ def extract_figure_captions(pdf_path: str) -> dict[str, str]:
     with fitz.open(path) as doc:
         full_text = "\n".join(page.get_text("text") for page in doc)
 
-    captions: dict[str, str] = {}
-
     # PyMuPDF often wraps captions across physical lines, so line-oriented
     # extraction is more reliable than a single "[^\n]*" regex.
     lines = [line.strip() for line in full_text.splitlines() if line.strip()]
-    start_re = re.compile(r"^(?:Figure|Fig\.?)\s+(\d+)\s*[:.\-]?\s*(.*)$", re.IGNORECASE)
-    stop_re = re.compile(r"^(?:Figure|Fig\.?|Table)\s+\d+\s*[:.\-]", re.IGNORECASE)
-
-    for idx, line in enumerate(lines):
-        match = start_re.match(line)
-        if not match:
-            continue
-        figure_num = match.group(1)
-        parts = [match.group(2).strip()] if match.group(2).strip() else []
-
-        for next_line in lines[idx + 1 : idx + 8]:
-            if stop_re.match(next_line):
-                break
-            parts.append(next_line)
-            caption_so_far = _normalise_caption(" ".join(parts))
-            if len(caption_so_far) >= 120 and caption_so_far.endswith((".", "!", "?")):
-                break
-
-        caption_text = _normalise_caption(" ".join(parts))
-        if not caption_text:
-            continue
-        figure_key = f"figure {figure_num}"
-        if figure_key not in captions or len(caption_text) > len(captions[figure_key]):
-            captions[figure_key] = caption_text
-
-    # Fallback for PDFs whose captions are not line-start aligned.
-    pattern = r"(?:Figure|Fig\.?)\s+(\d+)\s*[:.\-]\s*([^\n]{10,500})"
-    for match in re.finditer(pattern, full_text, re.IGNORECASE):
-        figure_num = match.group(1)
-        caption_text = _normalise_caption(match.group(2))
-        figure_key = f"figure {figure_num}"
-        if caption_text and (
-            figure_key not in captions or len(caption_text) > len(captions[figure_key])
-        ):
-            captions[figure_key] = caption_text
-
+    captions = _captions_from_lines(lines)
+    _captions_from_regex(full_text, captions)
     return captions
 
 
-def _normalise_caption(text: str) -> str:
-    return " ".join(text.split())
+def _caption_near_rect(page: Any, img_rect: Any) -> str:
+    """Read text just above (or below) an image rect as its caption."""
+    # Search above the image first — captions usually sit under the figure
+    # title but above the next block.
+    search_rect = fitz.Rect(
+        img_rect.x0 - 50,  # expand left
+        max(0, img_rect.y0 - 100),  # look above for caption
+        img_rect.x1 + 50,  # expand right
+        img_rect.y0 - 5,  # just above the image
+    )
+    caption = page.get_text("text", clip=search_rect).strip()
+
+    # If no caption above, try below
+    if not caption:
+        search_rect = fitz.Rect(
+            img_rect.x0 - 50,
+            img_rect.y1 + 5,
+            img_rect.x1 + 50,
+            min(page.rect.y1, img_rect.y1 + 100),
+        )
+        caption = page.get_text("text", clip=search_rect).strip()
+
+    return _clean_caption(caption)
 
 
-def extract_images(pdf_path: str, output_dir: str | Path) -> list[dict]:
+def _clean_caption(caption: str) -> str:
+    """Keep caption-like lines; otherwise truncate to the last 200 chars."""
+    if not caption:
+        return caption
+    lines = caption.split("\n")
+    caption_lines = [line for line in lines if "figure" in line.lower() or "fig" in line.lower()]
+    if caption_lines:
+        return " | ".join(caption_lines)
+    return caption[-200:] if len(caption) > 200 else caption
+
+
+def _caption_for_image(page: Any, xref: int) -> str:
+    """Extract nearby caption text for an embedded image, if any."""
+    try:
+        # fitz returns a list of (xref, rect) tuples; find the rect for our xref
+        img_info = page.get_image_rects(xref)
+        img_rect = img_info[0] if img_info else None
+        if img_rect:
+            return _caption_near_rect(page, img_rect)
+    except Exception:
+        pass
+    return ""
+
+
+def extract_images(pdf_path: str, output_dir: str | Path) -> list[dict[str, Any]]:
     """Extract embedded images and save to *output_dir*.
 
     Returns list of dicts with image info including nearby text (captions).
@@ -97,7 +155,7 @@ def extract_images(pdf_path: str, output_dir: str | Path) -> list[dict]:
     # First, extract all figure captions from the document
     figure_captions = extract_figure_captions(pdf_path)
 
-    results: list[dict] = []
+    results: list[dict[str, Any]] = []
     with fitz.open(path) as doc:
         for page_idx in range(len(doc)):
             page = doc[page_idx]
@@ -109,50 +167,7 @@ def extract_images(pdf_path: str, output_dir: str | Path) -> list[dict]:
                 out_path = output_dir / f"page{page_idx + 1}_img{img_idx + 1}.{ext}"
                 out_path.write_bytes(base_image["image"])
 
-                # Try to extract nearby text (caption) for this image
-                caption = ""
-                try:
-                    # Get image bbox - fitz returns a list of (xref, rect) tuples
-                    # Need to find the rect for our xref
-                    img_info = page.get_image_rects(xref)
-                    img_rect = img_info[0] if img_info else None
-
-                    if img_rect:
-                        # Search for text near this image (above it for caption)
-                        # Expand rect slightly upward to find caption
-                        search_rect = fitz.Rect(
-                            img_rect.x0 - 50,  # expand left
-                            max(0, img_rect.y0 - 100),  # look above for caption
-                            img_rect.x1 + 50,  # expand right
-                            img_rect.y0 - 5,  # just above the image
-                        )
-                        caption = page.get_text("text", clip=search_rect).strip()
-
-                        # If no caption above, try below
-                        if not caption:
-                            search_rect = fitz.Rect(
-                                img_rect.x0 - 50,
-                                img_rect.y1 + 5,
-                                img_rect.x1 + 50,
-                                min(page.rect.y1, img_rect.y1 + 100),
-                            )
-                            caption = page.get_text("text", clip=search_rect).strip()
-
-                        # Clean up caption - take last few lines (usually caption is below figure title)
-                        if caption:
-                            lines = caption.split("\n")
-                            # Find lines with "Figure" or "Fig"
-                            caption_lines = [
-                                line
-                                for line in lines
-                                if "figure" in line.lower() or "fig" in line.lower()
-                            ]
-                            if caption_lines:
-                                caption = " | ".join(caption_lines)
-                            else:
-                                caption = caption[-200:] if len(caption) > 200 else caption
-                except Exception:
-                    caption = ""
+                caption = _caption_for_image(page, xref)
 
                 # Mark likely figures (large images on first few pages)
                 width = base_image.get("width", 0)

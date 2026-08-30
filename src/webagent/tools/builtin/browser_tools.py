@@ -6,6 +6,7 @@ import asyncio
 from typing import Any
 
 from webagent.core.models import ToolResult
+from webagent.tools.builtin._base import BrowserToolBase
 from webagent.tools.registry import tool
 
 # URL schemes the navigation tool must refuse (the URL is partly page/LLM-driven).
@@ -52,16 +53,13 @@ def _validate_selector(selector: Any) -> None:
 
 
 @tool("goto", "Navigate to URL. params: url (string), wait_until=load|domcontentloaded|networkidle")
-class GotoTool:
+class GotoTool(BrowserToolBase):
     """Navigate to a specific URL.
 
     Example: {"url": "https://example.com", "wait_until": "load"}
     """
 
-    def __init__(self, browser: Any = None, **kw: Any) -> None:
-        self.browser = browser
-
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         if not isinstance(params.get("url"), str) or not params["url"].strip():
             raise ValueError("'url' required")
         # Block dangerous schemes (the URL is partly page/LLM-controlled). file://
@@ -71,7 +69,7 @@ class GotoTool:
         if params["url"].strip().lower().startswith(_DISALLOWED_GOTO_SCHEMES):
             raise ValueError(f"Disallowed URL scheme: {params['url'].strip()!r}")
 
-    async def execute(self, params: dict) -> ToolResult:
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         url = str(params["url"]).strip()
         wait = str(params.get("wait_until", "load"))
         resp = await self.browser.goto(url, wait_until=wait or "load")
@@ -87,7 +85,7 @@ class GotoTool:
 
 
 @tool("click", "Click element. params: selector={type:'text'|'css', value:(string)}, force=false")
-class ClickTool:
+class ClickTool(BrowserToolBase):
     """Click on an element using text or CSS selector.
 
     Examples:
@@ -96,13 +94,10 @@ class ClickTool:
     - Click with force: {"selector": {"type": "text", "value": "Link"}, "force": true}
     """
 
-    def __init__(self, browser: Any = None, **kw: Any) -> None:
-        self.browser = browser
-
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         _validate_selector(params.get("selector"))
 
-    async def execute(self, params: dict) -> ToolResult:
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         selector = _resolve_selector(params["selector"])
         force = bool(params.get("force", False))
         resp = await self.browser.click(selector, force=force)
@@ -114,7 +109,7 @@ class ClickTool:
 
 
 @tool("click_link", "Click link by text (fuzzy matching). params: text (string), fuzzy=true")
-class ClickLinkTool:
+class ClickLinkTool(BrowserToolBase):
     """Click a link using flexible text matching.
 
     This tool is designed for clicking links where the exact text might not match
@@ -125,18 +120,15 @@ class ClickLinkTool:
     4. URL pattern matching (arXiv IDs, DOIs, etc.)
 
     Examples:
-    - Click search result: {"text": "Qwen Technical Report arXiv.org"}
+    - Click search result: {"text": "ProjectX Technical Report arXiv.org"}
     - Click by title: {"text": "Download PDF"}
-    - Click by arXiv ID: {"text": "[2505.09388] Qwen3 Technical Report"}
+    - Click by arXiv ID: {"text": "[2505.12345] Example Technical Report"}
 
     Use this instead of 'click' when dealing with search results or links with
     inconsistent text formatting.
     """
 
-    def __init__(self, browser: Any = None, **kw: Any) -> None:
-        self.browser = browser
-
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         if not isinstance(params.get("text"), str) or not params["text"].strip():
             raise ValueError("'text' parameter is required and must be non-empty")
 
@@ -144,7 +136,7 @@ class ClickLinkTool:
         if not isinstance(fuzzy, bool):
             raise ValueError("'fuzzy' must be a boolean")
 
-    async def execute(self, params: dict) -> ToolResult:
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         text = str(params["text"]).strip()
         fuzzy = bool(params.get("fuzzy", True))
 
@@ -165,7 +157,7 @@ class ClickLinkTool:
     "type",
     "Type text into element. params: selector={type:'text'|'css', value:(string)}, text (string), delay_ms=50",
 )
-class TypeTool:
+class TypeTool(BrowserToolBase):
     """Type text into an input field or textarea.
 
     Examples:
@@ -174,15 +166,12 @@ class TypeTool:
     - With custom delay: {"selector": {"type": "text", "value": "Input"}, "text": "text", "delay_ms": 100}
     """
 
-    def __init__(self, browser: Any = None, **kw: Any) -> None:
-        self.browser = browser
-
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         _validate_selector(params.get("selector"))
         if not isinstance(params.get("text"), str):
             raise ValueError("'text' required")
 
-    async def execute(self, params: dict) -> ToolResult:
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         selector = _resolve_selector(params["selector"])
         text = str(params["text"])
         delay = int(params.get("delay_ms", 50))
@@ -204,7 +193,7 @@ class TypeTool:
     "press",
     "Press keyboard key. params: key (string), selector={type:'text'|'css', value:(string)}?",
 )
-class PressTool:
+class PressTool(BrowserToolBase):
     """Press a keyboard key, optionally on a specific element.
 
     Common keys: Enter, Tab, Escape, ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Home, End, PageUp, PageDown
@@ -214,14 +203,11 @@ class PressTool:
     - Press Tab on an element: {"key": "Tab", "selector": {"type": "text", "value": "Input"}}
     """
 
-    def __init__(self, browser: Any = None, **kw: Any) -> None:
-        self.browser = browser
-
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         if not isinstance(params.get("key"), str) or not params["key"].strip():
             raise ValueError("'key' required")
 
-    async def execute(self, params: dict) -> ToolResult:
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         key = str(params["key"]).strip()
         selector = None
         if params.get("selector"):
@@ -234,15 +220,12 @@ class PressTool:
 
 
 @tool("scroll", "Scroll page. params: direction='up'|'down', amount_px=500")
-class ScrollTool:
-    def __init__(self, browser: Any = None, **kw: Any) -> None:
-        self.browser = browser
-
-    def validate_params(self, params: dict) -> None:
+class ScrollTool(BrowserToolBase):
+    def validate_params(self, params: dict[str, Any]) -> None:
         if params.get("direction") and params["direction"] not in ("up", "down"):
             raise ValueError("direction must be 'up' or 'down'")
 
-    async def execute(self, params: dict) -> ToolResult:
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         direction = str(params.get("direction", "down"))
         amount = int(params.get("amount_px", 500))
         resp = await self.browser.scroll(direction=direction, amount=amount)
@@ -252,30 +235,24 @@ class ScrollTool:
 
 
 @tool("wait", "Sleep for milliseconds. params: ms (int, 0-60000)")
-class WaitTool:
-    def __init__(self, browser: Any = None, **kw: Any) -> None:
-        self.browser = browser
-
-    def validate_params(self, params: dict) -> None:
+class WaitTool(BrowserToolBase):
+    def validate_params(self, params: dict[str, Any]) -> None:
         ms = params.get("ms", 1000)
         if not isinstance(ms, int) or ms < 0 or ms > 60000:
             raise ValueError("ms must be 0-60000")
 
-    async def execute(self, params: dict) -> ToolResult:
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         ms = int(params.get("ms", 1000))
         await self.browser.wait(ms)
         return ToolResult(success=True, tool_name="wait", data={"waited_ms": ms})
 
 
 @tool("forward", "Go forward in browser history. params: steps=1")
-class ForwardTool:
-    def __init__(self, browser: Any = None, **kw: Any) -> None:
-        self.browser = browser
-
-    def validate_params(self, params: dict) -> None:
+class ForwardTool(BrowserToolBase):
+    def validate_params(self, params: dict[str, Any]) -> None:
         pass
 
-    async def execute(self, params: dict) -> ToolResult:
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         steps = params.get("steps", 1)
         for _ in range(int(steps)):
             await self.browser.page.go_forward()
@@ -283,14 +260,11 @@ class ForwardTool:
 
 
 @tool("back", "Go back in browser history. params: steps=1")
-class BackTool:
-    def __init__(self, browser: Any = None, **kw: Any) -> None:
-        self.browser = browser
-
-    def validate_params(self, params: dict) -> None:
+class BackTool(BrowserToolBase):
+    def validate_params(self, params: dict[str, Any]) -> None:
         pass
 
-    async def execute(self, params: dict) -> ToolResult:
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         steps = params.get("steps", 1)
         for _ in range(int(steps)):
             await self.browser.page.go_back()

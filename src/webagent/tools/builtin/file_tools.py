@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import base64
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import TYPE_CHECKING, Any
 
+from PIL import Image
+
 from webagent.core.models import ToolResult
+from webagent.tools.builtin._artifact_publish import publish_immutable_bytes
 from webagent.tools.registry import tool
 from webagent.utils.paths import get_artifacts_dir, resolve_file_path
 
@@ -21,6 +24,10 @@ def _contained_path(base: Path, rel: str) -> Path | None:
     (e.g. ``/etc/passwd``), which a plain ``base / rel`` join would otherwise
     allow.  Returns ``None`` when the result is outside ``base``.
     """
+    posix = PurePosixPath(rel)
+    windows = PureWindowsPath(rel)
+    if posix.is_absolute() or windows.is_absolute() or ".." in posix.parts or ".." in windows.parts:
+        return None
     base = base.resolve()
     out = (base / rel).resolve()
     if out == base or out.is_relative_to(base):
@@ -28,7 +35,23 @@ def _contained_path(base: Path, rel: str) -> Path | None:
     return None
 
 
-@tool("save_image", "Save base64 image. params: base64 (string), path (string)")
+def _categorized_path(artifacts_dir: Path, value: str, *, category: str) -> Path | None:
+    """Route plain tool filenames into a typed artifact namespace."""
+    raw = str(value).strip()
+    posix = PurePosixPath(raw)
+    windows = PureWindowsPath(raw)
+    if posix.is_absolute() or windows.is_absolute() or ".." in posix.parts or ".." in windows.parts:
+        return None
+    parts = posix.parts
+    categorized = raw if parts and parts[0] == category else str(PurePosixPath(category) / raw)
+    return _contained_path(artifacts_dir, categorized)
+
+
+@tool(
+    "save_image",
+    "Save base64 image to a new immutable path below artifacts/figures; an existing different "
+    "file is never overwritten. params: base64 (string), path (string)",
+)
 class SaveImageTool:
     def __init__(
         self,
@@ -38,30 +61,44 @@ class SaveImageTool:
     ) -> None:
         self.artifacts_dir = artifacts_dir or get_artifacts_dir(config)
 
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         if "base64" not in params and "image" not in params:
             raise ValueError("'base64' or 'image' required")
         if "path" not in params:
             raise ValueError("'path' required")
 
-    async def execute(self, params: dict) -> ToolResult:
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         b64 = params.get("base64") or params.get("image")
         if not b64:
             return ToolResult(success=False, tool_name="save_image", error="No image data provided")
-        out = _contained_path(self.artifacts_dir, params["path"])
+        out = _categorized_path(self.artifacts_dir, params["path"], category="figures")
         if out is None:
             return ToolResult(
                 success=False, tool_name="save_image", error="path escapes artifacts directory"
             )
-        out.parent.mkdir(parents=True, exist_ok=True)
         try:
-            out.write_bytes(base64.b64decode(b64))
-            return ToolResult(success=True, tool_name="save_image", data={"path": str(out)})
+            deduplicated = publish_immutable_bytes(base64.b64decode(b64), out)
+            return ToolResult(
+                success=True,
+                tool_name="save_image",
+                data={"path": str(out), "deduplicated": deduplicated},
+            )
+        except FileExistsError:
+            return ToolResult(
+                success=False,
+                tool_name="save_image",
+                error=f"Artifact already exists with different content: {out}",
+                data={"path": str(out)},
+            )
         except Exception as e:
             return ToolResult(success=False, tool_name="save_image", error=str(e))
 
 
-@tool("write_text", "Write text to file. params: path (string), content (string)")
+@tool(
+    "write_text",
+    "Write text to a new immutable path below artifacts/files; an existing different file is "
+    "never overwritten. params: path (string), content (string)",
+)
 class WriteTextTool:
     def __init__(
         self,
@@ -71,23 +108,33 @@ class WriteTextTool:
     ) -> None:
         self.artifacts_dir = artifacts_dir or get_artifacts_dir(config)
 
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         if "path" not in params:
             raise ValueError("'path' required")
         if "content" not in params and "text" not in params:
             raise ValueError("'content' or 'text' required")
 
-    async def execute(self, params: dict) -> ToolResult:
-        content = params.get("content") or params.get("text")
-        out = _contained_path(self.artifacts_dir, params["path"])
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
+        content = params["content"] if "content" in params else params.get("text")
+        out = _categorized_path(self.artifacts_dir, params["path"], category="files")
         if out is None:
             return ToolResult(
                 success=False, tool_name="write_text", error="path escapes artifacts directory"
             )
-        out.parent.mkdir(parents=True, exist_ok=True)
         try:
-            out.write_text(str(content), encoding="utf-8")
-            return ToolResult(success=True, tool_name="write_text", data={"path": str(out)})
+            deduplicated = publish_immutable_bytes(str(content).encode("utf-8"), out)
+            return ToolResult(
+                success=True,
+                tool_name="write_text",
+                data={"path": str(out), "deduplicated": deduplicated},
+            )
+        except FileExistsError:
+            return ToolResult(
+                success=False,
+                tool_name="write_text",
+                error=f"Artifact already exists with different content: {out}",
+                data={"path": str(out)},
+            )
         except Exception as e:
             return ToolResult(success=False, tool_name="write_text", error=str(e))
 
@@ -110,11 +157,11 @@ class ReadImageTool:
         self.browser = browser
         self.artifacts_dir = artifacts_dir or get_artifacts_dir(config)
 
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         if "path" not in params:
             raise ValueError("'path' required")
 
-    async def execute(self, params: dict) -> ToolResult:
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         path_str = params["path"].strip()
         # Use robust path resolution from paths module
         path = resolve_file_path(path_str, self.artifacts_dir)
@@ -128,8 +175,8 @@ class ReadImageTool:
                 )
             img_data = path.read_bytes()
             b64 = base64.b64encode(img_data).decode("utf-8")
-            # Determine mime type
-            suffix = path.suffix.lower()
+            # Determine mime type (suffix includes the leading dot, e.g. ".png")
+            suffix = path.suffix.lower().lstrip(".")
             mime = {
                 "jpg": "image/jpeg",
                 "jpeg": "image/jpeg",
@@ -192,42 +239,16 @@ class AnalyzeImageTool:
         self.browser = browser
         self.artifacts_dir = artifacts_dir or get_artifacts_dir(config)
 
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         if "path" not in params:
             raise ValueError("'path' required")
         if "question" not in params:
             raise ValueError("'question' required - what do you want to know about the image?")
 
-    async def execute(self, params: dict) -> ToolResult:
-        if self.planner is None:
-            return ToolResult(
-                success=False,
-                tool_name="analyze_image",
-                error="Planner not available - this tool requires a vision-enabled planner",
-            )
-
-        if not hasattr(self.planner, "analyze_image"):
-            return ToolResult(
-                success=False,
-                tool_name="analyze_image",
-                error="Current planner does not support direct image analysis. Use read_image instead.",
-            )
-
-        # Check if vision API is actually working
-        if (
-            hasattr(self.planner, "vision_actually_works")
-            and not self.planner.vision_actually_works
-        ):
-            return ToolResult(
-                success=False,
-                tool_name="analyze_image",
-                error=(
-                    "Vision API is not functioning properly. DO NOT retry analyze_image or "
-                    "read_image. Instead, use 'pdf_get_figure_info' to get figure captions, "
-                    "'pdf_extract_text' or 'pdf_search' to read surrounding text, then use "
-                    "'done' to summarize findings based on the caption and textual description."
-                ),
-            )
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
+        preflight_error = self._vision_preflight()
+        if preflight_error:
+            return preflight_error
 
         path_str = params["path"].strip()
         question = str(params["question"]).strip()
@@ -241,8 +262,6 @@ class AnalyzeImageTool:
             )
 
         try:
-            from PIL import Image
-
             img: Image.Image = Image.open(path)
             browser_url = None
             if self.browser:
@@ -250,39 +269,10 @@ class AnalyzeImageTool:
                 if open_result.get("success"):
                     browser_url = open_result.get("url")
 
-            # Resize large images to avoid API limits
-            max_dimension = 2000
-            if max(img.width, img.height) > max_dimension:
-                ratio = max_dimension / max(img.width, img.height)
-                new_width = int(img.width * ratio)
-                new_height = int(img.height * ratio)
-                img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)  # type: ignore[assignment]
-
+            img = _resize_for_api(img)
             analysis = await self.planner.analyze_image(img, question)
 
-            # Check if analysis indicates vision API failure
-            analysis_lower = analysis.lower()
-            vision_failure = False
-            if "vision api" in analysis_lower and (
-                "not functioning" in analysis_lower or "not working" in analysis_lower
-            ):
-                vision_failure = True
-            # Also detect "I don't see any image" style responses
-            no_vision_phrases = [
-                "i don't see any image",
-                "i cannot see",
-                "no image attached",
-                "no image provided",
-                "unable to view",
-                "i can't view",
-                "i don't have the ability to view",
-                "there is no image",
-                "cannot analyze images",
-            ]
-            if any(phrase in analysis_lower for phrase in no_vision_phrases):
-                vision_failure = True
-
-            if vision_failure:
+            if _detect_vision_failure(analysis):
                 return ToolResult(
                     success=False,
                     tool_name="analyze_image",
@@ -316,3 +306,73 @@ class AnalyzeImageTool:
             )
         except Exception as e:
             return ToolResult(success=False, tool_name="analyze_image", error=str(e))
+
+    def _vision_preflight(self) -> ToolResult | None:
+        """Reject the call early when vision analysis cannot proceed."""
+        if self.planner is None:
+            return ToolResult(
+                success=False,
+                tool_name="analyze_image",
+                error="Planner not available - this tool requires a vision-enabled planner",
+            )
+
+        if not hasattr(self.planner, "analyze_image"):
+            return ToolResult(
+                success=False,
+                tool_name="analyze_image",
+                error="Current planner does not support direct image analysis. Use read_image instead.",
+            )
+
+        # Check if vision API is actually working
+        if (
+            hasattr(self.planner, "vision_actually_works")
+            and not self.planner.vision_actually_works
+        ):
+            return ToolResult(
+                success=False,
+                tool_name="analyze_image",
+                error=(
+                    "Vision API is not functioning properly. DO NOT retry analyze_image or "
+                    "read_image. Instead, use 'pdf_get_figure_info' to get figure captions, "
+                    "'pdf_extract_text' or 'pdf_search' to read surrounding text, then use "
+                    "'done' to summarize findings based on the caption and textual description."
+                ),
+            )
+        return None
+
+
+# Maximum dimension (px) before an image is downscaled to stay under API limits.
+_API_MAX_DIMENSION = 2000
+
+# Phrases in a planner response that reveal the vision model saw no image.
+_NO_VISION_PHRASES = (
+    "i don't see any image",
+    "i cannot see",
+    "no image attached",
+    "no image provided",
+    "unable to view",
+    "i can't view",
+    "i don't have the ability to view",
+    "there is no image",
+    "cannot analyze images",
+)
+
+
+def _resize_for_api(img: Image.Image) -> Image.Image:
+    """Downscale an image so its longest side fits the API limit."""
+    if max(img.width, img.height) <= _API_MAX_DIMENSION:
+        return img
+    ratio = _API_MAX_DIMENSION / max(img.width, img.height)
+    new_width = int(img.width * ratio)
+    new_height = int(img.height * ratio)
+    return img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+
+
+def _detect_vision_failure(analysis: str) -> bool:
+    """Check whether a planner analysis indicates the vision API saw nothing."""
+    analysis_lower = analysis.lower()
+    if "vision api" in analysis_lower and (
+        "not functioning" in analysis_lower or "not working" in analysis_lower
+    ):
+        return True
+    return any(phrase in analysis_lower for phrase in _NO_VISION_PHRASES)

@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import logging
 
+import httpx
+
 from .._build import build_from_page_texts, write_outputs
 from .._errors import ParserProviderError
 from .._request import ParseRequest
@@ -21,7 +23,8 @@ class LocalPyMuPDFParser:
 
     name = "local"
 
-    async def parse(self, client, req: ParseRequest) -> PDFParseResult:
+    async def parse(self, client: httpx.AsyncClient, req: ParseRequest) -> PDFParseResult:
+        del client
         import asyncio
 
         return await asyncio.to_thread(self._parse_sync, req)

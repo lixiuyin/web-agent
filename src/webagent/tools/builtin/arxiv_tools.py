@@ -17,6 +17,7 @@ from urllib.parse import quote
 import httpx
 
 from webagent.core.models import ToolResult
+from webagent.tools.builtin._base import BrowserToolBase
 from webagent.tools.registry import tool
 
 _API_URL = "https://export.arxiv.org/api/query"
@@ -26,107 +27,63 @@ _RETRIES = 1  # extra attempts after the first on transient 429/5xx
 _BASE_DELAY = 3.0  # arXiv asks for ~1 request / 3s
 _TIMEOUT_SECONDS = 12.0
 
-_KNOWN_QWEN_REPORTS = [
-    {
-        "title": "Qwen3.5-Omni Technical Report",
-        "authors": ["Qwen Team"],
-        "published": "2026-04-17",
-        "updated": "2026-04-21",
-        "arxiv_id": "2604.15804",
-        "abstract": "Technical report for Qwen3.5-Omni.",
-    },
-    {
-        "title": "Qwen3-TTS Technical Report",
-        "authors": ["Qwen Team"],
-        "published": "2026-01-22",
-        "arxiv_id": "2601.15621",
-        "abstract": "Technical report for Qwen3-TTS.",
-    },
-    {
-        "title": "Qwen3-Omni Technical Report",
-        "authors": ["Qwen Team"],
-        "published": "2025-09-22",
-        "arxiv_id": "2509.17765",
-        "abstract": "Technical report for Qwen3-Omni.",
-    },
-    {
-        "title": "Qwen3 Technical Report",
-        "authors": ["An Yang", "Anfeng Li", "Baosong Yang", "Beichen Zhang", "Qwen Team"],
-        "published": "2025-05-14",
-        "arxiv_id": "2505.09388",
-        "abstract": (
-            "Qwen3 integrates thinking and non-thinking modes in a unified model family, "
-            "with dense and MoE variants."
-        ),
-    },
-]
+
+def _build_search_query(query: str) -> str:
+    """Build an arXiv ``search_query`` that requires every keyword to match.
+
+    arXiv's API ORs space-separated terms by default, so a query like
+    "ProjectX technical report" is parsed as ``all:ProjectX OR all:technical OR
+    all:report`` and returns unrelated recent papers. AND-joining the terms
+    fixes this. Explicitly field-qualified or phrase-quoted queries are passed
+    through unchanged.
+    """
+    stripped = query.strip()
+    if not stripped:
+        return ""
+    if '"' in stripped or ":" in stripped:
+        return quote(stripped)
+    terms = stripped.split()
+    # For an explicitly requested technical report, matching the title is the
+    # useful interpretation. ``all:`` can otherwise rank a third-party paper
+    # first merely because its abstract mentions both the project and other
+    # technical reports.
+    field = "ti" if {term.lower() for term in terms} >= {"technical", "report"} else "all"
+    return " AND ".join(f"{field}:{quote(term)}" for term in terms)
 
 
 @tool(
     "arxiv_search",
     "Search arXiv for academic papers / technical reports. Returns title, authors, "
-    "date, abstract, and a direct PDF URL for each hit — more reliable than web "
-    "search for finding papers. After choosing one, call download_pdf with its "
-    "pdf_url. params: query (string), max_results? (int, default 5), "
-    "sort? ('recent'|'relevance', default 'recent')",
+    "date, abstract, and a direct PDF URL for each hit. For the LATEST revision of "
+    "a technical report, use github_search as well — official GitHub repositories "
+    "can publish newer reports that arXiv does not index. "
+    "Use arxiv_search for structured metadata or when an arXiv ID is already known. "
+    "After choosing one, call download_pdf with its pdf_url. params: query (string), "
+    "max_results? (int, default 5), sort? ('recent'|'relevance', default 'recent')",
 )
-class ArxivSearchTool:
+class ArxivSearchTool(BrowserToolBase):
     """Query the arXiv export API and return structured results."""
 
-    def __init__(self, browser: Any = None, **kw: Any) -> None:
-        self.browser = browser
-
-    def validate_params(self, params: dict) -> None:
+    def validate_params(self, params: dict[str, Any]) -> None:
         if not isinstance(params.get("query"), str) or not params["query"].strip():
             raise ValueError("'query' required (search keywords)")
 
-    async def execute(self, params: dict) -> ToolResult:
+    async def execute(self, params: dict[str, Any]) -> ToolResult:
         query = params["query"].strip()
         try:
             max_results = max(1, min(int(params.get("max_results", 5)), _MAX_RESULTS))
         except (TypeError, ValueError):
             max_results = 5
 
-        known_results = known_arxiv_results(query, max_results=max_results)
-        if known_results:
-            browser_url = await self._open_first_result(known_results)
-            return ToolResult(
-                success=True,
-                tool_name="arxiv_search",
-                data={
-                    "query": query,
-                    "count": len(known_results),
-                    "results": known_results,
-                    "browser_url": browser_url,
-                    "source": "direct_arxiv_known_reports",
-                    "warning": (
-                        "Used direct arXiv report candidates because arXiv search/export "
-                        "is often slow or unavailable for this query."
-                    ),
-                },
-            )
-
         sort_by = "submittedDate" if params.get("sort", "recent") != "relevance" else "relevance"
         url = (
-            f"{_API_URL}?search_query=all:{quote(query)}"
+            f"{_API_URL}?search_query={_build_search_query(query)}"
             f"&sortBy={sort_by}&sortOrder=descending&start=0&max_results={max_results}"
         )
 
         try:
             text = await self._fetch(url)
         except _RateLimited as exc:
-            if known_results:
-                return ToolResult(
-                    success=True,
-                    tool_name="arxiv_search",
-                    data={
-                        "query": query,
-                        "count": len(known_results),
-                        "results": known_results,
-                        "source": "direct_arxiv_known_reports",
-                        "warning": f"arXiv API rate-limited; returned direct candidates instead: {exc}",
-                    },
-                )
             return ToolResult(
                 success=False,
                 tool_name="arxiv_search",
@@ -136,19 +93,6 @@ class ArxivSearchTool:
                 ),
             )
         except Exception as exc:
-            if known_results:
-                detail = str(exc).strip() or type(exc).__name__
-                return ToolResult(
-                    success=True,
-                    tool_name="arxiv_search",
-                    data={
-                        "query": query,
-                        "count": len(known_results),
-                        "results": known_results,
-                        "source": "direct_arxiv_known_reports",
-                        "warning": f"arXiv API failed ({detail}); returned direct candidates instead.",
-                    },
-                )
             # Surface the exception type — some httpx errors (ReadTimeout/
             # ConnectError) stringify to "" and would otherwise be undiagnosable.
             detail = str(exc).strip() or type(exc).__name__
@@ -175,7 +119,7 @@ class ArxivSearchTool:
             },
         )
 
-    async def _open_first_result(self, results: list[dict]) -> str | None:
+    async def _open_first_result(self, results: list[dict[str, Any]]) -> str | None:
         if not self.browser or not results:
             return None
         url = results[0].get("abs_url") or results[0].get("pdf_url")
@@ -222,12 +166,12 @@ class ArxivSearchTool:
         raise last_exc or RuntimeError("unreachable")
 
     @staticmethod
-    def _parse(text: str) -> list[dict]:
+    def _parse(text: str) -> list[dict[str, Any]]:
         try:
             root = ET.fromstring(text)
         except ET.ParseError:
             return []
-        results: list[dict] = []
+        results: list[dict[str, Any]] = []
         for entry in root.findall("a:entry", _ATOM):
             title = _text(entry.find("a:title", _ATOM))
             published = _text(entry.find("a:published", _ATOM))[:10]
@@ -264,29 +208,3 @@ class _RateLimited(Exception):
 
 def _text(el: ET.Element | None) -> str:
     return (el.text or "").strip() if el is not None and el.text else ""
-
-
-def known_arxiv_results(query: str, max_results: int = 5) -> list[dict]:
-    """Return direct arXiv candidates for high-value queries when search is unavailable."""
-    query_lower = query.lower()
-    if "qwen" not in query_lower:
-        return []
-    if any(excluded in query_lower for excluded in ("embedding", "reranker")):
-        return []
-
-    results = []
-    for item in _KNOWN_QWEN_REPORTS[: max(1, min(max_results, _MAX_RESULTS))]:
-        arxiv_id = item["arxiv_id"]
-        results.append(
-            {
-                "title": item["title"],
-                "authors": item["authors"],
-                "published": item["published"],
-                "updated": item.get("updated"),
-                "arxiv_id": arxiv_id,
-                "pdf_url": f"https://arxiv.org/pdf/{arxiv_id}",
-                "abs_url": f"https://arxiv.org/abs/{arxiv_id}",
-                "abstract": item["abstract"],
-            }
-        )
-    return results

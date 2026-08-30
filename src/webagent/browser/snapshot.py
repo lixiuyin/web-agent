@@ -11,7 +11,6 @@ Inspired by browser-use's approach to page content understanding.
 
 from __future__ import annotations
 
-import hashlib
 import logging
 import re
 from datetime import UTC, datetime
@@ -36,12 +35,6 @@ AD_REGEX = re.compile(
 )
 
 
-def _stable_index(prefix: str, *parts: str) -> str:
-    """Generate stable index from components."""
-    h = hashlib.sha1("||".join(parts).encode("utf-8")).hexdigest()[:8]
-    return f"{prefix}_{h}"
-
-
 async def take_snapshot(
     page: Page,
     full_page: bool = False,
@@ -49,6 +42,7 @@ async def take_snapshot(
     task: str = "",
     max_elements: int = 50,
     use_cdp: bool = True,
+    filter_ads: bool = True,
 ) -> dict[str, Any]:
     """Capture enhanced DOM + screenshot from an existing Playwright page.
 
@@ -65,6 +59,7 @@ async def take_snapshot(
         task: User's task for relevance matching
         max_elements: Maximum number of elements to include in output
         use_cdp: Whether to use CDP for enhanced detection
+        filter_ads: Whether to remove ad-like elements and containers
 
     Returns:
         Snapshot dict with markdown, elements, screenshot, and metadata
@@ -88,23 +83,11 @@ async def take_snapshot(
         elements = await _extract_elements_basic(page)
 
     # Filter and prioritize
-    elements = _filter_and_dedupe(elements)
+    elements = _filter_and_dedupe(elements, filter_ads=filter_ads)
     elements = sort_elements_by_priority(elements, task=task, max_elements=max_elements)
 
-    # Add stable indices
-    for _i, elem in enumerate(elements):
-        if "_index" not in elem:
-            elem["_index"] = _stable_index(
-                "i",
-                str(elem.get("tag", "")),
-                str(elem.get("attrs", {}).get("id", "")),
-                str(elem.get("attrs", {}).get("name", "")),
-                str(elem.get("text", ""))[:80],
-                str(elem.get("css_path", "")),
-            )
-
     # Generate optimized markdown
-    sanitized = _sanitize_html(html)
+    sanitized = _sanitize_html(html, filter_ads=filter_ads)
     markdown = _generate_llm_markdown(sanitized, elements, max_elements)
 
     # Get viewport info for priority calculation
@@ -141,8 +124,8 @@ async def _extract_elements_enhanced(page: Page) -> list[dict[str, Any]]:
             else:
                 elements = await extract_interactive_elements(page)
 
-    except Exception as e:
-        logger.debug(f"CDP extraction failed, using basic: {e}")
+    except Exception as exc:
+        logger.debug("CDP extraction failed, using basic: %s", exc)
         elements = await _extract_elements_basic(page)
 
     return elements
@@ -152,8 +135,8 @@ async def _extract_elements_basic(page: Page) -> list[dict[str, Any]]:
     """Extract interactive elements using JavaScript only."""
     try:
         elements = await extract_interactive_elements(page)
-    except Exception as e:
-        logger.warning(f"Basic element extraction failed: {e}")
+    except Exception as exc:
+        logger.warning("Basic element extraction failed: %s", exc)
         elements = []
     return elements
 
@@ -223,10 +206,12 @@ async def _extract_from_ax_tree(ax_tree: dict[str, Any], page: Page) -> list[dic
     return elements
 
 
-def _filter_and_dedupe(raw: list[dict]) -> list[dict]:
+def _filter_and_dedupe(
+    raw: list[dict[str, Any]], *, filter_ads: bool = True
+) -> list[dict[str, Any]]:
     """Filter out ads and deduplicate elements."""
     seen: set[str] = set()
-    out: list[dict] = []
+    out: list[dict[str, Any]] = []
 
     for e in raw:
         attrs = e.get("attrs") or {}
@@ -237,11 +222,12 @@ def _filter_and_dedupe(raw: list[dict]) -> list[dict]:
         txt = e.get("text") or ""
 
         # Filter ads
-        try:
-            if AD_REGEX.search(str(cls)) or AD_REGEX.search(str(txt)):
-                continue
-        except Exception:
-            pass
+        if filter_ads:
+            try:
+                if AD_REGEX.search(str(cls)) or AD_REGEX.search(str(txt)):
+                    continue
+            except Exception:
+                pass
 
         # Dedupe by signature
         sig = "|".join(
@@ -263,21 +249,8 @@ def _filter_and_dedupe(raw: list[dict]) -> list[dict]:
     return out
 
 
-def _sanitize_html(html: str) -> str:
-    """Remove noise elements from HTML."""
-    try:
-        soup = BeautifulSoup(html, "lxml")
-    except Exception:
-        soup = BeautifulSoup(html, "html.parser")
-
-    # Remove noise tags
-    for tag in soup.find_all(["script", "style", "noscript", "template", "link"]):
-        try:
-            tag.decompose()
-        except Exception:
-            pass
-
-    # Remove ad/tracker containers
+def _remove_ad_containers(soup: BeautifulSoup) -> None:
+    """Decompose ad/tracker containers matched by id/class against AD_REGEX."""
     to_remove = []
     for node in list(soup.find_all(True)):
         if not isinstance(node, Tag):
@@ -299,24 +272,49 @@ def _sanitize_html(html: str) -> str:
         except Exception:
             pass
 
-    return str(soup)
 
-
-def _generate_llm_markdown(html: str, elements: list[dict], max_elements: int = 50) -> str:
-    """Generate optimized markdown for LLM consumption.
-
-    Shows:
-    1. Page title and structure
-    2. Top N interactive elements (prioritized)
-    3. Ellipsis for remaining elements
-
-    This format reduces token usage while maintaining actionable information.
-    """
+def _sanitize_html(html: str, *, filter_ads: bool = True) -> str:
+    """Remove noise elements from HTML."""
     try:
         soup = BeautifulSoup(html, "lxml")
     except Exception:
         soup = BeautifulSoup(html, "html.parser")
 
+    # Remove noise tags
+    for tag in soup.find_all(["script", "style", "noscript", "template", "link"]):
+        try:
+            tag.decompose()
+        except Exception:
+            pass
+
+    if filter_ads:
+        _remove_ad_containers(soup)
+
+    return str(soup)
+
+
+def _list_lines(tag: Tag) -> list[str]:
+    """Markdown lines for a top-level ``ul``/``ol``."""
+    lines = []
+    for li in tag.find_all("li", recursive=False):
+        text = li.get_text(separator=" ", strip=True)
+        if text:
+            lines.append(f"- {text}\n")
+    return lines
+
+
+def _structural_lines(tag: Tag) -> list[str]:
+    """Markdown lines for key children of a structural container."""
+    lines = []
+    for p in tag.find_all(["h1", "h2", "h3", "p"], recursive=False):
+        t = p.get_text(separator=" ", strip=True)
+        if t:
+            lines.append(t + "\n")
+    return lines
+
+
+def _page_structure_lines(soup: BeautifulSoup) -> list[str]:
+    """Markdown lines for the page title and top-level body structure."""
     parts: list[str] = []
 
     # Page title
@@ -335,21 +333,17 @@ def _generate_llm_markdown(html: str, elements: list[dict], max_elements: int = 
             if text:
                 parts.append(text + "\n")
         elif name in ("ul", "ol"):
-            for li in tag.find_all("li", recursive=False):
-                text = li.get_text(separator=" ", strip=True)
-                if text:
-                    parts.append(f"- {text}\n")
+            parts.extend(_list_lines(tag))
         elif name in ("section", "main", "div", "form"):
-            # Extract key structural elements
-            for p in tag.find_all(["h1", "h2", "h3", "p"], recursive=False):
-                t = p.get_text(separator=" ", strip=True)
-                if t:
-                    parts.append(t + "\n")
+            parts.extend(_structural_lines(tag))
 
-    # Interactive controls section (optimized)
-    parts.append("\n## Interactive Controls\n")
+    return parts
 
-    # Show top elements with priority scores
+
+def _interactive_controls_lines(elements: list[dict[str, Any]], max_elements: int) -> list[str]:
+    """Markdown lines listing the top prioritized interactive elements."""
+    parts = ["\n## Interactive Controls\n"]
+
     shown_count = 0
     for e in elements[:max_elements]:
         shown_count += 1
@@ -366,12 +360,35 @@ def _generate_llm_markdown(html: str, elements: list[dict], max_elements: int = 
     if remaining > 0:
         parts.append(f"\n*... and {remaining} more interactive element(s)*\n")
 
+    return parts
+
+
+def _generate_llm_markdown(
+    html: str, elements: list[dict[str, Any]], max_elements: int = 50
+) -> str:
+    """Generate optimized markdown for LLM consumption.
+
+    Shows:
+    1. Page title and structure
+    2. Top N interactive elements (prioritized)
+    3. Ellipsis for remaining elements
+
+    This format reduces token usage while maintaining actionable information.
+    """
+    try:
+        soup = BeautifulSoup(html, "lxml")
+    except Exception:
+        soup = BeautifulSoup(html, "html.parser")
+
+    parts = _page_structure_lines(soup)
+    parts.extend(_interactive_controls_lines(elements, max_elements))
     return "\n".join(parts)
 
 
 def _extract_element_label(element: dict[str, Any]) -> str:
     """Extract meaningful label for element display."""
-    attrs = element.get("attrs", {})
+    attrs_value = element.get("attrs", {})
+    attrs = attrs_value if isinstance(attrs_value, dict) else {}
 
     # Try ARIA attributes first
     for key in ["aria-label", "aria-placeholder", "placeholder"]:
@@ -379,7 +396,8 @@ def _extract_element_label(element: dict[str, Any]) -> str:
             return str(attrs[key])
 
     # Try text content
-    text = element.get("text", "").strip()
+    text_value = element.get("text", "")
+    text = text_value.strip() if isinstance(text_value, str) else str(text_value).strip()
     if text:
         return text[:60]
 
@@ -389,7 +407,7 @@ def _extract_element_label(element: dict[str, Any]) -> str:
         return str(title)
 
     # Fallback to tag name
-    tag = element.get("tag", "")
+    tag = str(element.get("tag", ""))
     if tag == "input":
         input_type = attrs.get("type", "")
         return f"{input_type} input" if input_type else "input"

@@ -9,11 +9,25 @@ This module provides centralized path resolution that follows Python packaging b
 
 from __future__ import annotations
 
+import hashlib
+import re
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from webagent.core.config import AgentConfig
+    from webagent.evaluation.artifacts import RunLayout
+
+
+def get_run_layout(config: AgentConfig | Path | None = None) -> RunLayout:
+    """Return the typed layout for one exact run directory.
+
+    ``Path`` follows :func:`get_output_dir` semantics and denotes a run root,
+    not an artifacts directory or a CLI workspace root.
+    """
+    from webagent.evaluation.artifacts import RunLayout
+
+    return RunLayout.from_root(get_output_dir(config))
 
 
 def get_artifacts_dir(config: AgentConfig | Path | None = None) -> Path:
@@ -28,7 +42,7 @@ def get_artifacts_dir(config: AgentConfig | Path | None = None) -> Path:
     Examples:
         >>> from webagent.core.config import AgentConfig
         >>> get_artifacts_dir(AgentConfig())
-        PosixPath('/path/to/outputs/artifacts')
+        PosixPath('/path/to/exact-run/artifacts')
 
         >>> get_artifacts_dir(Path("./custom/artifacts"))
         PosixPath('/absolute/path/to/custom/artifacts')
@@ -46,15 +60,34 @@ def get_artifacts_dir(config: AgentConfig | Path | None = None) -> Path:
     return config.artifacts_dir.resolve()
 
 
-def get_pdf_extract_dir(artifacts_dir: Path) -> Path:
-    """Canonical directory for a PDF's API-extracted content.
+def get_pdf_extract_dir(
+    artifacts_dir: Path,
+    source_path: Path | None = None,
+    *,
+    content_sha256: str | None = None,
+) -> Path:
+    """Canonical, per-document directory for API-extracted PDF content.
 
     All cloud-OCR output (``parsed.md``, ``parsed_content_list.json`` and the
-    ``images/`` figures) is written here so artifacts stay organized: the
-    downloaded ``*.pdf`` lives at the artifacts root while everything the parser
-    cascade produces is grouped under a single ``pdf/`` subdirectory.
+    ``images/`` figures) is grouped below ``artifacts/documents``.  A source PDF
+    gets a stable stem-plus-content-hash directory so multiple documents in one
+    run cannot overwrite one another.  ``source_path=None`` is the compatibility
+    location for callers that have not resolved a document yet.
     """
-    return artifacts_dir / "pdf"
+    documents = artifacts_dir / "documents"
+    if source_path is None:
+        return documents / "default"
+    digest = content_sha256 or _file_sha256(source_path)
+    stem = re.sub(r"[^a-z0-9]+", "-", source_path.stem.casefold()).strip("-") or "document"
+    return documents / f"{stem[:48]}-{digest[:12]}"
+
+
+def _file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def get_output_dir(config: AgentConfig | Path | None = None) -> Path:
@@ -124,8 +157,18 @@ def _pick_candidate(path: Path, artifacts_dir: Path) -> Path:
     candidate = artifacts_dir / path
     if candidate.exists():
         return candidate
-    # Parser figures now live under pdf/images; keep the legacy locations too.
-    for subdir in ("pdf/images", "pdf_images", "images"):
+    # Prefer the current categorized tree, while keeping legacy parser/image
+    # locations readable for historical runs.
+    for subdir in (
+        "figures",
+        "files",
+        "downloads",
+        "documents",
+        "documents/pdf/images",
+        "pdf/images",
+        "pdf_images",
+        "images",
+    ):
         candidate = artifacts_dir / subdir / path.name
         if candidate.exists():
             return candidate
@@ -186,7 +229,7 @@ def _to_artifacts_path(path_str: str, artifacts_dir: Path) -> Path:
 
     A relative path that already exists under the current output root is kept
     as-is, which preserves paths returned by tools (for example
-    ``outputs/artifacts/paper.pdf``). Other relative paths are treated as
+    ``<run>/artifacts/downloads/paper.pdf``). Other relative paths are treated as
     artifacts-relative, including nested paths like ``papers/foo.pdf``.
     """
     path = Path(path_str.strip())
@@ -206,14 +249,20 @@ def _find_most_recent_pdf(artifacts_dir: Path, excluded_path: Path | None = None
         return None
 
     pdf_files = []
-    for pdf_path in artifacts_dir.glob("*.pdf"):
-        if excluded_path and pdf_path.resolve() == excluded_path.resolve():
-            continue
-        if pdf_path.is_file():
-            try:
-                pdf_files.append((pdf_path, pdf_path.stat().st_mtime))
-            except OSError:
+    candidate_dirs = (
+        artifacts_dir,
+        artifacts_dir / "downloads",
+        artifacts_dir / "documents",
+    )
+    for directory in candidate_dirs:
+        for pdf_path in directory.glob("*.pdf"):
+            if excluded_path and pdf_path.resolve() == excluded_path.resolve():
                 continue
+            if pdf_path.is_file():
+                try:
+                    pdf_files.append((pdf_path, pdf_path.stat().st_mtime))
+                except OSError:
+                    continue
 
     if not pdf_files:
         return None

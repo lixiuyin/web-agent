@@ -7,18 +7,31 @@ import base64
 import io
 import logging
 import re
+from collections.abc import Sequence
 from typing import Any
 
 import httpx
 from PIL import Image
 
 from webagent.core.models import BrowserState, ToolCall
-from webagent.planner.base import SYSTEM_PROMPT, build_prompt, parse_llm_response
-from webagent.planner.enhanced_base import (
-    ENHANCED_SYSTEM_PROMPT,
-    build_enhanced_prompt,
-    parse_enhanced_response,
+from webagent.planner._vision_heuristics import has_visual_content, indicates_no_vision
+from webagent.planner.base import (
+    STRUCTURED_SYSTEM_PROMPT,
+    SYSTEM_PROMPT,
+    build_prompt,
+    parse_llm_response,
 )
+from webagent.planner.structured import (
+    JSON_SCHEMA_SYSTEM_PROMPT,
+    NATIVE_TOOL_SYSTEM_PROMPT,
+    PlannerOutputMode,
+    normalize_output_mode,
+    openai_function_tools,
+    openai_response_format,
+    parse_provider_tool_call,
+    response_text,
+)
+from webagent.tools.registry import ToolSpec
 
 # Matches <think>...</think> blocks produced by reasoning models (DeepSeek, GLM-Z1, etc.)
 _THINK_TAG_RE = re.compile(r"<think>.*?</think>", re.DOTALL | re.IGNORECASE)
@@ -26,6 +39,21 @@ _THINK_TAG_RE = re.compile(r"<think>.*?</think>", re.DOTALL | re.IGNORECASE)
 _THINK_UNCLOSED_RE = re.compile(r"<think>.*", re.DOTALL | re.IGNORECASE)
 
 logger = logging.getLogger("webagent")
+
+_LOCAL_ARTIFACT_TOOLS = (
+    "download_pdf(",
+    "pdf_parse(",
+    "pdf_analyze_figure(",
+    "analyze_image(",
+    "read_image(",
+)
+
+
+def _local_artifact_history(history_text: str, url: str) -> bool:
+    """Whether a local preview is redundant with structured artifact evidence."""
+    return url.casefold().startswith("file://") and any(
+        marker in history_text for marker in _LOCAL_ARTIFACT_TOOLS
+    )
 
 
 def _strip_thinking_tags(text: str) -> str:
@@ -99,6 +127,13 @@ class APIPlanner:
     URL and routes ``analyze_image`` calls there.
     """
 
+    # Retries within a single ``analyze_image`` call: flaky vision models
+    # occasionally miss an image they can otherwise read, so retry before giving up.
+    _VISION_RETRY_ATTEMPTS = 2
+    # Consecutive fully-failed ``analyze_image`` calls before chat vision is
+    # latched off for the rest of the session. Keeps one blip from disabling vision.
+    _VISION_FAILURE_LIMIT = 2
+
     def __init__(
         self,
         api_url: str,
@@ -108,7 +143,12 @@ class APIPlanner:
         temperature: float = 0.7,
         use_structured_output: bool = False,
         max_tokens: int = 4096,
+        reasoning_effort: str | None = None,
+        vision_max_tokens: int = 2000,
+        vision_brief_max_tokens: int = 1200,
+        vision_max_words: int = 350,
         hard_timeout: int = 300,
+        output_mode: str | None = None,
     ) -> None:
         self.api_url = api_url
         self.api_key = api_key
@@ -122,13 +162,50 @@ class APIPlanner:
         self.hard_timeout = max(hard_timeout, timeout)
         self.temperature = temperature
         self.use_structured_output = use_structured_output
+        configured_mode = output_mode or ("auto" if use_structured_output else "prompt-json")
+        self.output_mode: PlannerOutputMode = normalize_output_mode(configured_mode)
+        self._effective_output_mode: PlannerOutputMode | None = (
+            None if self.output_mode == "auto" else self.output_mode
+        )
+        self._tool_specs: list[ToolSpec] = []
+        self._structured_fallbacks: list[dict[str, Any]] = []
         # Cap output length. Generous enough for reasoning models (which spend
         # tokens thinking before emitting the action JSON) without truncation.
         self.max_tokens = max_tokens
+        self.reasoning_effort = reasoning_effort
+        self.vision_max_tokens = vision_max_tokens
+        self.vision_brief_max_tokens = vision_brief_max_tokens
+        self.vision_max_words = vision_max_words
         self._supports_vision: bool | None = None  # chat API accepts images?
         self._vision_actually_works: bool = True  # chat API vision produces real results?
+        self._vision_failure_count: int = 0  # consecutive analyze_image calls that saw no image
         self._vlm_url: str | None = _detect_vlm_url(api_url)  # separate VLM endpoint
         self._vlm_available: bool = False  # probed during load()
+        self._last_call_metadata: dict[str, Any] = {}
+
+    @property
+    def last_call_metadata(self) -> dict[str, Any]:
+        """Metadata for the latest planning call, excluding response content."""
+        return dict(self._last_call_metadata)
+
+    @property
+    def effective_output_mode(self) -> PlannerOutputMode:
+        """Output mode currently selected after any capability fallback."""
+        return self._effective_output_mode or self.output_mode
+
+    @property
+    def structured_fallbacks(self) -> list[dict[str, Any]]:
+        """Capability downgrades performed in auto mode during this session."""
+        return [dict(item) for item in self._structured_fallbacks]
+
+    def configure_tools(self, specs: Sequence[ToolSpec]) -> None:
+        """Install the policy-filtered tool catalog used in provider requests."""
+        unique: dict[str, ToolSpec] = {}
+        for spec in specs:
+            if not spec.name or spec.name in unique:
+                raise ValueError(f"Duplicate or empty planner tool name: {spec.name!r}")
+            unique[spec.name] = spec
+        self._tool_specs = list(unique.values())
 
     async def load(self) -> None:
         """Probe the API to detect vision support."""
@@ -171,17 +248,26 @@ class APIPlanner:
         history_text: str,
         available_tools: str,
     ) -> ToolCall | None:
-        # Choose prompt builder based on configuration
-        if self.use_structured_output:
-            prompt, screenshot_b64 = build_enhanced_prompt(
-                task, browser_state, history_text, available_tools
-            )
-        else:
-            prompt, screenshot_b64 = build_prompt(
-                task, browser_state, history_text, available_tools
-            )
+        provider_mode = self._initial_planning_mode()
+        response_instruction = (
+            "SELECT EXACTLY ONE ACTION USING THE REQUIRED PROVIDER FORMAT:"
+            if provider_mode != "prompt-json"
+            else "YOUR RESPONSE (JSON ONLY):"
+        )
+        prompt, screenshot_b64 = build_prompt(
+            task,
+            browser_state,
+            history_text,
+            available_tools,
+            response_instruction=response_instruction,
+        )
 
         if not self._supports_vision:
+            screenshot_b64 = None
+        elif screenshot_b64 and _local_artifact_history(history_text, browser_state.url):
+            # A browser PDF/image preview is redundant once a structured file/PDF
+            # tool has returned the path and evidence. Omitting it avoids an
+            # expensive second visual interpretation during action planning.
             screenshot_b64 = None
         logger.info(
             "Planner request context: dom_chars=%d screenshot_captured=%s screenshot_sent=%s",
@@ -189,20 +275,12 @@ class APIPlanner:
             browser_state.screenshot is not None,
             screenshot_b64 is not None,
         )
-        raw = await self._call(prompt, screenshot_b64)
-
-        # Parse response based on configuration
-        if self.use_structured_output:
-            enhanced = parse_enhanced_response(raw)
-            if enhanced:
-                return ToolCall(
-                    tool_name=enhanced.tool_name,
-                    parameters=enhanced.parameters,
-                    reasoning=enhanced.reasoning,
-                )
-            return None
-        else:
+        self._last_call_metadata = {}
+        if provider_mode == "prompt-json":
+            raw = await self._call(prompt, screenshot_b64)
+            self._annotate_output_mode("prompt-json")
             return parse_llm_response(raw)
+        return await self._call_structured(prompt, screenshot_b64, provider_mode)
 
     async def analyze_image(self, image: Image.Image, question: str) -> str:
         """Analyze an image using vision capabilities.
@@ -294,11 +372,49 @@ class APIPlanner:
         return content if content else "VLM returned empty response."
 
     async def _analyze_image_chat(self, b64: str, question: str) -> str:
-        """Analyze an image via the chat completions API (inline image)."""
+        """Analyze an image via the chat completions API (inline image).
+
+        Retries within the call on a transient "cannot see image" response, and
+        only latches chat vision off after ``_VISION_FAILURE_LIMIT`` consecutive
+        failed calls, so a single blip does not disable vision for the session.
+        """
+        # Scale the directive and token budget to the question's complexity.
+        # A terse question ("what color?") gets a concise answer so a reasoning
+        # model answers directly; a detailed one ("describe ... in detail") gets
+        # a thorough answer with more headroom so the chain-of-thought doesn't
+        # crowd out the content.
+        q = question.strip().lower()
+        wants_detail = len(question.strip()) > 80 or any(
+            k in q
+            for k in (
+                "in detail",
+                "thorough",
+                "comprehensive",
+                "describe",
+                "explain",
+                "analyze",
+                "purpose",
+                "key finding",
+            )
+        )
+        if wants_detail:
+            directive = (
+                "Provide a thorough, structured answer covering the purpose, key "
+                "components, and findings. Omit meta-commentary and step-by-step reasoning. "
+                f"Keep the answer under {self.vision_max_words} words. "
+            )
+            max_tokens = self.vision_max_tokens
+        else:
+            directive = (
+                "Answer concisely, in a few short paragraphs, without showing your reasoning. "
+            )
+            max_tokens = min(self.vision_max_tokens, self.vision_brief_max_tokens)
+
         prompt_with_instruction = (
             "You are an image analysis assistant. Carefully observe the image "
             "and answer the user's question. If the content cannot be clearly "
             "seen or determined, state it honestly. "
+            f"{directive}"
             f"\n\nUser question: {question}"
         )
         payload: dict[str, Any] = {
@@ -319,23 +435,37 @@ class APIPlanner:
                 }
             ],
             "temperature": max(0.3, self.temperature),
-            "max_tokens": 2000,
+            "max_tokens": max_tokens,
         }
-        response = await self._post(payload)
-        response = self._clean_vision_response(response, prompt_with_instruction)
 
-        if self._indicates_no_vision(response):
+        for attempt in range(1, self._VISION_RETRY_ATTEMPTS + 1):
+            response = await self._post(payload, timeout=self.hard_timeout)
+            response = self._clean_vision_response(response, prompt_with_instruction)
+            # A blank response carries no analysis — treat it like a "cannot see
+            # image" answer and retry, rather than returning a useless "" to the
+            # caller (which would surface as an empty `vision_analysis`).
+            if response.strip() and not indicates_no_vision(response):
+                self._vision_failure_count = 0  # success clears the streak
+                return response
             logger.warning(
-                "Chat vision failed — model cannot see image. Response: %s",
-                response[:200],
+                "Chat vision saw no image (attempt %d/%d): %s",
+                attempt,
+                self._VISION_RETRY_ATTEMPTS,
+                response[:200] or "(empty)",
             )
+
+        self._vision_failure_count += 1
+        if self._vision_failure_count >= self._VISION_FAILURE_LIMIT:
             self._vision_actually_works = False
-            return (
-                "Vision API is not functioning properly. "
-                "Use 'pdf_get_figure_info' for figure captions, "
-                "or 'pdf_extract_text'/'pdf_search' to read surrounding text."
+            logger.warning(
+                "Chat vision disabled after %d consecutive failed calls",
+                self._vision_failure_count,
             )
-        return response
+        return (
+            "Vision API could not read the image this time. "
+            "Use 'pdf_get_figure_info' for figure captions, "
+            "or 'pdf_extract_text'/'pdf_search' to read surrounding text."
+        )
 
     def _clean_vision_response(self, response: str, prompt: str) -> str:
         """Clean up vision API response by removing echoed prompt prefix."""
@@ -349,113 +479,6 @@ class APIPlanner:
 
         return response
 
-    @staticmethod
-    def _indicates_no_vision(response: str) -> bool:
-        """Return True if the response suggests the model cannot see the image."""
-        if not response:
-            return False
-        lower = response.lower()
-        no_vision_phrases = [
-            "i don't see any image",
-            "i don't see an image",
-            "i cannot see any image",
-            "i cannot see the image",
-            "no image attached",
-            "no image provided",
-            "no image was provided",
-            "i'm unable to view",
-            "i am unable to view",
-            "i can't view the image",
-            "i cannot view the image",
-            "i don't have the ability to view",
-            "i do not have the ability to view",
-            "i'm not able to see",
-            "i am not able to see",
-            "there is no image",
-            "image is not visible",
-            "unable to see the image",
-            "cannot analyze images",
-            "i cannot analyze the image",
-        ]
-        return any(phrase in lower for phrase in no_vision_phrases)
-
-    def _has_visual_content(self, response: str) -> bool:
-        """Check if response contains visual analysis indicators."""
-        if not response:
-            return False
-
-        response_lower = response.lower()
-
-        # Visual content indicators - words that suggest the model is describing an image
-        # Also include simple color answers which are valid vision responses
-        visual_indicators = [
-            # Colors
-            "red",
-            "blue",
-            "green",
-            "yellow",
-            "black",
-            "white",
-            "orange",
-            "purple",
-            "pink",
-            "brown",
-            "gray",
-            "grey",
-            "color",
-            # Shapes and visual elements
-            "shows",
-            "shows a",
-            "depicts",
-            "displays",
-            "illustrates",
-            "presents",
-            "figure",
-            "chart",
-            "graph",
-            "image",
-            "diagram",
-            "plot",
-            "rectangle",
-            "square",
-            "circle",
-            "left",
-            "right",
-            "top",
-            "bottom",
-            "center",
-            # Descriptive language
-            "the image",
-            "this figure",
-            "the chart",
-            "the graph",
-            "the picture",
-            "we can see",
-            "visible",
-            "appears to be",
-            "see the",
-            "image is",
-        ]
-
-        # Check for at least one visual indicator
-        has_indicator = any(indicator in response_lower for indicator in visual_indicators)
-
-        # Also accept short responses that are likely color/object answers
-        # (e.g., "Red", "A cat", "Blue sky")
-        if not has_indicator and len(response) < 10 and response.isalpha():
-            # Very short answers like color names are valid vision responses
-            return True
-
-        # Also accept medium-length responses that describe visual content
-        # (e.g., "It is a green rectangle.")
-        if not has_indicator and 10 <= len(response) <= 150:
-            # Check for common visual description patterns
-            visual_patterns = ["is a", "is an", "consists of", "contains", "made of", "solid"]
-            if any(pattern in response_lower for pattern in visual_patterns):
-                return True
-
-        return has_indicator
-
     @property
     def vision_actually_works(self) -> bool:
         """Return True if any vision path is available (chat API or VLM)."""
@@ -463,6 +486,129 @@ class APIPlanner:
         return chat_vision or self._vlm_available
 
     # -- internals --------------------------------------------------------
+
+    def _initial_planning_mode(self) -> PlannerOutputMode:
+        """Select a mode without claiming native support before a successful call."""
+        if not self._tool_specs:
+            if self.output_mode in {"native-tools", "json-schema"}:
+                raise RuntimeError(
+                    f"planner output mode {self.output_mode!r} requires configure_tools(specs)"
+                )
+            return "prompt-json"
+        if self._effective_output_mode is not None:
+            return self._effective_output_mode
+        return "native-tools"
+
+    async def _call_structured(
+        self,
+        prompt: str,
+        screenshot_b64: str | None,
+        initial_mode: PlannerOutputMode,
+    ) -> ToolCall | None:
+        modes = self._structured_mode_ladder(initial_mode)
+        for index, mode in enumerate(modes):
+            if mode == "prompt-json":
+                raw = await self._call(prompt, screenshot_b64)
+                if self.output_mode == "auto":
+                    self._effective_output_mode = mode
+                self._annotate_output_mode(mode)
+                return parse_llm_response(raw)
+
+            payload = self._structured_payload(prompt, screenshot_b64, mode)
+            try:
+                data = await self._post_data(payload)
+            except httpx.HTTPStatusError as exc:
+                if self.output_mode != "auto" or not _structured_output_unsupported(exc, mode):
+                    raise
+                next_mode = modes[index + 1] if index + 1 < len(modes) else None
+                if next_mode is None:
+                    raise
+                self._record_structured_fallback(mode, next_mode, exc)
+                continue
+
+            raw = _strip_thinking_tags(response_text(data))
+            call = (
+                parse_provider_tool_call(data)
+                if mode == "native-tools"
+                else parse_llm_response(raw)
+            )
+            self._capture_response_metadata(data, len(raw))
+            if self.output_mode == "auto":
+                self._effective_output_mode = mode
+            self._annotate_output_mode(mode)
+            if call is not None and call.tool_name not in {spec.name for spec in self._tool_specs}:
+                logger.warning("Provider returned unexposed tool call: %s", call.tool_name)
+                return None
+            return call
+        return None
+
+    def _structured_mode_ladder(
+        self, initial_mode: PlannerOutputMode
+    ) -> tuple[PlannerOutputMode, ...]:
+        if self.output_mode != "auto":
+            return (initial_mode,)
+        ladder: tuple[PlannerOutputMode, ...] = (
+            "native-tools",
+            "json-schema",
+            "prompt-json",
+        )
+        try:
+            return ladder[ladder.index(initial_mode) :]
+        except ValueError:
+            return ("prompt-json",)
+
+    def _structured_payload(
+        self,
+        prompt: str,
+        screenshot_b64: str | None,
+        mode: PlannerOutputMode,
+    ) -> dict[str, Any]:
+        payload = self._base_chat_payload(
+            prompt,
+            screenshot_b64,
+            system_prompt=(
+                NATIVE_TOOL_SYSTEM_PROMPT if mode == "native-tools" else JSON_SCHEMA_SYSTEM_PROMPT
+            ),
+        )
+        if mode == "native-tools":
+            payload["tools"] = openai_function_tools(self._tool_specs)
+            payload["tool_choice"] = "required"
+            payload["parallel_tool_calls"] = False
+        elif mode == "json-schema":
+            payload["response_format"] = openai_response_format(self._tool_specs)
+        else:
+            raise ValueError(f"Structured payload requested for mode {mode!r}")
+        return payload
+
+    def _record_structured_fallback(
+        self,
+        source: PlannerOutputMode,
+        target: PlannerOutputMode,
+        exc: httpx.HTTPStatusError,
+    ) -> None:
+        response = exc.response
+        event = {
+            "from": source,
+            "to": target,
+            "status_code": response.status_code,
+            "reason": response.text[:300],
+        }
+        self._structured_fallbacks.append(event)
+        logger.warning(
+            "Planner provider does not support %s; falling back to %s (%d)",
+            source,
+            target,
+            response.status_code,
+        )
+
+    def _annotate_output_mode(self, effective: PlannerOutputMode) -> None:
+        self._last_call_metadata.update(
+            {
+                "requested_output_mode": self.output_mode,
+                "effective_output_mode": effective,
+                "structured_fallbacks": self.structured_fallbacks,
+            }
+        )
 
     async def _probe_vision(self) -> bool:
         """Send a small image to the chat API; return True if API accepts it."""
@@ -507,8 +653,8 @@ class APIPlanner:
                 if "choices" in data:
                     msg = data["choices"][0].get("message", {})
                     content = msg.get("content") or ""
-                    if not content and msg.get("reasoning_content"):
-                        content = msg["reasoning_content"]
+                    if not content:
+                        content = msg.get("reasoning_content") or msg.get("reasoning") or ""
                 content = _strip_thinking_tags(content)
 
                 # If content is still raw thinking (strip fell back to original
@@ -522,7 +668,7 @@ class APIPlanner:
                     self._vision_actually_works = False
                     return True
 
-                if self._indicates_no_vision(content):
+                if indicates_no_vision(content):
                     logger.info(
                         "Vision probe: chat API — model cannot see images: %s",
                         content[:100],
@@ -530,7 +676,7 @@ class APIPlanner:
                     self._vision_actually_works = False
                     return True
                 if "red" not in content.lower():
-                    has_visual = self._has_visual_content(content)
+                    has_visual = has_visual_content(content)
                     if not has_visual:
                         logger.info(
                             "Vision probe: no visual content (expected 'red', "
@@ -588,6 +734,18 @@ class APIPlanner:
             return False
 
     async def _call(self, prompt: str, screenshot_b64: str | None) -> str:
+        # Choose system prompt based on configuration
+        system_prompt = STRUCTURED_SYSTEM_PROMPT if self.use_structured_output else SYSTEM_PROMPT
+        payload = self._base_chat_payload(prompt, screenshot_b64, system_prompt=system_prompt)
+        return await self._post(payload)
+
+    def _base_chat_payload(
+        self,
+        prompt: str,
+        screenshot_b64: str | None,
+        *,
+        system_prompt: str,
+    ) -> dict[str, Any]:
         if screenshot_b64:
             user_content: str | list[dict[str, Any]] = [
                 {"type": "text", "text": prompt},
@@ -601,10 +759,6 @@ class APIPlanner:
             ]
         else:
             user_content = prompt
-
-        # Choose system prompt based on configuration
-        system_prompt = ENHANCED_SYSTEM_PROMPT if self.use_structured_output else SYSTEM_PROMPT
-
         payload: dict[str, Any] = {
             "model": self.model_name,
             "messages": [
@@ -614,10 +768,19 @@ class APIPlanner:
             "temperature": self.temperature,
             "max_tokens": self.max_tokens,
         }
-        return await self._post(payload)
+        if self.reasoning_effort is not None:
+            payload["reasoning"] = {
+                "effort": self.reasoning_effort,
+                "exclude": True,
+            }
+        return payload
 
     async def _bounded_post(
-        self, url: str, payload: dict[str, Any], headers: dict[str, str]
+        self,
+        url: str,
+        payload: dict[str, Any],
+        headers: dict[str, str],
+        timeout: int | None = None,
     ) -> httpx.Response:
         """POST with a per-read timeout AND a hard wall-clock cap.
 
@@ -625,43 +788,112 @@ class APIPlanner:
         server that trickles data. ``asyncio.wait_for`` enforces a true upper
         bound (``hard_timeout``); on expiry it raises ``TimeoutError``, which
         callers let propagate so the agent records a failed step and recovers.
+        A caller may pass ``timeout`` to extend the read timeout (e.g. slow
+        reasoning-model vision calls); the wall-clock cap stays ``hard_timeout``.
         """
-        async with httpx.AsyncClient(timeout=self.timeout) as client:
+        read_timeout = timeout if timeout is not None else self.timeout
+        async with httpx.AsyncClient(timeout=read_timeout) as client:
             return await asyncio.wait_for(
                 client.post(url, headers=headers, json=payload),
                 timeout=self.hard_timeout,
             )
 
-    async def _post(self, payload: dict[str, Any]) -> str:
+    async def _post(self, payload: dict[str, Any], timeout: int | None = None) -> str:
+        data = await self._post_data(payload, timeout=timeout)
+        response = _strip_thinking_tags(response_text(data))
+        self._capture_response_metadata(data, len(response))
+        logger.debug("API response length: %d chars", len(response))
+        return response
+
+    async def _post_data(
+        self, payload: dict[str, Any], timeout: int | None = None
+    ) -> dict[str, Any]:
+        """Return the raw provider object needed for native tool-call parsing."""
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self.api_key}",
         }
-        resp = await self._bounded_post(self.api_url, payload, headers)
+        resp = await self._bounded_post(self.api_url, payload, headers, timeout=timeout)
         if resp.status_code != 200:
             logger.error("API %d: %s", resp.status_code, resp.text[:500])
         resp.raise_for_status()
         data = resp.json()
+        if not isinstance(data, dict):
+            raise ValueError("Planner API response must be a JSON object")
 
         # Log response structure for debugging
-        logger.debug(
-            "API response keys: %s", list(data.keys()) if isinstance(data, dict) else type(data)
-        )
+        logger.debug("API response keys: %s", list(data.keys()))
+        return data
 
-        if data.get("choices"):
-            msg = data["choices"][0].get("message", {})
-            content = msg.get("content") or ""
-            # Some APIs put the thinking chain in a separate field;
-            # if content is empty fall back to reasoning_content.
-            if not content and msg.get("reasoning_content"):
-                content = msg["reasoning_content"]
-            content = _strip_thinking_tags(content)
-            logger.debug("API response length: %d chars", len(content))
-            return content
-        # Handle alternative response formats
-        response = data.get("response", "")
-        if not response and "data" in data:
-            response = data.get("data", {}).get("content", "")
-        response = _strip_thinking_tags(response)
-        logger.debug("API response length: %d chars", len(response))
-        return response
+    def _capture_response_metadata(self, data: dict[str, Any], response_length: int) -> None:
+        choices = data.get("choices")
+        finish_reason = (
+            choices[0].get("finish_reason")
+            if isinstance(choices, list) and choices and isinstance(choices[0], dict)
+            else None
+        )
+        self._capture_call_metadata(data, finish_reason, response_length)
+
+    def _capture_call_metadata(
+        self, data: dict[str, Any], finish_reason: Any, response_length: int
+    ) -> None:
+        raw_usage = data.get("usage")
+        usage: dict[str, Any] = raw_usage if isinstance(raw_usage, dict) else {}
+        self._last_call_metadata = {
+            "response_length": response_length,
+            "finish_reason": str(finish_reason) if finish_reason is not None else None,
+            "prompt_tokens": _optional_int(usage.get("prompt_tokens")),
+            "completion_tokens": _optional_int(usage.get("completion_tokens")),
+            "total_tokens": _optional_int(usage.get("total_tokens")),
+        }
+
+
+def _optional_int(value: Any) -> int | None:
+    return value if isinstance(value, int) and not isinstance(value, bool) else None
+
+
+def _structured_output_unsupported(exc: httpx.HTTPStatusError, mode: PlannerOutputMode) -> bool:
+    """Only downgrade on explicit client-side feature incompatibility.
+
+    Authentication, rate limits, timeouts, and server errors must propagate;
+    treating them as capability failures would hide operational incidents.
+    """
+    response = exc.response
+    if response.status_code not in {400, 404, 415, 422}:
+        return False
+    body = response.text.casefold()
+    # Schema/request/model errors are implementation or configuration defects,
+    # not evidence that the provider lacks structured-output support.
+    non_capability_errors = (
+        "invalid schema",
+        "schema validation",
+        "invalid function",
+        "invalid tool definition",
+        "unknown model",
+        "model not found",
+        "invalid request body",
+        "malformed request",
+        "invalid json",
+        "missing required",
+        "required field",
+    )
+    if any(term in body for term in non_capability_errors):
+        return False
+    explicit_capability_errors = (
+        "unsupported",
+        "not supported",
+        "does not support",
+        "unsupported parameter",
+        "unknown parameter",
+        "unrecognized parameter",
+        "unexpected parameter",
+        "extra fields not permitted",
+    )
+    feature_terms = (
+        ("tools", "tool_choice", "function", "parallel_tool_calls")
+        if mode == "native-tools"
+        else ("response_format", "json_schema", "json schema")
+    )
+    return any(term in body for term in explicit_capability_errors) and any(
+        term in body for term in feature_terms
+    )

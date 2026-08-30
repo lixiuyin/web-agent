@@ -1,6 +1,6 @@
 """MinerU API client — mineru.net v4 cloud document extraction.
 
-Documented v4 batch-upload flow (https://mineru.net/apiManage/docs):
+Documented v4 batch-upload flow (https://mineru.net/doc/docs/index_en/):
 
   1. ``POST /file-urls/batch`` — request a signed upload URL + ``batch_id``.
   2. ``PUT`` the file binary directly to that URL (no Content-Type header).
@@ -18,6 +18,7 @@ import logging
 import time
 import zipfile
 from pathlib import Path
+from typing import Any
 
 import httpx
 
@@ -60,7 +61,7 @@ class MinerUAPIParser:
         return base.rstrip("/")
 
     @staticmethod
-    def _check_api_code(body: dict, context: str) -> None:
+    def _check_api_code(body: dict[str, Any], context: str) -> None:
         code = body.get("code")
         if isinstance(code, int) and code != 0:
             msg = body.get("msg") or body.get("message") or "unknown"
@@ -106,7 +107,12 @@ class MinerUAPIParser:
             raise ParserProviderError(provider="mineru", retryable=True, cause=exc) from exc
 
     async def _request_upload_url(
-        self, client, api_root, headers, req: ParseRequest, is_ocr: bool
+        self,
+        client: httpx.AsyncClient,
+        api_root: str,
+        headers: dict[str, str],
+        req: ParseRequest,
+        is_ocr: bool,
     ) -> tuple[str, str]:
         endpoint = f"{api_root}/file-urls/batch"
         payload = {
@@ -130,7 +136,9 @@ class MinerUAPIParser:
             )
         return str(batch_id), str(file_urls[0])
 
-    async def _upload_file(self, client, upload_url: str, req: ParseRequest) -> None:
+    async def _upload_file(
+        self, client: httpx.AsyncClient, upload_url: str, req: ParseRequest
+    ) -> None:
         # MinerU's signed URL rejects an explicit Content-Type; suppress httpx's default.
         body = await asyncio.to_thread(req.file_path.read_bytes)
         resp = await client.put(upload_url, content=body, headers={"Content-Type": ""})
@@ -141,7 +149,14 @@ class MinerUAPIParser:
                 cause=Exception(f"file upload failed (HTTP {resp.status_code}): {resp.text[:300]}"),
             )
 
-    async def _poll_batch(self, client, api_root, headers, batch_id, req: ParseRequest) -> dict:
+    async def _poll_batch(
+        self,
+        client: httpx.AsyncClient,
+        api_root: str,
+        headers: dict[str, str],
+        batch_id: str,
+        req: ParseRequest,
+    ) -> dict[str, Any]:
         poll_url = f"{api_root}/extract-results/batch/{batch_id}"
         interval = float(req.config.parser_poll_interval_seconds)
         deadline = time.monotonic() + req.config.mineru_max_wait_seconds
@@ -176,7 +191,7 @@ class MinerUAPIParser:
         )
 
     @staticmethod
-    def _select_entry(body: dict, file_name: str) -> dict | None:
+    def _select_entry(body: dict[str, Any], file_name: str) -> dict[str, Any] | None:
         results = (body.get("data") or {}).get("extract_result") or []
         if not results:
             return None
@@ -186,7 +201,12 @@ class MinerUAPIParser:
         first = results[0]
         return first if isinstance(first, dict) else None
 
-    async def _download_and_build(self, client, entry: dict, req: ParseRequest) -> PDFParseResult:
+    async def _download_and_build(
+        self,
+        client: httpx.AsyncClient,
+        entry: dict[str, Any],
+        req: ParseRequest,
+    ) -> PDFParseResult:
         zip_url = entry.get("full_zip_url")
         if not zip_url:
             raise ParserProviderError(
@@ -217,23 +237,23 @@ class MinerUAPIParser:
         return result
 
     @staticmethod
-    def _unpack_zip(zip_bytes: bytes, images_dir: Path) -> tuple[str, list]:
+    def _unpack_zip(zip_bytes: bytes, images_dir: Path) -> tuple[str, list[dict[str, Any]]]:
         """Extract markdown, content_list.json and images from the result archive."""
         images_dir.mkdir(parents=True, exist_ok=True)
         markdown = ""
-        content_list: list = []
+        content_list: list[dict[str, Any]] = []
         with zipfile.ZipFile(io.BytesIO(zip_bytes)) as zf:
             for name in zf.namelist():
                 lower = name.lower()
                 if lower.endswith("/"):
                     continue
-                if not markdown and (lower.endswith("full.md") or lower.endswith(".md")):
+                if not markdown and lower.endswith(".md"):
                     markdown = zf.read(name).decode("utf-8", errors="replace")
                 elif lower.endswith("content_list.json"):
                     try:
                         parsed = json.loads(zf.read(name).decode("utf-8", errors="replace"))
                         if isinstance(parsed, list):
-                            content_list = parsed
+                            content_list = [item for item in parsed if isinstance(item, dict)]
                     except json.JSONDecodeError:
                         pass
                 elif "/images/" in lower or lower.startswith("images/"):
@@ -241,7 +261,10 @@ class MinerUAPIParser:
         return markdown, content_list
 
     def _map_content_list(
-        self, result: PDFParseResult, content_list: list, req: ParseRequest
+        self,
+        result: PDFParseResult,
+        content_list: list[dict[str, Any]],
+        req: ParseRequest,
     ) -> None:
         """Map MinerU content_list items to structured TextBlock/Table/Image entries."""
         current_section = "root"

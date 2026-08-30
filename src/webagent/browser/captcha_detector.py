@@ -77,11 +77,6 @@ class CaptchaDetector:
         "i'm not a robot",
     ]
 
-    def __init__(self) -> None:
-        """Initialize the captcha detector."""
-        self._detected_type: str | None = None
-        self._detected_confidence: float = 0.0
-
     async def detect_captcha(self, page: Page) -> dict[str, Any]:
         """Scan page for captcha indicators.
 
@@ -101,10 +96,9 @@ class CaptchaDetector:
         title_lower = title.lower()
 
         # Check URL and title for captcha keywords
-        keyword_matches = []
-        for keyword in self.CAPTCHA_KEYWORDS:
-            if keyword in url or keyword in title_lower:
-                keyword_matches.append(keyword)
+        keyword_matches = [
+            keyword for keyword in self.CAPTCHA_KEYWORDS if keyword in url or keyword in title_lower
+        ]
 
         # Check DOM for known captcha patterns
         dom_matches: dict[str, list[str]] = {}
@@ -113,7 +107,7 @@ class CaptchaDetector:
             for selector in selectors:
                 try:
                     element = await page.query_selector(selector)
-                    if element is not None:
+                    if element is not None and await element.is_visible():
                         matching_selectors.append(selector)
                 except Exception:
                     # Selector might be invalid, skip it
@@ -126,9 +120,6 @@ class CaptchaDetector:
         if dom_matches:
             # Found DOM patterns - highest confidence
             captcha_type = next(iter(dom_matches))
-            self._detected_type = captcha_type
-            self._detected_confidence = 0.9
-
             return {
                 "detected": True,
                 "type": captcha_type,
@@ -137,11 +128,8 @@ class CaptchaDetector:
                 "selectors": dom_matches[captcha_type],
             }
 
-        elif keyword_matches:
+        if keyword_matches:
             # Found keywords but no DOM patterns - medium confidence
-            self._detected_type = "unknown"
-            self._detected_confidence = 0.5
-
             return {
                 "detected": True,
                 "type": "unknown",
@@ -150,28 +138,14 @@ class CaptchaDetector:
                 "selectors": [],
             }
 
-        else:
-            # No captcha detected
-            self._detected_type = None
-            self._detected_confidence = 0.0
-
-            return {
-                "detected": False,
-                "type": None,
-                "confidence": 0.0,
-                "reason": "No captcha indicators found",
-                "selectors": [],
-            }
-
-    @property
-    def detected_type(self) -> str | None:
-        """Get the type of captcha most recently detected."""
-        return self._detected_type
-
-    @property
-    def detected_confidence(self) -> float:
-        """Get the confidence of the most recent detection."""
-        return self._detected_confidence
+        # No captcha detected
+        return {
+            "detected": False,
+            "type": None,
+            "confidence": 0.0,
+            "reason": "No captcha indicators found",
+            "selectors": [],
+        }
 
 
 async def check_captcha(page: Page) -> dict[str, Any]:

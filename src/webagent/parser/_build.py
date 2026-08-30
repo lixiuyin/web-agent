@@ -16,6 +16,7 @@ from .models import (
     PDFParseResult,
     TableInfo,
     TextBlock,
+    extract_figure_number,
     extract_table_number,
 )
 
@@ -28,32 +29,66 @@ _MD_TABLE_SEP_RE = re.compile(r"^\s*\|[\s:|-]+\|\s*$")
 # Markdown inline image: ![alt](key). Captures alt text and the image key.
 _IMG_REF_RE = re.compile(r"!\[([^\]]*)\]\(([^)]+)\)")
 # A figure-caption line, e.g. "Figure 1: The Transformer ..." (colon or period
-# after the number distinguishes a caption from a body-text mention).
-_FIG_CAPTION_RE = re.compile(r"Figure\s+\d+[a-z]?\s*[:.][^\n]*", re.IGNORECASE)
+# after the number distinguishes a caption from a body-text mention). Stop at
+# "]" so an inline image's `![Figure 1: ...](key)` alt text never leaks the
+# `](key)` tail into the caption.
+_FIG_CAPTION_RE = re.compile(r"Figure\s+\d+[a-z]?\s*[:.][^\]\n]*", re.IGNORECASE)
 # Loose "figure N" mention, used to detect when an image's alt text is itself a caption.
 _FIG_MENTION_RE = re.compile(r"fig(?:ure|\.)?\s*\d", re.IGNORECASE)
+# Alt text that names a non-content element (logo, icon, badge, …). Such images
+# must never inherit a nearby figure caption via the fallback below.
+_NON_FIGURE_ALT_RE = re.compile(
+    r"\b(?:logo|icon|badge|avatar|qr\s*code|favicon|watermark|emoji|button)\b",
+    re.IGNORECASE,
+)
 
 
 def image_captions_from_pages(page_texts: list[str]) -> dict[str, tuple[int, str]]:
     """Map each markdown image key (basename) to ``(page_idx, caption)``.
 
-    Marker embeds images as ``![alt](key)``. The caption is the alt text when it
-    already reads like a figure caption (e.g. ``![Figure 1: ...](key)``),
-    otherwise the nearest ``Figure N: ...`` caption line on the same page. This
+    Marker embeds images as ``![alt](key)``. A standalone caption line is
+    preferred over generated image alt text when both name the same figure;
+    otherwise the alt text is used when it already reads like a figure caption,
+    then the nearest standalone ``Figure N: ...`` line on the same page. This
     lets ``Figure N`` be resolved to the correct image instead of relying on
-    arbitrary extraction order.
+    arbitrary extraction order or a provider-generated caption hallucination.
+
+    Two guards keep unrelated images (cover logos, icons, QR codes) from being
+    mislabelled as figures:
+      1. only standalone caption *lines* count as fallback candidates — a
+         ``Figure N:`` that lives inside an image's own alt text is excluded;
+      2. an image whose alt text names a non-content element (``logo``, ``icon``,
+         …) never inherits a caption.
     """
     mapping: dict[str, tuple[int, str]] = {}
     for page_idx, page_md in enumerate(page_texts):
-        captions = [(m.start(), m.group(0).strip()) for m in _FIG_CAPTION_RE.finditer(page_md)]
+        # Span of each inline image's alt text, so caption matches sitting inside
+        # an alt (rather than on their own line) can be excluded from the fallback.
+        alt_spans = [(m.start(1), m.end(1)) for m in _IMG_REF_RE.finditer(page_md)]
+        captions = [
+            (m.start(), m.group(0).strip())
+            for m in _FIG_CAPTION_RE.finditer(page_md)
+            if not any(s <= m.start() < e for s, e in alt_spans)
+        ]
         for ref in _IMG_REF_RE.finditer(page_md):
             alt = ref.group(1).strip()
             name = Path(ref.group(2).strip()).name
             if name in mapping:
                 continue
-            if _FIG_MENTION_RE.search(alt):
+            alt_number = extract_figure_number(alt)
+            same_number = [
+                caption
+                for _pos, caption in captions
+                if alt_number and extract_figure_number(caption) == alt_number
+            ]
+            if same_number:
+                # Marker can emit a generated alt/caption pair followed by the
+                # PDF's real caption. The final same-number standalone caption
+                # is the source-authored one in that layout.
+                caption = same_number[-1]
+            elif _FIG_MENTION_RE.search(alt):
                 caption = alt
-            elif captions:
+            elif captions and not _NON_FIGURE_ALT_RE.search(alt):
                 pos = ref.start()
                 caption = min(captions, key=lambda c: abs(c[0] - pos))[1]
             else:
@@ -99,11 +134,21 @@ def add_block(result: PDFParseResult, block: TextBlock, current_section: str) ->
     return current_section
 
 
-def build_from_page_texts(result: PDFParseResult, page_texts: list[str]) -> None:
-    """Populate ``text_blocks`` / ``sections`` / ``tables`` from per-page markdown."""
-    current_section = "root"
-    for page_idx, page_md in enumerate(page_texts):
+def build_from_page_texts(
+    result: PDFParseResult,
+    page_texts: list[str],
+    *,
+    page_offset: int = 0,
+    current_section: str = "root",
+) -> str:
+    """Populate structured content and return the final active section.
+
+    ``page_offset`` and ``current_section`` let providers append pages in
+    separate batches without resetting page numbers or section membership.
+    """
+    for page_idx, page_md in enumerate(page_texts, start=page_offset):
         current_section = _parse_markdown_page(result, page_md, page_idx, current_section)
+    return current_section
 
 
 def _parse_markdown_page(
