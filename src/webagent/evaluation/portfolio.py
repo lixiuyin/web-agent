@@ -82,6 +82,7 @@ def load_empirical_portfolio(
     *,
     minimum_models: int = 2,
     minimum_dates: int = 3,
+    requested_endpoints: Sequence[tuple[str, str]] | None = None,
 ) -> EmpiricalPortfolio:
     """Load retained reports and require complete generality/long-horizon cells."""
     if minimum_models < 2 or minimum_models > 3:
@@ -133,6 +134,7 @@ def load_empirical_portfolio(
         runs,
         minimum_models=minimum_models,
         minimum_dates=minimum_dates,
+        requested_endpoints=requested_endpoints,
     )
 
 
@@ -141,6 +143,7 @@ def analyze_empirical_portfolio(
     *,
     minimum_models: int = 2,
     minimum_dates: int = 3,
+    requested_endpoints: Sequence[tuple[str, str]] | None = None,
 ) -> EmpiricalPortfolio:
     """Analyze already validated report/task bindings."""
     by_cell: defaultdict[
@@ -148,7 +151,8 @@ def analyze_empirical_portfolio(
     ] = defaultdict(list)
     for evidence, tasks in runs:
         by_cell[(evidence.provider, evidence.model, evidence.date)].append((evidence, tasks))
-    requested_endpoints = sorted({(item.provider, item.model) for item, _tasks in runs})
+    observed_endpoints = {(item.provider, item.model) for item, _tasks in runs}
+    requested = sorted(observed_endpoints | set(requested_endpoints or ()))
     cells: list[PortfolioCell] = []
     complete_dates: dict[tuple[str, str], set[str]] = defaultdict(set)
     all_tasks: list[TaskEvaluation] = []
@@ -216,7 +220,7 @@ def analyze_empirical_portfolio(
     benchmark_source_sha256s = sorted({item.benchmark_source_sha256 for item in comparable_inputs})
     if len(endpoints) < minimum_models:
         missing.append(f"requires at least {minimum_models} provider/model endpoints")
-    if len(endpoints) > 3:
+    if len(requested) > 3:
         missing.append("allows at most 3 provider/model endpoints")
     if len(agent_source_sha256s) != 1:
         missing.append("requires one immutable agent source fingerprint across comparable cells")
@@ -246,11 +250,11 @@ def analyze_empirical_portfolio(
     return EmpiricalPortfolio(
         status="insufficient" if missing else "ready",
         input_reports=[item for item, _tasks in runs],
-        requested_endpoint_count=len(requested_endpoints),
+        requested_endpoint_count=len(requested),
         endpoint_count=len(endpoints),
         excluded_endpoints=[
             f"{provider}::{model}"
-            for provider, model in requested_endpoints
+            for provider, model in requested
             if (provider, model) not in available_endpoints
         ],
         agent_source_sha256s=agent_source_sha256s,

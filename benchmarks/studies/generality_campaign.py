@@ -168,7 +168,10 @@ def run_campaign(args: argparse.Namespace) -> int:
         )
 
     report_paths = _campaign_reports(output)
-    portfolio = load_empirical_portfolio(report_paths)
+    portfolio = load_empirical_portfolio(
+        report_paths,
+        requested_endpoints=[(args.provider, model) for model in requested_models],
+    )
     snapshot = reports_dir / f"{batch_id}.json"
     write_empirical_portfolio(portfolio, snapshot)
     latest = reports_dir / "latest.json"

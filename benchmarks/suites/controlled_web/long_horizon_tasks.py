@@ -54,8 +54,8 @@ def build_long_horizon_tasks(base_url: str) -> list[BenchmarkTask]:
                     weight=2.0,
                 ),
                 BenchmarkAssertion(
-                    kind="answer_regex",
-                    expected=r"CEDAR\W+ORBIT\W+LANTERN\W+DELTA",
+                    kind="answer_in_order",
+                    expected=["CEDAR", "ORBIT", "LANTERN", "DELTA"],
                     weight=2.0,
                 ),
             ],

@@ -44,7 +44,8 @@ remain organized by system responsibility.  Research concepts live in
   provider/model/date cells, rejects scripted baselines as empirical model
   evidence, separates provider/transport unavailability from zero model
   performance, and rejects comparable cells that mix agent or benchmark source
-  fingerprints across dates.
+  fingerprints across dates. Campaign callers also retain preflight-excluded
+  endpoints in the portfolio's requested/excluded provenance.
 - `endpoints.py` performs a minimal credential-redacted availability probe so an
   expensive campaign does not turn a provider privacy-policy rejection into 30
   apparent task failures.

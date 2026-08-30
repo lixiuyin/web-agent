@@ -12,6 +12,7 @@ from benchmarks.environments.controlled_web.long_horizon_site import (
     RECALLS,
     _stage_page,
 )
+from benchmarks.suites.controlled_web.long_horizon_tasks import build_long_horizon_tasks
 
 from webagent.agent.loop import _checkpoint_planning_state
 from webagent.agent.state import PlanningState
@@ -47,6 +48,14 @@ def test_long_horizon_recall_instructions_name_the_actual_cue_source_stage() -> 
         assert f"introduced at stage {source_stage}" in page
 
     assert CUE_SOURCE_STAGES == {44: 4, 49: 14, 54: 24, 59: 34}
+
+
+def test_long_horizon_final_answer_uses_semantic_order_assertion() -> None:
+    task = build_long_horizon_tasks("http://mission.test")[0]
+    assertion = task.assertions[-1]
+
+    assert assertion.kind == "answer_in_order"
+    assert assertion.expected == ["CEDAR", "ORBIT", "LANTERN", "DELTA"]
 
 
 def _evaluation(
@@ -260,10 +269,19 @@ def test_empirical_portfolio_requires_complete_common_model_date_cells() -> None
                     )
                 )
 
-    report = analyze_empirical_portfolio(runs)
+    report = analyze_empirical_portfolio(
+        runs,
+        requested_endpoints=[
+            ("openrouter", "model-a"),
+            ("openrouter", "model-b"),
+            ("openrouter", "model-unavailable"),
+        ],
+    )
 
     assert report.status == "ready"
+    assert report.requested_endpoint_count == 3
     assert report.endpoint_count == 2
+    assert report.excluded_endpoints == ["openrouter::model-unavailable"]
     assert report.common_complete_dates == ["2026-08-28", "2026-08-29", "2026-08-30"]
     assert all(cell.ready for cell in report.cells)
     assert all(cell.failures.task_count == 36 for cell in report.cells)

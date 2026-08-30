@@ -245,18 +245,39 @@ async def test_evaluator_scores_final_answer_and_observed_source(monkeypatch) ->
     task = _task(
         BenchmarkAssertion(kind="answer_contains", expected="Mira Chen"),
         BenchmarkAssertion(kind="answer_regex", expected=r"mira\.chen@.*\.test"),
+        BenchmarkAssertion(
+            kind="answer_in_order",
+            expected=["CEDAR", "ORBIT", "LANTERN", "DELTA"],
+        ),
         BenchmarkAssertion(kind="answer_not_contains", expected="Noah is the lead"),
         BenchmarkAssertion(kind="history_url_observed", expected="http://example.test/final"),
     )
 
     evaluation = await TerminalStateEvaluator(_Page()).evaluate(  # type: ignore[arg-type]
         task,
-        _agent_result(summary="Mira Chen — mira.chen@example.test"),
+        _agent_result(
+            summary=(
+                "Mira Chen — mira.chen@example.test. CEDAR (stage 4), then ORBIT; "
+                "LANTERN, and DELTA."
+            )
+        ),
     )
 
     assert evaluation.passed is True
-    assert evaluation.answer_assertion_count == 4
-    assert evaluation.answer_assertion_passed == 4
+    assert evaluation.answer_assertion_count == 5
+    assert evaluation.answer_assertion_passed == 5
+
+    reversed_order = await TerminalStateEvaluator(_Page()).evaluate(  # type: ignore[arg-type]
+        _task(
+            BenchmarkAssertion(
+                kind="answer_in_order",
+                expected=["CEDAR", "ORBIT", "LANTERN", "DELTA"],
+            )
+        ),
+        _agent_result(summary="ORBIT, CEDAR, LANTERN, DELTA"),
+    )
+
+    assert reversed_order.passed is False
 
 
 async def test_evaluator_records_pre_judgment_success_probability(monkeypatch) -> None:

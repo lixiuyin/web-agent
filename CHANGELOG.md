@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- Long-horizon cue scoring now uses an ordered-token assertion, so correct cue sequences remain
+  valid when a model adds explanatory stage labels; reversed or missing cues still fail.
+- Campaign portfolios now retain all requested endpoints, including models excluded by endpoint
+  preflight, instead of making the requested set appear smaller in the standalone report.
 - Empirical portfolios now fail closed when comparable model/date cells mix agent or benchmark
   source fingerprints, preventing post-fix runs from being merged into an ostensibly unchanged
   multi-date condition.

@@ -242,7 +242,8 @@ input report and produces `analysis/portfolios/<batch>.json`. Before allocating
 browser work, one minimal real inference request per requested model is recorded
 under `evidence/endpoint-probes/`. Provider/privacy/transport rejections are
 excluded as unavailable endpoints rather than scored as model failures; the
-requested and evaluated model sets remain explicit in campaign evidence. The
+requested and evaluated model sets remain explicit in both campaign and
+portfolio evidence. The
 preflight can be skipped only with the auditable `--skip-endpoint-preflight`
 offline-harness option. Re-run on three
 actual UTC dates; there is no date override. A portfolio becomes `ready` only

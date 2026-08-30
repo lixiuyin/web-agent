@@ -29,6 +29,7 @@ AssertionKind = Literal[
     "answer_labeled_date",
     "answer_not_contains",
     "answer_regex",
+    "answer_in_order",
     "history_url_observed",
     "history_origin_observed",
     "history_tool_succeeded",
@@ -154,6 +155,12 @@ class BenchmarkAssertion(BaseModel):
             or not all(isinstance(item, str) and item for item in self.expected)
         ):
             raise ValueError("history_tool_sequence requires a non-empty tool-name list")
+        if self.kind == "answer_in_order" and (
+            not isinstance(self.expected, list)
+            or not self.expected
+            or not all(isinstance(item, str) and item.strip() for item in self.expected)
+        ):
+            raise ValueError("answer_in_order requires a non-empty string list")
         if self.kind == "artifact_exists":
             _validate_artifact_path(self.expected)
         if self.kind == "artifact_sha256":

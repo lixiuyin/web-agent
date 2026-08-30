@@ -90,6 +90,17 @@ def _matches_answer_assertion(assertion: BenchmarkAssertion, observed: Any) -> b
         return str(assertion.expected).casefold() not in str(observed).casefold()
     if kind == "answer_regex":
         return re.search(str(assertion.expected), str(observed), flags=re.IGNORECASE) is not None
+    if kind == "answer_in_order":
+        if not isinstance(assertion.expected, list):
+            return False
+        text = str(observed).casefold()
+        cursor = 0
+        for expected in assertion.expected:
+            position = text.find(str(expected).casefold(), cursor)
+            if position < 0:
+                return False
+            cursor = position + len(str(expected))
+        return True
     return False
 
 
