@@ -11,6 +11,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from benchmarks.core import default_study_dir, packaged_manifest_path
+from webagent.core.config import AgentConfig
+from webagent.evaluation.endpoints import EndpointProbe, probe_chat_endpoint
 from webagent.evaluation.portfolio import load_empirical_portfolio, write_empirical_portfolio
 
 
@@ -40,13 +42,18 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         default="low",
     )
     parser.add_argument("--captcha-handling", choices=("fail", "report"), default="fail")
+    parser.add_argument(
+        "--skip-endpoint-preflight",
+        action="store_true",
+        help="Skip the real minimal inference probe (intended only for offline harness tests)",
+    )
     parser.add_argument("--require-ready", action="store_true")
     return parser.parse_args(argv)
 
 
 def run_campaign(args: argparse.Namespace) -> int:
-    models = list(dict.fromkeys(str(model) for model in args.models))
-    if not 2 <= len(models) <= 3:
+    requested_models = list(dict.fromkeys(str(model) for model in args.models))
+    if not 2 <= len(requested_models) <= 3:
         raise ValueError("generality campaign requires two or three distinct models")
     started_at = datetime.now(UTC)
     output = args.output.expanduser().resolve()
@@ -55,6 +62,20 @@ def run_campaign(args: argparse.Namespace) -> int:
     logs.mkdir(parents=True, exist_ok=True)
     reports_dir.mkdir(parents=True, exist_ok=True)
     batch_id = started_at.strftime("%Y%m%dT%H%M%S%fZ")
+    probes, preflight_path = _preflight_models(
+        provider=args.provider,
+        models=requested_models,
+        output=output,
+        batch_id=batch_id,
+        skip=args.skip_endpoint_preflight,
+    )
+    models = [probe.model for probe in probes if probe.status == "available"]
+    if len(models) < 2:
+        unavailable = [probe.model for probe in probes if probe.status == "unavailable"]
+        raise RuntimeError(
+            "generality campaign requires at least two available endpoints after preflight; "
+            f"unavailable={unavailable}; evidence={preflight_path}"
+        )
 
     open_root = output / "suites" / "open-web"
     _run(
@@ -157,7 +178,10 @@ def run_campaign(args: argparse.Namespace) -> int:
         "batch_id": batch_id,
         "collection_date": started_at.date().isoformat(),
         "provider": args.provider,
-        "models": models,
+        "requested_models": requested_models,
+        "evaluated_models": models,
+        "excluded_models": [probe.model for probe in probes if probe.status == "unavailable"],
+        "endpoint_preflight_path": str(preflight_path),
         "report_paths": [str(path) for path in report_paths],
         "portfolio_path": str(snapshot),
         "portfolio_status": portfolio.status,
@@ -173,6 +197,10 @@ def run_campaign(args: argparse.Namespace) -> int:
         json.dumps(
             {
                 "portfolio_status": portfolio.status,
+                "evaluated_models": models,
+                "excluded_models": [
+                    probe.model for probe in probes if probe.status == "unavailable"
+                ],
                 "common_complete_dates": portfolio.common_complete_dates,
                 "missing_requirements": portfolio.missing_requirements,
                 "portfolio": str(snapshot),
@@ -182,6 +210,61 @@ def run_campaign(args: argparse.Namespace) -> int:
         )
     )
     return 1 if args.require_ready and portfolio.status != "ready" else 0
+
+
+def _preflight_models(
+    *,
+    provider: str,
+    models: list[str],
+    output: Path,
+    batch_id: str,
+    skip: bool,
+) -> tuple[list[EndpointProbe], Path]:
+    path = output / "evidence" / "endpoint-probes" / f"{batch_id}.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if skip:
+        probes = [
+            EndpointProbe(
+                provider=provider,
+                model=model,
+                endpoint_host="not-checked",
+                status="available",
+                checked_at=datetime.now(UTC).isoformat(),
+                duration_seconds=0.0,
+            )
+            for model in models
+        ]
+        notice = "Endpoint preflight was explicitly skipped; availability was not verified."
+    else:
+        config = AgentConfig()
+        if not config.model_api_url or not config.model_api_key:
+            raise RuntimeError(
+                "endpoint preflight requires AGENT_MODEL_API_URL and AGENT_MODEL_API_KEY"
+            )
+        probes = [
+            probe_chat_endpoint(
+                api_url=config.model_api_url,
+                api_key=config.model_api_key,
+                provider=provider,
+                model=model,
+                timeout_seconds=min(float(config.api_timeout), 30.0),
+            )
+            for model in models
+        ]
+        notice = (
+            "A minimal real inference request checked transport/provider availability. "
+            "Unavailable endpoints are excluded from performance metrics, not scored as failures."
+        )
+    payload = {
+        "schema_version": 1,
+        "batch_id": batch_id,
+        "notice": notice,
+        "probes": [probe.model_dump(mode="json") for probe in probes],
+    }
+    temporary = path.with_suffix(".json.tmp")
+    temporary.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    temporary.replace(path)
+    return probes, path.resolve()
 
 
 def _run(command: list[str], *, log_path: Path, expected_report: Path | None) -> None:

@@ -11,9 +11,12 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from webagent.evaluation.calibration import CalibrationAnalysis, analyze_calibration
+from webagent.evaluation.failures import FailureAnalysis, analyze_failures
 from webagent.evaluation.generality import GeneralityAnalysis, analyze_generality
 from webagent.evaluation.long_horizon import LongHorizonAnalysis, analyze_long_horizon
 from webagent.evaluation.models import BenchmarkReport, TaskEvaluation
+from webagent.evaluation.transfer import TransferAnalysis, analyze_transfer
 
 
 class PortfolioInput(BaseModel):
@@ -38,7 +41,11 @@ class PortfolioCell(BaseModel):
     report_count: int = Field(ge=0)
     suite_count: int = Field(ge=0)
     task_count: int = Field(ge=0)
-    success_rate: float = Field(ge=0.0, le=1.0)
+    success_rate: float | None = Field(default=None, ge=0.0, le=1.0)
+    endpoint_status: Literal["available", "unavailable"]
+    failures: FailureAnalysis
+    calibration: CalibrationAnalysis
+    transfer: TransferAnalysis | None
     generality: GeneralityAnalysis
     long_horizon: LongHorizonAnalysis
     ready: bool
@@ -48,10 +55,12 @@ class PortfolioCell(BaseModel):
 class EmpiricalPortfolio(BaseModel):
     """Fail-closed evidence status for a multi-model, multi-date agent portfolio."""
 
-    schema_version: int = 1
+    schema_version: int = 2
     status: Literal["ready", "insufficient"]
     input_reports: list[PortfolioInput]
+    requested_endpoint_count: int = Field(ge=0)
     endpoint_count: int = Field(ge=0)
+    excluded_endpoints: list[str]
     distinct_dates: list[str]
     common_complete_dates: list[str]
     cells: list[PortfolioCell]
@@ -127,22 +136,39 @@ def analyze_empirical_portfolio(
     ] = defaultdict(list)
     for evidence, tasks in runs:
         by_cell[(evidence.provider, evidence.model, evidence.date)].append((evidence, tasks))
-    endpoints = sorted({(item.provider, item.model) for item, _tasks in runs})
+    requested_endpoints = sorted({(item.provider, item.model) for item, _tasks in runs})
     cells: list[PortfolioCell] = []
     complete_dates: dict[tuple[str, str], set[str]] = defaultdict(set)
     all_tasks: list[TaskEvaluation] = []
+    cell_endpoint_status: dict[tuple[str, str, str], Literal["available", "unavailable"]] = {}
+    available_endpoints: set[tuple[str, str]] = set()
+    for key, cell_runs in by_cell.items():
+        tasks = _unique_tasks([task for _evidence, values in cell_runs for task in values])
+        status: Literal["available", "unavailable"] = (
+            "unavailable" if _planner_endpoint_unavailable(tasks) else "available"
+        )
+        cell_endpoint_status[key] = status
+        if status == "available":
+            available_endpoints.add((key[0], key[1]))
+
     for (provider, model, day), cell_runs in sorted(by_cell.items()):
         tasks = _unique_tasks([task for _evidence, values in cell_runs for task in values])
-        all_tasks.extend(tasks)
+        endpoint_status = cell_endpoint_status[(provider, model, day)]
+        if endpoint_status == "available":
+            all_tasks.extend(tasks)
         generality = analyze_generality(tasks)
         long_horizon = analyze_long_horizon(tasks)
         reasons: list[str] = []
-        if generality.status != "ready":
+        if endpoint_status == "unavailable":
+            reasons.append(
+                "planner endpoint unavailable: every planner attempt failed before any action"
+            )
+        elif generality.status != "ready":
             reasons.extend(generality.missing_requirements)
-        if long_horizon.status != "available":
+        if endpoint_status == "available" and long_horizon.status != "available":
             reasons.append(long_horizon.reason or "long-horizon evidence is unavailable")
         suites = {evidence.suite for evidence, _values in cell_runs}
-        if len(suites) < 3:
+        if endpoint_status == "available" and len(suites) < 3:
             reasons.append("requires at least 3 complementary suites per model/date cell")
         ready = not reasons
         if ready:
@@ -155,7 +181,11 @@ def analyze_empirical_portfolio(
                 report_count=len(cell_runs),
                 suite_count=len(suites),
                 task_count=len(tasks),
-                success_rate=_success_rate(tasks),
+                success_rate=_success_rate(tasks) if endpoint_status == "available" else None,
+                endpoint_status=endpoint_status,
+                failures=analyze_failures(tasks),
+                calibration=analyze_calibration(tasks),
+                transfer=analyze_transfer(tasks) if endpoint_status == "available" else None,
                 generality=generality,
                 long_horizon=long_horizon,
                 ready=ready,
@@ -163,6 +193,7 @@ def analyze_empirical_portfolio(
             )
         )
     missing: list[str] = []
+    endpoints = sorted(available_endpoints)
     if len(endpoints) < minimum_models:
         missing.append(f"requires at least {minimum_models} provider/model endpoints")
     if len(endpoints) > 3:
@@ -176,7 +207,11 @@ def analyze_empirical_portfolio(
         missing.append(
             f"requires {minimum_dates} common dates with complete generality and long-horizon cells"
         )
-    incomplete = [f"{cell.provider}::{cell.model}@{cell.date}" for cell in cells if not cell.ready]
+    incomplete = [
+        f"{cell.provider}::{cell.model}@{cell.date}"
+        for cell in cells
+        if (cell.provider, cell.model) in available_endpoints and not cell.ready
+    ]
     if incomplete:
         missing.append("incomplete cells: " + ", ".join(incomplete))
     scenario_groups: defaultdict[str, list[TaskEvaluation]] = defaultdict(list)
@@ -185,7 +220,13 @@ def analyze_empirical_portfolio(
     return EmpiricalPortfolio(
         status="insufficient" if missing else "ready",
         input_reports=[item for item, _tasks in runs],
+        requested_endpoint_count=len(requested_endpoints),
         endpoint_count=len(endpoints),
+        excluded_endpoints=[
+            f"{provider}::{model}"
+            for provider, model in requested_endpoints
+            if (provider, model) not in available_endpoints
+        ],
         distinct_dates=sorted({item.date for item, _tasks in runs}),
         common_complete_dates=common_dates,
         cells=cells,
@@ -224,6 +265,19 @@ def _known(value: object, field: str, path: Path) -> str:
 
 def _success_rate(values: Sequence[TaskEvaluation]) -> float:
     return sum(item.passed for item in values) / len(values) if values else 0.0
+
+
+def _planner_endpoint_unavailable(values: Sequence[TaskEvaluation]) -> bool:
+    """Identify transport/provider rejection without treating it as model failure."""
+    attempts = sum(item.planner_attempt_count for item in values)
+    failures = sum(item.planner_failure_count for item in values)
+    return bool(
+        values
+        and attempts > 0
+        and failures >= attempts
+        and sum(item.planner_tokens for item in values) == 0
+        and sum(item.action_count for item in values) == 0
+    )
 
 
 __all__ = [

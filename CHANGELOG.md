@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Reserve a bounded planner-context slice for explicit checkpoint-safe durable notes, so recent
+  ordinary tool traffic cannot evict long-delay memory cues after resume.
+- Prioritize visible retry/reload controls, refresh, or bounded waits when the observed page itself
+  declares a transient interruption, reducing navigation churn into blank/history pages.
+- Preflight requested study endpoints with a minimal real inference and exclude fully unavailable
+  provider/transport cells from performance aggregates while retaining auditable evidence.
+
 ## [0.2.0] - 2026-08-30
 
 ### Added

@@ -15,6 +15,7 @@ from webagent.evaluation.calibration import (
     RiskCoveragePoint,
     analyze_calibration,
 )
+from webagent.evaluation.endpoints import EndpointProbe, probe_chat_endpoint
 from webagent.evaluation.evaluator import TerminalStateEvaluator
 from webagent.evaluation.failures import (
     FailureAnalysis,
@@ -89,6 +90,7 @@ __all__ = [
     "CalibrationAnalysis",
     "CalibrationBin",
     "EmpiricalPortfolio",
+    "EndpointProbe",
     "FailureAnalysis",
     "FailureEvidence",
     "FailureEvidenceSource",
@@ -134,6 +136,7 @@ __all__ = [
     "load_empirical_portfolio",
     "load_study_records",
     "merge_adjudicated_findings",
+    "probe_chat_endpoint",
     "publish_study_run_records",
     "read_study_manifest",
     "safe_component",

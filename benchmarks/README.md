@@ -238,12 +238,19 @@ python -m benchmarks.studies.generality_campaign \
 
 The campaign runs the 30-task/10-origin open-web suite, five multi-origin
 sandbox tasks, and the 60-stage task for each model. It content-hashes every
-input report and produces `analysis/portfolios/<batch>.json`. Re-run on three
+input report and produces `analysis/portfolios/<batch>.json`. Before allocating
+browser work, one minimal real inference request per requested model is recorded
+under `evidence/endpoint-probes/`. Provider/privacy/transport rejections are
+excluded as unavailable endpoints rather than scored as model failures; the
+requested and evaluated model sets remain explicit in campaign evidence. The
+preflight can be skipped only with the auditable `--skip-endpoint-preflight`
+offline-harness option. Re-run on three
 actual UTC dates; there is no date override. A portfolio becomes `ready` only
-when every provider/model/date cell contains all three complementary suites,
+when every comparable provider/model/date cell contains all three complementary suites,
 passes the coverage floor, includes a 50+-action trajectory, and the same two or
 three endpoints share at least three complete dates. Failed tasks remain valid
-empirical outcomes; scripted harness reports are rejected as model evidence.
+empirical outcomes when planning was actually available; scripted harness
+reports are rejected as model evidence.
 
 To audit an explicit set of retained reports independently:
 

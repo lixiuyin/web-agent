@@ -871,6 +871,9 @@ class WebAgent:
             history_text += "\n\nCONTROLLER PLAN STATE:\n" + state.planning_state.prompt_summary()
         if state is not None and state.strategy_manager is not None:
             history_text += "\n\nCONTROLLER STRATEGY HINT: " + state.strategy_manager.prompt_hint
+        transient_hint = _transient_page_recovery_hint(browser_state)
+        if transient_hint is not None:
+            history_text += "\n\nOBSERVED TRANSIENT PAGE: " + transient_hint
 
         remaining_actions = max(self.config.max_steps - step_number + 1, 0)
         if remaining_actions == 1:
@@ -1032,6 +1035,34 @@ def _initial_planning_state(task: str) -> PlanningState:
             "Execute the requested browser or document workflow",
             "Verify the evidence and return an honest final result",
         ],
+    )
+
+
+def _transient_page_recovery_hint(browser_state: BrowserState) -> str | None:
+    """Prioritize grounded in-place recovery when the page declares a transient error."""
+    title = browser_state.title.casefold()
+    body = browser_state.dom_summary.casefold()
+    title_markers = (
+        "service unavailable",
+        "temporarily unavailable",
+        "too many requests",
+        "transient interruption",
+    )
+    body_markers = (
+        "temporarily unavailable",
+        "transient interruption",
+        "retry this request",
+        "retry this stage",
+        "try again later",
+    )
+    if not any(marker in title for marker in title_markers) and not any(
+        marker in body for marker in body_markers
+    ):
+        return None
+    return (
+        "The current page itself reports a temporary interruption. Stay grounded on this page: "
+        "prefer its visible retry/reload control; otherwise use refresh or a bounded wait. Do not "
+        "navigate to a blank or guessed URL unless newly observed evidence requires it."
     )
 
 

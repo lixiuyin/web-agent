@@ -187,6 +187,26 @@ class TestThink:
         await agent._think(self._state())
         assert "VISION DISABLED" in planner.received_history
 
+    async def test_transient_page_recovery_hint_is_grounded_in_observation(
+        self, tmp_path: Path
+    ) -> None:
+        planner = FakePlanner(ToolCall(tool_name="refresh"))
+        agent = _agent(tmp_path, planner, FakeBrowser())
+        browser_state = BrowserState(
+            screenshot=None,
+            dom_summary="The workflow is intact. Retry this request.",
+            url="https://example.test/workflow",
+            title="Service Unavailable",
+            timestamp="now",
+        )
+
+        await agent._think(browser_state)
+
+        assert planner.received_history is not None
+        assert "OBSERVED TRANSIENT PAGE" in planner.received_history
+        assert "visible retry/reload control" in planner.received_history
+        assert "blank or guessed URL" in planner.received_history
+
     async def test_loop_detector_nudge_injected(self, tmp_path: Path) -> None:
         planner = FakePlanner(ToolCall(tool_name="goto", parameters={"url": "https://x"}))
         agent = _agent(

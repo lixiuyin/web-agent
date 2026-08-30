@@ -249,6 +249,82 @@ def test_empirical_portfolio_requires_complete_common_model_date_cells() -> None
     assert report.endpoint_count == 2
     assert report.common_complete_dates == ["2026-08-28", "2026-08-29", "2026-08-30"]
     assert all(cell.ready for cell in report.cells)
+    assert all(cell.failures.task_count == 36 for cell in report.cells)
+    assert all(
+        cell.transfer is not None and cell.transfer.status == "available" for cell in report.cells
+    )
+
+
+def test_empirical_portfolio_excludes_transport_unavailable_endpoint() -> None:
+    runs = []
+    for model in ("model-a", "model-b"):
+        for day in ("2026-08-28", "2026-08-29", "2026-08-30"):
+            tasks = _broad_tasks()
+            for suffix, chunk in zip(
+                ("open", "sandbox", "long"), (tasks[:18], tasks[18:35], tasks[35:]), strict=True
+            ):
+                runs.append(
+                    (
+                        PortfolioInput(
+                            path=f"/{model}/{day}/{suffix}.json",
+                            sha256="a" * 64,
+                            run_id=f"{model}-{day}-{suffix}",
+                            suite=suffix,
+                            date=day,
+                            provider="openrouter",
+                            model=model,
+                            task_count=len(chunk),
+                        ),
+                        chunk,
+                    )
+                )
+
+    unavailable = [
+        item.model_copy(
+            update={
+                "action_count": 0,
+                "failed_action_count": 0,
+                "planner_attempt_count": 2,
+                "planner_failure_count": 2,
+                "planner_tokens": 0,
+                "passed": False,
+                "score": 0.0,
+                "agent_reported_success": False,
+                "agent_status": "failed",
+            }
+        )
+        for item in _broad_tasks()[:3]
+    ]
+    for suffix, task in zip(("open", "sandbox", "long"), unavailable, strict=True):
+        runs.append(
+            (
+                PortfolioInput(
+                    path=f"/unavailable/2026-08-30/{suffix}.json",
+                    sha256="b" * 64,
+                    run_id=f"unavailable-2026-08-30-{suffix}",
+                    suite=suffix,
+                    date="2026-08-30",
+                    provider="openrouter",
+                    model="model-unavailable",
+                    task_count=1,
+                ),
+                [task],
+            )
+        )
+
+    report = analyze_empirical_portfolio(runs)
+
+    assert report.status == "ready"
+    assert report.requested_endpoint_count == 3
+    assert report.endpoint_count == 2
+    assert report.excluded_endpoints == ["openrouter::model-unavailable"]
+    assert report.overall_success_rate == 1.0
+    excluded = next(cell for cell in report.cells if cell.model == "model-unavailable")
+    assert excluded.endpoint_status == "unavailable"
+    assert excluded.success_rate is None
+    assert excluded.transfer is None
+    assert excluded.ready is False
+    assert "planner endpoint unavailable" in excluded.reasons[0]
 
 
 async def test_durable_memory_survives_checkpoint_but_rejects_sensitive_notes(

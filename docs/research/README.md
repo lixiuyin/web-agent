@@ -41,8 +41,12 @@ remain organized by system responsibility.  Research concepts live in
   same-state stagnation, replanning/strategy churn, recovery, and
   checkpoint-resume diagnostics from observable steps and events.
 - `portfolio.py` combines content-hashed agent reports into complete
-  provider/model/date cells and rejects scripted baselines as empirical model
-  evidence.
+  provider/model/date cells, rejects scripted baselines as empirical model
+  evidence, and separates provider/transport unavailability from zero model
+  performance.
+- `endpoints.py` performs a minimal credential-redacted availability probe so an
+  expensive campaign does not turn a provider privacy-policy rejection into 30
+  apparent task failures.
 - `studies.py` defines immutable, versioned study manifests and hash-bound run
   records for model/condition comparisons.
 - `artifacts.py` is the canonical authority for research run/study filesystem paths. Runtime

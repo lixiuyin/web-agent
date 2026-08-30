@@ -31,8 +31,42 @@ def test_planning_state_advances_records_evidence_and_revises() -> None:
     assert revised.milestones[1].status == "abandoned"
     assert revised.active_milestone_id == "r1-m1"
     assert revised.revisions[0].reason == "candidate date was unknown"
-    assert "DURABLE EVIDENCE" in revised.prompt_summary()
+    assert "RECENT EVIDENCE" in revised.prompt_summary()
     assert "Official repository" in revised.prompt_summary()
+
+
+def test_prompt_summary_reserves_budget_for_durable_notes() -> None:
+    state = PlanningState.create("Recall retained cues", ["collect", "recall"])
+    for step, cue in ((4, "CEDAR"), (14, "ORBIT"), (24, "LANTERN"), (34, "DELTA")):
+        state = state.record_evidence(
+            step_number=step,
+            kind="durable_note",
+            summary=f"Mission cue: {cue}",
+        )
+    for step in range(35, 60):
+        state = state.record_evidence(
+            step_number=step,
+            kind="tool_result",
+            summary=f"ordinary observation {step}",
+        )
+
+    summary = state.prompt_summary(max_evidence=8, max_durable_notes=4)
+
+    assert "DURABLE NOTES" in summary
+    assert all(cue in summary for cue in ("CEDAR", "ORBIT", "LANTERN", "DELTA"))
+    assert "ordinary observation 59" in summary
+    assert "ordinary observation 54" not in summary
+
+
+def test_prompt_summary_rejects_negative_limits() -> None:
+    state = PlanningState.create("Task", ["act"])
+
+    try:
+        state.prompt_summary(max_evidence=-1)
+    except ValueError as exc:
+        assert "non-negative" in str(exc)
+    else:  # pragma: no cover - assertion branch
+        raise AssertionError("negative prompt evidence budget was accepted")
 
 
 def test_planning_state_round_trips_and_rejects_dangling_links() -> None:

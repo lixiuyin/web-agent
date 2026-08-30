@@ -200,20 +200,49 @@ class PlanningState(BaseModel):
             }
         )
 
-    def prompt_summary(self, *, max_evidence: int = 12) -> str:
-        """Compact durable state for injection next to rolling history."""
+    def prompt_summary(
+        self,
+        *,
+        max_evidence: int = 12,
+        max_durable_notes: int = 8,
+    ) -> str:
+        """Compact controller state without evicting deliberately retained notes.
+
+        Ordinary tool evidence is a rolling cache, while ``durable_note`` records
+        are explicit memory writes.  Selecting only the newest records allowed a
+        long run's post-checkpoint tool traffic to push every retained note out of
+        the planner prompt even though the notes remained in the checkpoint.  Keep
+        a bounded, dedicated durable slice and spend the remaining budget on recent
+        evidence.
+        """
+        if max_evidence < 0 or max_durable_notes < 0:
+            raise ValueError("prompt evidence limits must be non-negative")
         active = next(
             (item.description for item in self.milestones if item.id == self.active_milestone_id),
             "none",
         )
-        evidence = self.evidence[-max_evidence:]
         lines = [f"OBJECTIVE: {self.objective}", f"ACTIVE MILESTONE: {active}"]
-        if evidence:
-            lines.append("DURABLE EVIDENCE:")
+
+        durable = [item for item in self.evidence if item.kind == "durable_note"]
+        durable_budget = min(max_durable_notes, max_evidence)
+        durable = durable[-durable_budget:] if durable_budget else []
+        recent_budget = max(max_evidence - len(durable), 0)
+        recent = [item for item in self.evidence if item.kind != "durable_note"]
+        recent = recent[-recent_budget:] if recent_budget else []
+
+        if durable:
+            lines.append("DURABLE NOTES (retain and use when the task asks for them):")
             lines.extend(
                 f"- [{item.id}, step {item.step_number}] {item.summary}"
                 + (f" ({item.source})" if item.source else "")
-                for item in evidence
+                for item in durable
+            )
+        if recent:
+            lines.append("RECENT EVIDENCE:")
+            lines.extend(
+                f"- [{item.id}, step {item.step_number}] {item.summary}"
+                + (f" ({item.source})" if item.source else "")
+                for item in recent
             )
         return "\n".join(lines)
 
