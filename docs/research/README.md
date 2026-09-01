@@ -79,6 +79,11 @@ single-turn by contract.
 See [experiment-lifecycle.md](experiment-lifecycle.md) for the data flow and
 [failure-taxonomy.md](failure-taxonomy.md) for attribution rules.
 
+The current Chinese evaluation snapshot, including the frozen campaign contract,
+task design, first-date GLM/Qwen results, evidence boundaries, and remaining
+three-date/BrowserGym requirements, is documented in
+[current-evaluation-results-zh.md](current-evaluation-results-zh.md).
+
 The long-horizon controlled suite deliberately separates three claims. A
 scripted 60-stage pass proves only that Chromium, tools, checkpoint restoration,
 the state server, and the judge compose correctly. A model run provides one
