@@ -66,6 +66,13 @@ _STATE_CHANGING_CONTEXT_RE = re.compile(r"formmethod['\" :]+post", flags=re.IGNO
 def assess_tool_call(tool_call: ToolCall, *, context: str = "") -> RiskAssessment:
     """Classify likely side effects from tool name and planner-visible parameters."""
     name = tool_call.tool_name.casefold()
+    nested_action = str(tool_call.parameters.get("action", "")).casefold()
+    if name in {"frame_interact", "shadow_dom"} and nested_action == "extract_text":
+        # The selected element's text is included in ``context`` and can contain
+        # words such as "register" or "submit" even though the requested action
+        # is purely observational.  Classify the requested operation, not the
+        # prose being read.
+        return RiskAssessment("low", "none_or_reversible", False)
     searchable = f"{name} {tool_call.parameters!s} {context}"
     if name == "upload_file":
         return RiskAssessment("high", "local_file_disclosure", True)
@@ -74,8 +81,7 @@ def assess_tool_call(tool_call: ToolCall, *, context: str = "") -> RiskAssessmen
     ):
         return RiskAssessment("high", "external_state_change", True)
     is_typing = name == "type" or (
-        name in {"frame_interact", "shadow_dom"}
-        and str(tool_call.parameters.get("action", "")).casefold() == "type"
+        name in {"frame_interact", "shadow_dom"} and nested_action == "type"
     )
     if is_typing and _SENSITIVE_INPUT_RE.search(searchable):
         return RiskAssessment("medium", "sensitive_input", False)

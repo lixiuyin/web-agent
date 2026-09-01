@@ -418,7 +418,9 @@ class SearchEngineOnlyPolicy:
         "EVALUATION POLICY — SEARCH ENGINE ONLY: Your first action MUST be the browser "
         "search tool. official_report_search, github_search, and arxiv_search are unavailable. "
         "Do not guess URLs: goto and download_pdf accept only URLs observed in search results "
-        "or links on pages you visited. "
+        "or links on pages you visited. Once a relevant official candidate is visible, inspect "
+        "structured results and visit that exact primary source before more query rewrites or "
+        "completion. "
         + _LATEST_EVIDENCE_GUIDANCE
         + "For latest/newest tasks, run at least two differently "
         "worded searches; a missing result date means unknown and requires opening the candidate, "
@@ -970,7 +972,7 @@ class SearchEngineOnlyPolicy:
             cited = {
                 canonical
                 for raw in re.findall(r"https?://[^\s<>\"']+", summary)
-                if (canonical := _canonical_url(raw.rstrip(".,;:!?)]}>`。，；：！？）】》")))
+                if (canonical := _canonical_url(raw.rstrip(".,;:!?)]}>`*。，；：！？）】》")))
                 is not None
             }
             unobserved = sorted(cited - set(self._observed_urls))

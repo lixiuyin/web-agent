@@ -258,6 +258,50 @@ async def test_done_rejects_unobserved_cited_url(tmp_path: Path) -> None:
     assert "absent from browser evidence" in denied.reason
 
 
+async def test_done_strips_markdown_emphasis_from_cited_url(tmp_path: Path) -> None:
+    browser = _Browser()
+    policy = SearchEngineOnlyPolicy(browser, artifacts_dir=tmp_path / "artifacts")
+    observed = "https://example.test/report"
+    await _complete_search(policy, observed)
+    goto = ToolCall(tool_name="goto", parameters={"url": observed})
+    decision = await policy.authorize(goto)
+    browser.page.url = observed
+    await _record_result(
+        policy,
+        goto,
+        ToolResult(success=True, tool_name="goto", data={"url": observed}),
+        decision,
+    )
+
+    allowed = await policy.authorize(
+        ToolCall(tool_name="done", parameters={"summary": f"Source: **{observed}**"})
+    )
+
+    assert allowed.allowed is True
+
+
+async def test_complete_link_projection_records_urls_without_truncation(tmp_path: Path) -> None:
+    policy = SearchEngineOnlyPolicy(_Browser(), artifacts_dir=tmp_path / "artifacts")
+    await _complete_search(policy, "https://example.test/start")
+    call = ToolCall(tool_name="get_all_links", parameters={})
+    decision = await policy.authorize(call)
+    links = [
+        {"href": f"https://example.test/docs/{index}", "text": f"Documentation {index}"}
+        for index in range(30)
+    ]
+    result = ToolResult(
+        success=True,
+        tool_name="get_all_links",
+        data={"links": links, "total_count": 30, "returned": 30},
+    )
+
+    audit = await _record_result(policy, call, result, decision)
+
+    assert audit["new_urls_observed"] == 20
+    assert "https://example.test/docs/19" in policy._observed_urls
+    assert "https://example.test/docs/20" not in policy._observed_urls
+
+
 async def test_policy_checkpoint_restores_grounded_url_and_counters(tmp_path: Path) -> None:
     observed = "https://example.test/report.pdf"
     original = SearchEngineOnlyPolicy(_Browser(), artifacts_dir=tmp_path / "artifacts")

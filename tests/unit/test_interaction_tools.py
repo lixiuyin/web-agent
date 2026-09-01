@@ -1,5 +1,7 @@
 """Tests for interaction tools."""
 
+from unittest.mock import AsyncMock
+
 import pytest
 
 from webagent.core.models import ToolCall
@@ -381,6 +383,28 @@ async def test_get_search_results_success(tool_executor):
     assert result.data["results"][0]["title"] == "Qwen Technical Report"
     assert result.data["results"][0]["url"] == "https://arxiv.org/pdf/2505.09388"
     assert result.data["results"][0]["link"] == "https://arxiv.org/pdf/2505.09388"
+
+
+@pytest.mark.asyncio
+async def test_get_search_results_unwraps_bing_destination(tool_executor, mock_browser):
+    wrapped = (
+        "https://www.bing.com/ck/a?u=a1aHR0cHM6Ly9kb2NzLnB5dGhvbi5vcmcvMy9mYXEvZ2VuZXJhbC5odG1s"
+    )
+    mock_browser.get_search_results = AsyncMock(
+        return_value={
+            "success": True,
+            "engine": "bing",
+            "query": "python faq",
+            "results": [{"title": "Python FAQ", "link": wrapped, "snippet": "FAQ"}],
+            "count": 1,
+        }
+    )
+
+    result = await tool_executor.execute(
+        ToolCall(tool_name="get_search_results", parameters={}, reasoning="Get results")
+    )
+
+    assert result.data["results"][0]["url"] == ("https://docs.python.org/3/faq/general.html")
 
 
 @pytest.mark.asyncio

@@ -224,6 +224,7 @@ class LoopDetector:
 
         # Detectors in priority order (most specific first).
         detectors = (
+            ("search_churn", self._is_search_churn),
             ("action_repeat", self._is_action_repeat),
             ("scroll_churn", self._is_scroll_churn),
             ("page_stagnation", self._is_page_stagnation),
@@ -237,6 +238,15 @@ class LoopDetector:
                 return
 
         self._in_loop = False
+
+    def _is_search_churn(self) -> bool:
+        """Detect repeated query rewriting without opening an evidence page."""
+        required = min(max(self.threshold, 4), self.window_size)
+        if len(self.recent_actions) < required:
+            return False
+        return all(
+            action.split(":", 1)[0] == "search" for action in self.recent_actions[-required:]
+        )
 
     def _is_scroll_churn(self) -> bool:
         """Detect repeated viewport traversal on one URL despite changing snapshots."""
@@ -315,6 +325,16 @@ class LoopDetector:
 
     def _get_nudge_message(self) -> str:
         """Generate a helpful nudge message based on loop type and context."""
+        if self._loop_type == "search_churn":
+            return (
+                "You have rewritten the same discovery search for several consecutive actions "
+                "without opening evidence. Stop paraphrasing the query. Inspect the current "
+                "structured results with get_search_results, then open a grounded relevant "
+                "official candidate. Use one materially different engine or site-scoped query "
+                "only if no relevant candidate is visible. For latest tasks, continue only the "
+                "distinct searches still required by the explicit policy checklist."
+            )
+
         # If mostly research/extraction tools, guide toward completion
         if self._is_research_loop():
             return (

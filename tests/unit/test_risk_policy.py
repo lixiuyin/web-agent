@@ -58,6 +58,22 @@ def test_risk_classifier_distinguishes_read_sensitive_and_external_actions() -> 
     )
 
 
+def test_nested_text_extraction_ignores_risky_words_in_page_context() -> None:
+    call = ToolCall(
+        tool_name="frame_interact",
+        parameters={
+            "frame_index": 0,
+            "action": "extract_text",
+            "selector": {"type": "css", "value": "main"},
+        },
+    )
+
+    assessment = assess_tool_call(call, context="Register, submit, or delete an account")
+
+    assert assessment.level == "low"
+    assert assessment.approval_required is False
+
+
 async def test_default_risk_policy_denies_high_risk_action() -> None:
     policy = ActionRiskPolicy()
     decision = await policy.authorize(_purchase_call())

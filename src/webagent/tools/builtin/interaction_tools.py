@@ -7,6 +7,7 @@ from typing import Any
 from webagent.core.models import ToolResult
 from webagent.tools.builtin._base import BrowserToolBase
 from webagent.tools.builtin.browser_tools import _resolve_selector, _validate_selector
+from webagent.tools.builtin.search_tools import _unwrap_search_redirect
 from webagent.tools.registry import tool
 
 
@@ -336,7 +337,7 @@ class GetSearchResultsTool(BrowserToolBase):
             total_count = resp.get("count", 0)
 
             def format_result(result: dict[str, Any]) -> dict[str, str]:
-                url = str(result.get("url") or result.get("link") or "")
+                url = _unwrap_search_redirect(str(result.get("url") or result.get("link") or ""))
                 return {
                     "title": str(result.get("title", "")),
                     "url": url,

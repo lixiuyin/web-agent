@@ -29,6 +29,10 @@ TRANSPORT_AGNOSTIC_PLANNING_RULES = """Task and evidence rules:
   If it remains unknown or conflicts, keep investigating or report the uncertainty.
 - Never invent a URL, date, result, truncation claim, local path, or other fact in either the action
   rationale or final answer; use only observed evidence.
+- After search exposes a relevant official candidate, inspect structured results and open that
+  candidate instead of repeatedly paraphrasing the query. Before `done`, visit the exact primary
+  source URL you will cite; cite supporting URLs only when they appeared in visible results or
+  page links.
 - For benchmark figures, a highlighted bar is not necessarily first place. Report actual values and
   rankings and reconcile vision with any related extracted table before completion.
 """

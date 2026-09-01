@@ -81,6 +81,34 @@ class TestLoopDetector:
 
         assert detector.is_looping()[0] is False
 
+    def test_distinct_search_queries_trigger_search_churn(self):
+        detector = LoopDetector(window_size=5, threshold=3)
+        for index in range(4):
+            detector.add_action(
+                "search",
+                f"https://www.bing.com/search?q=query-{index}",
+                f"results-{index}",
+                {"query": f"query {index}"},
+            )
+
+        is_looping, nudge = detector.is_looping()
+
+        assert is_looping is True
+        assert detector.loop_type == "search_churn"
+        assert "get_search_results" in nudge
+
+    def test_three_required_searches_do_not_trigger_search_churn(self):
+        detector = LoopDetector(window_size=5, threshold=3)
+        for index in range(3):
+            detector.add_action(
+                "search",
+                f"https://www.bing.com/search?q=query-{index}",
+                f"results-{index}",
+                {"query": f"query {index}"},
+            )
+
+        assert detector.is_looping()[0] is False
+
     def test_url_oscillation_detection(self):
         """Test detection of bouncing between URLs."""
         detector = LoopDetector(window_size=7, threshold=3)

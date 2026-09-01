@@ -60,6 +60,26 @@ def planner_context(tool_name: str, data: dict[str, Any]) -> dict[str, Any]:
             for item in _dict_items(data.get("results"))[:10]
         ]
         return projected
+    if tool_name == "get_search_results":
+        projected = _pick(
+            data,
+            "engine",
+            "query",
+            "count",
+            "total_available",
+            "more_results",
+        )
+        projected["results"] = [
+            _pick(item, "title", "url", "link", "snippet")
+            for item in _dict_items(data.get("results"))[:10]
+        ]
+        return projected
+    if tool_name == "get_all_links":
+        projected = _pick(data, "source_url", "total_count", "returned")
+        projected["links"] = [
+            _pick(item, "href", "text") for item in _dict_items(data.get("links"))[:20]
+        ]
+        return projected
     if tool_name == "download_pdf":
         return _pick(
             data,
