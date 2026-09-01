@@ -84,7 +84,7 @@ jobs:
         with:
           name: release-distributions
           path: dist
-      - uses: actions/attest-build-provenance@v2
+      - uses: actions/attest-build-provenance@v4
         with:
           subject-path: "dist/*"
 
