@@ -1,0 +1,916 @@
+{
+  "format": "webagent-checkpoint",
+  "schema_version": 2,
+  "checkpoint_sha256": "7273cbbd68f87b6ac1cb43df12a7e9059d7196917ee45583b21cee44e81192d7",
+  "checkpoint": {
+    "artifacts": [],
+    "browser_state": {
+      "active_tab_index": 0,
+      "current_url": "https://numpy.org/doc/stable/reference/generated/numpy.array.html",
+      "tab_urls": [
+        "https://numpy.org/doc/stable/reference/generated/numpy.array.html"
+      ]
+    },
+    "checkpoint_id": "4d2ec812-c857-44da-9925-5427812956b5",
+    "config_fingerprint": "8cec5c2d9a8383b4a581dc3e28b7de4baf7cbe53b378af61437660b1eef435c3",
+    "consecutive_failures": 0,
+    "created_at": "2026-09-01T12:50:49.236739Z",
+    "elapsed_seconds": 75.30637431144714,
+    "events": [
+      {
+        "current": "search-discovery",
+        "previous": "default",
+        "reason": "[omitted]",
+        "step_number": 1,
+        "timestamp": "2026-09-01T12:49:44.743701+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 1,
+        "strategy": "search-discovery",
+        "timestamp": "2026-09-01T12:49:44.743711+00:00",
+        "type": "replan"
+      },
+      {
+        "current": "alternate-navigation",
+        "previous": "search-discovery",
+        "reason": "[omitted]",
+        "step_number": 2,
+        "timestamp": "2026-09-01T12:49:57.538237+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 2,
+        "strategy": "alternate-navigation",
+        "timestamp": "2026-09-01T12:49:57.538257+00:00",
+        "type": "replan"
+      },
+      {
+        "current": "recovery",
+        "previous": "alternate-navigation",
+        "reason": "[omitted]",
+        "step_number": 4,
+        "timestamp": "2026-09-01T12:50:12.059015+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 4,
+        "strategy": "recovery",
+        "timestamp": "2026-09-01T12:50:12.059042+00:00",
+        "type": "replan"
+      },
+      {
+        "current": "semantic-dom",
+        "previous": "recovery",
+        "reason": "[omitted]",
+        "step_number": 5,
+        "timestamp": "2026-09-01T12:50:30.267183+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 5,
+        "strategy": "semantic-dom",
+        "timestamp": "2026-09-01T12:50:30.267210+00:00",
+        "type": "replan"
+      },
+      {
+        "current": "visual-grounding",
+        "previous": "semantic-dom",
+        "reason": "[omitted]",
+        "step_number": 7,
+        "timestamp": "2026-09-01T12:50:37.054146+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 7,
+        "strategy": "visual-grounding",
+        "timestamp": "2026-09-01T12:50:37.054161+00:00",
+        "type": "replan"
+      },
+      {
+        "current": "document-local",
+        "previous": "visual-grounding",
+        "reason": "[omitted]",
+        "step_number": 8,
+        "timestamp": "2026-09-01T12:50:46.878332+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 8,
+        "strategy": "document-local",
+        "timestamp": "2026-09-01T12:50:46.878345+00:00",
+        "type": "replan"
+      }
+    ],
+    "final_result": {},
+    "history": [
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:49:34.826045+00:00",
+          "title": "normal",
+          "url": "https://numpy.org/doc/stable/reference/generated/numpy.array.html"
+        },
+        "duration_seconds": 10.81442379951477,
+        "step_number": 1,
+        "timestamp": "2026-09-01T12:49:44.743651+00:00",
+        "tool_call": {
+          "parameters": {
+            "url": "https://numpy.org/doc/stable/reference/generated/numpy.array.html",
+            "wait_until": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "goto"
+        },
+        "tool_duration_seconds": 0.0001270771026611328,
+        "tool_result": {
+          "audit": {
+            "decision": "deny",
+            "policy": "browser_grounded",
+            "policy_step": 1,
+            "provenance": {},
+            "reason": "[omitted]",
+            "target": "https://numpy.org/doc/stable/reference/generated/numpy.array.html"
+          },
+          "data": {},
+          "error": "tool action failed; details omitted",
+          "success": false,
+          "tool_name": "goto"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:49:45.569881+00:00",
+          "title": "normal",
+          "url": "https://numpy.org/doc/stable/reference/generated/numpy.array.html"
+        },
+        "duration_seconds": 12.79252290725708,
+        "step_number": 2,
+        "timestamp": "2026-09-01T12:49:57.538152+00:00",
+        "tool_call": {
+          "parameters": {
+            "success_probability": 0.95,
+            "summary": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "done"
+        },
+        "tool_duration_seconds": 6.794929504394531e-05,
+        "tool_result": {
+          "audit": {
+            "decision": "deny",
+            "policy": "browser_grounded",
+            "policy_step": 2,
+            "provenance": {},
+            "reason": "[omitted]",
+            "target": "[omitted]"
+          },
+          "data": {},
+          "error": "tool action failed; details omitted",
+          "success": false,
+          "tool_name": "done"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:49:58.389871+00:00",
+          "title": "normal",
+          "url": "https://numpy.org/doc/stable/reference/generated/numpy.array.html"
+        },
+        "duration_seconds": 3.287792921066284,
+        "step_number": 3,
+        "timestamp": "2026-09-01T12:50:00.829965+00:00",
+        "tool_call": {
+          "parameters": {},
+          "reasoning": "",
+          "tool_name": "get_url"
+        },
+        "tool_duration_seconds": 0.0002110004425048828,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 1,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 3,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "url": "https://numpy.org/doc/stable/reference/generated/numpy.array.html"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "get_url"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:50:31.085653+00:00",
+          "title": "normal",
+          "url": "https://numpy.org/doc/stable/reference/generated/numpy.array.html"
+        },
+        "duration_seconds": 5.727511167526245,
+        "step_number": 6,
+        "timestamp": "2026-09-01T12:50:36.005605+00:00",
+        "tool_call": {
+          "parameters": {},
+          "reasoning": "",
+          "tool_name": "get_title"
+        },
+        "tool_duration_seconds": 0.004374027252197266,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 1,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 2,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 4,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "title": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "get_title"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:50:37.020708+00:00",
+          "title": "normal",
+          "url": "https://numpy.org/doc/stable/reference/generated/numpy.array.html"
+        },
+        "duration_seconds": 10.009799242019653,
+        "step_number": 7,
+        "timestamp": "2026-09-01T12:50:46.019195+00:00",
+        "tool_call": {
+          "parameters": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "scroll_to_element"
+        },
+        "tool_duration_seconds": 0.05348706245422363,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 2,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 4,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 5,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "scroll_to_element"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:50:46.843649+00:00",
+          "title": "normal",
+          "url": "https://numpy.org/doc/stable/reference/generated/numpy.array.html"
+        },
+        "duration_seconds": 3.206164836883545,
+        "step_number": 8,
+        "timestamp": "2026-09-01T12:50:49.229050+00:00",
+        "tool_call": {
+          "parameters": {
+            "success_probability": 0.97,
+            "summary": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "done"
+        },
+        "tool_duration_seconds": 0.00023293495178222656,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 4,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 6,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "attachments": [],
+            "success_probability": 0.97,
+            "summary": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "done"
+        }
+      }
+    ],
+    "last_figure_path": null,
+    "loop_state": {
+      "in_loop": true,
+      "loop_type": "action_variety_no_progress",
+      "page_hash_history": [
+        "edd213904692386c260cb463937083c2",
+        "edd213904692386c260cb463937083c2",
+        "edd213904692386c260cb463937083c2",
+        "37a030853b0c72cf68ca2a55c6868deb"
+      ],
+      "recent_actions": [
+        "26907555b0324b8a5de84cc72a6d845e2dcd6db0db62fd56d165c8164ac98628",
+        "53577d569d6585b8bc046b851ae372476777da37da512361f111b404ef3c73ce",
+        "c970e04637e841b9b8ff1ca303495717b71a136ab737ff675d5eb677e5e8b233",
+        "6c89471c7ec06d30c0ab88670bb79e7f8b60b553b9367fac04f9668d92fe0f2a"
+      ],
+      "recent_pages": [
+        "0ddd873c761157f9fd4a1bd6104c0ba9aab1aa25b1e58e1a00fd6d8a0af63a4e",
+        "0ddd873c761157f9fd4a1bd6104c0ba9aab1aa25b1e58e1a00fd6d8a0af63a4e",
+        "0ddd873c761157f9fd4a1bd6104c0ba9aab1aa25b1e58e1a00fd6d8a0af63a4e",
+        "93fa1e4e744d26fce510d47f670846bc2cc2b1bd527345dd95d77ec2d1bd3bc3"
+      ],
+      "schema_version": 1,
+      "threshold": 4,
+      "url_history": [
+        "https://numpy.org/doc/stable/reference/generated/numpy.array.html",
+        "https://numpy.org/doc/stable/reference/generated/numpy.array.html",
+        "https://numpy.org/doc/stable/reference/generated/numpy.array.html",
+        "https://numpy.org/doc/stable/reference/generated/numpy.array.html"
+      ],
+      "window_size": 4
+    },
+    "next_step": 9,
+    "pending_action": null,
+    "planner_attempts": [
+      {
+        "attempt_number": 1,
+        "completion_tokens": 63,
+        "duration_seconds": 8.551692008972168,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6380,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 1,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:49:43.415611+00:00",
+        "total_tokens": 6443,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 177,
+        "duration_seconds": 11.920079946517944,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6619,
+        "requested_output_mode": "auto",
+        "response_length": 4,
+        "step_number": 2,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:49:57.529121+00:00",
+        "total_tokens": 6796,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 16,
+        "duration_seconds": 1.0831708908081055,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6655,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 3,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:49:59.503711+00:00",
+        "total_tokens": 6671,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 4,
+        "duration_seconds": 6.654742956161499,
+        "effective_output_mode": "native-tools",
+        "error": "planner attempt failed; details omitted",
+        "finish_reason": "error",
+        "prompt_tokens": 6573,
+        "requested_output_mode": "auto",
+        "response_length": 13,
+        "step_number": 4,
+        "structured_fallbacks": [],
+        "success": false,
+        "timestamp": "2026-09-01T12:50:08.316477+00:00",
+        "total_tokens": 6577,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 2,
+        "completion_tokens": 4,
+        "duration_seconds": 3.742252826690674,
+        "effective_output_mode": "native-tools",
+        "error": "planner attempt failed; details omitted",
+        "finish_reason": "error",
+        "prompt_tokens": 6626,
+        "requested_output_mode": "auto",
+        "response_length": 13,
+        "step_number": 4,
+        "structured_fallbacks": [],
+        "success": false,
+        "timestamp": "2026-09-01T12:50:12.058837+00:00",
+        "total_tokens": 6630,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 4,
+        "duration_seconds": 7.441070079803467,
+        "effective_output_mode": "native-tools",
+        "error": "planner attempt failed; details omitted",
+        "finish_reason": "error",
+        "prompt_tokens": 6604,
+        "requested_output_mode": "auto",
+        "response_length": 13,
+        "step_number": 5,
+        "structured_fallbacks": [],
+        "success": false,
+        "timestamp": "2026-09-01T12:50:20.384131+00:00",
+        "total_tokens": 6608,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 2,
+        "completion_tokens": 162,
+        "duration_seconds": 9.882802248001099,
+        "effective_output_mode": "native-tools",
+        "error": "planner attempt failed; details omitted",
+        "finish_reason": "error",
+        "prompt_tokens": 6657,
+        "requested_output_mode": "auto",
+        "response_length": 645,
+        "step_number": 5,
+        "structured_fallbacks": [],
+        "success": false,
+        "timestamp": "2026-09-01T12:50:30.266954+00:00",
+        "total_tokens": 6819,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 6,
+        "duration_seconds": 3.317793130874634,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6749,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 6,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:50:34.436689+00:00",
+        "total_tokens": 6755,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 27,
+        "duration_seconds": 7.537012815475464,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 7169,
+        "requested_output_mode": "auto",
+        "response_length": 17,
+        "step_number": 7,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:50:44.591136+00:00",
+        "total_tokens": 7196,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 196,
+        "duration_seconds": 2.3415369987487793,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 7112,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 8,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:50:49.219900+00:00",
+        "total_tokens": 7308,
+        "transport_retries": 0
+      }
+    ],
+    "planning_state": {
+      "active_milestone_id": "m9",
+      "evidence": [
+        {
+          "id": "e1",
+          "kind": "checkpoint",
+          "source": "https://numpy.org/doc/stable/reference/generated/numpy.array.html",
+          "step_number": 3,
+          "summary": "evidence retained from step 3"
+        },
+        {
+          "id": "e2",
+          "kind": "checkpoint",
+          "source": "https://numpy.org/doc/stable/reference/generated/numpy.array.html",
+          "step_number": 6,
+          "summary": "evidence retained from step 6"
+        },
+        {
+          "id": "e3",
+          "kind": "checkpoint",
+          "source": "https://numpy.org/doc/stable/reference/generated/numpy.array.html",
+          "step_number": 7,
+          "summary": "evidence retained from step 7"
+        },
+        {
+          "id": "e4",
+          "kind": "checkpoint",
+          "source": "https://numpy.org/doc/stable/reference/generated/numpy.array.html",
+          "step_number": 8,
+          "summary": "evidence retained from step 8"
+        }
+      ],
+      "milestones": [
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 1",
+          "id": "m1",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 2",
+          "id": "m2",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 3",
+          "id": "m3",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 4",
+          "id": "m4",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 5",
+          "id": "m5",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 6",
+          "id": "m6",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 7",
+          "id": "m7",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 8",
+          "id": "m8",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 9",
+          "id": "m9",
+          "status": "active"
+        }
+      ],
+      "objective": "task bound by checkpoint task_sha256",
+      "revisions": [
+        {
+          "added_milestone_ids": [
+            "m4"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 1,
+          "step_number": 1,
+          "strategy": "search-discovery"
+        },
+        {
+          "added_milestone_ids": [
+            "m5"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 2,
+          "step_number": 2,
+          "strategy": "alternate-navigation"
+        },
+        {
+          "added_milestone_ids": [
+            "m6"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 3,
+          "step_number": 4,
+          "strategy": "recovery"
+        },
+        {
+          "added_milestone_ids": [
+            "m7"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 4,
+          "step_number": 5,
+          "strategy": "semantic-dom"
+        },
+        {
+          "added_milestone_ids": [
+            "m8"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 5,
+          "step_number": 7,
+          "strategy": "visual-grounding"
+        },
+        {
+          "added_milestone_ids": [
+            "m9"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 6,
+          "step_number": 8,
+          "strategy": "document-local"
+        }
+      ]
+    },
+    "policy_state": {
+      "broad_current_year_search_completed": false,
+      "current_year": 2026,
+      "downloaded_paths": {},
+      "figure_analysis_completed": false,
+      "hybrid": {
+        "candidate_date": null,
+        "candidate_owner": null,
+        "candidate_url": null,
+        "candidate_version_key": [],
+        "cross_check_exhausted": false,
+        "direct_evidence_verified": false,
+        "missing_repeat_count": 0,
+        "missing_signature": [],
+        "official_report_attempts": {},
+        "required_next_action": null,
+        "subject": "[omitted]",
+        "successful_topics": []
+      },
+      "observed_urls": {
+        "field_74656a0d5e82": {
+          "page_url": "https://numpy.org/doc/stable/reference/generated/numpy.array.html",
+          "policy_step": 4,
+          "source": "[omitted]"
+        },
+        "field_9527874040c5": {
+          "page_url": "https://numpy.org/doc/stable/reference/generated/numpy.array.html",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_959e07db2f69": {
+          "page_url": "https://numpy.org/doc/stable/reference/generated/numpy.array.html",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_b66658e23e36": {
+          "page_url": "https://numpy.org/doc/stable/reference/generated/numpy.array.html",
+          "policy_step": 5,
+          "source": "[omitted]"
+        }
+      },
+      "official_identity_search_completed": false,
+      "official_identity_urls": [],
+      "official_scope_result_urls": [],
+      "official_scope_search_completed": false,
+      "pending_url_evidence_target": null,
+      "pending_url_search_attempts": 0,
+      "policy": "browser_grounded",
+      "release_landscape_evidence_urls": [],
+      "release_landscape_search_completed": false,
+      "schema_version": 3,
+      "search_completed": false,
+      "selected_candidate_url": null,
+      "step": 6,
+      "successful_queries": [],
+      "successful_searches": 0,
+      "task_sha256": "067e81bdf0178119a99d3c5ec897dc2ecc465463af80bffb5fa634a5c9e4c461",
+      "version_frontier": null,
+      "version_frontier_key": [],
+      "version_frontier_resolved": true,
+      "visited_urls": [
+        "https://numpy.org/doc/stable/reference/generated/numpy.array.html"
+      ]
+    },
+    "previous_checkpoint_sha256": "f7946cf69d437f2dd48d82de90862e5ece0a2f1373ea38488ae5515f12989caf",
+    "resume_count": 0,
+    "run_id": "3c67f033-2608-4769-9e2d-026c6df427cf",
+    "schema_version": 2,
+    "source_fingerprint": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "status": "completed",
+    "strategy_state": {
+      "attempted": [
+        "default",
+        "search-discovery",
+        "alternate-navigation",
+        "recovery",
+        "semantic-dom",
+        "visual-grounding",
+        "document-local"
+      ],
+      "consecutive_failures": 0,
+      "consecutive_no_progress": 0,
+      "current": "document-local",
+      "exhausted": false,
+      "switch_count": 6,
+      "switches": [
+        {
+          "current": "search-discovery",
+          "previous": "default",
+          "reason": "runtime strategy switch",
+          "step_number": 1
+        },
+        {
+          "current": "alternate-navigation",
+          "previous": "search-discovery",
+          "reason": "runtime strategy switch",
+          "step_number": 2
+        },
+        {
+          "current": "recovery",
+          "previous": "alternate-navigation",
+          "reason": "runtime strategy switch",
+          "step_number": 4
+        },
+        {
+          "current": "semantic-dom",
+          "previous": "recovery",
+          "reason": "runtime strategy switch",
+          "step_number": 5
+        },
+        {
+          "current": "visual-grounding",
+          "previous": "semantic-dom",
+          "reason": "runtime strategy switch",
+          "step_number": 7
+        },
+        {
+          "current": "document-local",
+          "previous": "visual-grounding",
+          "reason": "runtime strategy switch",
+          "step_number": 8
+        }
+      ]
+    },
+    "task_sha256": "067e81bdf0178119a99d3c5ec897dc2ecc465463af80bffb5fa634a5c9e4c461",
+    "updated_at": "2026-09-01T12:50:49.236761Z"
+  }
+}

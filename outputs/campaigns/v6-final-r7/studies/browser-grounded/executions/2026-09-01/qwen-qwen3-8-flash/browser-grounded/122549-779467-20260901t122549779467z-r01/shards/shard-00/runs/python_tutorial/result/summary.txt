@@ -1,0 +1,7 @@
+Intended audience of the official Python Tutorial (Python 3.14.7 documentation):
+
+The tutorial's own "Tip" states: "This tutorial is designed for programmers that are new to the Python language, not beginners who are new to programming."
+
+In other words, the intended audience is experienced programmers coming from other languages who want to learn Python — it is not aimed at people who are entirely new to programming. The page adds that familiarity with "at least one programming language" is assumed, and it walks the reader through Python's features, data types, control flow, functions, modules, errors/exceptions, classes, I/O, and an overview of the standard library, with links onward to the Python Standard Library, the Python Language Reference, and "Extending and Embedding the Python Interpreter."
+
+Exact URL cited (currently loaded page, confirmed by the browser frame URL and page title "The Python Tutorial — Python 3.14.7 documentation"): https://docs.python.org/3/tutorial/index.html

@@ -1,0 +1,800 @@
+{
+  "format": "webagent-checkpoint",
+  "schema_version": 2,
+  "checkpoint_sha256": "50601b61b97ff5ec04509b33ad4ee650fae5da0eeb8aa37fa4fb117841117581",
+  "checkpoint": {
+    "artifacts": [],
+    "browser_state": {
+      "active_tab_index": 0,
+      "current_url": "https://playwright.dev/python/docs/api/class-locator",
+      "tab_urls": [
+        "https://playwright.dev/python/docs/api/class-locator"
+      ]
+    },
+    "checkpoint_id": "880d0e09-850f-4315-83fb-6e65d5dff207",
+    "config_fingerprint": "69a8e06a14b33d902e9db15e3bc570860b38268472423080fe5c14247bd8cf05",
+    "consecutive_failures": 0,
+    "created_at": "2026-09-01T13:14:14.145711Z",
+    "elapsed_seconds": 107.61655187606812,
+    "events": [
+      {
+        "current": "alternate-navigation",
+        "previous": "default",
+        "reason": "[omitted]",
+        "step_number": 5,
+        "timestamp": "2026-09-01T13:13:53.165502+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 5,
+        "strategy": "alternate-navigation",
+        "timestamp": "2026-09-01T13:13:53.165515+00:00",
+        "type": "replan"
+      },
+      {
+        "current": "semantic-dom",
+        "previous": "alternate-navigation",
+        "reason": "[omitted]",
+        "step_number": 6,
+        "timestamp": "2026-09-01T13:14:04.988607+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 6,
+        "strategy": "semantic-dom",
+        "timestamp": "2026-09-01T13:14:04.988620+00:00",
+        "type": "replan"
+      }
+    ],
+    "final_result": {},
+    "history": [
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:12:29.628341+00:00",
+          "title": "normal",
+          "url": "https://playwright.dev/python/docs/api/class-locator"
+        },
+        "duration_seconds": 13.029287099838257,
+        "step_number": 1,
+        "timestamp": "2026-09-01T13:12:39.558207+00:00",
+        "tool_call": {
+          "parameters": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "frame_interact"
+        },
+        "tool_duration_seconds": 0.03593087196350098,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 1,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 1,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "match_count": 1,
+            "text": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "frame_interact"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:12:42.616325+00:00",
+          "title": "normal",
+          "url": "https://playwright.dev/python/docs/api/class-locator"
+        },
+        "duration_seconds": 43.55919790267944,
+        "step_number": 2,
+        "timestamp": "2026-09-01T13:13:23.119294+00:00",
+        "tool_call": {
+          "parameters": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "frame_interact"
+        },
+        "tool_duration_seconds": 31.012573957443237,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 1,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 2,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {},
+          "error": "tool action failed; details omitted",
+          "success": false,
+          "tool_name": "frame_interact"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:13:26.015858+00:00",
+          "title": "normal",
+          "url": "https://playwright.dev/python/docs/api/class-locator"
+        },
+        "duration_seconds": 14.246766805648804,
+        "step_number": 3,
+        "timestamp": "2026-09-01T13:13:37.368835+00:00",
+        "tool_call": {
+          "parameters": {
+            "attribute": "[omitted]",
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "get_attribute"
+        },
+        "tool_duration_seconds": 0.011153936386108398,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 3,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 4,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 3,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "attribute": "[omitted]",
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            },
+            "value": "https://playwright.dev/python/docs/api/class-locator"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "get_attribute"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:13:40.450244+00:00",
+          "title": "normal",
+          "url": "https://playwright.dev/python/docs/api/class-locator"
+        },
+        "duration_seconds": 12.831820964813232,
+        "step_number": 4,
+        "timestamp": "2026-09-01T13:13:50.203808+00:00",
+        "tool_call": {
+          "parameters": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "frame_interact"
+        },
+        "tool_duration_seconds": 0.02269124984741211,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 4,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 4,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "match_count": 1,
+            "text": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "frame_interact"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:13:53.110156+00:00",
+          "title": "normal",
+          "url": "https://playwright.dev/python/docs/api/class-locator"
+        },
+        "duration_seconds": 11.644411087036133,
+        "step_number": 5,
+        "timestamp": "2026-09-01T13:14:01.851510+00:00",
+        "tool_call": {
+          "parameters": {
+            "attribute": "[omitted]",
+            "selector": {
+              "type": "text",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "get_attribute"
+        },
+        "tool_duration_seconds": 0.03834700584411621,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 3,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 7,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 5,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "attribute": "[omitted]",
+            "selector": {
+              "type": "text",
+              "value": "[omitted]"
+            },
+            "value": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "get_attribute"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:14:04.933835+00:00",
+          "title": "normal",
+          "url": "https://playwright.dev/python/docs/api/class-locator"
+        },
+        "duration_seconds": 12.284624338150024,
+        "step_number": 6,
+        "timestamp": "2026-09-01T13:14:14.139510+00:00",
+        "tool_call": {
+          "parameters": {
+            "success_probability": 0.95,
+            "summary": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "done"
+        },
+        "tool_duration_seconds": 0.00017023086547851562,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 7,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 6,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "attachments": [],
+            "success_probability": 0.95,
+            "summary": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "done"
+        }
+      }
+    ],
+    "last_figure_path": null,
+    "loop_state": {
+      "in_loop": true,
+      "loop_type": "page_stagnation",
+      "page_hash_history": [
+        "8b6a93045b312f6eee40687ef89fe59e",
+        "8b6a93045b312f6eee40687ef89fe59e",
+        "8b6a93045b312f6eee40687ef89fe59e",
+        "8b6a93045b312f6eee40687ef89fe59e"
+      ],
+      "recent_actions": [
+        "7a9e39f5e5415b5594e4fd5ff12ddb3f545ba08d55c09abf4469bebd2779d42a",
+        "ae7c4ba3b50b192c60c1c2654ff5e4d753fd8452001a7c3964a921f7e8a31552",
+        "7a9e39f5e5415b5594e4fd5ff12ddb3f545ba08d55c09abf4469bebd2779d42a",
+        "184e7304ffa8b5e67a3a7c2738b0412813e1286ea595ad1c3dcf301cb8a1028d"
+      ],
+      "recent_pages": [
+        "db8d881bc6483f7df84c3fc984a008beaa9f25c0d62ba22ee7dd20d6130129aa",
+        "db8d881bc6483f7df84c3fc984a008beaa9f25c0d62ba22ee7dd20d6130129aa",
+        "db8d881bc6483f7df84c3fc984a008beaa9f25c0d62ba22ee7dd20d6130129aa",
+        "db8d881bc6483f7df84c3fc984a008beaa9f25c0d62ba22ee7dd20d6130129aa"
+      ],
+      "schema_version": 1,
+      "threshold": 4,
+      "url_history": [
+        "https://playwright.dev/python/docs/api/class-locator",
+        "https://playwright.dev/python/docs/api/class-locator",
+        "https://playwright.dev/python/docs/api/class-locator",
+        "https://playwright.dev/python/docs/api/class-locator"
+      ],
+      "window_size": 4
+    },
+    "next_step": 7,
+    "pending_action": null,
+    "planner_attempts": [
+      {
+        "attempt_number": 1,
+        "completion_tokens": 324,
+        "duration_seconds": 6.047661066055298,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6844,
+        "requested_output_mode": "auto",
+        "response_length": 79,
+        "step_number": 1,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:12:35.739604+00:00",
+        "total_tokens": 7168,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 368,
+        "duration_seconds": 5.617011785507202,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 7180,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 2,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:12:48.288806+00:00",
+        "total_tokens": 7548,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 390,
+        "duration_seconds": 7.575637102127075,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 7292,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 3,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:13:33.649398+00:00",
+        "total_tokens": 7682,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 391,
+        "duration_seconds": 5.955606937408447,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 7325,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 4,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:13:46.460384+00:00",
+        "total_tokens": 7716,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 356,
+        "duration_seconds": 4.971322059631348,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 7600,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 5,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:13:58.136849+00:00",
+        "total_tokens": 7956,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 826,
+        "duration_seconds": 9.144579648971558,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 7739,
+        "requested_output_mode": "auto",
+        "response_length": 120,
+        "step_number": 6,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:14:14.133213+00:00",
+        "total_tokens": 8565,
+        "transport_retries": 0
+      }
+    ],
+    "planning_state": {
+      "active_milestone_id": "m5",
+      "evidence": [
+        {
+          "id": "e1",
+          "kind": "checkpoint",
+          "source": "https://playwright.dev/python/docs/api/class-locator",
+          "step_number": 1,
+          "summary": "evidence retained from step 1"
+        },
+        {
+          "id": "e2",
+          "kind": "checkpoint",
+          "source": "https://playwright.dev/python/docs/api/class-locator",
+          "step_number": 3,
+          "summary": "evidence retained from step 3"
+        },
+        {
+          "id": "e3",
+          "kind": "checkpoint",
+          "source": "https://playwright.dev/python/docs/api/class-locator",
+          "step_number": 5,
+          "summary": "evidence retained from step 5"
+        },
+        {
+          "id": "e4",
+          "kind": "checkpoint",
+          "source": "https://playwright.dev/python/docs/api/class-locator",
+          "step_number": 6,
+          "summary": "evidence retained from step 6"
+        }
+      ],
+      "milestones": [
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 1",
+          "id": "m1",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 2",
+          "id": "m2",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 3",
+          "id": "m3",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 4",
+          "id": "m4",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 5",
+          "id": "m5",
+          "status": "active"
+        }
+      ],
+      "objective": "task bound by checkpoint task_sha256",
+      "revisions": [
+        {
+          "added_milestone_ids": [
+            "m4"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 1,
+          "step_number": 5,
+          "strategy": "alternate-navigation"
+        },
+        {
+          "added_milestone_ids": [
+            "m5"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 2,
+          "step_number": 6,
+          "strategy": "semantic-dom"
+        }
+      ]
+    },
+    "policy_state": {
+      "broad_current_year_search_completed": false,
+      "current_year": 2026,
+      "downloaded_paths": {},
+      "figure_analysis_completed": false,
+      "hybrid": {
+        "candidate_date": null,
+        "candidate_owner": null,
+        "candidate_url": null,
+        "candidate_version_key": [],
+        "cross_check_exhausted": false,
+        "direct_evidence_verified": false,
+        "missing_repeat_count": 0,
+        "missing_signature": [],
+        "official_report_attempts": {},
+        "required_next_action": null,
+        "subject": "[omitted]",
+        "successful_topics": []
+      },
+      "observed_urls": {
+        "field_0ea929082911": {
+          "page_url": "https://playwright.dev/python/docs/api/class-locator",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_151db798ba3e": {
+          "page_url": "https://playwright.dev/python/docs/api/class-locator",
+          "policy_step": 3,
+          "source": "[omitted]"
+        },
+        "field_4916cb43ab0c": {
+          "page_url": "https://playwright.dev/python/docs/api/class-locator",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_6ba2f5d71f9c": {
+          "page_url": "https://playwright.dev/python/docs/api/class-locator",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_897432c242c7": {
+          "page_url": "https://playwright.dev/python/docs/api/class-locator",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_cd8edba9d4c0": {
+          "page_url": "https://playwright.dev/python/docs/api/class-locator",
+          "policy_step": 3,
+          "source": "[omitted]"
+        },
+        "field_e0b97a309e3b": {
+          "page_url": "https://playwright.dev/python/docs/api/class-locator",
+          "policy_step": 3,
+          "source": "[omitted]"
+        }
+      },
+      "official_identity_search_completed": false,
+      "official_identity_urls": [],
+      "official_scope_result_urls": [],
+      "official_scope_search_completed": false,
+      "pending_url_evidence_target": null,
+      "pending_url_search_attempts": 0,
+      "policy": "browser_grounded",
+      "release_landscape_evidence_urls": [],
+      "release_landscape_search_completed": false,
+      "schema_version": 3,
+      "search_completed": false,
+      "selected_candidate_url": null,
+      "step": 6,
+      "successful_queries": [],
+      "successful_searches": 0,
+      "task_sha256": "d44084f0753893469b4fb6faf4c773e4dc022a62386656f34a703d4d76a37c9f",
+      "version_frontier": null,
+      "version_frontier_key": [],
+      "version_frontier_resolved": true,
+      "visited_urls": [
+        "https://playwright.dev/python/docs/api/class-locator"
+      ]
+    },
+    "previous_checkpoint_sha256": "77a64acd15e49a64647c8b712037ebdaccac277dba247c8099802c2dc59136f7",
+    "resume_count": 0,
+    "run_id": "ccc406fd-0241-4421-b962-3735838828b9",
+    "schema_version": 2,
+    "source_fingerprint": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "status": "completed",
+    "strategy_state": {
+      "attempted": [
+        "default",
+        "alternate-navigation",
+        "semantic-dom"
+      ],
+      "consecutive_failures": 0,
+      "consecutive_no_progress": 0,
+      "current": "semantic-dom",
+      "exhausted": false,
+      "switch_count": 2,
+      "switches": [
+        {
+          "current": "alternate-navigation",
+          "previous": "default",
+          "reason": "runtime strategy switch",
+          "step_number": 5
+        },
+        {
+          "current": "semantic-dom",
+          "previous": "alternate-navigation",
+          "reason": "runtime strategy switch",
+          "step_number": 6
+        }
+      ]
+    },
+    "task_sha256": "d44084f0753893469b4fb6faf4c773e4dc022a62386656f34a703d4d76a37c9f",
+    "updated_at": "2026-09-01T13:14:14.145727Z"
+  }
+}

@@ -1,0 +1,662 @@
+{
+  "format": "webagent-checkpoint",
+  "schema_version": 2,
+  "checkpoint_sha256": "3b13d00fd388ad3d54995199c5d1619348e13a64010ff8733148d3d9ae5f8326",
+  "checkpoint": {
+    "artifacts": [],
+    "browser_state": {
+      "active_tab_index": 0,
+      "current_url": "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository",
+      "tab_urls": [
+        "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository"
+      ]
+    },
+    "checkpoint_id": "15702d88-6b2a-4a98-8f70-0e75000b1a4f",
+    "config_fingerprint": "8cec5c2d9a8383b4a581dc3e28b7de4baf7cbe53b378af61437660b1eef435c3",
+    "consecutive_failures": 0,
+    "created_at": "2026-09-01T12:41:20.070581Z",
+    "elapsed_seconds": 32.480777978897095,
+    "events": [
+      {
+        "current": "search-discovery",
+        "previous": "default",
+        "reason": "[omitted]",
+        "step_number": 1,
+        "timestamp": "2026-09-01T12:40:53.610234+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 1,
+        "strategy": "search-discovery",
+        "timestamp": "2026-09-01T12:40:53.610271+00:00",
+        "type": "replan"
+      },
+      {
+        "current": "alternate-navigation",
+        "previous": "search-discovery",
+        "reason": "[omitted]",
+        "step_number": 5,
+        "timestamp": "2026-09-01T12:41:16.021929+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 5,
+        "strategy": "alternate-navigation",
+        "timestamp": "2026-09-01T12:41:16.021949+00:00",
+        "type": "replan"
+      }
+    ],
+    "final_result": {},
+    "history": [
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:40:48.299357+00:00",
+          "title": "normal",
+          "url": "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository"
+        },
+        "duration_seconds": 6.019181966781616,
+        "step_number": 1,
+        "timestamp": "2026-09-01T12:40:53.608829+00:00",
+        "tool_call": {
+          "parameters": {
+            "url": "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository",
+            "wait_until": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "goto"
+        },
+        "tool_duration_seconds": 0.0003230571746826172,
+        "tool_result": {
+          "audit": {
+            "decision": "deny",
+            "policy": "browser_grounded",
+            "policy_step": 1,
+            "provenance": {},
+            "reason": "[omitted]",
+            "target": "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository"
+          },
+          "data": {},
+          "error": "tool action failed; details omitted",
+          "success": false,
+          "tool_name": "goto"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:40:54.297707+00:00",
+          "title": "normal",
+          "url": "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository"
+        },
+        "duration_seconds": 6.938141107559204,
+        "step_number": 2,
+        "timestamp": "2026-09-01T12:41:00.550352+00:00",
+        "tool_call": {
+          "parameters": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "frame_interact"
+        },
+        "tool_duration_seconds": 0.023720264434814453,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 2,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 3,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 2,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "match_count": 1,
+            "text": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "frame_interact"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:41:01.242686+00:00",
+          "title": "normal",
+          "url": "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository"
+        },
+        "duration_seconds": 6.976136922836304,
+        "step_number": 3,
+        "timestamp": "2026-09-01T12:41:07.528634+00:00",
+        "tool_call": {
+          "parameters": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "frame_interact"
+        },
+        "tool_duration_seconds": 0.024816036224365234,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 3,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 3,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "match_count": 18,
+            "text": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "frame_interact"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:41:08.234333+00:00",
+          "title": "normal",
+          "url": "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository"
+        },
+        "duration_seconds": 7.746027708053589,
+        "step_number": 4,
+        "timestamp": "2026-09-01T12:41:15.277399+00:00",
+        "tool_call": {
+          "parameters": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "frame_interact"
+        },
+        "tool_duration_seconds": 0.021680831909179688,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 3,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 4,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "match_count": 12,
+            "text": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "frame_interact"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:41:15.988158+00:00",
+          "title": "normal",
+          "url": "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository"
+        },
+        "duration_seconds": 4.782716989517212,
+        "step_number": 5,
+        "timestamp": "2026-09-01T12:41:20.062899+00:00",
+        "tool_call": {
+          "parameters": {
+            "success_probability": 0.95,
+            "summary": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "done"
+        },
+        "tool_duration_seconds": 0.0002779960632324219,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 3,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 5,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "attachments": [],
+            "success_probability": 0.95,
+            "summary": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "done"
+        }
+      }
+    ],
+    "last_figure_path": null,
+    "loop_state": {
+      "in_loop": true,
+      "loop_type": "page_stagnation",
+      "page_hash_history": [
+        "c9e06cb6556a83ff9b54ad421b736aa3",
+        "c9e06cb6556a83ff9b54ad421b736aa3",
+        "c9e06cb6556a83ff9b54ad421b736aa3",
+        "c9e06cb6556a83ff9b54ad421b736aa3"
+      ],
+      "recent_actions": [
+        "ae7c4ba3b50b192c60c1c2654ff5e4d753fd8452001a7c3964a921f7e8a31552",
+        "ae7c4ba3b50b192c60c1c2654ff5e4d753fd8452001a7c3964a921f7e8a31552",
+        "ae7c4ba3b50b192c60c1c2654ff5e4d753fd8452001a7c3964a921f7e8a31552",
+        "b4b0cdf0be81cb313a01bebc59d6376a6d955a01d3da19c309898f5e88c04358"
+      ],
+      "recent_pages": [
+        "76c3c68fb70311366d81f6d5286a565d6e344ad203f299567f7130999d1e53ff",
+        "76c3c68fb70311366d81f6d5286a565d6e344ad203f299567f7130999d1e53ff",
+        "76c3c68fb70311366d81f6d5286a565d6e344ad203f299567f7130999d1e53ff",
+        "76c3c68fb70311366d81f6d5286a565d6e344ad203f299567f7130999d1e53ff"
+      ],
+      "schema_version": 1,
+      "threshold": 4,
+      "url_history": [
+        "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository",
+        "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository",
+        "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository",
+        "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository"
+      ],
+      "window_size": 4
+    },
+    "next_step": 6,
+    "pending_action": null,
+    "planner_attempts": [
+      {
+        "attempt_number": 1,
+        "completion_tokens": 48,
+        "duration_seconds": 4.019712924957275,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6567,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 1,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:40:52.356611+00:00",
+        "total_tokens": 6615,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 130,
+        "duration_seconds": 4.92557692527771,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6658,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 2,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:40:59.254639+00:00",
+        "total_tokens": 6788,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 72,
+        "duration_seconds": 4.975978136062622,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6809,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 3,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:41:06.251906+00:00",
+        "total_tokens": 6881,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 47,
+        "duration_seconds": 5.750054121017456,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 7144,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 4,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:41:14.014862+00:00",
+        "total_tokens": 7191,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 152,
+        "duration_seconds": 4.030458211898804,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 7561,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 5,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:41:20.052423+00:00",
+        "total_tokens": 7713,
+        "transport_retries": 0
+      }
+    ],
+    "planning_state": {
+      "active_milestone_id": "m5",
+      "evidence": [
+        {
+          "id": "e1",
+          "kind": "checkpoint",
+          "source": "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository",
+          "step_number": 2,
+          "summary": "evidence retained from step 2"
+        },
+        {
+          "id": "e2",
+          "kind": "checkpoint",
+          "source": "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository",
+          "step_number": 3,
+          "summary": "evidence retained from step 3"
+        },
+        {
+          "id": "e3",
+          "kind": "checkpoint",
+          "source": "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository",
+          "step_number": 4,
+          "summary": "evidence retained from step 4"
+        },
+        {
+          "id": "e4",
+          "kind": "checkpoint",
+          "source": "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository",
+          "step_number": 5,
+          "summary": "evidence retained from step 5"
+        }
+      ],
+      "milestones": [
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 1",
+          "id": "m1",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 2",
+          "id": "m2",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 3",
+          "id": "m3",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 4",
+          "id": "m4",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 5",
+          "id": "m5",
+          "status": "active"
+        }
+      ],
+      "objective": "task bound by checkpoint task_sha256",
+      "revisions": [
+        {
+          "added_milestone_ids": [
+            "m4"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 1,
+          "step_number": 1,
+          "strategy": "search-discovery"
+        },
+        {
+          "added_milestone_ids": [
+            "m5"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 2,
+          "step_number": 5,
+          "strategy": "alternate-navigation"
+        }
+      ]
+    },
+    "policy_state": {
+      "broad_current_year_search_completed": false,
+      "current_year": 2026,
+      "downloaded_paths": {},
+      "figure_analysis_completed": false,
+      "hybrid": {
+        "candidate_date": null,
+        "candidate_owner": null,
+        "candidate_url": null,
+        "candidate_version_key": [],
+        "cross_check_exhausted": false,
+        "direct_evidence_verified": false,
+        "missing_repeat_count": 0,
+        "missing_signature": [],
+        "official_report_attempts": {},
+        "required_next_action": null,
+        "subject": "[omitted]",
+        "successful_topics": []
+      },
+      "observed_urls": {
+        "field_0f9a7e85baab": {
+          "page_url": "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_3053321ab84b": {
+          "page_url": "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_acb03b7286ee": {
+          "page_url": "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository",
+          "policy_step": 2,
+          "source": "[omitted]"
+        }
+      },
+      "official_identity_search_completed": false,
+      "official_identity_urls": [],
+      "official_scope_result_urls": [],
+      "official_scope_search_completed": false,
+      "pending_url_evidence_target": null,
+      "pending_url_search_attempts": 0,
+      "policy": "browser_grounded",
+      "release_landscape_evidence_urls": [],
+      "release_landscape_search_completed": false,
+      "schema_version": 3,
+      "search_completed": false,
+      "selected_candidate_url": null,
+      "step": 5,
+      "successful_queries": [],
+      "successful_searches": 0,
+      "task_sha256": "e0f28cc3a43b4ffbd88b6eb9492a3f4c5e33d1e291cd4f6e29132478e4d34e5e",
+      "version_frontier": null,
+      "version_frontier_key": [],
+      "version_frontier_resolved": true,
+      "visited_urls": [
+        "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository"
+      ]
+    },
+    "previous_checkpoint_sha256": "02245785238471b9e0869ceca03b040d3e9e4706641ccfa468533e51346e2a9f",
+    "resume_count": 0,
+    "run_id": "6cc81c79-fc17-4e20-8012-322d68221d31",
+    "schema_version": 2,
+    "source_fingerprint": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "status": "completed",
+    "strategy_state": {
+      "attempted": [
+        "default",
+        "search-discovery",
+        "alternate-navigation"
+      ],
+      "consecutive_failures": 0,
+      "consecutive_no_progress": 0,
+      "current": "alternate-navigation",
+      "exhausted": false,
+      "switch_count": 2,
+      "switches": [
+        {
+          "current": "search-discovery",
+          "previous": "default",
+          "reason": "runtime strategy switch",
+          "step_number": 1
+        },
+        {
+          "current": "alternate-navigation",
+          "previous": "search-discovery",
+          "reason": "runtime strategy switch",
+          "step_number": 5
+        }
+      ]
+    },
+    "task_sha256": "e0f28cc3a43b4ffbd88b6eb9492a3f4c5e33d1e291cd4f6e29132478e4d34e5e",
+    "updated_at": "2026-09-01T12:41:20.070610Z"
+  }
+}

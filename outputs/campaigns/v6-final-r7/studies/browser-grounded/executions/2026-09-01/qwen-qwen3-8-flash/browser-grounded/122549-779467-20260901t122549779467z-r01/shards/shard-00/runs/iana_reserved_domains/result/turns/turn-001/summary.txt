@@ -1,0 +1,22 @@
+WHAT IANA SAYS ABOUT RESERVED DOMAINS
+
+Exact source URL (as requested): https://www.iana.org/domains/reserved
+Page title: "IANA-managed Reserved Domains"
+
+Key statements published by IANA on that page:
+
+1. General framing / overview:
+   "Certain domains are set aside, and nominally registered to 'IANA', for specific policy or technical purposes."
+
+2. Example (documentation) domains:
+   "As described in RFC 2606 and RFC 6761, a number of domains such as example.com and example.org are maintained for documentation purposes. These domains may be used as illustrative examples in documents without prior coordination with us. They are not available for registration or transfer."
+   - Supporting RFC links given on the page: RFC 2606 ("Reserved Top Level DNS Names") and RFC 6761 ("Alternative Usage of the IETF Stream and Its Subtypes"), i.e. the RFCs that define reserved/special-use domain names.
+   - IANA also links its IDN Evaluation / ICANN-related material in the adjacent paragraph on that page.
+
+3. Policy-reserved domains and IANA's role:
+   "We act as both the registrant and registrar for a select number of domains which have been reserved under policy grounds. These exclusions are typically indicated in either technical standards (RFC documents), or contractual limitations."
+   - The phrase "contractual limitations" is a hyperlink on the page (pointing to IANA's contractual/agreement material), and the RFC references link to the IETF RFC documents.
+
+In short, IANA states that reserved domains are names deliberately set aside (nominally registered to IANA) for policy or technical reasons; the "example" TLDs such as example.com/example.org (per RFC 2606 and RFC 6761) are reserved purely for documentation use, may be used illustratively in documents without coordinating with IANA, and are NOT available for registration or transfer; and for a select set of policy-reserved domains IANA serves as both registrant and registrar, with those exclusions defined either by technical standards (RFCs) or by contractual limitations.
+
+Navigation context observed on the page: this content sits under IANA's "Domain Names" section (site nav item "Reserved Domains"), alongside related IANA functions pages such as Root Zone Management, .INT Registry, .ARPA Registry, IDN Practices Repository, and Root Key Signing Key (DNSSEC).

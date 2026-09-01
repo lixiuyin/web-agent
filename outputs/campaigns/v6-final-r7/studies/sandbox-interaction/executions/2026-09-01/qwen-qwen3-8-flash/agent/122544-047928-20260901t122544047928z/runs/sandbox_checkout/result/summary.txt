@@ -1,0 +1,9 @@
+Task completed successfully. The full flow was performed in the sandbox shop:
+
+1. **Added exactly one Orbit Notebook** — clicked the "Add Orbit Notebook" control (button#add-orbit) once on the sandbox shop page, adding a single unit to the sandbox cart.
+2. **Continued to sandbox checkout** — arrived at the checkout page at http://127.0.0.1:60362/checkout, which displayed: "Sandbox checkout — No payment method; test credits only."
+3. **Entered the shipping address** — typed "42 Orbit Road" into the address field (input#order-address).
+4. **Accepted the sandbox terms** — clicked/checked the "Accept sandbox terms" checkbox (input#order-terms).
+5. **Placed the order** — clicked the "Place sandbox order" button (button#place-sandbox-order).
+
+**Confirmation:** The browser navigated to http://127.0.0.1:60362/order/complete, titled "Order complete", and the page body shows the message "Sandbox order placed", confirming the order was submitted. No extra quantities were added and no other items were included.

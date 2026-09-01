@@ -1,0 +1,430 @@
+{
+  "format": "webagent-checkpoint",
+  "schema_version": 2,
+  "checkpoint_sha256": "1714fec4c6f264a5f4c621a1ac50b9267dc560c0424888e12b2092d86dcbec22",
+  "checkpoint": {
+    "artifacts": [],
+    "browser_state": {
+      "active_tab_index": 0,
+      "current_url": "https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html",
+      "tab_urls": [
+        "https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html"
+      ]
+    },
+    "checkpoint_id": "4e06f9e9-23ec-4f4e-b95f-7c7c9fd41eca",
+    "config_fingerprint": "69a8e06a14b33d902e9db15e3bc570860b38268472423080fe5c14247bd8cf05",
+    "consecutive_failures": 0,
+    "created_at": "2026-09-01T13:36:51.037783Z",
+    "elapsed_seconds": 20.064398765563965,
+    "events": [],
+    "final_result": {},
+    "history": [
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:36:32.248478+00:00",
+          "title": "normal",
+          "url": "https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html"
+        },
+        "duration_seconds": 7.360090732574463,
+        "step_number": 1,
+        "timestamp": "2026-09-01T13:36:38.333095+00:00",
+        "tool_call": {
+          "parameters": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "frame_interact"
+        },
+        "tool_duration_seconds": 0.032089948654174805,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 1,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 1,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "match_count": 1,
+            "text": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "frame_interact"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:36:39.299971+00:00",
+          "title": "normal",
+          "url": "https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html"
+        },
+        "duration_seconds": 8.430498123168945,
+        "step_number": 2,
+        "timestamp": "2026-09-01T13:36:46.765388+00:00",
+        "tool_call": {
+          "parameters": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "frame_interact"
+        },
+        "tool_duration_seconds": 0.01073598861694336,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 1,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 2,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "match_count": 92,
+            "text": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "frame_interact"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:36:47.693120+00:00",
+          "title": "normal",
+          "url": "https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html"
+        },
+        "duration_seconds": 4.262772083282471,
+        "step_number": 3,
+        "timestamp": "2026-09-01T13:36:51.030392+00:00",
+        "tool_call": {
+          "parameters": {
+            "success_probability": 1,
+            "summary": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "done"
+        },
+        "tool_duration_seconds": 0.0005199909210205078,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 1,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 2,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 3,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "attachments": [],
+            "success_probability": 1.0,
+            "summary": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "done"
+        }
+      }
+    ],
+    "last_figure_path": null,
+    "loop_state": {
+      "in_loop": false,
+      "loop_type": "",
+      "page_hash_history": [
+        "2ab328c18a35af8c423d66ca18a6767b",
+        "2ab328c18a35af8c423d66ca18a6767b",
+        "2ab328c18a35af8c423d66ca18a6767b"
+      ],
+      "recent_actions": [
+        "ae7c4ba3b50b192c60c1c2654ff5e4d753fd8452001a7c3964a921f7e8a31552",
+        "ae7c4ba3b50b192c60c1c2654ff5e4d753fd8452001a7c3964a921f7e8a31552",
+        "00e01924276da1c211d916d8efccd475de9bf7ea68eb928c6af98df6735b9c2e"
+      ],
+      "recent_pages": [
+        "2a635f5cbd8cc4220368b2e00c93f2b1425b709a9ab06bd7e1d86a0ea602b9c6",
+        "2a635f5cbd8cc4220368b2e00c93f2b1425b709a9ab06bd7e1d86a0ea602b9c6",
+        "2a635f5cbd8cc4220368b2e00c93f2b1425b709a9ab06bd7e1d86a0ea602b9c6"
+      ],
+      "schema_version": 1,
+      "threshold": 4,
+      "url_history": [
+        "https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html",
+        "https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html",
+        "https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html"
+      ],
+      "window_size": 4
+    },
+    "next_step": 4,
+    "pending_action": null,
+    "planner_attempts": [
+      {
+        "attempt_number": 1,
+        "completion_tokens": 164,
+        "duration_seconds": 4.581161022186279,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 7016,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 1,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:36:36.872292+00:00",
+        "total_tokens": 7180,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 204,
+        "duration_seconds": 6.009244918823242,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 7349,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 2,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:36:45.342357+00:00",
+        "total_tokens": 7553,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 182,
+        "duration_seconds": 3.2904980182647705,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 7678,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 3,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:36:51.016723+00:00",
+        "total_tokens": 7860,
+        "transport_retries": 0
+      }
+    ],
+    "planning_state": {
+      "active_milestone_id": "m1",
+      "evidence": [
+        {
+          "id": "e1",
+          "kind": "checkpoint",
+          "source": "https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html",
+          "step_number": 1,
+          "summary": "evidence retained from step 1"
+        },
+        {
+          "id": "e2",
+          "kind": "checkpoint",
+          "source": "https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html",
+          "step_number": 2,
+          "summary": "evidence retained from step 2"
+        },
+        {
+          "id": "e3",
+          "kind": "checkpoint",
+          "source": "https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html",
+          "step_number": 3,
+          "summary": "evidence retained from step 3"
+        }
+      ],
+      "milestones": [
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 1",
+          "id": "m1",
+          "status": "active"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 2",
+          "id": "m2",
+          "status": "pending"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 3",
+          "id": "m3",
+          "status": "pending"
+        }
+      ],
+      "objective": "task bound by checkpoint task_sha256",
+      "revisions": []
+    },
+    "policy_state": {
+      "broad_current_year_search_completed": false,
+      "current_year": 2026,
+      "downloaded_paths": {},
+      "figure_analysis_completed": false,
+      "hybrid": {
+        "candidate_date": null,
+        "candidate_owner": null,
+        "candidate_url": null,
+        "candidate_version_key": [],
+        "cross_check_exhausted": false,
+        "direct_evidence_verified": false,
+        "missing_repeat_count": 0,
+        "missing_signature": [],
+        "official_report_attempts": {},
+        "required_next_action": null,
+        "subject": "[omitted]",
+        "successful_topics": []
+      },
+      "observed_urls": {
+        "field_42fd4c6e2be6": {
+          "page_url": "https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html",
+          "policy_step": 3,
+          "source": "[omitted]"
+        },
+        "field_b39ea90dfce4": {
+          "page_url": "https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html",
+          "policy_step": 1,
+          "source": "[omitted]"
+        }
+      },
+      "official_identity_search_completed": false,
+      "official_identity_urls": [],
+      "official_scope_result_urls": [],
+      "official_scope_search_completed": false,
+      "pending_url_evidence_target": null,
+      "pending_url_search_attempts": 0,
+      "policy": "browser_grounded",
+      "release_landscape_evidence_urls": [],
+      "release_landscape_search_completed": false,
+      "schema_version": 3,
+      "search_completed": false,
+      "selected_candidate_url": null,
+      "step": 3,
+      "successful_queries": [],
+      "successful_searches": 0,
+      "task_sha256": "c90eefb410f7691e5763321bc3e116105a895ca092f7aa8520fd35667d6fc758",
+      "version_frontier": null,
+      "version_frontier_key": [],
+      "version_frontier_resolved": true,
+      "visited_urls": [
+        "https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html"
+      ]
+    },
+    "previous_checkpoint_sha256": "1ce56c61d43c83ba486e7d4c8d34cf97fd9477a7e23c892bea2ddc43b174ac49",
+    "resume_count": 0,
+    "run_id": "a2a7949c-d4ea-4e98-b915-f7467dfa0add",
+    "schema_version": 2,
+    "source_fingerprint": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "status": "completed",
+    "strategy_state": {
+      "attempted": [
+        "default"
+      ],
+      "consecutive_failures": 0,
+      "consecutive_no_progress": 0,
+      "current": "default",
+      "exhausted": false,
+      "switch_count": 0,
+      "switches": []
+    },
+    "task_sha256": "c90eefb410f7691e5763321bc3e116105a895ca092f7aa8520fd35667d6fc758",
+    "updated_at": "2026-09-01T13:36:51.037804Z"
+  }
+}

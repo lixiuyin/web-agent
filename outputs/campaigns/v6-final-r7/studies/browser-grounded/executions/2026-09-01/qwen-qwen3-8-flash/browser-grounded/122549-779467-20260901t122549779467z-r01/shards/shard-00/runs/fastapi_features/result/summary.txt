@@ -1,0 +1,3 @@
+Standards-based FastAPI feature: "Based on open standards" — FastAPI is built on OpenAPI for API creation (declarations of path operations, parameters, request bodies, security, etc.), plus automatic data model documentation with JSON Schema (since OpenAPI itself is based on JSON Schema). This standards-first design also enables automatic client generation.
+
+Exact features URL cited: https://fastapi.tiangolo.com/features/ (page title: "Features - FastAPI"; confirmed as the current page URL during this session).

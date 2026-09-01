@@ -1,0 +1,148 @@
+{
+  "task_id": "mdn_html",
+  "category": "web_platform",
+  "goal": "Starting from a blank page, use browser search to find MDN's official HTML page, describe HTML's role, and cite the exact URL.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 37.77721405029297,
+  "steps": 4,
+  "action_count": 3,
+  "failed_action_count": 0,
+  "planner_attempt_count": 4,
+  "planner_failure_count": 0,
+  "planner_tokens": 51054,
+  "answer_assertion_count": 3,
+  "answer_assertion_passed": 3,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "held_out_setting",
+  "task_family": "web_platform_documentation",
+  "setting_id": "localized_web_platform_reference",
+  "leakage_group": "host_developer_mozilla_org",
+  "target_failure_modes": [
+    "search_discovery",
+    "tool_use",
+    "answer_grounding"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "medium",
+  "scenario": "search_discovery",
+  "environment": "public_web",
+  "entry_mode": "search",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://developer.mozilla.org"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 3,
+    "distinct_tool_count": 3,
+    "tool_entropy_bits": 1.584962500721156,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 1,
+    "recovery_count": 0,
+    "minimum_window_entropy_bits": null,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 1,
+    "stagnation_onset_step": null,
+    "replan_count": 0,
+    "strategy_switch_count": 0,
+    "replan_rate": 0.0,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 1.0,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 4,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "HTML",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "**MDN's official HTML page (found via browser search)**\n\n- Search used: Bing query \"MDN HTML documentation official page\" → top relevant result: \"HTML: HyperText Markup Language | MDN\" (developer.mozilla.org/en-US/docs/Web/HTML), which I then opened directly.\n- **Exact URL cited:** https://developer.mozilla.org/en-US/docs/Web/HTML\n- Page title (verified in browser): \"HTML: HyperText Markup Language | MDN\"\n\n**HTML's role, as described by MDN (first-party text from that page):**\n- \"HTML (HyperText Markup Language) is the most basic building block of the Web. It defines the meaning and structure of web content.\"\n- MDN places it in the standard three-technology division of labor: \"Other technologies besides HTML are generally used to describe a web page's appearance/presentation (CSS) or functionality/behavior (JavaScript).\" So HTML supplies structure and semantics, CSS the presentation, JavaScript the behavior.\n- On the \"hypertext\" part of the name: \"'Hypertext' refers to links that connect web pages to one another, either within a site or between sites\" — i.e., HTML is what makes the Web a linked document graph.\n- Practically, HTML is written with markup \"elements\": content is wrapped in tags (e.g., `<p>` for paragraphs, `<a>` for links, `<img>` for images) that mark up text and define types of information such as headings, lists, quotations, code, tables, images, forms, audio/video, and interactive controls. The page also indexes the complete element reference, guides (e.g., HTML cheatsheet, defining terms with HTML, date/time formats, data attributes, cross-origin images, fast-loading HTML pages, form validation), and links onward to CSS and JavaScript docs.\n\n**Summary of the role:** HTML is the foundational, semantic structural layer of every web page — it declares *what* the content is and how it is organized and linked — while CSS styles it and JavaScript adds behavior.",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains_any",
+        "expected": [
+          "https://developer.mozilla.org/en-US/docs/Web/HTML",
+          "https://developer.mozilla.org/zh-CN/docs/Web/HTML"
+        ],
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "**MDN's official HTML page (found via browser search)**\n\n- Search used: Bing query \"MDN HTML documentation official page\" → top relevant result: \"HTML: HyperText Markup Language | MDN\" (developer.mozilla.org/en-US/docs/Web/HTML), which I then opened directly.\n- **Exact URL cited:** https://developer.mozilla.org/en-US/docs/Web/HTML\n- Page title (verified in browser): \"HTML: HyperText Markup Language | MDN\"\n\n**HTML's role, as described by MDN (first-party text from that page):**\n- \"HTML (HyperText Markup Language) is the most basic building block of the Web. It defines the meaning and structure of web content.\"\n- MDN places it in the standard three-technology division of labor: \"Other technologies besides HTML are generally used to describe a web page's appearance/presentation (CSS) or functionality/behavior (JavaScript).\" So HTML supplies structure and semantics, CSS the presentation, JavaScript the behavior.\n- On the \"hypertext\" part of the name: \"'Hypertext' refers to links that connect web pages to one another, either within a site or between sites\" — i.e., HTML is what makes the Web a linked document graph.\n- Practically, HTML is written with markup \"elements\": content is wrapped in tags (e.g., `<p>` for paragraphs, `<a>` for links, `<img>` for images) that mark up text and define types of information such as headings, lists, quotations, code, tables, images, forms, audio/video, and interactive controls. The page also indexes the complete element reference, guides (e.g., HTML cheatsheet, defining terms with HTML, date/time formats, data attributes, cross-origin images, fast-loading HTML pages, form validation), and links onward to CSS and JavaScript docs.\n\n**Summary of the role:** HTML is the foundational, semantic structural layer of every web page — it declares *what* the content is and how it is organized and linked — while CSS styles it and JavaScript adds behavior.",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_url_observed_any",
+        "expected": [
+          "https://developer.mozilla.org/en-US/docs/Web/HTML",
+          "https://developer.mozilla.org/zh-CN/docs/Web/HTML"
+        ],
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "certificate_valid",
+        "expected": true,
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

@@ -1,0 +1,940 @@
+{
+  "format": "webagent-checkpoint",
+  "schema_version": 2,
+  "checkpoint_sha256": "ca1db16bd57762766be7b35300950b8ed5f228526e83603b0c3b7041a76b181e",
+  "checkpoint": {
+    "artifacts": [],
+    "browser_state": {
+      "active_tab_index": 0,
+      "current_url": "https://git-scm.com/docs/git-clone",
+      "tab_urls": [
+        "https://git-scm.com/docs/git-clone"
+      ]
+    },
+    "checkpoint_id": "0c8e5d6e-eaf4-42a1-b7d4-43c87984cc7a",
+    "config_fingerprint": "69a8e06a14b33d902e9db15e3bc570860b38268472423080fe5c14247bd8cf05",
+    "consecutive_failures": 0,
+    "created_at": "2026-09-01T13:17:41.558374Z",
+    "elapsed_seconds": 85.29498791694641,
+    "events": [
+      {
+        "current": "alternate-navigation",
+        "previous": "default",
+        "reason": "[omitted]",
+        "step_number": 5,
+        "timestamp": "2026-09-01T13:17:14.807534+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 5,
+        "strategy": "alternate-navigation",
+        "timestamp": "2026-09-01T13:17:14.807548+00:00",
+        "type": "replan"
+      },
+      {
+        "current": "semantic-dom",
+        "previous": "alternate-navigation",
+        "reason": "[omitted]",
+        "step_number": 6,
+        "timestamp": "2026-09-01T13:17:24.742442+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 6,
+        "strategy": "semantic-dom",
+        "timestamp": "2026-09-01T13:17:24.742455+00:00",
+        "type": "replan"
+      },
+      {
+        "current": "recovery",
+        "previous": "semantic-dom",
+        "reason": "[omitted]",
+        "step_number": 7,
+        "timestamp": "2026-09-01T13:17:31.643798+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 7,
+        "strategy": "recovery",
+        "timestamp": "2026-09-01T13:17:31.643810+00:00",
+        "type": "replan"
+      }
+    ],
+    "final_result": {},
+    "history": [
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:16:17.016784+00:00",
+          "title": "normal",
+          "url": "https://git-scm.com/docs/git-clone"
+        },
+        "duration_seconds": 32.88421010971069,
+        "step_number": 1,
+        "timestamp": "2026-09-01T13:16:49.146452+00:00",
+        "tool_call": {
+          "parameters": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "frame_interact"
+        },
+        "tool_duration_seconds": 0.03086996078491211,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 1,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 1,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "match_count": 1,
+            "text": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "frame_interact"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:16:49.929385+00:00",
+          "title": "normal",
+          "url": "https://git-scm.com/docs/git-clone"
+        },
+        "duration_seconds": 7.441816091537476,
+        "step_number": 2,
+        "timestamp": "2026-09-01T13:16:56.590239+00:00",
+        "tool_call": {
+          "parameters": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "frame_interact"
+        },
+        "tool_duration_seconds": 0.011134862899780273,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 1,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 2,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "match_count": 1,
+            "text": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "frame_interact"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:16:57.394166+00:00",
+          "title": "normal",
+          "url": "https://git-scm.com/docs/git-clone"
+        },
+        "duration_seconds": 10.636741161346436,
+        "step_number": 3,
+        "timestamp": "2026-09-01T13:17:07.229235+00:00",
+        "tool_call": {
+          "parameters": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "frame_interact"
+        },
+        "tool_duration_seconds": 0.024989843368530273,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 2,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 3,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 3,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "match_count": 1,
+            "text": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "frame_interact"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:17:08.011816+00:00",
+          "title": "normal",
+          "url": "https://git-scm.com/docs/git-clone"
+        },
+        "duration_seconds": 6.778310060501099,
+        "step_number": 4,
+        "timestamp": "2026-09-01T13:17:14.009958+00:00",
+        "tool_call": {
+          "parameters": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "frame_interact"
+        },
+        "tool_duration_seconds": 0.02112412452697754,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 3,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 4,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "match_count": 1,
+            "text": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "frame_interact"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:17:14.775603+00:00",
+          "title": "normal",
+          "url": "https://git-scm.com/docs/git-clone"
+        },
+        "duration_seconds": 9.890834093093872,
+        "step_number": 5,
+        "timestamp": "2026-09-01T13:17:23.903370+00:00",
+        "tool_call": {
+          "parameters": {},
+          "reasoning": "",
+          "tool_name": "get_url"
+        },
+        "tool_duration_seconds": 0.00035691261291503906,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 3,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 5,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "url": "https://git-scm.com/docs/git-clone"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "get_url"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:17:24.710318+00:00",
+          "title": "normal",
+          "url": "https://git-scm.com/docs/git-clone"
+        },
+        "duration_seconds": 6.915098190307617,
+        "step_number": 6,
+        "timestamp": "2026-09-01T13:17:30.821855+00:00",
+        "tool_call": {
+          "parameters": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "frame_interact"
+        },
+        "tool_duration_seconds": 0.018908023834228516,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 1,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 4,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 6,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "match_count": 1,
+            "text": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "frame_interact"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:17:31.611634+00:00",
+          "title": "normal",
+          "url": "https://git-scm.com/docs/git-clone"
+        },
+        "duration_seconds": 10.723743915557861,
+        "step_number": 7,
+        "timestamp": "2026-09-01T13:17:41.548788+00:00",
+        "tool_call": {
+          "parameters": {
+            "success_probability": 0.97,
+            "summary": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "done"
+        },
+        "tool_duration_seconds": 0.0004868507385253906,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 4,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 7,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "attachments": [],
+            "success_probability": 0.97,
+            "summary": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "done"
+        }
+      }
+    ],
+    "last_figure_path": null,
+    "loop_state": {
+      "in_loop": true,
+      "loop_type": "page_stagnation",
+      "page_hash_history": [
+        "6d5ad62f77b8c3aaa17615fba95aec9b",
+        "6d5ad62f77b8c3aaa17615fba95aec9b",
+        "6d5ad62f77b8c3aaa17615fba95aec9b",
+        "6d5ad62f77b8c3aaa17615fba95aec9b"
+      ],
+      "recent_actions": [
+        "ae7c4ba3b50b192c60c1c2654ff5e4d753fd8452001a7c3964a921f7e8a31552",
+        "26907555b0324b8a5de84cc72a6d845e2dcd6db0db62fd56d165c8164ac98628",
+        "ae7c4ba3b50b192c60c1c2654ff5e4d753fd8452001a7c3964a921f7e8a31552",
+        "b0623ab05ee49b4f8dff4ad281b7fcc502bb82e76e47f8e7cd6c363c892b3f47"
+      ],
+      "recent_pages": [
+        "370d996ce7a40fee8c642c9f999e154de6e1fdde6b4dfdb6da67cee6c837e261",
+        "370d996ce7a40fee8c642c9f999e154de6e1fdde6b4dfdb6da67cee6c837e261",
+        "370d996ce7a40fee8c642c9f999e154de6e1fdde6b4dfdb6da67cee6c837e261",
+        "370d996ce7a40fee8c642c9f999e154de6e1fdde6b4dfdb6da67cee6c837e261"
+      ],
+      "schema_version": 1,
+      "threshold": 4,
+      "url_history": [
+        "https://git-scm.com/docs/git-clone",
+        "https://git-scm.com/docs/git-clone",
+        "https://git-scm.com/docs/git-clone",
+        "https://git-scm.com/docs/git-clone"
+      ],
+      "window_size": 4
+    },
+    "next_step": 8,
+    "pending_action": null,
+    "planner_attempts": [
+      {
+        "attempt_number": 1,
+        "completion_tokens": null,
+        "duration_seconds": 23.81947112083435,
+        "effective_output_mode": "native-tools",
+        "error": "planner attempt failed; details omitted",
+        "finish_reason": null,
+        "prompt_tokens": null,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 1,
+        "structured_fallbacks": [],
+        "success": false,
+        "timestamp": "2026-09-01T13:16:40.879559+00:00",
+        "total_tokens": null,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 2,
+        "completion_tokens": 176,
+        "duration_seconds": 6.825376033782959,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 7348,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 1,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:16:47.704959+00:00",
+        "total_tokens": 7524,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 177,
+        "duration_seconds": 5.3342530727386475,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 7729,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 2,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:16:55.295954+00:00",
+        "total_tokens": 7906,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 339,
+        "duration_seconds": 8.45569109916687,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 8017,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 3,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:17:05.882204+00:00",
+        "total_tokens": 8356,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 140,
+        "duration_seconds": 4.567347288131714,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 8119,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 4,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:17:12.614493+00:00",
+        "total_tokens": 8259,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 512,
+        "duration_seconds": 7.790044069290161,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 8401,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 5,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:17:22.597579+00:00",
+        "total_tokens": 8913,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 304,
+        "duration_seconds": 4.745726108551025,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 8459,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 6,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:17:29.488175+00:00",
+        "total_tokens": 8763,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 750,
+        "duration_seconds": 9.889004230499268,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 8693,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 7,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:17:41.532807+00:00",
+        "total_tokens": 9443,
+        "transport_retries": 0
+      }
+    ],
+    "planning_state": {
+      "active_milestone_id": "m6",
+      "evidence": [
+        {
+          "id": "e1",
+          "kind": "checkpoint",
+          "source": "https://git-scm.com/docs/git-clone",
+          "step_number": 1,
+          "summary": "evidence retained from step 1"
+        },
+        {
+          "id": "e2",
+          "kind": "checkpoint",
+          "source": "https://git-scm.com/docs/git-clone",
+          "step_number": 2,
+          "summary": "evidence retained from step 2"
+        },
+        {
+          "id": "e3",
+          "kind": "checkpoint",
+          "source": "https://git-scm.com/docs/git-clone",
+          "step_number": 3,
+          "summary": "evidence retained from step 3"
+        },
+        {
+          "id": "e4",
+          "kind": "checkpoint",
+          "source": "https://git-scm.com/docs/git-clone",
+          "step_number": 4,
+          "summary": "evidence retained from step 4"
+        },
+        {
+          "id": "e5",
+          "kind": "checkpoint",
+          "source": "https://git-scm.com/docs/git-clone",
+          "step_number": 5,
+          "summary": "evidence retained from step 5"
+        },
+        {
+          "id": "e6",
+          "kind": "checkpoint",
+          "source": "https://git-scm.com/docs/git-clone",
+          "step_number": 6,
+          "summary": "evidence retained from step 6"
+        },
+        {
+          "id": "e7",
+          "kind": "checkpoint",
+          "source": "https://git-scm.com/docs/git-clone",
+          "step_number": 7,
+          "summary": "evidence retained from step 7"
+        }
+      ],
+      "milestones": [
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 1",
+          "id": "m1",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 2",
+          "id": "m2",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 3",
+          "id": "m3",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 4",
+          "id": "m4",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 5",
+          "id": "m5",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 6",
+          "id": "m6",
+          "status": "active"
+        }
+      ],
+      "objective": "task bound by checkpoint task_sha256",
+      "revisions": [
+        {
+          "added_milestone_ids": [
+            "m4"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 1,
+          "step_number": 5,
+          "strategy": "alternate-navigation"
+        },
+        {
+          "added_milestone_ids": [
+            "m5"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 2,
+          "step_number": 6,
+          "strategy": "semantic-dom"
+        },
+        {
+          "added_milestone_ids": [
+            "m6"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 3,
+          "step_number": 7,
+          "strategy": "recovery"
+        }
+      ]
+    },
+    "policy_state": {
+      "broad_current_year_search_completed": false,
+      "current_year": 2026,
+      "downloaded_paths": {},
+      "figure_analysis_completed": false,
+      "hybrid": {
+        "candidate_date": null,
+        "candidate_owner": null,
+        "candidate_url": null,
+        "candidate_version_key": [],
+        "cross_check_exhausted": false,
+        "direct_evidence_verified": false,
+        "missing_repeat_count": 0,
+        "missing_signature": [],
+        "official_report_attempts": {},
+        "required_next_action": null,
+        "subject": "[omitted]",
+        "successful_topics": []
+      },
+      "observed_urls": {
+        "field_928eb011b4d6": {
+          "page_url": "https://git-scm.com/docs/git-clone",
+          "policy_step": 6,
+          "source": "[omitted]"
+        },
+        "field_997ba69b0184": {
+          "page_url": "https://git-scm.com/docs/git-clone",
+          "policy_step": 3,
+          "source": "[omitted]"
+        },
+        "field_ad1f69576c5e": {
+          "page_url": "https://git-scm.com/docs/git-clone",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_ad2f99637110": {
+          "page_url": "https://git-scm.com/docs/git-clone",
+          "policy_step": 3,
+          "source": "[omitted]"
+        }
+      },
+      "official_identity_search_completed": false,
+      "official_identity_urls": [],
+      "official_scope_result_urls": [],
+      "official_scope_search_completed": false,
+      "pending_url_evidence_target": null,
+      "pending_url_search_attempts": 0,
+      "policy": "browser_grounded",
+      "release_landscape_evidence_urls": [],
+      "release_landscape_search_completed": false,
+      "schema_version": 3,
+      "search_completed": false,
+      "selected_candidate_url": null,
+      "step": 7,
+      "successful_queries": [],
+      "successful_searches": 0,
+      "task_sha256": "f1f72c7666109f51ab0cf9e635799eba31719a978c92cd96ccfd3fb059bd346b",
+      "version_frontier": null,
+      "version_frontier_key": [],
+      "version_frontier_resolved": true,
+      "visited_urls": [
+        "https://git-scm.com/docs/git-clone"
+      ]
+    },
+    "previous_checkpoint_sha256": "f4ef3a18ae37d4fc8fd6bb9ffffa95a6c0463fc269ab58948238dbc0a7ef4d87",
+    "resume_count": 0,
+    "run_id": "a9074eb4-1c88-4ff0-8690-ccf2d24f2926",
+    "schema_version": 2,
+    "source_fingerprint": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "status": "completed",
+    "strategy_state": {
+      "attempted": [
+        "default",
+        "alternate-navigation",
+        "semantic-dom",
+        "recovery"
+      ],
+      "consecutive_failures": 0,
+      "consecutive_no_progress": 0,
+      "current": "recovery",
+      "exhausted": false,
+      "switch_count": 3,
+      "switches": [
+        {
+          "current": "alternate-navigation",
+          "previous": "default",
+          "reason": "runtime strategy switch",
+          "step_number": 5
+        },
+        {
+          "current": "semantic-dom",
+          "previous": "alternate-navigation",
+          "reason": "runtime strategy switch",
+          "step_number": 6
+        },
+        {
+          "current": "recovery",
+          "previous": "semantic-dom",
+          "reason": "runtime strategy switch",
+          "step_number": 7
+        }
+      ]
+    },
+    "task_sha256": "f1f72c7666109f51ab0cf9e635799eba31719a978c92cd96ccfd3fb059bd346b",
+    "updated_at": "2026-09-01T13:17:41.558400Z"
+  }
+}

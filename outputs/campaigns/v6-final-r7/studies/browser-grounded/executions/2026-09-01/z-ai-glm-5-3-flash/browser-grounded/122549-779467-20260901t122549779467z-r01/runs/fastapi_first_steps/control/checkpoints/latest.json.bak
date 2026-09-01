@@ -1,0 +1,428 @@
+{
+  "format": "webagent-checkpoint",
+  "schema_version": 2,
+  "checkpoint_sha256": "6ea643741466fa8dac039039ec2b0f6904805836391f4f5b10f976880ba82286",
+  "checkpoint": {
+    "artifacts": [],
+    "browser_state": {
+      "active_tab_index": 0,
+      "current_url": "https://fastapi.tiangolo.com/tutorial/first-steps/",
+      "tab_urls": [
+        "https://fastapi.tiangolo.com/tutorial/first-steps/"
+      ]
+    },
+    "checkpoint_id": "8560f99a-aa6b-4168-a61a-1bf9d71d599b",
+    "config_fingerprint": "8cec5c2d9a8383b4a581dc3e28b7de4baf7cbe53b378af61437660b1eef435c3",
+    "consecutive_failures": 0,
+    "created_at": "2026-09-01T12:57:41.606166Z",
+    "elapsed_seconds": 26.291577100753784,
+    "events": [
+      {
+        "current": "search-discovery",
+        "previous": "default",
+        "reason": "[omitted]",
+        "step_number": 1,
+        "timestamp": "2026-09-01T12:57:25.085682+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 1,
+        "strategy": "search-discovery",
+        "timestamp": "2026-09-01T12:57:25.085693+00:00",
+        "type": "replan"
+      }
+    ],
+    "final_result": {},
+    "history": [
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:57:16.450517+00:00",
+          "title": "normal",
+          "url": "https://fastapi.tiangolo.com/tutorial/first-steps/"
+        },
+        "duration_seconds": 9.771414041519165,
+        "step_number": 1,
+        "timestamp": "2026-09-01T12:57:25.084927+00:00",
+        "tool_call": {
+          "parameters": {
+            "url": "https://fastapi.tiangolo.com/tutorial/first-steps/"
+          },
+          "reasoning": "",
+          "tool_name": "goto"
+        },
+        "tool_duration_seconds": 0.00011181831359863281,
+        "tool_result": {
+          "audit": {
+            "decision": "deny",
+            "policy": "browser_grounded",
+            "policy_step": 1,
+            "provenance": {},
+            "reason": "[omitted]",
+            "target": "https://fastapi.tiangolo.com/tutorial/first-steps/"
+          },
+          "data": {},
+          "error": "tool action failed; details omitted",
+          "success": false,
+          "tool_name": "goto"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:57:26.135276+00:00",
+          "title": "normal",
+          "url": "https://fastapi.tiangolo.com/tutorial/first-steps/"
+        },
+        "duration_seconds": 11.312875032424927,
+        "step_number": 2,
+        "timestamp": "2026-09-01T12:57:36.410815+00:00",
+        "tool_call": {
+          "parameters": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "frame_interact"
+        },
+        "tool_duration_seconds": 0.02030205726623535,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 1,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 2,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "match_count": 1,
+            "text": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "frame_interact"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:57:37.450433+00:00",
+          "title": "normal",
+          "url": "https://fastapi.tiangolo.com/tutorial/first-steps/"
+        },
+        "duration_seconds": 5.191507816314697,
+        "step_number": 3,
+        "timestamp": "2026-09-01T12:57:41.604501+00:00",
+        "tool_call": {
+          "parameters": {
+            "success_probability": 0.95,
+            "summary": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "done"
+        },
+        "tool_duration_seconds": 0.00041413307189941406,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 1,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 2,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 3,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "attachments": [],
+            "success_probability": 0.95,
+            "summary": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "done"
+        }
+      }
+    ],
+    "last_figure_path": null,
+    "loop_state": {
+      "in_loop": false,
+      "loop_type": "",
+      "page_hash_history": [
+        "779b0d4dd95d7fb0e5344615863b0f91",
+        "4eb1d28fee78c8b4ce8405380b666a71",
+        "d5758e01ebd5d4c054042e9648a9dfe7"
+      ],
+      "recent_actions": [
+        "f074ce8ce9ac6d9d783566482b8344f9ea7dfddbc791e50f794b480a7eccada9",
+        "ae7c4ba3b50b192c60c1c2654ff5e4d753fd8452001a7c3964a921f7e8a31552",
+        "3933006d93eb761003e9ae2b9040b9fe06b62bdac55ed51fdd27d40e6d24d647"
+      ],
+      "recent_pages": [
+        "739cfac830f9a761567d820ea5e83afb7a0f043b3e62efdadf5b0f07d28b02a8",
+        "53801c90752e935cdc3d9a58fdde756a4fe8c06270f60e1c702819082c48c4e1",
+        "18b9260b8237a9e42357b3a256f3f8e6a43fa8c62fc839b9a4c1545b29f8f504"
+      ],
+      "schema_version": 1,
+      "threshold": 4,
+      "url_history": [
+        "https://fastapi.tiangolo.com/tutorial/first-steps/",
+        "https://fastapi.tiangolo.com/tutorial/first-steps/",
+        "https://fastapi.tiangolo.com/tutorial/first-steps/"
+      ],
+      "window_size": 4
+    },
+    "next_step": 4,
+    "pending_action": null,
+    "planner_attempts": [
+      {
+        "attempt_number": 1,
+        "completion_tokens": 24,
+        "duration_seconds": 7.116894006729126,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6628,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 1,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:57:23.613062+00:00",
+        "total_tokens": 6652,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 79,
+        "duration_seconds": 8.708154201507568,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6711,
+        "requested_output_mode": "auto",
+        "response_length": 181,
+        "step_number": 2,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:57:34.881838+00:00",
+        "total_tokens": 6790,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 86,
+        "duration_seconds": 4.107335090637207,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6923,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 3,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:57:41.594607+00:00",
+        "total_tokens": 7009,
+        "transport_retries": 0
+      }
+    ],
+    "planning_state": {
+      "active_milestone_id": "m4",
+      "evidence": [
+        {
+          "id": "e1",
+          "kind": "checkpoint",
+          "source": "https://fastapi.tiangolo.com/tutorial/first-steps/",
+          "step_number": 2,
+          "summary": "evidence retained from step 2"
+        },
+        {
+          "id": "e2",
+          "kind": "checkpoint",
+          "source": "https://fastapi.tiangolo.com/tutorial/first-steps/",
+          "step_number": 3,
+          "summary": "evidence retained from step 3"
+        }
+      ],
+      "milestones": [
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 1",
+          "id": "m1",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 2",
+          "id": "m2",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 3",
+          "id": "m3",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 4",
+          "id": "m4",
+          "status": "active"
+        }
+      ],
+      "objective": "task bound by checkpoint task_sha256",
+      "revisions": [
+        {
+          "added_milestone_ids": [
+            "m4"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 1,
+          "step_number": 1,
+          "strategy": "search-discovery"
+        }
+      ]
+    },
+    "policy_state": {
+      "broad_current_year_search_completed": false,
+      "current_year": 2026,
+      "downloaded_paths": {},
+      "figure_analysis_completed": false,
+      "hybrid": {
+        "candidate_date": null,
+        "candidate_owner": null,
+        "candidate_url": null,
+        "candidate_version_key": [],
+        "cross_check_exhausted": false,
+        "direct_evidence_verified": false,
+        "missing_repeat_count": 0,
+        "missing_signature": [],
+        "official_report_attempts": {},
+        "required_next_action": null,
+        "subject": "[omitted]",
+        "successful_topics": []
+      },
+      "observed_urls": {
+        "field_1d1f5505857e": {
+          "page_url": "https://fastapi.tiangolo.com/tutorial/first-steps/",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_a2caf8ce2f78": {
+          "page_url": "https://fastapi.tiangolo.com/tutorial/first-steps/",
+          "policy_step": 3,
+          "source": "[omitted]"
+        }
+      },
+      "official_identity_search_completed": false,
+      "official_identity_urls": [],
+      "official_scope_result_urls": [],
+      "official_scope_search_completed": false,
+      "pending_url_evidence_target": null,
+      "pending_url_search_attempts": 0,
+      "policy": "browser_grounded",
+      "release_landscape_evidence_urls": [],
+      "release_landscape_search_completed": false,
+      "schema_version": 3,
+      "search_completed": false,
+      "selected_candidate_url": null,
+      "step": 3,
+      "successful_queries": [],
+      "successful_searches": 0,
+      "task_sha256": "565b45cc37fadf839ce3257ff328c14ea5bece0c739e47fa5398abf271847c4d",
+      "version_frontier": null,
+      "version_frontier_key": [],
+      "version_frontier_resolved": true,
+      "visited_urls": [
+        "https://fastapi.tiangolo.com/tutorial/first-steps/"
+      ]
+    },
+    "previous_checkpoint_sha256": "1f3c371af1677ae3b7595a15cd22773002a42c3464ed1f816089e1000abf9e3f",
+    "resume_count": 0,
+    "run_id": "a00e3228-7beb-46bf-9835-7be1e4aec66d",
+    "schema_version": 2,
+    "source_fingerprint": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "status": "running",
+    "strategy_state": {
+      "attempted": [
+        "default",
+        "search-discovery"
+      ],
+      "consecutive_failures": 0,
+      "consecutive_no_progress": 0,
+      "current": "search-discovery",
+      "exhausted": false,
+      "switch_count": 1,
+      "switches": [
+        {
+          "current": "search-discovery",
+          "previous": "default",
+          "reason": "runtime strategy switch",
+          "step_number": 1
+        }
+      ]
+    },
+    "task_sha256": "565b45cc37fadf839ce3257ff328c14ea5bece0c739e47fa5398abf271847c4d",
+    "updated_at": "2026-09-01T12:57:41.606187Z"
+  }
+}

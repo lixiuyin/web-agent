@@ -1,0 +1,17 @@
+**IANA's official "Example Domains" page found via browser search.**
+
+**Exact URL (primary source, visited and read):** https://www.iana.org/help/example-domains — page title: "Example Domains" (hosted in IANA's Help / Instructions and Guides section on www.iana.org, the official Internet Assigned Numbers Authority site).
+
+**How it was found:** Browser searches for IANA's example/reserved documentation domains (Bing, Yahoo Japan, Seznam) surfaced the official IANA results https://www.iana.org/domains/reserved ("IANA-managed Reserved Domains", which contains an "Example domains" section) and https://www.iana.org/help/example-domains ("Example Domains"). I opened both IANA pages; the dedicated help page is the official example-domains page.
+
+**Purpose of the page (from the page's own text):**
+It is IANA's explanatory/reference page about the special "example" domain names used for illustration. Verbatim from the page:
+- "As described in RFC 2606 and RFC 6761, a number of domains such as example.com and example.org are maintained for documentation purposes. These domains may be used as illustrative examples in documents without prior coordination with us. They are not available for registration or transfer."
+- "We provide a web service on the example domain hosts to provide basic information on the purpose of the domain. These web services are provided as best effort, but are not designed to supp…" (text continues/truncated in the extraction).
+
+So its purposes are:
+1. **Document IANA's reservation of illustrative domain names** (e.g. example.com, example.org — the .example/.test-style documentation TLDs and second-level "example" names reserved by RFC 2606 and RFC 6761) so that authors of specifications, tutorials, configuration samples and test cases can use realistic-looking domain names without pointing at real, registered infrastructure.
+2. **Tell users the usage rules:** no prior permission/coordination with IANA is needed to use them as examples, and conversely they are **not available for registration or transfer**, so nobody can claim or buy them.
+3. **Explain the accompanying web service:** IANA operates HTTP/HTTPS hosts for these example domains that serve a page explaining why the domain exists (so a browser that accidentally lands on example.com gets an explanation rather than a parked/ad page), noting this service is best-effort and not designed for heavy/production traffic.
+
+It therefore serves as the authoritative, first-party statement of what "example" domains are for and how they may be used, complementing the broader reservation list on https://www.iana.org/domains/reserved (IANA-managed Reserved Domains).

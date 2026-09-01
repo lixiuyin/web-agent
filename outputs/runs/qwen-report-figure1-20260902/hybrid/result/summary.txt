@@ -1,0 +1,26 @@
+TASK COMPLETE — Most recent Qwen technical report identified and Figure 1 interpreted.
+
+## 1. Most recent Qwen technical report (PDF)
+- **Report:** Qwen3.8-Flash-Next Technical Report (tech_report.pdf)
+- **First-party provenance:** Verified exact-owner match from the official QwenLM GitHub repository (QwenLM/Qwen3.8-Flash-Next), file dated **2026-08-26T12:29:38Z** — the newest verified first-party candidate from official_report_search.
+- **PDF source:** https://raw.githubusercontent.com/QwenLM/Qwen3.8-Flash-Next/main/tech_report.pdf (HTML view: https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf)
+- **Cross-check:** A subject-wide current-year release-landscape search (Bing, recency=year) surfaced the Qwen blog lineup (qwen.ai, qwen3.6 post), Hugging Face Qwen org, and a Qwen3.8 landscape page dated Aug 2, 2026 — no genuinely higher observed Qwen version than Qwen3.8-Flash-Next, so the Aug 26, 2026 first-party report stands as the most recent. (Newer arXiv title-matches like Qwen-UI-Agent 2026-07-30 and Qwen-Audio-3.0-Gen-Preview 2026-07-29 are older and authorship-unverified.)
+- **Downloaded to:** artifacts/downloads/tech_report.pdf
+
+## 2. Figure 1 interpretation (page 2)
+**Caption:** "Figure 1: Qwen3.8-Flash-Next architecture. Token mixing alternates three GDN layers with one QSA layer per block of four. Every sublayer reads and writes through GR, which widens the residual stream and gates the read elementwise. An n-gram embedding layer at Layer 2 scales capacity off the accelerator via host-memory prefetching. The MTP module reuses QSA indices across speculative decoding steps."
+
+**Purpose:** It is a schematic **architecture diagram** (not a results chart) describing the design of Qwen3.8-Flash-Next, a hybrid transformer language model — how layers are stacked and how data flows through the residual stream. It contains no axes, benchmarks, or quantitative metrics.
+
+**Panels and labels:**
+- **Left panel (layer stack):** Input Tokens → Vocabulary Embedding → N-gram Embedding Layer (marked "Layer 2 only") → repeated blocks of **3× GDN Layers + 1× QSA Layer** → MTP Modules at the top, with a Prediction Head at top right.
+- **Right panel (two zoomed sublayers):**
+  - **QSA Layer (1×, blue):** Expanded Residual → GR Read → elementwise multiply (⊗) → Qwen Sparse Attn → MoE branch → GR Write back into the residual stream (rows of circles).
+  - **GDN Layer (3×, green):** identical structure but with **Gated DeltaNet** as the token-mixing operator.
+  - Both include a pink **MoE** (mixture-of-experts) block feeding the write path.
+
+**Key components:** (1) **Gated Residual (GR)** — every sublayer reads from and writes to a widened residual stream, with the read gated elementwise via ⊗ nodes; (2) **hybrid token mixing** — cheap Gated DeltaNet (linear-attention style) layers dominate 3 of every 4 layers, with sparse attention used once per block for long-range precision at lower cost; (3) **MoE feed-forward** in both sublayer types; (4) **n-gram embedding at Layer 2 only**, adding capacity off the accelerator via host-memory prefetching; (5) **MTP (multi-token prediction) modules** that reuse QSA indices across speculative decoding steps.
+
+**Key findings/takeaways:** The architecture is efficiency-driven: inexpensive GDN layers dominate the stack, sparse attention is used sparingly, memory-heavy n-gram capacity is offloaded to host memory, and a unified gated-residual mechanism standardizes information flow. The "3×/1×" labels emphasize the repeating four-layer block structure. No performance results are shown — the figure is purely descriptive of model design.
+
+**Figure image artifact:** artifacts/documents/tech-report-04f263446d74/figures/local/local_figure_1_p2.png (751×762)

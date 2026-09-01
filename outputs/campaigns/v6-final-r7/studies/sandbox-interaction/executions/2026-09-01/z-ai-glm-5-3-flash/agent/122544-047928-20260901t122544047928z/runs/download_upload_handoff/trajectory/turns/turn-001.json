@@ -1,0 +1,462 @@
+{
+  "schema_version": 8,
+  "$schema": "https://raw.githubusercontent.com/lixiuyin/web-agent/main/src/webagent/schemas/run-trace-v8.schema.json",
+  "producer": {
+    "name": "lixiuyin-webagent",
+    "version": "0.2.0",
+    "source_sha256": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c"
+  },
+  "created_at": "2026-09-01T13:54:05.455018+00:00",
+  "run_id": "c6b2d07d-375b-49c7-a540-f69a116beaca",
+  "run_kind": "agent_e2e",
+  "task": "Download the case file, continue to the partner upload portal, upload that exact downloaded file, wait until it is ready, and submit it.",
+  "status": "completed",
+  "success": true,
+  "steps_taken": 5,
+  "total_duration": 343.24816393852234,
+  "final_result": {
+    "summary": "Task completed successfully. Sequence of verified steps: (1) Downloaded the case file from http://127.0.0.1:55790/files via a#download-payload, saved as sandbox-payload.txt (sha256 e19000ed80b3e60944fe5c91e37ce48edd72f1f813a441c47bd70322240e8a4e, no rename, deduplicated=false). (2) Clicked a#upload-destination to continue to the partner upload portal at http://127.0.0.1:55791/upload. (3) Uploaded that exact downloaded file (sandbox-payload.txt, same path/sha256) through input#upload-file. (4) Waited for the upload to be ready. (5) Clicked button#submit-upload to submit it. The browser now shows the confirmation page at http://127.0.0.1:55791/upload/complete with title and body text \"Upload complete\", confirming the submission was accepted. The exact downloaded file (sandbox-payload.txt) was uploaded and submitted without renaming or modification.",
+    "attachments": [
+      "artifacts/downloads/sandbox-payload.txt"
+    ],
+    "success_probability": 0.98
+  },
+  "evaluation": {
+    "agent_source_sha256": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "mode": "hybrid_api_augmented",
+    "discovery_mode": "hybrid",
+    "direct_source_tools_enabled": true,
+    "high_risk_action_policy": "deny",
+    "stealth_mode": false,
+    "anti_shortcut_contract": null,
+    "certificate_required": false,
+    "strict_eval_mode": false,
+    "search_engine_only": false,
+    "browser_profile_mode": "temporary",
+    "browser_channel": "bundled",
+    "persistent_pdf_cache": false
+  },
+  "planner_attempts": [
+    {
+      "step_number": 1,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:48:28.718958+00:00",
+      "duration_seconds": 5.933463096618652,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 6167,
+      "completion_tokens": 27,
+      "total_tokens": 6194,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 2,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:48:32.807379+00:00",
+      "duration_seconds": 2.7958579063415527,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 551,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 6413,
+      "completion_tokens": 193,
+      "total_tokens": 6606,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 3,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:48:39.956096+00:00",
+      "duration_seconds": 5.3496739864349365,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 1396,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 6506,
+      "completion_tokens": 521,
+      "total_tokens": 7027,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 4,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:53:41.253676+00:00",
+      "duration_seconds": 300.0901298522949,
+      "success": false,
+      "error": "TimeoutError: TimeoutError()",
+      "transport_retries": 0,
+      "response_length": null,
+      "finish_reason": null,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "total_tokens": null,
+      "requested_output_mode": null,
+      "effective_output_mode": null,
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 5,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:53:53.216229+00:00",
+      "duration_seconds": 11.342528104782104,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 860,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 6698,
+      "completion_tokens": 226,
+      "total_tokens": 6924,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 6,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:54:05.423393+00:00",
+      "duration_seconds": 10.43838095664978,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 1117,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 6723,
+      "completion_tokens": 663,
+      "total_tokens": 7386,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    }
+  ],
+  "events": [
+    {
+      "type": "strategy_switch",
+      "timestamp": "2026-09-01T13:53:41.257101+00:00",
+      "step_number": 4,
+      "previous": "default",
+      "current": "recovery",
+      "reason": "planner failed to produce an executable action"
+    },
+    {
+      "type": "replan",
+      "timestamp": "2026-09-01T13:53:41.257715+00:00",
+      "step_number": 4,
+      "reason": "planner failed to produce an executable action",
+      "strategy": "recovery",
+      "exhausted": false
+    }
+  ],
+  "steps": [
+    {
+      "step_number": 1,
+      "run_id": "c6b2d07d-375b-49c7-a540-f69a116beaca",
+      "timestamp": "2026-09-01T13:48:29.394973+00:00",
+      "tool": "download_file",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "a#download-payload"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "path": "artifacts/downloads/sandbox-payload.txt",
+        "filename": "sandbox-payload.txt",
+        "suggested_filename": "sandbox-payload.txt",
+        "renamed": false,
+        "sha256": "e19000ed80b3e60944fe5c91e37ce48edd72f1f813a441c47bd70322240e8a4e",
+        "deduplicated": false
+      },
+      "planner_visible_result": "{\"path\": \"artifacts/downloads/sandbox-payload.txt\", \"filename\": \"sandbox-payload.txt\", \"suggested_filename\": \"sandbox-payload.txt\", \"renamed\": false, \"sha256\": \"e19000ed80b3e60944fe5c91e37ce48edd72f1f813a441c47bd70322240e8a4e\", \"deduplicated\": false}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 1,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 3,
+        "observed_url_count": 4,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 7.195476055145264,
+      "tool_duration_seconds": 0.07801175117492676
+    },
+    {
+      "step_number": 2,
+      "run_id": "c6b2d07d-375b-49c7-a540-f69a116beaca",
+      "timestamp": "2026-09-01T13:48:33.993602+00:00",
+      "tool": "click",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "a#upload-destination"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "selector": {
+          "type": "css",
+          "value": "a#upload-destination"
+        }
+      },
+      "planner_visible_result": "{\"selector\": {\"type\": \"css\", \"value\": \"a#upload-destination\"}}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 2,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 3,
+        "observed_url_count": 7,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 4.596139669418335,
+      "tool_duration_seconds": 0.5591771602630615
+    },
+    {
+      "step_number": 3,
+      "run_id": "c6b2d07d-375b-49c7-a540-f69a116beaca",
+      "timestamp": "2026-09-01T13:48:40.582737+00:00",
+      "tool": "upload_file",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "input#upload-file"
+        },
+        "path": "[redacted]"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "selector": {
+          "type": "css",
+          "value": "input#upload-file"
+        },
+        "filename": "sandbox-payload.txt"
+      },
+      "planner_visible_result": "{\"selector\": {\"type\": \"css\", \"value\": \"input#upload-file\"}, \"filename\": \"sandbox-payload.txt\"}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 3,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 2,
+        "observed_url_count": 9,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "high-risk actions explicitly allowed",
+          "risk_level": "high",
+          "external_effect": "local_file_disclosure",
+          "approval_required": true,
+          "approval_received": true
+        }
+      },
+      "duration_seconds": 6.586471796035767,
+      "tool_duration_seconds": 0.017773866653442383
+    },
+    {
+      "step_number": 5,
+      "run_id": "c6b2d07d-375b-49c7-a540-f69a116beaca",
+      "timestamp": "2026-09-01T13:53:54.390659+00:00",
+      "tool": "click",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "button#submit-upload"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "selector": {
+          "type": "css",
+          "value": "button#submit-upload"
+        }
+      },
+      "planner_visible_result": "{\"selector\": {\"type\": \"css\", \"value\": \"button#submit-upload\"}}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 4,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 3,
+        "observed_url_count": 12,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "high-risk actions explicitly allowed",
+          "risk_level": "high",
+          "external_effect": "external_state_change",
+          "approval_required": true,
+          "approval_received": true
+        }
+      },
+      "duration_seconds": 13.108272790908813,
+      "tool_duration_seconds": 0.570213794708252
+    },
+    {
+      "step_number": 6,
+      "run_id": "c6b2d07d-375b-49c7-a540-f69a116beaca",
+      "timestamp": "2026-09-01T13:54:05.438659+00:00",
+      "tool": "done",
+      "parameters": {
+        "summary": "Task completed successfully. Sequence of verified steps: (1) Downloaded the case file from http://127.0.0.1:55790/files via a#download-payload, saved as sandbox-payload.txt (sha256 e19000ed80b3e60944fe5c91e37ce48edd72f1f813a441c47bd70322240e8a4e, no rename, deduplicated=false). (2) Clicked a#upload-destination to continue to the partner upload portal at http://127.0.0.1:55791/upload. (3) Uploaded that exact downloaded file (sandbox-payload.txt, same path/sha256) through input#upload-file. (4) Waited for the upload to be ready. (5) Clicked button#submit-upload to submit it. The browser now shows the confirmation page at http://127.0.0.1:55791/upload/complete with title and body text \"Upload complete\", confirming the submission was accepted. The exact downloaded file (sandbox-payload.txt) was uploaded and submitted without renaming or modification.",
+        "attachments": [
+          "artifacts/downloads/sandbox-payload.txt"
+        ],
+        "success_probability": 0.98
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "summary": "Task completed successfully. Sequence of verified steps: (1) Downloaded the case file from http://127.0.0.1:55790/files via a#download-payload, saved as sandbox-payload.txt (sha256 e19000ed80b3e60944fe5c91e37ce48edd72f1f813a441c47bd70322240e8a4e, no rename, deduplicated=false). (2) Clicked a#upload-destination to continue to the partner upload portal at http://127.0.0.1:55791/upload. (3) Uploaded that exact downloaded file (sandbox-payload.txt, same path/sha256) through input#upload-file. (4) Waited for the upload to be ready. (5) Clicked button#submit-upload to submit it. The browser now shows the confirmation page at http://127.0.0.1:55791/upload/complete with title and body text \"Upload complete\", confirming the submission was accepted. The exact downloaded file (sandbox-payload.txt) was uploaded and submitted without renaming or modification.",
+        "attachments": [
+          "artifacts/downloads/sandbox-payload.txt"
+        ],
+        "success_probability": 0.98
+      },
+      "planner_visible_result": "{\"summary\": \"Task completed successfully. Sequence of verified steps: (1) Downloaded the case file from http://127.0.0.1:55790/files via a#download-payload, saved as sandbox-payload.txt (sha256 e19000ed80b3e60944fe5c91e37ce48edd72f1f813a441c47bd70322240e8a4e, no rename, deduplicated=false). (2) Clicked a#upload-destination to continue to the partner upload portal at http://127.0.0.1:55791/upload. (3) Uploaded that exact downloaded file (sandbox-payload.txt, same path/sha256) through input#upload...",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "completion is grounded in a visited evidence page",
+        "policy_step": 5,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 12,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 11.044105768203735,
+      "tool_duration_seconds": 0.0005061626434326172
+    }
+  ],
+  "resume_count": 0,
+  "checkpoint_schema_version": null,
+  "resumed_from_checkpoint": false
+}

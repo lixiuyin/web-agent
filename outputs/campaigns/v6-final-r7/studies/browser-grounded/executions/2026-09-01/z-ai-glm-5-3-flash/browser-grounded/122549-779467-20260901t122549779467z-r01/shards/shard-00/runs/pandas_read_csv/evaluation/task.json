@@ -1,0 +1,124 @@
+{
+  "task_id": "pandas_read_csv",
+  "category": "data_science",
+  "goal": "State what pandas.read_csv reads and cite the exact API URL.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 102.53961396217346,
+  "steps": 7,
+  "action_count": 6,
+  "failed_action_count": 4,
+  "planner_attempt_count": 7,
+  "planner_failure_count": 0,
+  "planner_tokens": 48877,
+  "answer_assertion_count": 3,
+  "answer_assertion_passed": 3,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "held_out_task",
+  "task_family": "data_library_documentation",
+  "setting_id": "versioned_official_documentation",
+  "leakage_group": "host_pandas_pydata_org",
+  "target_failure_modes": [
+    "information_extraction",
+    "tool_use",
+    "answer_grounding"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "short",
+  "scenario": "document_read",
+  "environment": "public_web",
+  "entry_mode": "direct",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://pandas.pydata.org"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 6,
+    "distinct_tool_count": 2,
+    "tool_entropy_bits": 0.6500224216483541,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 2,
+    "recovery_count": 2,
+    "minimum_window_entropy_bits": -0.0,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 6,
+    "stagnation_onset_step": null,
+    "replan_count": 4,
+    "strategy_switch_count": 4,
+    "replan_rate": 0.6666666666666666,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 0.97,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 7,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "comma-separated",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "pandas.read_csv reads a comma-separated values (csv) file into a DataFrame (also supports optionally iterating or breaking the file into chunks). Exact API URL: https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html (pandas 3.0.5 documentation).",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "pandas.read_csv reads a comma-separated values (csv) file into a DataFrame (also supports optionally iterating or breaking the file into chunks). Exact API URL: https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html (pandas 3.0.5 documentation).",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_url_observed",
+        "expected": "https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

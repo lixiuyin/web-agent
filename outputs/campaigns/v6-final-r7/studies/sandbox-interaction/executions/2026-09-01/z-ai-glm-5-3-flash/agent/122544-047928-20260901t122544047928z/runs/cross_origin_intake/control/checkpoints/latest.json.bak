@@ -1,0 +1,871 @@
+{
+  "format": "webagent-checkpoint",
+  "schema_version": 2,
+  "checkpoint_sha256": "da7ec1ca8e23d8cbf8a8784236d88cc593ab3d7de57f54bc7bce12963f8d3c2f",
+  "checkpoint": {
+    "artifacts": [],
+    "browser_state": {
+      "active_tab_index": 0,
+      "current_url": "http://127.0.0.1:55791/intake/complete",
+      "tab_urls": [
+        "http://127.0.0.1:55791/intake/complete"
+      ]
+    },
+    "checkpoint_id": "6347248a-1a8a-4698-bcc1-9c34762c39c7",
+    "config_fingerprint": "e381825424fa14f22f35629d4c521b7c77d4bfb1314a5462413650b6062cca40",
+    "consecutive_failures": 0,
+    "created_at": "2026-09-01T13:48:22.077498Z",
+    "elapsed_seconds": 36.71152901649475,
+    "events": [],
+    "final_result": {},
+    "history": [
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:47:45.908239+00:00",
+          "title": "normal",
+          "url": "http://127.0.0.1:55790/handoff"
+        },
+        "duration_seconds": 7.2227020263671875,
+        "step_number": 1,
+        "timestamp": "2026-09-01T13:47:52.588497+00:00",
+        "tool_call": {
+          "parameters": {
+            "note": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "remember"
+        },
+        "tool_duration_seconds": 0.0003161430358886719,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 1,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 2,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 1,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "note": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "remember"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:47:53.148948+00:00",
+          "title": "normal",
+          "url": "http://127.0.0.1:55790/handoff"
+        },
+        "duration_seconds": 3.911963939666748,
+        "step_number": 2,
+        "timestamp": "2026-09-01T13:47:56.502331+00:00",
+        "tool_call": {
+          "parameters": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "click"
+        },
+        "tool_duration_seconds": 0.5647611618041992,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 3,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 5,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 2,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "click"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:47:57.168444+00:00",
+          "title": "normal",
+          "url": "http://127.0.0.1:55791/intake"
+        },
+        "duration_seconds": 2.820580244064331,
+        "step_number": 3,
+        "timestamp": "2026-09-01T13:47:59.325190+00:00",
+        "tool_call": {
+          "parameters": {
+            "attribute": "[omitted]",
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "get_attribute"
+        },
+        "tool_duration_seconds": 0.02095317840576172,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 3,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 8,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 3,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "attribute": "[omitted]",
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            },
+            "value": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "get_attribute"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:47:59.924602+00:00",
+          "title": "normal",
+          "url": "http://127.0.0.1:55791/intake"
+        },
+        "duration_seconds": 6.810504913330078,
+        "step_number": 4,
+        "timestamp": "2026-09-01T13:48:06.138078+00:00",
+        "tool_call": {
+          "parameters": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            },
+            "text": "[redacted]"
+          },
+          "reasoning": "",
+          "tool_name": "type"
+        },
+        "tool_duration_seconds": 0.16527700424194336,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 1,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 9,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 4,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            },
+            "text": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "type"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:48:06.724786+00:00",
+          "title": "normal",
+          "url": "http://127.0.0.1:55791/intake"
+        },
+        "duration_seconds": 4.082992792129517,
+        "step_number": 5,
+        "timestamp": "2026-09-01T13:48:10.223729+00:00",
+        "tool_call": {
+          "parameters": {
+            "label": "[omitted]",
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "select_dropdown"
+        },
+        "tool_duration_seconds": 0.0052089691162109375,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 2,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 11,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 5,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "option": {
+              "label": "[omitted]"
+            },
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "select_dropdown"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:48:10.821249+00:00",
+          "title": "normal",
+          "url": "http://127.0.0.1:55791/intake"
+        },
+        "duration_seconds": 6.250107765197754,
+        "step_number": 6,
+        "timestamp": "2026-09-01T13:48:16.476572+00:00",
+        "tool_call": {
+          "parameters": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "click"
+        },
+        "tool_duration_seconds": 0.5545668601989746,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 3,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 14,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 6,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": true,
+              "approval_required": true,
+              "decision": "allow",
+              "external_effect": "[omitted]",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "click"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:48:17.078841+00:00",
+          "title": "normal",
+          "url": "http://127.0.0.1:55791/intake/complete"
+        },
+        "duration_seconds": 5.596590995788574,
+        "step_number": 7,
+        "timestamp": "2026-09-01T13:48:22.076545+00:00",
+        "tool_call": {
+          "parameters": {
+            "success_probability": 0.99,
+            "summary": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "done"
+        },
+        "tool_duration_seconds": 0.00016689300537109375,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 14,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 7,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "attachments": [],
+            "success_probability": 0.99,
+            "summary": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "done"
+        }
+      }
+    ],
+    "last_figure_path": null,
+    "loop_state": {
+      "in_loop": false,
+      "loop_type": "",
+      "page_hash_history": [
+        "573c77751825c7c4d29a6aeb4b251854",
+        "573c77751825c7c4d29a6aeb4b251854",
+        "fd40cb6a25bb33ed3c25c8e56cb532e5",
+        "fd40cb6a25bb33ed3c25c8e56cb532e5",
+        "655d6e54c2d9001bb29e3274e63c5e6f",
+        "655d6e54c2d9001bb29e3274e63c5e6f",
+        "0566ce9dd642f114c573d8a5cfac5bd4"
+      ],
+      "recent_actions": [
+        "4bd1ae0a663a5553d8cd5e6e05d904496874697a4fcb815ae545b1d8ff650d83",
+        "c5e0c75ee6257f455e33d3f7c790e6d78a1037d1d63e0ccd1a7739ea573d8890",
+        "02d7d12fc9ef6071e2c775061432da4734910ee9e259d9c94182c69bede25e91",
+        "79187b6db38790097fff150b12cd75bf22f7a0664c69a412a82d98a8f46f00a6",
+        "b60500f15e53ce6852421b7b1917119336c7e392597bfbe0b13847d7fec5e9f7",
+        "c5e0c75ee6257f455e33d3f7c790e6d78a1037d1d63e0ccd1a7739ea573d8890",
+        "b7eeac6540d9452d2c3d634a71e2527516aa3590c332441c8d47fc5faa1710ef"
+      ],
+      "recent_pages": [
+        "93f8f97699d0f20fab88997a30a1d42b641cfb9fefa9c6ef3031158e46748711",
+        "93f8f97699d0f20fab88997a30a1d42b641cfb9fefa9c6ef3031158e46748711",
+        "2169956f776f61a5389c7f73b236760eb18d516fcd31665753bcbf8ad09436f4",
+        "2169956f776f61a5389c7f73b236760eb18d516fcd31665753bcbf8ad09436f4",
+        "bbee5ff21cd1e20aa5056b4b502f283c08dd1b9ac0412504a9307e9abd95c97a",
+        "bbee5ff21cd1e20aa5056b4b502f283c08dd1b9ac0412504a9307e9abd95c97a",
+        "303fcafdd3a10fa8b11b9fda9aa01661bab284f0e943632eefa9cdc9d9e575db"
+      ],
+      "schema_version": 1,
+      "threshold": 5,
+      "url_history": [
+        "http://127.0.0.1:55790/handoff",
+        "http://127.0.0.1:55790/handoff",
+        "http://127.0.0.1:55791/intake",
+        "http://127.0.0.1:55791/intake",
+        "http://127.0.0.1:55791/intake",
+        "http://127.0.0.1:55791/intake",
+        "http://127.0.0.1:55791/intake/complete"
+      ],
+      "window_size": 9
+    },
+    "next_step": 8,
+    "pending_action": null,
+    "planner_attempts": [
+      {
+        "attempt_number": 1,
+        "completion_tokens": 18,
+        "duration_seconds": 6.082082033157349,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6151,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 1,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:47:51.990353+00:00",
+        "total_tokens": 6169,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 26,
+        "duration_seconds": 2.155369997024536,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6078,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 2,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:47:55.304380+00:00",
+        "total_tokens": 6104,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 33,
+        "duration_seconds": 1.5332942008972168,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 5081,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 3,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:47:58.701856+00:00",
+        "total_tokens": 5114,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 32,
+        "duration_seconds": 5.463600158691406,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 5227,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 4,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:48:05.388296+00:00",
+        "total_tokens": 5259,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 80,
+        "duration_seconds": 2.898880958557129,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 5346,
+        "requested_output_mode": "auto",
+        "response_length": 184,
+        "step_number": 5,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:48:09.623762+00:00",
+        "total_tokens": 5426,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 26,
+        "duration_seconds": 4.507636070251465,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 5467,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 6,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:48:15.329002+00:00",
+        "total_tokens": 5493,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 153,
+        "duration_seconds": 4.992025136947632,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6624,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 7,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:48:22.070999+00:00",
+        "total_tokens": 6777,
+        "transport_retries": 0
+      }
+    ],
+    "planning_state": {
+      "active_milestone_id": "m1",
+      "evidence": [
+        {
+          "id": "e1",
+          "kind": "durable_note",
+          "source": "http://127.0.0.1:55790/handoff",
+          "step_number": 1,
+          "summary": "Case identifier: ORBIT-731"
+        },
+        {
+          "id": "e2",
+          "kind": "checkpoint",
+          "source": "http://127.0.0.1:55791/intake",
+          "step_number": 2,
+          "summary": "evidence retained from step 2"
+        },
+        {
+          "id": "e3",
+          "kind": "checkpoint",
+          "source": "http://127.0.0.1:55791/intake",
+          "step_number": 3,
+          "summary": "evidence retained from step 3"
+        },
+        {
+          "id": "e4",
+          "kind": "checkpoint",
+          "source": "http://127.0.0.1:55791/intake",
+          "step_number": 4,
+          "summary": "evidence retained from step 4"
+        },
+        {
+          "id": "e5",
+          "kind": "checkpoint",
+          "source": "http://127.0.0.1:55791/intake",
+          "step_number": 5,
+          "summary": "evidence retained from step 5"
+        },
+        {
+          "id": "e6",
+          "kind": "checkpoint",
+          "source": "http://127.0.0.1:55791/intake/complete",
+          "step_number": 6,
+          "summary": "evidence retained from step 6"
+        },
+        {
+          "id": "e7",
+          "kind": "checkpoint",
+          "source": "http://127.0.0.1:55791/intake/complete",
+          "step_number": 7,
+          "summary": "evidence retained from step 7"
+        }
+      ],
+      "milestones": [
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 1",
+          "id": "m1",
+          "status": "active"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 2",
+          "id": "m2",
+          "status": "pending"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 3",
+          "id": "m3",
+          "status": "pending"
+        }
+      ],
+      "objective": "task bound by checkpoint task_sha256",
+      "revisions": []
+    },
+    "policy_state": {
+      "broad_current_year_search_completed": false,
+      "current_year": 2026,
+      "downloaded_paths": {},
+      "figure_analysis_completed": false,
+      "hybrid": {
+        "candidate_date": null,
+        "candidate_owner": null,
+        "candidate_url": null,
+        "candidate_version_key": [],
+        "cross_check_exhausted": false,
+        "direct_evidence_verified": false,
+        "missing_repeat_count": 0,
+        "missing_signature": [],
+        "official_report_attempts": {},
+        "required_next_action": null,
+        "subject": "[omitted]",
+        "successful_topics": []
+      },
+      "observed_urls": {
+        "field_17d29abfd352": {
+          "page_url": "http://127.0.0.1:55791/intake",
+          "policy_step": 3,
+          "source": "[omitted]"
+        },
+        "field_1df777b54173": {
+          "page_url": "http://127.0.0.1:55791/intake/complete",
+          "policy_step": 6,
+          "source": "[omitted]"
+        },
+        "field_1fe5fd0f534d": {
+          "page_url": "http://127.0.0.1:55791/intake",
+          "policy_step": 3,
+          "source": "[omitted]"
+        },
+        "field_7c0f523eb732": {
+          "page_url": "http://127.0.0.1:55791/intake",
+          "policy_step": 3,
+          "source": "[omitted]"
+        },
+        "field_7c7f52558dfe": {
+          "page_url": "http://127.0.0.1:55791/intake",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_873a624ef946": {
+          "page_url": "http://127.0.0.1:55791/intake/complete",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_87c8298ba0a8": {
+          "page_url": "http://127.0.0.1:55790/handoff",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_9a979bd42d79": {
+          "page_url": "http://127.0.0.1:55791/intake",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_9ed7751004f4": {
+          "page_url": "http://127.0.0.1:55791/intake",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_ae4119ea6f60": {
+          "page_url": "http://127.0.0.1:55791/intake/complete",
+          "policy_step": 6,
+          "source": "[omitted]"
+        },
+        "field_bae7de2918ec": {
+          "page_url": "http://127.0.0.1:55791/intake",
+          "policy_step": 3,
+          "source": "[omitted]"
+        },
+        "field_c066eeb7148f": {
+          "page_url": "http://127.0.0.1:55790/handoff",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_dd944e3f00e3": {
+          "page_url": "http://127.0.0.1:55791/intake",
+          "policy_step": 3,
+          "source": "[omitted]"
+        },
+        "field_ffae16b73fda": {
+          "page_url": "http://127.0.0.1:55791/intake",
+          "policy_step": 4,
+          "source": "[omitted]"
+        }
+      },
+      "official_identity_search_completed": false,
+      "official_identity_urls": [],
+      "official_scope_result_urls": [],
+      "official_scope_search_completed": false,
+      "pending_url_evidence_target": null,
+      "pending_url_search_attempts": 0,
+      "policy": "browser_grounded",
+      "release_landscape_evidence_urls": [],
+      "release_landscape_search_completed": false,
+      "schema_version": 3,
+      "search_completed": false,
+      "selected_candidate_url": null,
+      "step": 7,
+      "successful_queries": [],
+      "successful_searches": 0,
+      "task_sha256": "56b045c0400f459fb41d17ad1d2c1b3c390d18a1fe7930259cdb9c1e148e0594",
+      "version_frontier": null,
+      "version_frontier_key": [],
+      "version_frontier_resolved": true,
+      "visited_urls": [
+        "http://127.0.0.1:55790/handoff",
+        "http://127.0.0.1:55791/intake",
+        "http://127.0.0.1:55791/intake/complete"
+      ]
+    },
+    "previous_checkpoint_sha256": "f87a159c5f9d7b6903260e89a774aac574c7e48fe13c27dffe37be2cf87c5d02",
+    "resume_count": 0,
+    "run_id": "fb5b8a1e-3b11-47d4-946e-006e2e1141c6",
+    "schema_version": 2,
+    "source_fingerprint": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "status": "running",
+    "strategy_state": {
+      "attempted": [
+        "default"
+      ],
+      "consecutive_failures": 0,
+      "consecutive_no_progress": 0,
+      "current": "default",
+      "exhausted": false,
+      "switch_count": 0,
+      "switches": []
+    },
+    "task_sha256": "56b045c0400f459fb41d17ad1d2c1b3c390d18a1fe7930259cdb9c1e148e0594",
+    "updated_at": "2026-09-01T13:48:22.077514Z"
+  }
+}

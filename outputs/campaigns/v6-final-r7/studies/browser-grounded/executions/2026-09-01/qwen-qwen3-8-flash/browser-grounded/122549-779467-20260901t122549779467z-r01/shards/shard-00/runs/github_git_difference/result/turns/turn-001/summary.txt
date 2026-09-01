@@ -1,0 +1,18 @@
+**Found via browser search → official GitHub Docs page: "What is GitHub?" (Get started → Start your journey)**
+
+**Exact URL (primary source):** https://docs.github.com/en/get-started/start-your-journey/what-is-github
+
+**How it was reached:** Starting from a blank page, I ran several web searches (Bing and Yahoo Japan) for the GitHub Docs explanation of Git vs. GitHub, e.g. `GitHub Docs "GitHub" and "Git" difference overview` and `site:docs.github.com "Git and GitHub" overview what is Git`. Those results surfaced official docs pages (including https://docs.github.com/en/get-started/git-basics/set-up-git); the links on that visited page pointed to the "What is GitHub?" article, which I opened and read directly (breadcrumb: GitHub Docs › Get started › Start your journey › What is GitHub?, version "Free, Pro, & Team", "Get started – Article 1 of 8").
+
+**What the official docs say (observed text):**
+- Article intro: "GitHub is a platform that supports your entire software development process, from planning work to deploying and operating software."
+- Body: "GitHub is a platform for building software. Whether you are starting a new project or contributing to an existing one, GitHub brings together the tools and workflows you need across every stage of the software development life cycle (SDLC)."
+- The page has a dedicated section titled **"GitHub and Git"**, whose first line is: **"GitHub is based on the open-source software, Git."**
+- Related sections on the page: "GitHub and the software development life cycle" ("The software development life cycle describes the stages a software project moves through, from the first idea to running code in production. GitHub is designed to support every stage of that process."), "Is GitHub right for me?", "Where do I start?", plus linked tasks such as "Creating a repository for your project on GitHub."
+
+**The distinction, explained:**
+- **Git** is the underlying **open-source version-control software** — the tool that runs on your own machine and tracks changes to files/history (commits, branches, diffs). It is a standalone program, not owned by or dependent on GitHub; GitHub's own docs treat it as separate software that you install and configure (see the sibling "Git basics"/"Set up Git" content, which links out to git-scm.com for downloading Git).
+- **GitHub** is a **hosted platform/service for building software** that is *based on* Git. It adds the networked collaboration layer on top of Git: repositories hosted in the cloud, plus planning and delivery workflows across the whole software development life cycle (repositories, pull requests/review, and other SDLC tooling described on this page).
+- So the relationship is **tool vs. platform**: Git = the version-control engine; GitHub = the platform built on Git that stores/shares that work and supports the surrounding collaboration and delivery workflow. You can use Git without GitHub, but GitHub cannot exist without Git.
+
+**Citation:** GitHub Docs, "What is GitHub?", https://docs.github.com/en/get-started/start-your-journey/what-is-github (accessed during this session; no publication date is displayed on the page).

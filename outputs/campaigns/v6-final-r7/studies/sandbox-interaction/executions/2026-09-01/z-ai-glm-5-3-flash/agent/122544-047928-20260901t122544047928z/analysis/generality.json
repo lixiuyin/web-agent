@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "status": "insufficient",
+  "task_count": 5,
+  "category_count": 5,
+  "source_origin_count": 0,
+  "discovery_task_count": 0,
+  "scenario_counts": {
+    "authenticated_session": 1,
+    "cross_origin_form": 1,
+    "file_workflow": 1,
+    "sandbox_transaction": 1,
+    "spa_interaction": 1
+  },
+  "environment_counts": {
+    "sandbox": 5
+  },
+  "split_counts": {
+    "development": 5
+  },
+  "source_origins": [],
+  "missing_requirements": [
+    "requires at least 30 evaluated tasks",
+    "requires at least 8 task categories",
+    "requires at least 8 distinct public source origins",
+    "missing scenario coverage: recovery, search_discovery",
+    "missing research splits: held_out_setting, held_out_task",
+    "requires both public_web and sandbox evidence",
+    "requires at least 5 genuine search-discovery tasks"
+  ],
+  "interpretation_notice": "Readiness means the retained task set crosses a preregistered coverage floor. It does not by itself prove performance, robustness, or transfer across the covered settings."
+}

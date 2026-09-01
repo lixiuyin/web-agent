@@ -1,0 +1,585 @@
+{
+  "schema_version": 8,
+  "$schema": "https://raw.githubusercontent.com/lixiuyin/web-agent/main/src/webagent/schemas/run-trace-v8.schema.json",
+  "producer": {
+    "name": "lixiuyin-webagent",
+    "version": "0.2.0",
+    "source_sha256": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c"
+  },
+  "created_at": "2026-09-01T14:06:42.844734+00:00",
+  "run_id": "c1633242-f56e-4bb5-856c-5099a28d5928",
+  "run_kind": "agent_e2e",
+  "task": "Read the case identifier on the handoff page, continue to the partner origin, assign it to Ada with urgent priority, and submit the sandbox intake.",
+  "status": "completed",
+  "success": true,
+  "steps_taken": 7,
+  "total_duration": 40.8715500831604,
+  "final_result": {
+    "summary": "Sandbox intake completed successfully.\n\n- Case identifier read from the handoff page: ORBIT-731 (carried through as ?case=ORBIT-731 on the partner-origin intake page and pre-filled in the case field).\n- Continued from the handoff page via the \"continue\" link to the partner origin intake form at http://127.0.0.1:60362/intake?case=ORBIT-731.\n- Assignee (intake owner) set to: Ada\n- Priority set to: Urgent\n- Submitted the form with the \"submit intake\" button, which navigated to http://127.0.0.1:60362/intake/complete — the page now shows the heading/title \"Intake complete\", confirming the submission was accepted.",
+    "attachments": [],
+    "success_probability": 0.95
+  },
+  "evaluation": {
+    "agent_source_sha256": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "mode": "hybrid_api_augmented",
+    "discovery_mode": "hybrid",
+    "direct_source_tools_enabled": true,
+    "high_risk_action_policy": "deny",
+    "stealth_mode": false,
+    "anti_shortcut_contract": null,
+    "certificate_required": false,
+    "strict_eval_mode": false,
+    "search_engine_only": false,
+    "browser_profile_mode": "temporary",
+    "browser_channel": "bundled",
+    "persistent_pdf_cache": false
+  },
+  "planner_attempts": [
+    {
+      "step_number": 1,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T14:06:07.502801+00:00",
+      "duration_seconds": 4.98769998550415,
+      "success": false,
+      "error": "planner returned no executable tool call",
+      "transport_retries": 0,
+      "response_length": 254,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 6188,
+      "completion_tokens": 173,
+      "total_tokens": 6361,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 1,
+      "attempt_number": 2,
+      "timestamp": "2026-09-01T14:06:11.670541+00:00",
+      "duration_seconds": 4.167603969573975,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 500,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 6230,
+      "completion_tokens": 160,
+      "total_tokens": 6390,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 2,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T14:06:15.617339+00:00",
+      "duration_seconds": 2.1377758979797363,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 194,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 5517,
+      "completion_tokens": 56,
+      "total_tokens": 5573,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 3,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T14:06:20.619360+00:00",
+      "duration_seconds": 3.754817008972168,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 371,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 5640,
+      "completion_tokens": 144,
+      "total_tokens": 5784,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 4,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T14:06:25.629634+00:00",
+      "duration_seconds": 3.7815113067626953,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 629,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 5790,
+      "completion_tokens": 225,
+      "total_tokens": 6015,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 5,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T14:06:31.621752+00:00",
+      "duration_seconds": 4.625396013259888,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 337,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 5935,
+      "completion_tokens": 144,
+      "total_tokens": 6079,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 6,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T14:06:35.815374+00:00",
+      "duration_seconds": 2.965366840362549,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 124,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 6061,
+      "completion_tokens": 70,
+      "total_tokens": 6131,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 7,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T14:06:42.816762+00:00",
+      "duration_seconds": 5.288455963134766,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 405,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 6898,
+      "completion_tokens": 312,
+      "total_tokens": 7210,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    }
+  ],
+  "events": [],
+  "steps": [
+    {
+      "step_number": 1,
+      "run_id": "c1633242-f56e-4bb5-856c-5099a28d5928",
+      "timestamp": "2026-09-01T14:06:12.891699+00:00",
+      "tool": "click",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "a#continue-intake"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "selector": {
+          "type": "css",
+          "value": "a#continue-intake"
+        }
+      },
+      "planner_visible_result": "{\"selector\": {\"type\": \"css\", \"value\": \"a#continue-intake\"}}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 1,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 3,
+        "observed_url_count": 4,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 10.924232959747314,
+      "tool_duration_seconds": 0.5553269386291504
+    },
+    {
+      "step_number": 2,
+      "run_id": "c1633242-f56e-4bb5-856c-5099a28d5928",
+      "timestamp": "2026-09-01T14:06:16.249358+00:00",
+      "tool": "get_url",
+      "parameters": {},
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "url": "http://127.0.0.1:60362/intake?case=ORBIT-731"
+      },
+      "planner_visible_result": "{\"url\": \"http://127.0.0.1:60362/intake?case=ORBIT-731\"}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 2,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 4,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 3.355755090713501,
+      "tool_duration_seconds": 0.0002429485321044922
+    },
+    {
+      "step_number": 3,
+      "run_id": "c1633242-f56e-4bb5-856c-5099a28d5928",
+      "timestamp": "2026-09-01T14:06:21.249997+00:00",
+      "tool": "get_attribute",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "input#intake-case"
+        },
+        "attribute": "value"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "selector": {
+          "type": "css",
+          "value": "input#intake-case"
+        },
+        "attribute": "value",
+        "value": "ORBIT-731"
+      },
+      "planner_visible_result": "{\"selector\": {\"type\": \"css\", \"value\": \"input#intake-case\"}, \"attribute\": \"value\", \"value\": \"ORBIT-731\"}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 3,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 3,
+        "observed_url_count": 7,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 4.998365879058838,
+      "tool_duration_seconds": 0.03139185905456543
+    },
+    {
+      "step_number": 4,
+      "run_id": "c1633242-f56e-4bb5-856c-5099a28d5928",
+      "timestamp": "2026-09-01T14:06:26.403193+00:00",
+      "tool": "type",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "input#intake-owner"
+        },
+        "text": "Ada"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "selector": {
+          "type": "css",
+          "value": "input#intake-owner"
+        },
+        "text": "Ada"
+      },
+      "planner_visible_result": "{\"selector\": {\"type\": \"css\", \"value\": \"input#intake-owner\"}, \"text\": \"Ada\"}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 4,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 1,
+        "observed_url_count": 8,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 5.1504387855529785,
+      "tool_duration_seconds": 0.17197585105895996
+    },
+    {
+      "step_number": 5,
+      "run_id": "c1633242-f56e-4bb5-856c-5099a28d5928",
+      "timestamp": "2026-09-01T14:06:32.229629+00:00",
+      "tool": "select_dropdown",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "select#intake-priority"
+        },
+        "label": "Urgent"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "selector": {
+          "type": "css",
+          "value": "select#intake-priority"
+        },
+        "option": {
+          "label": "Urgent"
+        }
+      },
+      "planner_visible_result": "{\"selector\": {\"type\": \"css\", \"value\": \"select#intake-priority\"}, \"option\": {\"label\": \"Urgent\"}}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 5,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 2,
+        "observed_url_count": 10,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 5.823709011077881,
+      "tool_duration_seconds": 0.007539272308349609
+    },
+    {
+      "step_number": 6,
+      "run_id": "c1633242-f56e-4bb5-856c-5099a28d5928",
+      "timestamp": "2026-09-01T14:06:36.963171+00:00",
+      "tool": "click",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "button#submit-intake"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "selector": {
+          "type": "css",
+          "value": "button#submit-intake"
+        }
+      },
+      "planner_visible_result": "{\"selector\": {\"type\": \"css\", \"value\": \"button#submit-intake\"}}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 6,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 3,
+        "observed_url_count": 13,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "high-risk actions explicitly allowed",
+          "risk_level": "high",
+          "external_effect": "external_state_change",
+          "approval_required": true,
+          "approval_received": true
+        }
+      },
+      "duration_seconds": 4.7305309772491455,
+      "tool_duration_seconds": 0.5589570999145508
+    },
+    {
+      "step_number": 7,
+      "run_id": "c1633242-f56e-4bb5-856c-5099a28d5928",
+      "timestamp": "2026-09-01T14:06:42.832010+00:00",
+      "tool": "done",
+      "parameters": {
+        "summary": "Sandbox intake completed successfully.\n\n- Case identifier read from the handoff page: ORBIT-731 (carried through as ?case=ORBIT-731 on the partner-origin intake page and pre-filled in the case field).\n- Continued from the handoff page via the \"continue\" link to the partner origin intake form at http://127.0.0.1:60362/intake?case=ORBIT-731.\n- Assignee (intake owner) set to: Ada\n- Priority set to: Urgent\n- Submitted the form with the \"submit intake\" button, which navigated to http://127.0.0.1:60362/intake/complete — the page now shows the heading/title \"Intake complete\", confirming the submission was accepted.",
+        "success_probability": 0.95
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "summary": "Sandbox intake completed successfully.\n\n- Case identifier read from the handoff page: ORBIT-731 (carried through as ?case=ORBIT-731 on the partner-origin intake page and pre-filled in the case field).\n- Continued from the handoff page via the \"continue\" link to the partner origin intake form at http://127.0.0.1:60362/intake?case=ORBIT-731.\n- Assignee (intake owner) set to: Ada\n- Priority set to: Urgent\n- Submitted the form with the \"submit intake\" button, which navigated to http://127.0.0.1:60362/intake/complete — the page now shows the heading/title \"Intake complete\", confirming the submission was accepted.",
+        "attachments": [],
+        "success_probability": 0.95
+      },
+      "planner_visible_result": "{\"summary\": \"Sandbox intake completed successfully.\\n\\n- Case identifier read from the handoff page: ORBIT-731 (carried through as ?case=ORBIT-731 on the partner-origin intake page and pre-filled in the case field).\\n- Continued from the handoff page via the \\\"continue\\\" link to the partner origin intake form at http://127.0.0.1:60362/intake?case=ORBIT-731.\\n- Assignee (intake owner) set to: Ada\\n- Priority set to: Urgent\\n- Submitted the form with the \\\"submit intake\\\" button, which navigated t...",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "completion is grounded in a visited evidence page",
+        "policy_step": 7,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 13,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 5.8655500411987305,
+      "tool_duration_seconds": 0.0005729198455810547
+    }
+  ],
+  "resume_count": 0,
+  "checkpoint_schema_version": null,
+  "resumed_from_checkpoint": false
+}

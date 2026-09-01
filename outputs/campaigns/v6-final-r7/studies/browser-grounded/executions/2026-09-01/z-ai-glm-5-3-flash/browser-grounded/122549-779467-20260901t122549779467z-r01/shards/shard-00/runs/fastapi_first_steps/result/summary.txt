@@ -1,0 +1,1 @@
+In FastAPI's "First Steps" tutorial, the application object is created with `app = FastAPI()` — the variable `app` is an instance of the `FastAPI` class (imported via `from fastapi import FastAPI`). Exact URL: https://fastapi.tiangolo.com/tutorial/first-steps/

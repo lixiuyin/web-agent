@@ -1,0 +1,754 @@
+{
+  "format": "webagent-checkpoint",
+  "schema_version": 2,
+  "checkpoint_sha256": "3bc5da821128410a1052e4231c9a1d21d7fc8b37fa1fc3bbb2ad3ed519892399",
+  "checkpoint": {
+    "artifacts": [],
+    "browser_state": {
+      "active_tab_index": 0,
+      "current_url": "https://www.iana.org/domains/reserved",
+      "tab_urls": [
+        "https://www.iana.org/domains/reserved"
+      ]
+    },
+    "checkpoint_id": "a4045cb5-4fdb-4d3b-9b24-1faf2909ea3b",
+    "config_fingerprint": "8cec5c2d9a8383b4a581dc3e28b7de4baf7cbe53b378af61437660b1eef435c3",
+    "consecutive_failures": 0,
+    "created_at": "2026-09-01T12:27:57.717959Z",
+    "elapsed_seconds": 59.80276083946228,
+    "events": [
+      {
+        "current": "search-discovery",
+        "previous": "default",
+        "reason": "[omitted]",
+        "step_number": 1,
+        "timestamp": "2026-09-01T12:27:02.190453+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 1,
+        "strategy": "search-discovery",
+        "timestamp": "2026-09-01T12:27:02.190465+00:00",
+        "type": "replan"
+      },
+      {
+        "current": "alternate-navigation",
+        "previous": "search-discovery",
+        "reason": "[omitted]",
+        "step_number": 5,
+        "timestamp": "2026-09-01T12:27:14.232030+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 5,
+        "strategy": "alternate-navigation",
+        "timestamp": "2026-09-01T12:27:14.232045+00:00",
+        "type": "replan"
+      },
+      {
+        "current": "semantic-dom",
+        "previous": "alternate-navigation",
+        "reason": "[omitted]",
+        "step_number": 6,
+        "timestamp": "2026-09-01T12:27:51.478411+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 6,
+        "strategy": "semantic-dom",
+        "timestamp": "2026-09-01T12:27:51.478432+00:00",
+        "type": "replan"
+      }
+    ],
+    "final_result": {},
+    "history": [
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:26:58.591916+00:00",
+          "title": "normal",
+          "url": "https://www.iana.org/domains/reserved"
+        },
+        "duration_seconds": 4.275755882263184,
+        "step_number": 1,
+        "timestamp": "2026-09-01T12:27:02.190389+00:00",
+        "tool_call": {
+          "parameters": {
+            "url": "https://www.iana.org/domains/reserved"
+          },
+          "reasoning": "",
+          "tool_name": "goto"
+        },
+        "tool_duration_seconds": 8.082389831542969e-05,
+        "tool_result": {
+          "audit": {
+            "decision": "deny",
+            "policy": "browser_grounded",
+            "policy_step": 1,
+            "provenance": {},
+            "reason": "[omitted]",
+            "target": "https://www.iana.org/domains/reserved"
+          },
+          "data": {},
+          "error": "tool action failed; details omitted",
+          "success": false,
+          "tool_name": "goto"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:27:02.836913+00:00",
+          "title": "normal",
+          "url": "https://www.iana.org/domains/reserved"
+        },
+        "duration_seconds": 3.3332839012145996,
+        "step_number": 2,
+        "timestamp": "2026-09-01T12:27:05.525519+00:00",
+        "tool_call": {
+          "parameters": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "frame_interact"
+        },
+        "tool_duration_seconds": 0.029494047164916992,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 1,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 2,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "match_count": 1,
+            "text": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "frame_interact"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:27:06.193392+00:00",
+          "title": "normal",
+          "url": "https://www.iana.org/domains/reserved"
+        },
+        "duration_seconds": 3.5684778690338135,
+        "step_number": 3,
+        "timestamp": "2026-09-01T12:27:09.096057+00:00",
+        "tool_call": {
+          "parameters": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "frame_interact"
+        },
+        "tool_duration_seconds": 0.02294301986694336,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 1,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 3,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "match_count": 1,
+            "text": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "frame_interact"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:27:09.735079+00:00",
+          "title": "normal",
+          "url": "https://www.iana.org/domains/reserved"
+        },
+        "duration_seconds": 4.4742960929870605,
+        "step_number": 4,
+        "timestamp": "2026-09-01T12:27:13.572976+00:00",
+        "tool_call": {
+          "parameters": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "frame_interact"
+        },
+        "tool_duration_seconds": 0.018399953842163086,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 1,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 4,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "match_count": 1,
+            "text": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "frame_interact"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:27:14.203837+00:00",
+          "title": "normal",
+          "url": "https://www.iana.org/domains/reserved"
+        },
+        "duration_seconds": 37.23651695251465,
+        "step_number": 5,
+        "timestamp": "2026-09-01T12:27:50.812153+00:00",
+        "tool_call": {
+          "parameters": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "frame_interact"
+        },
+        "tool_duration_seconds": 31.014360189437866,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 1,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 5,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {},
+          "error": "tool action failed; details omitted",
+          "success": false,
+          "tool_name": "frame_interact"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:27:51.448478+00:00",
+          "title": "normal",
+          "url": "https://www.iana.org/domains/reserved"
+        },
+        "duration_seconds": 6.900958061218262,
+        "step_number": 6,
+        "timestamp": "2026-09-01T12:27:57.716190+00:00",
+        "tool_call": {
+          "parameters": {
+            "summary": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "done"
+        },
+        "tool_duration_seconds": 0.0003688335418701172,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 1,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 6,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "attachments": [],
+            "summary": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "done"
+        }
+      }
+    ],
+    "last_figure_path": null,
+    "loop_state": {
+      "in_loop": true,
+      "loop_type": "page_stagnation",
+      "page_hash_history": [
+        "a1cff632dbc3366fcc33a3cb47fbeff8",
+        "a1cff632dbc3366fcc33a3cb47fbeff8",
+        "a1cff632dbc3366fcc33a3cb47fbeff8",
+        "a1cff632dbc3366fcc33a3cb47fbeff8"
+      ],
+      "recent_actions": [
+        "ae7c4ba3b50b192c60c1c2654ff5e4d753fd8452001a7c3964a921f7e8a31552",
+        "ae7c4ba3b50b192c60c1c2654ff5e4d753fd8452001a7c3964a921f7e8a31552",
+        "ae7c4ba3b50b192c60c1c2654ff5e4d753fd8452001a7c3964a921f7e8a31552",
+        "6f8df53b4a10a964ea968cc98ab7e86f59a5c0af557e2ed046b0f14dae10e981"
+      ],
+      "recent_pages": [
+        "bd53bd4cd494d4311108abcb24d84727a1dab1609705447c99a9a6dd30624be6",
+        "bd53bd4cd494d4311108abcb24d84727a1dab1609705447c99a9a6dd30624be6",
+        "bd53bd4cd494d4311108abcb24d84727a1dab1609705447c99a9a6dd30624be6",
+        "bd53bd4cd494d4311108abcb24d84727a1dab1609705447c99a9a6dd30624be6"
+      ],
+      "schema_version": 1,
+      "threshold": 4,
+      "url_history": [
+        "https://www.iana.org/domains/reserved",
+        "https://www.iana.org/domains/reserved",
+        "https://www.iana.org/domains/reserved",
+        "https://www.iana.org/domains/reserved"
+      ],
+      "window_size": 4
+    },
+    "next_step": 7,
+    "pending_action": null,
+    "planner_attempts": [
+      {
+        "attempt_number": 1,
+        "completion_tokens": 28,
+        "duration_seconds": 2.362460136413574,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6566,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 1,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:27:00.988453+00:00",
+        "total_tokens": 6594,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 79,
+        "duration_seconds": 1.4673328399658203,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6640,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 2,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:27:04.334070+00:00",
+        "total_tokens": 6719,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 44,
+        "duration_seconds": 1.5907251834869385,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6940,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 3,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:27:07.813758+00:00",
+        "total_tokens": 6984,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 81,
+        "duration_seconds": 2.5955629348754883,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 7093,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 4,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:27:12.359570+00:00",
+        "total_tokens": 7174,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 157,
+        "duration_seconds": 4.383824110031128,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 7255,
+        "requested_output_mode": "auto",
+        "response_length": 1,
+        "step_number": 5,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:27:18.615868+00:00",
+        "total_tokens": 7412,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 152,
+        "duration_seconds": 6.226557016372681,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 7247,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 6,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:27:57.704993+00:00",
+        "total_tokens": 7399,
+        "transport_retries": 0
+      }
+    ],
+    "planning_state": {
+      "active_milestone_id": "m6",
+      "evidence": [
+        {
+          "id": "e1",
+          "kind": "checkpoint",
+          "source": "https://www.iana.org/domains/reserved",
+          "step_number": 2,
+          "summary": "evidence retained from step 2"
+        },
+        {
+          "id": "e2",
+          "kind": "checkpoint",
+          "source": "https://www.iana.org/domains/reserved",
+          "step_number": 6,
+          "summary": "evidence retained from step 6"
+        }
+      ],
+      "milestones": [
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 1",
+          "id": "m1",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 2",
+          "id": "m2",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 3",
+          "id": "m3",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 4",
+          "id": "m4",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 5",
+          "id": "m5",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 6",
+          "id": "m6",
+          "status": "active"
+        }
+      ],
+      "objective": "task bound by checkpoint task_sha256",
+      "revisions": [
+        {
+          "added_milestone_ids": [
+            "m4"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 1,
+          "step_number": 1,
+          "strategy": "search-discovery"
+        },
+        {
+          "added_milestone_ids": [
+            "m5"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 2,
+          "step_number": 5,
+          "strategy": "alternate-navigation"
+        },
+        {
+          "added_milestone_ids": [
+            "m6"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 3,
+          "step_number": 6,
+          "strategy": "semantic-dom"
+        }
+      ]
+    },
+    "policy_state": {
+      "broad_current_year_search_completed": false,
+      "current_year": 2026,
+      "downloaded_paths": {},
+      "figure_analysis_completed": false,
+      "hybrid": {
+        "candidate_date": null,
+        "candidate_owner": null,
+        "candidate_url": null,
+        "candidate_version_key": [],
+        "cross_check_exhausted": false,
+        "direct_evidence_verified": false,
+        "missing_repeat_count": 0,
+        "missing_signature": [],
+        "official_report_attempts": {},
+        "required_next_action": null,
+        "subject": "[omitted]",
+        "successful_topics": []
+      },
+      "observed_urls": {
+        "field_a32f3bb71f3e": {
+          "page_url": "https://www.iana.org/domains/reserved",
+          "policy_step": 1,
+          "source": "[omitted]"
+        }
+      },
+      "official_identity_search_completed": false,
+      "official_identity_urls": [],
+      "official_scope_result_urls": [],
+      "official_scope_search_completed": false,
+      "pending_url_evidence_target": null,
+      "pending_url_search_attempts": 0,
+      "policy": "browser_grounded",
+      "release_landscape_evidence_urls": [],
+      "release_landscape_search_completed": false,
+      "schema_version": 3,
+      "search_completed": false,
+      "selected_candidate_url": null,
+      "step": 6,
+      "successful_queries": [],
+      "successful_searches": 0,
+      "task_sha256": "aa97fe38a3235789fc9bf9648760aa5a54faa8f43b80fc124b80c6525cfdeb47",
+      "version_frontier": null,
+      "version_frontier_key": [],
+      "version_frontier_resolved": true,
+      "visited_urls": [
+        "https://www.iana.org/domains/reserved"
+      ]
+    },
+    "previous_checkpoint_sha256": "2c33b6b025c0d2546b403970b002a4d24245d0550fccd89e1b0da3c9baee9f2f",
+    "resume_count": 0,
+    "run_id": "6c97bbe1-d2ce-4dee-906e-4bc2756e8972",
+    "schema_version": 2,
+    "source_fingerprint": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "status": "running",
+    "strategy_state": {
+      "attempted": [
+        "default",
+        "search-discovery",
+        "alternate-navigation",
+        "semantic-dom"
+      ],
+      "consecutive_failures": 0,
+      "consecutive_no_progress": 0,
+      "current": "semantic-dom",
+      "exhausted": false,
+      "switch_count": 3,
+      "switches": [
+        {
+          "current": "search-discovery",
+          "previous": "default",
+          "reason": "runtime strategy switch",
+          "step_number": 1
+        },
+        {
+          "current": "alternate-navigation",
+          "previous": "search-discovery",
+          "reason": "runtime strategy switch",
+          "step_number": 5
+        },
+        {
+          "current": "semantic-dom",
+          "previous": "alternate-navigation",
+          "reason": "runtime strategy switch",
+          "step_number": 6
+        }
+      ]
+    },
+    "task_sha256": "aa97fe38a3235789fc9bf9648760aa5a54faa8f43b80fc124b80c6525cfdeb47",
+    "updated_at": "2026-09-01T12:27:57.717987Z"
+  }
+}

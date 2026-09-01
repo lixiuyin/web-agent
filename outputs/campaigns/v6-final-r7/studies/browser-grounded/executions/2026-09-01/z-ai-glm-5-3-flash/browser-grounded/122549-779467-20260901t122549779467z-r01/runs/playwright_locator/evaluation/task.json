@@ -1,0 +1,124 @@
+{
+  "task_id": "playwright_locator",
+  "category": "browser_automation",
+  "goal": "Explain the role of Playwright locators and cite the exact API URL.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 32.13093686103821,
+  "steps": 3,
+  "action_count": 2,
+  "failed_action_count": 1,
+  "planner_attempt_count": 3,
+  "planner_failure_count": 0,
+  "planner_tokens": 19739,
+  "answer_assertion_count": 3,
+  "answer_assertion_passed": 3,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "development",
+  "task_family": "browser_automation_documentation",
+  "setting_id": "versioned_official_documentation",
+  "leakage_group": "host_playwright_dev",
+  "target_failure_modes": [
+    "information_extraction",
+    "tool_use",
+    "answer_grounding"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "short",
+  "scenario": "document_read",
+  "environment": "public_web",
+  "entry_mode": "direct",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://playwright.dev"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 2,
+    "distinct_tool_count": 2,
+    "tool_entropy_bits": 1.0,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 1,
+    "recovery_count": 1,
+    "minimum_window_entropy_bits": null,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 2,
+    "stagnation_onset_step": null,
+    "replan_count": 1,
+    "strategy_switch_count": 1,
+    "replan_rate": 0.5,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 0.97,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 3,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "Locator",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "Role of Playwright locators: According to the official Playwright Python API reference, 'Locators are the central piece of Playwright's auto-waiting and retry-ability. In a nutshell, locators represent a way to find element(s) on the page at any moment.' A locator is created with the page.locator() method. Because locators are resolved lazily against the live DOM, they auto-wait for elements to appear/become actionable and retry automatically, making tests resilient to timing issues. The Locator class also exposes methods such as all() (added in v1.29), which returns an array of locators when the locator points to a list of elements. Exact API URL cited: https://playwright.dev/python/docs/api/class-locator (page title: 'Locator | Playwright Python').",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "https://playwright.dev/python/docs/api/class-locator",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "Role of Playwright locators: According to the official Playwright Python API reference, 'Locators are the central piece of Playwright's auto-waiting and retry-ability. In a nutshell, locators represent a way to find element(s) on the page at any moment.' A locator is created with the page.locator() method. Because locators are resolved lazily against the live DOM, they auto-wait for elements to appear/become actionable and retry automatically, making tests resilient to timing issues. The Locator class also exposes methods such as all() (added in v1.29), which returns an array of locators when the locator points to a list of elements. Exact API URL cited: https://playwright.dev/python/docs/api/class-locator (page title: 'Locator | Playwright Python').",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_url_observed",
+        "expected": "https://playwright.dev/python/docs/api/class-locator",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

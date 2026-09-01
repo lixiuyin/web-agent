@@ -1,0 +1,442 @@
+{
+  "schema_version": 8,
+  "$schema": "https://raw.githubusercontent.com/lixiuyin/web-agent/main/src/webagent/schemas/run-trace-v8.schema.json",
+  "producer": {
+    "name": "lixiuyin-webagent",
+    "version": "0.2.0",
+    "source_sha256": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c"
+  },
+  "created_at": "2026-09-01T13:09:39.068522+00:00",
+  "run_id": "ad06ed5c-f90f-4dc5-9fb4-2b99af957625",
+  "run_kind": "agent_e2e",
+  "task": "Explain what asyncio is used for according to its official page and cite the exact URL.",
+  "status": "completed",
+  "success": true,
+  "steps_taken": 5,
+  "total_duration": 37.03869390487671,
+  "final_result": {
+    "summary": "**What asyncio is used for (per its official Python documentation page)**\n\nSource URL (exact): https://docs.python.org/3/library/asyncio.html — page title: \"asyncio — Asynchronous I/O — Python 3.14.7 documentation\" (docs.python.org, the official Python documentation site).\n\nPurpose, as stated on the page:\n1. **Concurrent code via async/await** — \"asyncio is a library to write concurrent code using the async/await syntax.\"\n2. **Foundation for other async frameworks** — \"asyncio is used as a foundation for multiple Python asynchronous frameworks that provide high-performance network and web-servers, database connection libraries, distributed task queues, etc.\"\n3. **Best-fit workload** — \"asyncio is often a perfect fit for IO-bound and high-level structured network code.\"\n\nHigh-level APIs it provides (verbatim bullets from the page), to:\n- run Python coroutines concurrently and have full control over their execution;\n- perform network IO and IPC;\n- control subprocesses;\n- distribute tasks via queues;\n- synchronize concurrent code.\n\nFor introspection, it provides APIs for:\n- inspecting the async call graph of tasks and futures;\n- inspecting tasks in another running Python process with command-line tools.\n\nLow-level capability:\n- \"create and manage event loops, which provide asynchronous APIs for networking, running subprocesses, handling [OS/POSIX] signals…\" (the event-loop bullet continues in the same sentence on the page).\n\nTypical usage pattern shown on the page (the \"Hello World!\" example): define a coroutine and drive it with the runner, e.g. `async def main(): ... await asyncio.sleep(1) ...` then `asyncio.run(main())`.\n\nPage structure (documented sub-areas of the library): High-level APIs (Runners, Coroutines and tasks, Streams, Synchronization Primitives, Subprocesses, Queues, Exceptions); Introspection APIs (Call graph introspection, Command-line introspection tools); Low-level APIs (Event loop, Futures, Transports and Protocols, Policies, Platform Support, Extending); plus Guides and Tutorials (High-level API Index, Low-level API Index, Developing with asyncio, asyncio and free-threaded Python). It sits under \"Networking and Interprocess Communication\" in the Python Standard Library docs.\n\nIn short: asyncio is Python's official library for writing asynchronous, concurrent code with `async`/`await`, mainly for IO-bound and structured network programs — powering network/IPC handling, subprocess control, task queues, synchronization primitives, and event-loop management, and serving as the base layer for many third-party async frameworks and servers.",
+    "attachments": [],
+    "success_probability": 0.97
+  },
+  "evaluation": {
+    "agent_source_sha256": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "mode": "browser_grounded",
+    "discovery_mode": "browser-grounded",
+    "direct_source_tools_enabled": false,
+    "high_risk_action_policy": "deny",
+    "stealth_mode": false,
+    "anti_shortcut_contract": null,
+    "certificate_required": false,
+    "strict_eval_mode": false,
+    "search_engine_only": false,
+    "browser_profile_mode": "temporary",
+    "browser_channel": "bundled",
+    "persistent_pdf_cache": false
+  },
+  "planner_attempts": [
+    {
+      "step_number": 1,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:09:06.484604+00:00",
+      "duration_seconds": 3.6729331016540527,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 7062,
+      "completion_tokens": 192,
+      "total_tokens": 7254,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 2,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:09:14.773018+00:00",
+      "duration_seconds": 6.134589195251465,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 7390,
+      "completion_tokens": 287,
+      "total_tokens": 7677,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 3,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:09:20.646886+00:00",
+      "duration_seconds": 3.8468148708343506,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 7724,
+      "completion_tokens": 187,
+      "total_tokens": 7911,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 4,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:09:27.527645+00:00",
+      "duration_seconds": 4.81538200378418,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 7916,
+      "completion_tokens": 269,
+      "total_tokens": 8185,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 5,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:09:39.036602+00:00",
+      "duration_seconds": 9.425544023513794,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 8184,
+      "completion_tokens": 786,
+      "total_tokens": 8970,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    }
+  ],
+  "events": [
+    {
+      "type": "strategy_switch",
+      "timestamp": "2026-09-01T13:09:29.611029+00:00",
+      "step_number": 5,
+      "previous": "default",
+      "current": "alternate-navigation",
+      "reason": "loop detector reported action_repeat"
+    },
+    {
+      "type": "replan",
+      "timestamp": "2026-09-01T13:09:29.611057+00:00",
+      "step_number": 5,
+      "reason": "loop detector reported action_repeat",
+      "strategy": "alternate-navigation",
+      "exhausted": false
+    }
+  ],
+  "steps": [
+    {
+      "step_number": 1,
+      "run_id": "ad06ed5c-f90f-4dc5-9fb4-2b99af957625",
+      "timestamp": "2026-09-01T13:09:07.762079+00:00",
+      "tool": "frame_interact",
+      "parameters": {
+        "frame_index": 0,
+        "action": "extract_text",
+        "selector": {
+          "type": "css",
+          "value": "section#module-asyncio"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "frame_index": 0,
+        "action": "extract_text",
+        "text": "asyncio — Asynchronous I/O\n\nHello World!\n\nimport asyncio\n\nasync def main():\n    print('Hello ...')\n    await asyncio.sleep(1)\n    print('... World!')\n\nasyncio.run(main())\n\n\nasyncio is a library to write concurrent code using the async/await syntax.\n\nasyncio is used as a foundation for multiple Python asynchronous frameworks that provide high-performance network and web-servers, database connection libraries, distributed task queues, etc.\n\nasyncio is often a perfect fit for IO-bound and high-level structured network code.\n\nSee also\n\nA Conceptual Overview of asyncio\n\nExplanation of the fundamentals of asyncio.\n\nasyncio provides a set of high-level APIs to:\n\nrun Python coroutines concurrently and have full control over their execution;\n\nperform network IO and IPC;\n\ncontrol subprocesses;\n\ndistribute tasks via queues;\n\nsynchronize concurrent code;\n\nFor introspection, asyncio provides APIs and tools for:\n\ninspecting the async call graph of tasks and futures;\n\ninspecting tasks in another running Python process with command-line tools;\n\nAdditionally, there are low-level APIs for library and framework developers to:\n\ncreate and manage event loops, which provide asynchronous APIs for networking, running subprocesses, handling OS signals, etc;\n\nimplement efficient protocols using transports;\n\nbridge callback-based libraries and code with async/await syntax.\n\nAvailability: not WASI.\n\nThis module does not work or is not available on WebAssembly. See WebAssembly platforms for more information.\n\nasyncio REPL\n\nYou can experiment with an asyncio concurrent context in the REPL:\n\n$ python -m asyncio\nasyncio REPL ...\nUse \"await\" directly instead of \"asyncio.run()\".\nType \"help\", \"copyright\", \"credits\" or \"license\" for more information.\n>>> import asyncio\n>>> await asyncio.sleep(10, result='hello')\n'hello'\n\n\nThis REPL provides limited compatibility with PYTHON_BASIC_REPL. It is recommended that the default REPL is used for full functionality and the latest features.\n\nRaises an auditing event cpython.run_stdin with no arguments.\n\nChanged in version 3.12.5: (also 3.11.10, 3.10.15, 3.9.20, and 3.8.20) Emits audit events.\n\nChanged in version 3.13: Uses PyREPL if possible, in which case PYTHONSTARTUP is also executed. Emits audit events.\n\nReference\n\nHigh-level APIs\n\nRunners\nCoroutines and tasks\nStreams\nSynchronization Primitives\nSubprocesses\nQueues\nExceptions\n\nIntrospection APIs\n\nCall graph introspection\nCommand-line introspection tools\n\nLow-level APIs\n\nEvent loop\nFutures\nTransports and Protocols\nPolicies\nPlatform Support\nExtending\n\nGuides and Tutorials\n\nHigh-level API Index\nLow-level API Index\nDeveloping with asyncio\nasyncio and free-threaded Python\n\nNote\n\n \n\nThe source code for asyncio can be found in Lib/asyncio/.",
+        "match_count": 1
+      },
+      "planner_visible_result": "{\"frame_index\": 0, \"action\": \"extract_text\", \"text\": \"asyncio — Asynchronous I/O\\n\\nHello World!\\n\\nimport asyncio\\n\\nasync def main():\\n    print('Hello ...')\\n    await asyncio.sleep(1)\\n    print('... World!')\\n\\nasyncio.run(main())\\n\\n\\nasyncio is a library to write concurrent code using the async/await syntax.\\n\\nasyncio is used as a foundation for multiple Python asynchronous frameworks that provide high-performance network and web-servers, database connection libraries, distributed task q...",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 1,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 1,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 5.739320993423462,
+      "tool_duration_seconds": 0.025674104690551758
+    },
+    {
+      "step_number": 2,
+      "run_id": "ad06ed5c-f90f-4dc5-9fb4-2b99af957625",
+      "timestamp": "2026-09-01T13:09:16.045643+00:00",
+      "tool": "frame_interact",
+      "parameters": {
+        "frame_index": 0,
+        "action": "extract_text",
+        "selector": {
+          "type": "css",
+          "value": "section#module-asyncio > div.toctree-wrapper"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "frame_index": 0,
+        "action": "extract_text",
+        "text": "High-level APIs\n\nRunners\nCoroutines and tasks\nStreams\nSynchronization Primitives\nSubprocesses\nQueues\nExceptions\n\nIntrospection APIs\n\nCall graph introspection\nCommand-line introspection tools\n\nLow-level APIs\n\nEvent loop\nFutures\nTransports and Protocols\nPolicies\nPlatform Support\nExtending\n\nGuides and Tutorials\n\nHigh-level API Index\nLow-level API Index\nDeveloping with asyncio\nasyncio and free-threaded Python",
+        "match_count": 4
+      },
+      "planner_visible_result": "{\"frame_index\": 0, \"action\": \"extract_text\", \"text\": \"High-level APIs\\n\\nRunners\\nCoroutines and tasks\\nStreams\\nSynchronization Primitives\\nSubprocesses\\nQueues\\nExceptions\\n\\nIntrospection APIs\\n\\nCall graph introspection\\nCommand-line introspection tools\\n\\nLow-level APIs\\n\\nEvent loop\\nFutures\\nTransports and Protocols\\nPolicies\\nPlatform Support\\nExtending\\n\\nGuides and Tutorials\\n\\nHigh-level API Index\\nLow-level API Index\\nDeveloping with asyncio\\nasyncio and free-threaded Python\", \"match...",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 2,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 1,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 8.281886339187622,
+      "tool_duration_seconds": 0.019350051879882812
+    },
+    {
+      "step_number": 3,
+      "run_id": "ad06ed5c-f90f-4dc5-9fb4-2b99af957625",
+      "timestamp": "2026-09-01T13:09:21.965092+00:00",
+      "tool": "frame_interact",
+      "parameters": {
+        "frame_index": 0,
+        "action": "extract_text",
+        "selector": {
+          "type": "css",
+          "value": "section#module-asyncio > p:not([class])"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "frame_index": 0,
+        "action": "extract_text",
+        "text": "asyncio is a library to write concurrent code using the async/await syntax.\n\nasyncio is used as a foundation for multiple Python asynchronous frameworks that provide high-performance network and web-servers, database connection libraries, distributed task queues, etc.\n\nasyncio is often a perfect fit for IO-bound and high-level structured network code.\n\nasyncio provides a set of high-level APIs to:\n\nFor introspection, asyncio provides APIs and tools for:\n\nAdditionally, there are low-level APIs for library and framework developers to:\n\nYou can experiment with an asyncio concurrent context in the REPL:\n\nThis REPL provides limited compatibility with PYTHON_BASIC_REPL. It is recommended that the default REPL is used for full functionality and the latest features.",
+        "match_count": 8
+      },
+      "planner_visible_result": "{\"frame_index\": 0, \"action\": \"extract_text\", \"text\": \"asyncio is a library to write concurrent code using the async/await syntax.\\n\\nasyncio is used as a foundation for multiple Python asynchronous frameworks that provide high-performance network and web-servers, database connection libraries, distributed task queues, etc.\\n\\nasyncio is often a perfect fit for IO-bound and high-level structured network code.\\n\\nasyncio provides a set of high-level APIs to:\\n\\nFor introspection, asyncio provides ...",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 3,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 1,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 5.9174888134002686,
+      "tool_duration_seconds": 0.01947021484375
+    },
+    {
+      "step_number": 4,
+      "run_id": "ad06ed5c-f90f-4dc5-9fb4-2b99af957625",
+      "timestamp": "2026-09-01T13:09:28.836538+00:00",
+      "tool": "frame_interact",
+      "parameters": {
+        "action": "extract_text",
+        "frame_index": 0,
+        "selector": {
+          "type": "css",
+          "value": "section#module-asyncio > ul.simple"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "frame_index": 0,
+        "action": "extract_text",
+        "text": "run Python coroutines concurrently and have full control over their execution;\n\nperform network IO and IPC;\n\ncontrol subprocesses;\n\ndistribute tasks via queues;\n\nsynchronize concurrent code;\n\ninspecting the async call graph of tasks and futures;\n\ninspecting tasks in another running Python process with command-line tools;\n\ncreate and manage event loops, which provide asynchronous APIs for networking, running subprocesses, handling OS signals, etc;\n\nimplement efficient protocols using transports;\n\nbridge callback-based libraries and code with async/await syntax.",
+        "match_count": 3
+      },
+      "planner_visible_result": "{\"frame_index\": 0, \"action\": \"extract_text\", \"text\": \"run Python coroutines concurrently and have full control over their execution;\\n\\nperform network IO and IPC;\\n\\ncontrol subprocesses;\\n\\ndistribute tasks via queues;\\n\\nsynchronize concurrent code;\\n\\ninspecting the async call graph of tasks and futures;\\n\\ninspecting tasks in another running Python process with command-line tools;\\n\\ncreate and manage event loops, which provide asynchronous APIs for networking, running subprocesses, handlin...",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 4,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 1,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 6.869023084640503,
+      "tool_duration_seconds": 0.050282955169677734
+    },
+    {
+      "step_number": 5,
+      "run_id": "ad06ed5c-f90f-4dc5-9fb4-2b99af957625",
+      "timestamp": "2026-09-01T13:09:39.052368+00:00",
+      "tool": "done",
+      "parameters": {
+        "summary": "**What asyncio is used for (per its official Python documentation page)**\n\nSource URL (exact): https://docs.python.org/3/library/asyncio.html — page title: \"asyncio — Asynchronous I/O — Python 3.14.7 documentation\" (docs.python.org, the official Python documentation site).\n\nPurpose, as stated on the page:\n1. **Concurrent code via async/await** — \"asyncio is a library to write concurrent code using the async/await syntax.\"\n2. **Foundation for other async frameworks** — \"asyncio is used as a foundation for multiple Python asynchronous frameworks that provide high-performance network and web-servers, database connection libraries, distributed task queues, etc.\"\n3. **Best-fit workload** — \"asyncio is often a perfect fit for IO-bound and high-level structured network code.\"\n\nHigh-level APIs it provides (verbatim bullets from the page), to:\n- run Python coroutines concurrently and have full control over their execution;\n- perform network IO and IPC;\n- control subprocesses;\n- distribute tasks via queues;\n- synchronize concurrent code.\n\nFor introspection, it provides APIs for:\n- inspecting the async call graph of tasks and futures;\n- inspecting tasks in another running Python process with command-line tools.\n\nLow-level capability:\n- \"create and manage event loops, which provide asynchronous APIs for networking, running subprocesses, handling [OS/POSIX] signals…\" (the event-loop bullet continues in the same sentence on the page).\n\nTypical usage pattern shown on the page (the \"Hello World!\" example): define a coroutine and drive it with the runner, e.g. `async def main(): ... await asyncio.sleep(1) ...` then `asyncio.run(main())`.\n\nPage structure (documented sub-areas of the library): High-level APIs (Runners, Coroutines and tasks, Streams, Synchronization Primitives, Subprocesses, Queues, Exceptions); Introspection APIs (Call graph introspection, Command-line introspection tools); Low-level APIs (Event loop, Futures, Transports and Protocols, Policies, Platform Support, Extending); plus Guides and Tutorials (High-level API Index, Low-level API Index, Developing with asyncio, asyncio and free-threaded Python). It sits under \"Networking and Interprocess Communication\" in the Python Standard Library docs.\n\nIn short: asyncio is Python's official library for writing asynchronous, concurrent code with `async`/`await`, mainly for IO-bound and structured network programs — powering network/IPC handling, subprocess control, task queues, synchronization primitives, and event-loop management, and serving as the base layer for many third-party async frameworks and servers.",
+        "success_probability": 0.97
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "summary": "**What asyncio is used for (per its official Python documentation page)**\n\nSource URL (exact): https://docs.python.org/3/library/asyncio.html — page title: \"asyncio — Asynchronous I/O — Python 3.14.7 documentation\" (docs.python.org, the official Python documentation site).\n\nPurpose, as stated on the page:\n1. **Concurrent code via async/await** — \"asyncio is a library to write concurrent code using the async/await syntax.\"\n2. **Foundation for other async frameworks** — \"asyncio is used as a foundation for multiple Python asynchronous frameworks that provide high-performance network and web-servers, database connection libraries, distributed task queues, etc.\"\n3. **Best-fit workload** — \"asyncio is often a perfect fit for IO-bound and high-level structured network code.\"\n\nHigh-level APIs it provides (verbatim bullets from the page), to:\n- run Python coroutines concurrently and have full control over their execution;\n- perform network IO and IPC;\n- control subprocesses;\n- distribute tasks via queues;\n- synchronize concurrent code.\n\nFor introspection, it provides APIs for:\n- inspecting the async call graph of tasks and futures;\n- inspecting tasks in another running Python process with command-line tools.\n\nLow-level capability:\n- \"create and manage event loops, which provide asynchronous APIs for networking, running subprocesses, handling [OS/POSIX] signals…\" (the event-loop bullet continues in the same sentence on the page).\n\nTypical usage pattern shown on the page (the \"Hello World!\" example): define a coroutine and drive it with the runner, e.g. `async def main(): ... await asyncio.sleep(1) ...` then `asyncio.run(main())`.\n\nPage structure (documented sub-areas of the library): High-level APIs (Runners, Coroutines and tasks, Streams, Synchronization Primitives, Subprocesses, Queues, Exceptions); Introspection APIs (Call graph introspection, Command-line introspection tools); Low-level APIs (Event loop, Futures, Transports and Protocols, Policies, Platform Support, Extending); plus Guides and Tutorials (High-level API Index, Low-level API Index, Developing with asyncio, asyncio and free-threaded Python). It sits under \"Networking and Interprocess Communication\" in the Python Standard Library docs.\n\nIn short: asyncio is Python's official library for writing asynchronous, concurrent code with `async`/`await`, mainly for IO-bound and structured network programs — powering network/IPC handling, subprocess control, task queues, synchronization primitives, and event-loop management, and serving as the base layer for many third-party async frameworks and servers.",
+        "attachments": [],
+        "success_probability": 0.97
+      },
+      "planner_visible_result": "{\"summary\": \"**What asyncio is used for (per its official Python documentation page)**\\n\\nSource URL (exact): https://docs.python.org/3/library/asyncio.html — page title: \\\"asyncio — Asynchronous I/O — Python 3.14.7 documentation\\\" (docs.python.org, the official Python documentation site).\\n\\nPurpose, as stated on the page:\\n1. **Concurrent code via async/await** — \\\"asyncio is a library to write concurrent code using the async/await syntax.\\\"\\n2. **Foundation for other async frameworks** — \\\"as...",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "completion is grounded in a visited evidence page",
+        "policy_step": 5,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 1,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 10.213064193725586,
+      "tool_duration_seconds": 0.0006577968597412109
+    }
+  ],
+  "resume_count": 0,
+  "checkpoint_schema_version": null,
+  "resumed_from_checkpoint": false
+}

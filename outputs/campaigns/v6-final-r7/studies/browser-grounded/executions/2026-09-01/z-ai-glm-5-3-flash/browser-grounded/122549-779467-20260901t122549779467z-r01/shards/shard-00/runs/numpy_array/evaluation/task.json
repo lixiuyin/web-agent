@@ -1,0 +1,124 @@
+{
+  "task_id": "numpy_array",
+  "category": "data_science",
+  "goal": "Explain what numpy.array creates and cite the exact reference URL.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 75.30629706382751,
+  "steps": 8,
+  "action_count": 4,
+  "failed_action_count": 1,
+  "planner_attempt_count": 10,
+  "planner_failure_count": 4,
+  "planner_tokens": 67803,
+  "answer_assertion_count": 3,
+  "answer_assertion_passed": 3,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "development",
+  "task_family": "data_library_documentation",
+  "setting_id": "versioned_official_documentation",
+  "leakage_group": "host_numpy_org",
+  "target_failure_modes": [
+    "information_extraction",
+    "tool_use",
+    "answer_grounding"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "short",
+  "scenario": "document_read",
+  "environment": "public_web",
+  "entry_mode": "direct",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://numpy.org"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 4,
+    "distinct_tool_count": 4,
+    "tool_entropy_bits": 2.0,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 1,
+    "recovery_count": 1,
+    "minimum_window_entropy_bits": null,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 4,
+    "stagnation_onset_step": null,
+    "replan_count": 6,
+    "strategy_switch_count": 6,
+    "replan_rate": 1.5,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 0.97,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 8,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "array",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "numpy.array creates a new ndarray — NumPy's N-dimensional array object — from an array-like input such as a list, tuple, or nested sequence. Per the official NumPy reference page (NumPy v2.5 Manual), the signature is numpy.array(object, dtype=None, *, copy=True, order='K', subok=False, ndmin=0, like=None), and it returns an ndarray constructed from the given object. Key behaviors: by default (copy=True) it makes a copy of the input; the dtype is inferred from the input data unless explicitly specified; order controls memory layout ('K', 'A', 'C', 'F'); ndmin specifies a minimum number of dimensions; and subok allows passing through subclasses. Exact reference URL: https://numpy.org/doc/stable/reference/generated/numpy.array.html",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "https://numpy.org/doc/stable/reference/generated/numpy.array.html",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "numpy.array creates a new ndarray — NumPy's N-dimensional array object — from an array-like input such as a list, tuple, or nested sequence. Per the official NumPy reference page (NumPy v2.5 Manual), the signature is numpy.array(object, dtype=None, *, copy=True, order='K', subok=False, ndmin=0, like=None), and it returns an ndarray constructed from the given object. Key behaviors: by default (copy=True) it makes a copy of the input; the dtype is inferred from the input data unless explicitly specified; order controls memory layout ('K', 'A', 'C', 'F'); ndmin specifies a minimum number of dimensions; and subok allows passing through subclasses. Exact reference URL: https://numpy.org/doc/stable/reference/generated/numpy.array.html",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_url_observed",
+        "expected": "https://numpy.org/doc/stable/reference/generated/numpy.array.html",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

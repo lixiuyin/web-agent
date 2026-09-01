@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "candidate_count": 1,
+  "boundary": "Candidates are not judge overrides or causal labels.",
+  "candidates": [
+    {
+      "task_id": "python_tutorial",
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "https://docs.python.org/3/tutorial/index.html",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "observed": "The official Python tutorial's intended audience: it is written for readers who want to learn the Python language — people who already know how to use a computer and do programming-adjacent work (including professional software developers who know other languages and want to add Python quickly), but it is not meant to be an exhaustive reference for language features. Source: https://docs.python.org/3/tutorial/appetite.html (\"1. Whetting Your Appetite — Python 3.14.7 documentation\").",
+      "reason": "semantic or URL assertion failed; inspect trace before assigning cause"
+    }
+  ]
+}

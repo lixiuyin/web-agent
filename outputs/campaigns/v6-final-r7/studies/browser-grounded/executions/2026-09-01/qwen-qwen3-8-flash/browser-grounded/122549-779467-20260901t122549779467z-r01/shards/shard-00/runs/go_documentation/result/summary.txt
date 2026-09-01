@@ -1,0 +1,14 @@
+**Official Go documentation hub: https://go.dev/doc/** (page title: "Documentation – The Go Programming Language")
+
+**How it was found (browser search):** A Bing search for "The Go programming language official documentation site" returned the official result "The Go Programming Language" → https://go.dev/. Opening that first-party site and using its top navigation "Docs" menu (whose items link to /ref/spec "Go Spec", /doc "Go User Manual", https://pkg.go.dev/std "Standard library", /doc/devel/release "Release Notes", /doc/effective_go "Effective Go", https://pkg.go.dev "Packages") led to the documentation landing page at https://go.dev/doc/, which was then visited directly.
+
+**What the hub provides (as observed on the page):**
+- **Introductory description:** "The Go programming language is an open source project to make programmers more productive." It describes Go as "expressive, concise, clean, and efficient," notes that its concurrency mechanisms make it easy to write programs that get the most out of multicore and networked machines, that its novel type system enables flexible and modular program construction, and that Go compiles quickly to machine code while providing the convenience of garbage collection (plus static typing).
+- **Getting started material:** an interactive code sample you can "Copy and paste the code," plus links to **Installing Go** (/doc/install), **Tutorial: Getting started** and **Tutorial: Create a module** (/doc/tutorial/…).
+- **Core reference documentation:** the **Go User Manual** (/doc), the **Go Language Specification** (/ref/spec), **Effective Go** (/doc/effective_go), and the **Standard library** reference (pkg.go.dev/std).
+- **Tooling and modules:** a **Command Documentation** section (the `go` command and its subcommands) and a **Developing and publishing modules** section covering module creation/publishing.
+- **Package ecosystem:** the **Packages** entry point to pkg.go.dev, the official package index.
+- **Version/release information:** **Release Notes** (/doc/devel/release) for Go releases.
+- **Community and learning resources linked from the docs navigation:** Recorded Talks (/talks/), Go blog (/blog), Go project help (/help), Meetups (meetup.com/pro/go) and Conferences (/wiki/Conferences), plus Learn, Download (/dl/), Security and "Report an Issue" links.
+
+In short, https://go.dev/doc/ is the single entry point to Go's official documentation: installation and tutorials, the user manual, language spec, Effective Go style/practice guide, standard library and package reference, command/tooling docs, module development and publishing guides, and release notes.

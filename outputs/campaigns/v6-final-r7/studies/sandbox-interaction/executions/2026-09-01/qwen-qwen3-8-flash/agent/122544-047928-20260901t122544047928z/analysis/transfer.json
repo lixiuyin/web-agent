@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "status": "unavailable",
+  "reason": "no held-out task or setting evaluations were recorded",
+  "splits": {
+    "development": {
+      "status": "available",
+      "reason": null,
+      "task_count": 5,
+      "success_rate": 1.0,
+      "mean_score": 1.0
+    },
+    "validation": {
+      "status": "unavailable",
+      "reason": "validation split is empty",
+      "task_count": 0,
+      "success_rate": null,
+      "mean_score": null
+    },
+    "held_out_task": {
+      "status": "unavailable",
+      "reason": "held_out_task split is empty",
+      "task_count": 0,
+      "success_rate": null,
+      "mean_score": null
+    },
+    "held_out_setting": {
+      "status": "unavailable",
+      "reason": "held_out_setting split is empty",
+      "task_count": 0,
+      "success_rate": null,
+      "mean_score": null
+    }
+  },
+  "held_out_task_success_delta": null,
+  "held_out_setting_success_delta": null,
+  "pooled_held_out_success_delta": null,
+  "leakage_groups": [],
+  "interpretation_notice": "Deltas are descriptive held-out minus development success rates for one condition. They do not establish that an intervention transfers without a paired baseline."
+}

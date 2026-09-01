@@ -1,0 +1,2793 @@
+{
+  "schema_version": 8,
+  "$schema": "https://raw.githubusercontent.com/lixiuyin/web-agent/main/src/webagent/schemas/run-trace-v8.schema.json",
+  "producer": {
+    "name": "lixiuyin-webagent",
+    "version": "0.2.0",
+    "source_sha256": "44a2ddfd1b04b204f5fbae16e55589ee5b4dd2f8d6d247d9230501a7bfc5bf05"
+  },
+  "created_at": "2026-09-01T16:32:24.059718+00:00",
+  "run_id": "85f02705-dc40-46ba-ab68-a765deebf5ae",
+  "run_kind": "agent_e2e",
+  "task": "Find the most recent technical report (PDF) about Qwen, then interpret Figure 1 by describing its purpose and key findings",
+  "status": "interrupted",
+  "success": false,
+  "steps_taken": 21,
+  "total_duration": 760.9239990711212,
+  "final_result": {},
+  "evaluation": {
+    "agent_source_sha256": "44a2ddfd1b04b204f5fbae16e55589ee5b4dd2f8d6d247d9230501a7bfc5bf05",
+    "mode": "browser_grounded",
+    "discovery_mode": "browser-grounded",
+    "direct_source_tools_enabled": false,
+    "high_risk_action_policy": "deny",
+    "stealth_mode": false,
+    "anti_shortcut_contract": null,
+    "certificate_required": false,
+    "strict_eval_mode": false,
+    "search_engine_only": false,
+    "browser_profile_mode": "temporary",
+    "browser_channel": "bundled",
+    "persistent_pdf_cache": false
+  },
+  "planner_attempts": [
+    {
+      "step_number": 1,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:19:46.163086+00:00",
+      "duration_seconds": 2.4225380420684814,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 653,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 9574,
+      "completion_tokens": 173,
+      "total_tokens": 9747,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 2,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:20:03.304706+00:00",
+      "duration_seconds": 6.62069034576416,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 3035,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 12214,
+      "completion_tokens": 765,
+      "total_tokens": 12979,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 3,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:20:15.946960+00:00",
+      "duration_seconds": 6.422098875045776,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 152,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 13950,
+      "completion_tokens": 66,
+      "total_tokens": 14016,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 4,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:20:29.331851+00:00",
+      "duration_seconds": 8.056028842926025,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 14278,
+      "completion_tokens": 27,
+      "total_tokens": 14305,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 5,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:20:52.823723+00:00",
+      "duration_seconds": 17.643882989883423,
+      "success": false,
+      "error": "planner returned no executable tool call",
+      "transport_retries": 0,
+      "response_length": 10045,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 15499,
+      "completion_tokens": 2770,
+      "total_tokens": 18269,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 5,
+      "attempt_number": 2,
+      "timestamp": "2026-09-01T16:21:20.643517+00:00",
+      "duration_seconds": 27.8196759223938,
+      "success": false,
+      "error": "planner returned no executable tool call",
+      "transport_retries": 0,
+      "response_length": 15995,
+      "finish_reason": "length",
+      "prompt_tokens": 15540,
+      "completion_tokens": 4096,
+      "total_tokens": 19636,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 6,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:21:47.578181+00:00",
+      "duration_seconds": 26.214162826538086,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 13200,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 15537,
+      "completion_tokens": 3334,
+      "total_tokens": 18871,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 7,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:22:13.257673+00:00",
+      "duration_seconds": 17.77249312400818,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 12020,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 16442,
+      "completion_tokens": 2836,
+      "total_tokens": 19278,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 8,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:22:32.037836+00:00",
+      "duration_seconds": 8.907827854156494,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 5388,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 15876,
+      "completion_tokens": 1220,
+      "total_tokens": 17096,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 9,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:22:48.700246+00:00",
+      "duration_seconds": 13.539009094238281,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 8585,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 16572,
+      "completion_tokens": 2117,
+      "total_tokens": 18689,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 10,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:23:01.741972+00:00",
+      "duration_seconds": 7.35132908821106,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 3553,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 17270,
+      "completion_tokens": 973,
+      "total_tokens": 18243,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 11,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:23:20.192218+00:00",
+      "duration_seconds": 11.245015859603882,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 5998,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 18774,
+      "completion_tokens": 1567,
+      "total_tokens": 20341,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 12,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:23:47.266176+00:00",
+      "duration_seconds": 20.27534508705139,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 12996,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 20106,
+      "completion_tokens": 3452,
+      "total_tokens": 23558,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 13,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:24:39.253913+00:00",
+      "duration_seconds": 15.887618064880371,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 9477,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 20847,
+      "completion_tokens": 2539,
+      "total_tokens": 23386,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 14,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:25:09.829064+00:00",
+      "duration_seconds": 26.500983953475952,
+      "success": false,
+      "error": "planner returned no executable tool call",
+      "transport_retries": 0,
+      "response_length": 17278,
+      "finish_reason": "length",
+      "prompt_tokens": 20917,
+      "completion_tokens": 4096,
+      "total_tokens": 25013,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 14,
+      "attempt_number": 2,
+      "timestamp": "2026-09-01T16:25:18.273012+00:00",
+      "duration_seconds": 8.443852186203003,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 5122,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 20958,
+      "completion_tokens": 1254,
+      "total_tokens": 22212,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 15,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:26:04.294571+00:00",
+      "duration_seconds": 40.83458590507507,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 16734,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 20168,
+      "completion_tokens": 4096,
+      "total_tokens": 24264,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 16,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:26:39.582324+00:00",
+      "duration_seconds": 28.54324507713318,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 5893,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 20933,
+      "completion_tokens": 1615,
+      "total_tokens": 22548,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 17,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:27:04.208629+00:00",
+      "duration_seconds": 19.348714113235474,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 10486,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 21496,
+      "completion_tokens": 2848,
+      "total_tokens": 24344,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 18,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:27:40.169810+00:00",
+      "duration_seconds": 29.016634941101074,
+      "success": false,
+      "error": "planner returned no executable tool call",
+      "transport_retries": 0,
+      "response_length": 15818,
+      "finish_reason": "length",
+      "prompt_tokens": 21569,
+      "completion_tokens": 4096,
+      "total_tokens": 25665,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 18,
+      "attempt_number": 2,
+      "timestamp": "2026-09-01T16:28:09.341799+00:00",
+      "duration_seconds": 29.17199182510376,
+      "success": false,
+      "error": "planner returned no executable tool call",
+      "transport_retries": 0,
+      "response_length": 17320,
+      "finish_reason": "length",
+      "prompt_tokens": 21610,
+      "completion_tokens": 4096,
+      "total_tokens": 25706,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 19,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:28:32.310078+00:00",
+      "duration_seconds": 22.185359954833984,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 13144,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 21559,
+      "completion_tokens": 3172,
+      "total_tokens": 24731,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 20,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:28:51.265931+00:00",
+      "duration_seconds": 14.923565149307251,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 8482,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 21332,
+      "completion_tokens": 2199,
+      "total_tokens": 23531,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 21,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:29:06.554099+00:00",
+      "duration_seconds": 11.814792156219482,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 6366,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 21479,
+      "completion_tokens": 1714,
+      "total_tokens": 23193,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 22,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:29:46.910690+00:00",
+      "duration_seconds": 34.73602318763733,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 10862,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 20766,
+      "completion_tokens": 2529,
+      "total_tokens": 23295,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 23,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:30:03.370977+00:00",
+      "duration_seconds": 14.259618997573853,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 7481,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 19798,
+      "completion_tokens": 1827,
+      "total_tokens": 21625,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 24,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:31:04.255209+00:00",
+      "duration_seconds": 34.78457975387573,
+      "success": false,
+      "error": "planner returned no executable tool call",
+      "transport_retries": 0,
+      "response_length": 18235,
+      "finish_reason": "length",
+      "prompt_tokens": 18103,
+      "completion_tokens": 4096,
+      "total_tokens": 22199,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 24,
+      "attempt_number": 2,
+      "timestamp": "2026-09-01T16:31:40.241396+00:00",
+      "duration_seconds": 35.98613405227661,
+      "success": false,
+      "error": "planner returned no executable tool call",
+      "transport_retries": 0,
+      "response_length": 18429,
+      "finish_reason": "length",
+      "prompt_tokens": 18144,
+      "completion_tokens": 4096,
+      "total_tokens": 22240,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 25,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:32:16.983899+00:00",
+      "duration_seconds": 36.07886099815369,
+      "success": false,
+      "error": "planner returned no executable tool call",
+      "transport_retries": 0,
+      "response_length": 18376,
+      "finish_reason": "length",
+      "prompt_tokens": 18119,
+      "completion_tokens": 4096,
+      "total_tokens": 22215,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    }
+  ],
+  "events": [
+    {
+      "type": "strategy_switch",
+      "timestamp": "2026-09-01T16:21:20.643713+00:00",
+      "step_number": 5,
+      "previous": "default",
+      "current": "recovery",
+      "reason": "planner failed to produce an executable action"
+    },
+    {
+      "type": "replan",
+      "timestamp": "2026-09-01T16:21:20.643740+00:00",
+      "step_number": 5,
+      "reason": "planner failed to produce an executable action",
+      "strategy": "recovery",
+      "exhausted": false
+    },
+    {
+      "type": "strategy_switch",
+      "timestamp": "2026-09-01T16:21:55.485121+00:00",
+      "step_number": 7,
+      "previous": "recovery",
+      "current": "alternate-navigation",
+      "reason": "loop detector reported search_churn"
+    },
+    {
+      "type": "replan",
+      "timestamp": "2026-09-01T16:21:55.485143+00:00",
+      "step_number": 7,
+      "reason": "loop detector reported search_churn",
+      "strategy": "alternate-navigation",
+      "exhausted": false
+    },
+    {
+      "type": "strategy_switch",
+      "timestamp": "2026-09-01T16:24:43.328063+00:00",
+      "step_number": 14,
+      "previous": "alternate-navigation",
+      "current": "semantic-dom",
+      "reason": "loop detector reported search_churn"
+    },
+    {
+      "type": "replan",
+      "timestamp": "2026-09-01T16:24:43.328081+00:00",
+      "step_number": 14,
+      "reason": "loop detector reported search_churn",
+      "strategy": "semantic-dom",
+      "exhausted": false
+    },
+    {
+      "type": "strategy_switch",
+      "timestamp": "2026-09-01T16:28:09.342254+00:00",
+      "step_number": 18,
+      "previous": "semantic-dom",
+      "current": "search-discovery",
+      "reason": "planner failed to produce an executable action"
+    },
+    {
+      "type": "replan",
+      "timestamp": "2026-09-01T16:28:09.342307+00:00",
+      "step_number": 18,
+      "reason": "planner failed to produce an executable action",
+      "strategy": "search-discovery",
+      "exhausted": false
+    },
+    {
+      "type": "strategy_switch",
+      "timestamp": "2026-09-01T16:28:54.739298+00:00",
+      "step_number": 21,
+      "previous": "search-discovery",
+      "current": "visual-grounding",
+      "reason": "loop detector reported search_churn"
+    },
+    {
+      "type": "replan",
+      "timestamp": "2026-09-01T16:28:54.739315+00:00",
+      "step_number": 21,
+      "reason": "loop detector reported search_churn",
+      "strategy": "visual-grounding",
+      "exhausted": false
+    },
+    {
+      "type": "strategy_switch",
+      "timestamp": "2026-09-01T16:31:40.241677+00:00",
+      "step_number": 24,
+      "previous": "visual-grounding",
+      "current": "document-local",
+      "reason": "planner failed to produce an executable action"
+    },
+    {
+      "type": "replan",
+      "timestamp": "2026-09-01T16:31:40.241723+00:00",
+      "step_number": 24,
+      "reason": "planner failed to produce an executable action",
+      "strategy": "document-local",
+      "exhausted": false
+    }
+  ],
+  "steps": [
+    {
+      "step_number": 1,
+      "run_id": "85f02705-dc40-46ba-ab68-a765deebf5ae",
+      "timestamp": "2026-09-01T16:19:55.983611+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "Qwen technical report 2025 PDF",
+        "recency": "year"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "Qwen technical report 2025 PDF",
+        "engine": "bing",
+        "url": "https://www.bing.com/search?q=Qwen+technical+report+2025+PDF&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=C635903FF3C246729C85CC916D806406&filt=custom&sc=0-y-0",
+        "title": "Qwen technical report 2025 PDF - Search",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "success"
+          }
+        ],
+        "search_market": "en-US",
+        "results": [
+          {
+            "title": "Qwen",
+            "url": "https://qwen.ai/home",
+            "date": ""
+          },
+          {
+            "title": "Qwen Studio",
+            "url": "https://chat.qwen.ai/auth?action=signin",
+            "date": ""
+          },
+          {
+            "title": "Qwen",
+            "url": "https://qwen.ai/blog?id=qwen3.6",
+            "date": ""
+          },
+          {
+            "title": "Qwen - Wikipedia",
+            "url": "https://en.wikipedia.org/wiki/Qwen",
+            "date": ""
+          },
+          {
+            "title": "Qwen (Qwen) - Hugging Face",
+            "url": "https://huggingface.co/Qwen",
+            "date": "Nov 27, 2024"
+          },
+          {
+            "title": "Qwen - Alibaba AI Assistant - Apps on Google Play",
+            "url": "https://play.google.com/store/apps/details?id=com.tongyi.intl&hl=en-US",
+            "date": ""
+          },
+          {
+            "title": "Qwen3.8 | OpenLM.ai",
+            "url": "https://openlm.ai/qwen3.8/",
+            "date": "Aug 2, 2026"
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"Qwen technical report 2025 PDF\", \"engine\": \"bing\", \"url\": \"https://www.bing.com/search?q=Qwen+technical+report+2025+PDF&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=C635903FF3C246729C85CC916D806406&filt=custom&sc=0-y-0\", \"title\": \"Qwen technical report 2025 PDF - Search\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"success\"}], \"search_market\": \"en-US\", \"results\": [{\"title\": \"Qwen\", \"url\": \"https://qwen.ai/home\", \"date\": \"\"}, {\"title\": \"Qwen Studio\", \"url\": \"https://chat.qwen.ai/auth?action=signin\", \"date\": \"\"}, {\"title\": \"Qwen\", \"url\": \"https://qwen.ai/blog?id=qwen3.6\", \"date\": \"\"}, {\"title\": \"Qwen - Wikipedia\", \"url\": \"https://en.wikipedia.org/wiki/Qwen\", \"date\": \"\"}, {\"title\": \"Qwen (Qwen) - Hugging Face\", \"url\": \"https://huggingface.co/Qwen\", \"date\": \"Nov 27, 2024\"}, {\"title\": \"Qwen - Alibaba AI Assistant - Apps on Google Play\", \"url\": \"https://play.google.com/store/apps/details?id=com.tongyi.intl&hl=en-US\", \"date\": \"\"}, {\"title\": \"Qwen3.8 | OpenLM.ai\", \"url\": \"https://openlm.ai/qwen3.8/\", \"date\": \"Aug 2, 2026\"}]}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser search provides grounded discovery",
+        "policy_step": 1,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 1,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": false,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "at least two successful browser searches with distinct queries",
+          "a subject-wide current-year release landscape search whose results show relevant model/version/release evidence",
+          "a non-site official identity search for the subject",
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)",
+          "an exact version follow-up search for the highest observed version 'qwen3.8'"
+        ],
+        "new_urls_observed": 21,
+        "observed_url_count": 21,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 12.877631902694702,
+      "tool_duration_seconds": 8.183441162109375
+    },
+    {
+      "step_number": 2,
+      "run_id": "85f02705-dc40-46ba-ab68-a765deebf5ae",
+      "timestamp": "2026-09-01T16:20:08.814305+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "Qwen3.8",
+        "recency": "year"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "Qwen3.8",
+        "engine": "bing",
+        "url": "https://www.bing.com/search?q=Qwen3.8&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=DCF153F024494E11953EF3AD51B1C250&filt=custom&sc=0-y-0",
+        "title": "Qwen3.8 - Search",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "success"
+          }
+        ],
+        "search_market": "en-US",
+        "results": [
+          {
+            "title": "Qwen3.8 | OpenLM.ai",
+            "url": "https://openlm.ai/qwen3.8/",
+            "date": "Aug 2, 2026"
+          },
+          {
+            "title": "GitHub - QwenLM/Qwen3.8: Qwen3.8 is the large language model …",
+            "url": "https://github.com/QwenLM/Qwen3.8",
+            "date": ""
+          },
+          {
+            "title": "Qwen/Qwen3.8-27B · Hugging Face",
+            "url": "https://huggingface.co/Qwen/Qwen3.8-27B",
+            "date": ""
+          },
+          {
+            "title": "Qwen3.8-Max: A New Bar for Coding and Cowork",
+            "url": "https://qwen.ai/blog?id=qwen3.8",
+            "date": ""
+          },
+          {
+            "title": "Qwen3.8 - How to Run Locally | Unsloth Documentation",
+            "url": "https://unsloth.ai/docs/models/qwen3.8",
+            "date": ""
+          },
+          {
+            "title": "Qwen/Qwen3.8-Flash-Next · Hugging Face",
+            "url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next",
+            "date": "Aug 25, 2026"
+          },
+          {
+            "title": "Qwen/Qwen3.8-27B | vLLM Recipes",
+            "url": "https://recipes.vllm.ai/Qwen/Qwen3.8-27B",
+            "date": ""
+          },
+          {
+            "title": "qwen3.8",
+            "url": "https://ollama.com/library/qwen3.8",
+            "date": "Aug 14, 2026"
+          },
+          {
+            "title": "Qwen3.8-27B: The Ultimate Guide to Running It Locally",
+            "url": "https://linas.substack.com/p/qwen3-8-27b-local-guide",
+            "date": "Aug 20, 2026"
+          },
+          {
+            "title": "Alibaba Unveils Qwen3.8-Max: Its Largest and Most Capable Flagship ...",
+            "url": "https://www.alibabagroup.com/document-2021044032125272064",
+            "date": "Aug 3, 2026"
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"Qwen3.8\", \"engine\": \"bing\", \"url\": \"https://www.bing.com/search?q=Qwen3.8&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=DCF153F024494E11953EF3AD51B1C250&filt=custom&sc=0-y-0\", \"title\": \"Qwen3.8 - Search\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"success\"}], \"search_market\": \"en-US\", \"results\": [{\"title\": \"Qwen3.8 | OpenLM.ai\", \"url\": \"https://openlm.ai/qwen3.8/\", \"date\": \"Aug 2, 2026\"}, {\"title\": \"GitHub - QwenLM/Qwen3.8: Qwen3.8 is the large language model …\", \"url\": \"https://github.com/QwenLM/Qwen3.8\", \"date\": \"\"}, {\"title\": \"Qwen/Qwen3.8-27B · Hugging Face\", \"url\": \"https://huggingface.co/Qwen/Qwen3.8-27B\", \"date\": \"\"}, {\"title\": \"Qwen3.8-Max: A New Bar for Coding and Cowork\", \"url\": \"https://qwen.ai/blog?id=qwen3.8\", \"date\": \"\"}, {\"title\": \"Qwen3.8 - How to Run Locally | Unsloth Documentation\", \"url\": \"https://unsloth.ai/docs/models/qwen3.8\", \"date\": \"\"}, {\"title\": \"Qwen/Qwen3.8-Flash-Next · Hugging Face\", \"url\": \"https://huggingface.co/Qwen/Qwen3.8-Flash-Next\", \"date\": \"Aug 25, 2026\"}, {\"title\": \"Qwen/Qwen3.8-27B | vLLM Recipes\", \"url\": \"https://recipes.vllm.ai/Qwen/Qwen3.8-27B\", \"date\": \"\"}, {\"title\": \"qwen3.8\", \"url\": \"https://ollama.com/library/qwen3.8\", \"date\": \"Aug 14, 2026\"}, {\"title\": \"Qwen3.8-27B: The Ultimate Guide to Running It Locally\", \"url\": \"https://linas.substack.com/p/qwen3-8-27b-local-guide\", \"date\": \"Aug 20, 2026\"}, {\"title\": \"Alibaba Unveils Qwen3.8-Max: Its Largest and Most Capable Flagship ...\", \"url\": \"https://www.alibabagroup.com/document-2021044032125272064\", \"date\": \"Aug 3, 2026\"}]}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser search provides grounded discovery",
+        "policy_step": 2,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 2,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "a subject-wide current-year release landscape search whose results show relevant model/version/release evidence",
+          "a non-site official identity search for the subject",
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 23,
+        "observed_url_count": 44,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 12.828559160232544,
+      "tool_duration_seconds": 4.321545839309692
+    },
+    {
+      "step_number": 3,
+      "run_id": "85f02705-dc40-46ba-ab68-a765deebf5ae",
+      "timestamp": "2026-09-01T16:20:20.388000+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "Qwen model releases 2026 technical report lineup Qwen3.8",
+        "recency": "year"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "Qwen model releases 2026 technical report lineup Qwen3.8",
+        "engine": "bing",
+        "url": "https://www.bing.com/search?q=Qwen+model+releases+2026+technical+report+lineup+Qwen3.8&mkt=en-US&cc=us&setlang=en-US&filt=custom&sc=0-y-0",
+        "title": "Qwen model releases 2026 technical report lineup Qwen3.8 - Search",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "success"
+          }
+        ],
+        "search_market": "en-US",
+        "results": [
+          {
+            "title": "Qwen",
+            "url": "https://qwen.ai/home",
+            "date": ""
+          },
+          {
+            "title": "Qwen Studio",
+            "url": "https://chat.qwen.ai/auth?action=signin",
+            "date": ""
+          },
+          {
+            "title": "Qwen",
+            "url": "https://qwen.ai/blog?id=qwen3.6",
+            "date": ""
+          },
+          {
+            "title": "Qwen - Wikipedia",
+            "url": "https://en.wikipedia.org/wiki/Qwen",
+            "date": ""
+          },
+          {
+            "title": "Qwen (Qwen) - Hugging Face",
+            "url": "https://huggingface.co/Qwen",
+            "date": "Nov 27, 2024"
+          },
+          {
+            "title": "Qwen - Alibaba AI Assistant - Apps on Google Play",
+            "url": "https://play.google.com/store/apps/details?id=com.tongyi.intl&hl=en-US",
+            "date": ""
+          },
+          {
+            "title": "Qwen3.8 | OpenLM.ai",
+            "url": "https://openlm.ai/qwen3.8/",
+            "date": "Aug 2, 2026"
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"Qwen model releases 2026 technical report lineup Qwen3.8\", \"engine\": \"bing\", \"url\": \"https://www.bing.com/search?q=Qwen+model+releases+2026+technical+report+lineup+Qwen3.8&mkt=en-US&cc=us&setlang=en-US&filt=custom&sc=0-y-0\", \"title\": \"Qwen model releases 2026 technical report lineup Qwen3.8 - Search\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"success\"}], \"search_market\": \"en-US\", \"results\": [{\"title\": \"Qwen\", \"url\": \"https://qwen.ai/home\", \"date\": \"\"}, {\"title\": \"Qwen Studio\", \"url\": \"https://chat.qwen.ai/auth?action=signin\", \"date\": \"\"}, {\"title\": \"Qwen\", \"url\": \"https://qwen.ai/blog?id=qwen3.6\", \"date\": \"\"}, {\"title\": \"Qwen - Wikipedia\", \"url\": \"https://en.wikipedia.org/wiki/Qwen\", \"date\": \"\"}, {\"title\": \"Qwen (Qwen) - Hugging Face\", \"url\": \"https://huggingface.co/Qwen\", \"date\": \"Nov 27, 2024\"}, {\"title\": \"Qwen - Alibaba AI Assistant - Apps on Google Play\", \"url\": \"https://play.google.com/store/apps/details?id=com.tongyi.intl&hl=en-US\", \"date\": \"\"}, {\"title\": \"Qwen3.8 | OpenLM.ai\", \"url\": \"https://openlm.ai/qwen3.8/\", \"date\": \"Aug 2, 2026\"}]}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser search provides grounded discovery",
+        "policy_step": 3,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 3,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "a subject-wide current-year release landscape search whose results show relevant model/version/release evidence",
+          "a non-site official identity search for the subject",
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 3,
+        "observed_url_count": 47,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 11.571067094802856,
+      "tool_duration_seconds": 1.9268217086791992
+    },
+    {
+      "step_number": 4,
+      "run_id": "85f02705-dc40-46ba-ab68-a765deebf5ae",
+      "timestamp": "2026-09-01T16:20:34.457707+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "Qwen3.8 technical report arxiv PDF",
+        "recency": "year"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "Qwen3.8 technical report arxiv PDF",
+        "engine": "bing",
+        "url": "https://www.bing.com/search?q=Qwen3.8+technical+report+arxiv+PDF&mkt=en-US&cc=us&setlang=en-US&filt=custom&sc=0-y-0&rdr=1&rdrig=1BEE7720B3B942618C731A2D9A03013E",
+        "title": "Qwen3.8 technical report arxiv PDF - Search",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "success"
+          }
+        ],
+        "search_market": "en-US",
+        "results": [
+          {
+            "title": "Qwen",
+            "url": "https://qwen.ai/blog?id=qwen3",
+            "date": "Apr 28, 2025"
+          },
+          {
+            "title": "GitHub - QwenLM/Qwen3: Qwen3 is the large language model series ...",
+            "url": "https://github.com/QwenLM/Qwen3",
+            "date": ""
+          },
+          {
+            "title": "Qwen3 - a Qwen Collection - Hugging Face",
+            "url": "https://huggingface.co/collections/Qwen/qwen3",
+            "date": "May 14, 2025"
+          },
+          {
+            "title": "[2505.09388] Qwen3 Technical Report - arXiv.org",
+            "url": "https://arxiv.org/abs/2505.09388",
+            "date": "May 14, 2025"
+          },
+          {
+            "title": "Qwen/Qwen3-8B · Hugging Face",
+            "url": "https://huggingface.co/Qwen/Qwen3-8B",
+            "date": ""
+          },
+          {
+            "title": "Qwen3.8-Max - 千问AI平台",
+            "url": "https://www.qianwenai.com/models/qwen3.8-max",
+            "date": ""
+          },
+          {
+            "title": "Qwen3: Think Deeper, Act Faster | Hybrid Thinking AI Model",
+            "url": "https://qwen3.app/",
+            "date": ""
+          },
+          {
+            "title": "[2511.21631] Qwen3-VL Technical Report - arXiv.org",
+            "url": "https://arxiv.org/abs/2511.21631",
+            "date": "Nov 26, 2025"
+          },
+          {
+            "title": "Qwen3.8-Max: A New Bar for Coding and Cowork",
+            "url": "https://qwen.ai/blog?id=qwen3.8",
+            "date": ""
+          },
+          {
+            "title": "GitHub - QwenLM/Qwen3.8: Qwen3.8 is the large language model …",
+            "url": "https://github.com/QwenLM/Qwen3.8",
+            "date": ""
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"Qwen3.8 technical report arxiv PDF\", \"engine\": \"bing\", \"url\": \"https://www.bing.com/search?q=Qwen3.8+technical+report+arxiv+PDF&mkt=en-US&cc=us&setlang=en-US&filt=custom&sc=0-y-0&rdr=1&rdrig=1BEE7720B3B942618C731A2D9A03013E\", \"title\": \"Qwen3.8 technical report arxiv PDF - Search\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"success\"}], \"search_market\": \"en-US\", \"results\": [{\"title\": \"Qwen\", \"url\": \"https://qwen.ai/blog?id=qwen3\", \"date\": \"Apr 28, 2025\"}, {\"title\": \"GitHub - QwenLM/Qwen3: Qwen3 is the large language model series ...\", \"url\": \"https://github.com/QwenLM/Qwen3\", \"date\": \"\"}, {\"title\": \"Qwen3 - a Qwen Collection - Hugging Face\", \"url\": \"https://huggingface.co/collections/Qwen/qwen3\", \"date\": \"May 14, 2025\"}, {\"title\": \"[2505.09388] Qwen3 Technical Report - arXiv.org\", \"url\": \"https://arxiv.org/abs/2505.09388\", \"date\": \"May 14, 2025\"}, {\"title\": \"Qwen/Qwen3-8B · Hugging Face\", \"url\": \"https://huggingface.co/Qwen/Qwen3-8B\", \"date\": \"\"}, {\"title\": \"Qwen3.8-Max - 千问AI平台\", \"url\": \"https://www.qianwenai.com/models/qwen3.8-max\", \"date\": \"\"}, {\"title\": \"Qwen3: Think Deeper, Act Faster | Hybrid Thinking AI Model\", \"url\": \"https://qwen3.app/\", \"date\": \"\"}, {\"title\": \"[2511.21631] Qwen3-VL Technical Report - arXiv.org\", \"url\": \"https://arxiv.org/abs/2511.21631\", \"date\": \"Nov 26, 2025\"}, {\"title\": \"Qwen3.8-Max: A New Bar for Coding and Cowork\", \"url\": \"https://qwen.ai/blog?id=qwen3.8\", \"date\": \"\"}, {\"title\": \"GitHub - QwenLM/Qwen3.8: Qwen3.8 is the large language model …\", \"url\": \"https://github.com/QwenLM/Qwen3.8\", \"date\": \"\"}]}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser search provides grounded discovery",
+        "policy_step": 4,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 4,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "a subject-wide current-year release landscape search whose results show relevant model/version/release evidence",
+          "a non-site official identity search for the subject",
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 20,
+        "observed_url_count": 67,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 14.06638216972351,
+      "tool_duration_seconds": 3.9372611045837402
+    },
+    {
+      "step_number": 6,
+      "run_id": "85f02705-dc40-46ba-ab68-a765deebf5ae",
+      "timestamp": "2026-09-01T16:21:54.747731+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "Alibaba Qwen model releases 2026",
+        "recency": "year"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "Alibaba Qwen model releases 2026",
+        "engine": "bing",
+        "url": "https://www.bing.com/search?q=Alibaba+Qwen+model+releases+2026&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=0D6750E6A93648C5B9E9F4E8F4D4706B&filt=custom&sc=0-y-0",
+        "title": "Alibaba Qwen model releases 2026 - Search",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "success"
+          }
+        ],
+        "search_market": "en-US",
+        "results": [
+          {
+            "title": "Alibaba.com: Manufacturers, Suppliers, Exporters & Importers from …",
+            "url": "https://www.alibaba.com/",
+            "date": ""
+          },
+          {
+            "title": "Alibaba.com",
+            "url": "https://www.alibaba.com/catalogs/",
+            "date": ""
+          },
+          {
+            "title": "Alibaba Group Official Website",
+            "url": "https://www.alibabagroup.com/en-US/",
+            "date": ""
+          },
+          {
+            "title": "Alibaba.com-Alibaba Group",
+            "url": "https://www.alibabagroup.com/en-US/about-alibaba-businesses-1747711844698554368",
+            "date": ""
+          },
+          {
+            "title": "Alibaba Group - Wikipedia",
+            "url": "https://en.wikipedia.org/wiki/Alibaba_Group",
+            "date": ""
+          },
+          {
+            "title": "Alibaba - la plataforma de comercio entre empresas en línea más …",
+            "url": "https://spanish.alibaba.com/",
+            "date": ""
+          },
+          {
+            "title": "阿里1688首页",
+            "url": "https://www.1688.com/",
+            "date": ""
+          },
+          {
+            "title": "AliExpress - Affordable Chinese Stores & Free Shipping - Online …",
+            "url": "https://www.aliexpress.com/",
+            "date": ""
+          },
+          {
+            "title": "Alibaba Manufacturer Directory - Suppliers, Manufacturers, Exporters ...",
+            "url": "https://i.alibaba.com/",
+            "date": ""
+          },
+          {
+            "title": "all categories - Alibaba",
+            "url": "https://sale.alibaba.com/category/products/index.html",
+            "date": ""
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"Alibaba Qwen model releases 2026\", \"engine\": \"bing\", \"url\": \"https://www.bing.com/search?q=Alibaba+Qwen+model+releases+2026&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=0D6750E6A93648C5B9E9F4E8F4D4706B&filt=custom&sc=0-y-0\", \"title\": \"Alibaba Qwen model releases 2026 - Search\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"success\"}], \"search_market\": \"en-US\", \"results\": [{\"title\": \"Alibaba.com: Manufacturers, Suppliers, Exporters & Importers from …\", \"url\": \"https://www.alibaba.com/\", \"date\": \"\"}, {\"title\": \"Alibaba.com\", \"url\": \"https://www.alibaba.com/catalogs/\", \"date\": \"\"}, {\"title\": \"Alibaba Group Official Website\", \"url\": \"https://www.alibabagroup.com/en-US/\", \"date\": \"\"}, {\"title\": \"Alibaba.com-Alibaba Group\", \"url\": \"https://www.alibabagroup.com/en-US/about-alibaba-businesses-1747711844698554368\", \"date\": \"\"}, {\"title\": \"Alibaba Group - Wikipedia\", \"url\": \"https://en.wikipedia.org/wiki/Alibaba_Group\", \"date\": \"\"}, {\"title\": \"Alibaba - la plataforma de comercio entre empresas en línea más …\", \"url\": \"https://spanish.alibaba.com/\", \"date\": \"\"}, {\"title\": \"阿里1688首页\", \"url\": \"https://www.1688.com/\", \"date\": \"\"}, {\"title\": \"AliExpress - Affordable Chinese Stores & Free Shipping - Online …\", \"url\": \"https://www.aliexpress.com/\", \"date\": \"\"}, {\"title\": \"Alibaba Manufacturer Directory - Suppliers, Manufacturers, Exporters ...\", \"url\": \"https://i.alibaba.com/\", \"date\": \"\"}, {\"title\": \"all categories - Alibaba\", \"url\": \"https://sale.alibaba.com/category/products/index.html\", \"date\": \"\"}]}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser search provides grounded discovery",
+        "policy_step": 5,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 5,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "a subject-wide current-year release landscape search whose results show relevant model/version/release evidence",
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 22,
+        "observed_url_count": 89,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 34.08687210083008,
+      "tool_duration_seconds": 5.95635986328125
+    },
+    {
+      "step_number": 7,
+      "run_id": "85f02705-dc40-46ba-ab68-a765deebf5ae",
+      "timestamp": "2026-09-01T16:22:22.152025+00:00",
+      "tool": "goto",
+      "parameters": {
+        "url": "https://github.com/QwenLM/Qwen3.8",
+        "wait_until": "load"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "url": "https://github.com/QwenLM/Qwen3.8",
+        "title": "GitHub - QwenLM/Qwen3.8: Qwen3.8 is the large language model series developed by Qwen team, Alibaba Group. · GitHub"
+      },
+      "planner_visible_result": "{\"url\": \"https://github.com/QwenLM/Qwen3.8\", \"title\": \"GitHub - QwenLM/Qwen3.8: Qwen3.8 is the large language model series developed by Qwen team, Alibaba Group. · GitHub\"}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "target URL is grounded in prior browser evidence",
+        "policy_step": 6,
+        "target": "https://github.com/QwenLM/Qwen3.8",
+        "provenance": {
+          "source": "search_planner_visible",
+          "policy_step": 2,
+          "page_url": "https://www.bing.com/search?q=Qwen3.8&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=DCF153F024494E11953EF3AD51B1C250&filt=custom&sc=0-y-0"
+        },
+        "search_completed": true,
+        "successful_searches": 5,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "a subject-wide current-year release landscape search whose results show relevant model/version/release evidence",
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 1,
+        "observed_url_count": 90,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 27.39973211288452,
+      "tool_duration_seconds": 7.382270336151123
+    },
+    {
+      "step_number": 8,
+      "run_id": "85f02705-dc40-46ba-ab68-a765deebf5ae",
+      "timestamp": "2026-09-01T16:22:34.213461+00:00",
+      "tool": "get_all_links",
+      "parameters": {
+        "max_results": 100
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "total_count": 180,
+        "returned": 100,
+        "links": [
+          {
+            "href": "/contact/report-content?content_url=https%3A%2F%2Fgithub.com%2FQwenLM%2FQwen3.8&report=QwenLM+%28user%29",
+            "text": "Report repository"
+          },
+          {
+            "href": "#start-of-content",
+            "text": "Skip to content"
+          },
+          {
+            "href": "/login?return_to=https%3A%2F%2Fgithub.com%2FQwenLM%2FQwen3.8",
+            "text": "Sign in"
+          },
+          {
+            "href": "https://github.com/mcp",
+            "text": "MCP RegistryIntegrate external tools"
+          },
+          {
+            "href": "https://github.com/security/advanced-security",
+            "text": "GitHub Advanced SecurityFind and fix vulnerabilities"
+          },
+          {
+            "href": "https://github.com/security/advanced-security/code-security",
+            "text": "Code securitySecure your code as you build"
+          },
+          {
+            "href": "https://github.com/security/advanced-security/secret-protection",
+            "text": "Secret protectionStop leaks before they start"
+          },
+          {
+            "href": "https://github.com/why-github",
+            "text": "Why GitHub"
+          },
+          {
+            "href": "https://docs.github.com",
+            "text": "Documentation"
+          },
+          {
+            "href": "https://github.blog",
+            "text": "Blog"
+          },
+          {
+            "href": "https://github.blog/changelog",
+            "text": "Changelog"
+          },
+          {
+            "href": "https://github.com/features",
+            "text": "View all features"
+          },
+          {
+            "href": "https://github.com/team",
+            "text": "Small and medium teams"
+          },
+          {
+            "href": "https://github.com/solutions",
+            "text": "View all solutions"
+          },
+          {
+            "href": "https://skills.github.com",
+            "text": "GitHub Skills"
+          },
+          {
+            "href": "https://support.github.com",
+            "text": "Customer support"
+          },
+          {
+            "href": "https://github.com/orgs/community/discussions",
+            "text": "Community forum"
+          },
+          {
+            "href": "https://github.com/trust-center",
+            "text": "Trust center"
+          },
+          {
+            "href": "https://github.com/partners",
+            "text": "Partners"
+          },
+          {
+            "href": "https://github.com/resources",
+            "text": "View all resources"
+          }
+        ]
+      },
+      "planner_visible_result": "{\"total_count\": 180, \"returned\": 100, \"links\": [{\"href\": \"/contact/report-content?content_url=https%3A%2F%2Fgithub.com%2FQwenLM%2FQwen3.8&report=QwenLM+%28user%29\", \"text\": \"Report repository\"}, {\"href\": \"#start-of-content\", \"text\": \"Skip to content\"}, {\"href\": \"/login?return_to=https%3A%2F%2Fgithub.com%2FQwenLM%2FQwen3.8\", \"text\": \"Sign in\"}, {\"href\": \"https://github.com/mcp\", \"text\": \"MCP RegistryIntegrate external tools\"}, {\"href\": \"https://github.com/security/advanced-security\", \"text\": \"GitHub Advanced SecurityFind and fix vulnerabilities\"}, {\"href\": \"https://github.com/security/advanced-security/code-security\", \"text\": \"Code securitySecure your code as you build\"}, {\"href\": \"https://github.com/security/advanced-security/secret-protection\", \"text\": \"Secret protectionStop leaks before they start\"}, {\"href\": \"https://github.com/why-github\", \"text\": \"Why GitHub\"}, {\"href\": \"https://docs.github.com\", \"text\": \"Documentation\"}, {\"href\": \"https://github.blog\", \"text\": \"Blog\"}, {\"href\": \"https://github.blog/changelog\", \"text\": \"Changelog\"}, {\"href\": \"https://github.com/features\", \"text\": \"View all features\"}, {\"href\": \"https://github.com/team\", \"text\": \"Small and medium teams\"}, {\"href\": \"https://github.com/solutions\", \"text\": \"View all solutions\"}, {\"href\": \"https://skills.github.com\", \"text\": \"GitHub Skills\"}, {\"href\": \"https://support.github.com\", \"text\": \"Customer support\"}, {\"href\": \"https://github.com/orgs/community/discussions\", \"text\": \"Community forum\"}, {\"href\": \"https://github.com/trust-center\", \"text\": \"Trust center\"}, {\"href\": \"https://github.com/partners\", \"text\": \"Partners\"}, {\"href\": \"https://github.com/resources\", \"text\": \"View all resources\"}]}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 7,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 5,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "a subject-wide current-year release landscape search whose results show relevant model/version/release evidence",
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 39,
+        "observed_url_count": 129,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 12.056769132614136,
+      "tool_duration_seconds": 0.6916091442108154
+    },
+    {
+      "step_number": 9,
+      "run_id": "85f02705-dc40-46ba-ab68-a765deebf5ae",
+      "timestamp": "2026-09-01T16:22:53.700711+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "Qwen releases new models 2026",
+        "recency": "year"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "Qwen releases new models 2026",
+        "engine": "bing",
+        "url": "https://www.bing.com/search?q=Qwen+releases+new+models+2026&mkt=en-US&cc=us&setlang=en-US&filt=custom&sc=0-y-0",
+        "title": "Qwen releases new models 2026 - Search",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "success"
+          }
+        ],
+        "search_market": "en-US",
+        "results": [
+          {
+            "title": "Qwen",
+            "url": "https://qwen.ai/home",
+            "date": ""
+          },
+          {
+            "title": "Qwen Studio",
+            "url": "https://chat.qwen.ai/auth?action=signin",
+            "date": ""
+          },
+          {
+            "title": "Qwen",
+            "url": "https://qwen.ai/blog?id=qwen3.6",
+            "date": ""
+          },
+          {
+            "title": "Qwen - Wikipedia",
+            "url": "https://en.wikipedia.org/wiki/Qwen",
+            "date": ""
+          },
+          {
+            "title": "Qwen (Qwen) - Hugging Face",
+            "url": "https://huggingface.co/Qwen",
+            "date": "Nov 27, 2024"
+          },
+          {
+            "title": "Qwen - Alibaba AI Assistant - Apps on Google Play",
+            "url": "https://play.google.com/store/apps/details?id=com.tongyi.intl&hl=en-US",
+            "date": ""
+          },
+          {
+            "title": "Qwen3.8 | OpenLM.ai",
+            "url": "https://openlm.ai/qwen3.8/",
+            "date": "Aug 2, 2026"
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"Qwen releases new models 2026\", \"engine\": \"bing\", \"url\": \"https://www.bing.com/search?q=Qwen+releases+new+models+2026&mkt=en-US&cc=us&setlang=en-US&filt=custom&sc=0-y-0\", \"title\": \"Qwen releases new models 2026 - Search\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"success\"}], \"search_market\": \"en-US\", \"results\": [{\"title\": \"Qwen\", \"url\": \"https://qwen.ai/home\", \"date\": \"\"}, {\"title\": \"Qwen Studio\", \"url\": \"https://chat.qwen.ai/auth?action=signin\", \"date\": \"\"}, {\"title\": \"Qwen\", \"url\": \"https://qwen.ai/blog?id=qwen3.6\", \"date\": \"\"}, {\"title\": \"Qwen - Wikipedia\", \"url\": \"https://en.wikipedia.org/wiki/Qwen\", \"date\": \"\"}, {\"title\": \"Qwen (Qwen) - Hugging Face\", \"url\": \"https://huggingface.co/Qwen\", \"date\": \"Nov 27, 2024\"}, {\"title\": \"Qwen - Alibaba AI Assistant - Apps on Google Play\", \"url\": \"https://play.google.com/store/apps/details?id=com.tongyi.intl&hl=en-US\", \"date\": \"\"}, {\"title\": \"Qwen3.8 | OpenLM.ai\", \"url\": \"https://openlm.ai/qwen3.8/\", \"date\": \"Aug 2, 2026\"}]}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser search provides grounded discovery",
+        "policy_step": 8,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 6,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 3,
+        "observed_url_count": 132,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 19.480794191360474,
+      "tool_duration_seconds": 1.5729851722717285
+    },
+    {
+      "step_number": 10,
+      "run_id": "85f02705-dc40-46ba-ab68-a765deebf5ae",
+      "timestamp": "2026-09-01T16:23:08.228250+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "QwenLM Qwen3.8 technical report PDF",
+        "recency": "year"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "QwenLM Qwen3.8 technical report PDF",
+        "engine": "bing",
+        "url": "https://www.bing.com/search?q=QwenLM+Qwen3.8+technical+report+PDF&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=A5E0EC2980CD44698DC0AE13D86B87E9&filt=custom&sc=0-y-0",
+        "title": "QwenLM Qwen3.8 technical report PDF - Search",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "success"
+          }
+        ],
+        "search_market": "en-US",
+        "results": [
+          {
+            "title": "Qwen on X: \" Exciting News! We're thrilled to announce the launch of ...",
+            "url": "https://x.com/Alibaba_Qwen/status/1877426465349972113",
+            "date": "Jan 9, 2025"
+          },
+          {
+            "title": "X. It’s what’s happening / X",
+            "url": "https://x.com/",
+            "date": ""
+          },
+          {
+            "title": "Qwen just open sourced a plugin layer that gives any AI agent ...",
+            "url": "https://x.com/AGTPinsights/status/2086789169976689053",
+            "date": "Aug 10, 2026"
+          },
+          {
+            "title": "elvis on X: \"What's better than an open-weight multimodal model …",
+            "url": "https://x.com/omarsar0/status/2092634019473015218",
+            "date": "6 days ago"
+          },
+          {
+            "title": "Qwen on X: \" Meet Qwen3.6-27B, our latest dense, open-source …",
+            "url": "https://x.com/Alibaba_Qwen/status/2046939764428009914",
+            "date": "Apr 22, 2026"
+          },
+          {
+            "title": "Qwen 3.6 27B model is available on Ollama! Use it with all the ...",
+            "url": "https://x.com/ollama/status/2047066252523507916",
+            "date": "Apr 22, 2026"
+          },
+          {
+            "title": "Qwen on X: \" Seeing is just the beginning. With Qwen-MM-Plugins, …",
+            "url": "https://x.com/Alibaba_Qwen/status/2086664887560970531",
+            "date": "Aug 10, 2026"
+          },
+          {
+            "title": "kadd on X: \"125B parameters only 6B active per token and you can ...",
+            "url": "https://x.com/kaddisdeployed/status/2093341368332484744",
+            "date": "4 days ago"
+          },
+          {
+            "title": "koffuxu on X: \"刷到 QwenLM/qwen-code：Qwen 官方开源 AI 编程 …",
+            "url": "https://x.com/koffuxu/status/2092083388039803345",
+            "date": "Aug 25, 2026"
+          },
+          {
+            "title": "Qwen on X: \" Qwen Code v0.14.0 – v0.14.2 are now ... - x.com",
+            "url": "https://x.com/Alibaba_Qwen/status/2042551216769765449",
+            "date": "Apr 10, 2026"
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"QwenLM Qwen3.8 technical report PDF\", \"engine\": \"bing\", \"url\": \"https://www.bing.com/search?q=QwenLM+Qwen3.8+technical+report+PDF&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=A5E0EC2980CD44698DC0AE13D86B87E9&filt=custom&sc=0-y-0\", \"title\": \"QwenLM Qwen3.8 technical report PDF - Search\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"success\"}], \"search_market\": \"en-US\", \"results\": [{\"title\": \"Qwen on X: \\\" Exciting News! We're thrilled to announce the launch of ...\", \"url\": \"https://x.com/Alibaba_Qwen/status/1877426465349972113\", \"date\": \"Jan 9, 2025\"}, {\"title\": \"X. It’s what’s happening / X\", \"url\": \"https://x.com/\", \"date\": \"\"}, {\"title\": \"Qwen just open sourced a plugin layer that gives any AI agent ...\", \"url\": \"https://x.com/AGTPinsights/status/2086789169976689053\", \"date\": \"Aug 10, 2026\"}, {\"title\": \"elvis on X: \\\"What's better than an open-weight multimodal model …\", \"url\": \"https://x.com/omarsar0/status/2092634019473015218\", \"date\": \"6 days ago\"}, {\"title\": \"Qwen on X: \\\" Meet Qwen3.6-27B, our latest dense, open-source …\", \"url\": \"https://x.com/Alibaba_Qwen/status/2046939764428009914\", \"date\": \"Apr 22, 2026\"}, {\"title\": \"Qwen 3.6 27B model is available on Ollama! Use it with all the ...\", \"url\": \"https://x.com/ollama/status/2047066252523507916\", \"date\": \"Apr 22, 2026\"}, {\"title\": \"Qwen on X: \\\" Seeing is just the beginning. With Qwen-MM-Plugins, …\", \"url\": \"https://x.com/Alibaba_Qwen/status/2086664887560970531\", \"date\": \"Aug 10, 2026\"}, {\"title\": \"kadd on X: \\\"125B parameters only 6B active per token and you can ...\", \"url\": \"https://x.com/kaddisdeployed/status/2093341368332484744\", \"date\": \"4 days ago\"}, {\"title\": \"koffuxu on X: \\\"刷到 QwenLM/qwen-code：Qwen 官方开源 AI 编程 …\", \"url\": \"https://x.com/koffuxu/status/2092083388039803345\", \"date\": \"Aug 25, 2026\"}, {\"title\": \"Qwen on X: \\\" Qwen Code v0.14.0 – v0.14.2 are now ... - x.com\", \"url\": \"https://x.com/Alibaba_Qwen/status/2042551216769765449\", \"date\": \"Apr 10, 2026\"}]}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser search provides grounded discovery",
+        "policy_step": 9,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 7,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 29,
+        "observed_url_count": 161,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 14.519930839538574,
+      "tool_duration_seconds": 5.2718517780303955
+    },
+    {
+      "step_number": 11,
+      "run_id": "85f02705-dc40-46ba-ab68-a765deebf5ae",
+      "timestamp": "2026-09-01T16:23:26.279007+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "QwenLM Qwen3.8 GitHub repository technical report",
+        "recency": "year"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "QwenLM Qwen3.8 GitHub repository technical report",
+        "engine": "bing",
+        "url": "https://www.bing.com/search?q=QwenLM+Qwen3.8+GitHub+repository+technical+report&mkt=en-US&cc=us&setlang=en-US&filt=custom&sc=0-y-0&rdr=1&rdrig=9A7F25FFFE97430296F17B61916C72F1",
+        "title": "QwenLM Qwen3.8 GitHub repository technical report - Search",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "success"
+          }
+        ],
+        "search_market": "en-US",
+        "results": [
+          {
+            "title": "Qwen on X: \" Exciting News! We're thrilled to announce the launch of ...",
+            "url": "https://x.com/Alibaba_Qwen/status/1877426465349972113",
+            "date": "Jan 9, 2025"
+          },
+          {
+            "title": "X. It’s what’s happening / X",
+            "url": "https://x.com/",
+            "date": ""
+          },
+          {
+            "title": "Qwen just open sourced a plugin layer that gives any AI agent ...",
+            "url": "https://x.com/AGTPinsights/status/2086789169976689053",
+            "date": "Aug 10, 2026"
+          },
+          {
+            "title": "elvis on X: \"What's better than an open-weight multimodal model …",
+            "url": "https://x.com/omarsar0/status/2092634019473015218",
+            "date": "6 days ago"
+          },
+          {
+            "title": "Qwen on X: \" Meet Qwen3.6-27B, our latest dense, open-source …",
+            "url": "https://x.com/Alibaba_Qwen/status/2046939764428009914",
+            "date": "Apr 22, 2026"
+          },
+          {
+            "title": "Qwen 3.6 27B model is available on Ollama! Use it with all the ...",
+            "url": "https://x.com/ollama/status/2047066252523507916",
+            "date": "Apr 22, 2026"
+          },
+          {
+            "title": "Qwen on X: \" Seeing is just the beginning. With Qwen-MM-Plugins, …",
+            "url": "https://x.com/Alibaba_Qwen/status/2086664887560970531",
+            "date": "Aug 10, 2026"
+          },
+          {
+            "title": "kadd on X: \"125B parameters only 6B active per token and you can ...",
+            "url": "https://x.com/kaddisdeployed/status/2093341368332484744",
+            "date": "4 days ago"
+          },
+          {
+            "title": "koffuxu on X: \"刷到 QwenLM/qwen-code：Qwen 官方开源 AI 编程 …",
+            "url": "https://x.com/koffuxu/status/2092083388039803345",
+            "date": "Aug 25, 2026"
+          },
+          {
+            "title": "Qwen on X: \" Qwen Code v0.14.0 – v0.14.2 are now ... - x.com",
+            "url": "https://x.com/Alibaba_Qwen/status/2042551216769765449",
+            "date": "Apr 10, 2026"
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"QwenLM Qwen3.8 GitHub repository technical report\", \"engine\": \"bing\", \"url\": \"https://www.bing.com/search?q=QwenLM+Qwen3.8+GitHub+repository+technical+report&mkt=en-US&cc=us&setlang=en-US&filt=custom&sc=0-y-0&rdr=1&rdrig=9A7F25FFFE97430296F17B61916C72F1\", \"title\": \"QwenLM Qwen3.8 GitHub repository technical report - Search\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"success\"}], \"search_market\": \"en-US\", \"results\": [{\"title\": \"Qwen on X: \\\" Exciting News! We're thrilled to announce the launch of ...\", \"url\": \"https://x.com/Alibaba_Qwen/status/1877426465349972113\", \"date\": \"Jan 9, 2025\"}, {\"title\": \"X. It’s what’s happening / X\", \"url\": \"https://x.com/\", \"date\": \"\"}, {\"title\": \"Qwen just open sourced a plugin layer that gives any AI agent ...\", \"url\": \"https://x.com/AGTPinsights/status/2086789169976689053\", \"date\": \"Aug 10, 2026\"}, {\"title\": \"elvis on X: \\\"What's better than an open-weight multimodal model …\", \"url\": \"https://x.com/omarsar0/status/2092634019473015218\", \"date\": \"6 days ago\"}, {\"title\": \"Qwen on X: \\\" Meet Qwen3.6-27B, our latest dense, open-source …\", \"url\": \"https://x.com/Alibaba_Qwen/status/2046939764428009914\", \"date\": \"Apr 22, 2026\"}, {\"title\": \"Qwen 3.6 27B model is available on Ollama! Use it with all the ...\", \"url\": \"https://x.com/ollama/status/2047066252523507916\", \"date\": \"Apr 22, 2026\"}, {\"title\": \"Qwen on X: \\\" Seeing is just the beginning. With Qwen-MM-Plugins, …\", \"url\": \"https://x.com/Alibaba_Qwen/status/2086664887560970531\", \"date\": \"Aug 10, 2026\"}, {\"title\": \"kadd on X: \\\"125B parameters only 6B active per token and you can ...\", \"url\": \"https://x.com/kaddisdeployed/status/2093341368332484744\", \"date\": \"4 days ago\"}, {\"title\": \"koffuxu on X: \\\"刷到 QwenLM/qwen-code：Qwen 官方开源 AI 编程 …\", \"url\": \"https://x.com/koffuxu/status/2092083388039803345\", \"date\": \"Aug 25, 2026\"}, {\"title\": \"Qwen on X: \\\" Qwen Code v0.14.0 – v0.14.2 are now ... - x.com\", \"url\": \"https://x.com/Alibaba_Qwen/status/2042551216769765449\", \"date\": \"Apr 10, 2026\"}]}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser search provides grounded discovery",
+        "policy_step": 10,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 8,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 3,
+        "observed_url_count": 164,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 18.04208207130432,
+      "tool_duration_seconds": 4.902588844299316
+    },
+    {
+      "step_number": 12,
+      "run_id": "85f02705-dc40-46ba-ab68-a765deebf5ae",
+      "timestamp": "2026-09-01T16:24:22.668210+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "QwenLM/Qwen3.8 technical report",
+        "engine": "duckduckgo",
+        "recency": "year"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "QwenLM/Qwen3.8 technical report",
+        "engine": "bing",
+        "url": "https://www.bing.com/search?q=QwenLM%2FQwen3.8+technical+report&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=F7A50E214361459C95A8F0EDCF5B3DFE&filt=custom&sc=0-y-0",
+        "title": "QwenLM/Qwen3.8 technical report - Search",
+        "search_attempts": [
+          {
+            "engine": "duckduckgo",
+            "outcome": "failed",
+            "failure_category": "challenge_or_block",
+            "error": "DuckDuckGo bot challenge detected"
+          },
+          {
+            "engine": "bing",
+            "outcome": "success"
+          }
+        ],
+        "search_market": "en-US",
+        "results": [
+          {
+            "title": "Qwen on X: \" Exciting News! We're thrilled to announce the launch of ...",
+            "url": "https://x.com/Alibaba_Qwen/status/1877426465349972113",
+            "date": "Jan 9, 2025"
+          },
+          {
+            "title": "X. It’s what’s happening / X",
+            "url": "https://x.com/",
+            "date": ""
+          },
+          {
+            "title": "Qwen just open sourced a plugin layer that gives any AI agent ...",
+            "url": "https://x.com/AGTPinsights/status/2086789169976689053",
+            "date": "Aug 10, 2026"
+          },
+          {
+            "title": "elvis on X: \"What's better than an open-weight multimodal model …",
+            "url": "https://x.com/omarsar0/status/2092634019473015218",
+            "date": "6 days ago"
+          },
+          {
+            "title": "Qwen on X: \" Meet Qwen3.6-27B, our latest dense, open-source …",
+            "url": "https://x.com/Alibaba_Qwen/status/2046939764428009914",
+            "date": "Apr 22, 2026"
+          },
+          {
+            "title": "Qwen 3.6 27B model is available on Ollama! Use it with all the ...",
+            "url": "https://x.com/ollama/status/2047066252523507916",
+            "date": "Apr 22, 2026"
+          },
+          {
+            "title": "Qwen on X: \" Seeing is just the beginning. With Qwen-MM-Plugins, …",
+            "url": "https://x.com/Alibaba_Qwen/status/2086664887560970531",
+            "date": "Aug 10, 2026"
+          },
+          {
+            "title": "kadd on X: \"125B parameters only 6B active per token and you can ...",
+            "url": "https://x.com/kaddisdeployed/status/2093341368332484744",
+            "date": "4 days ago"
+          },
+          {
+            "title": "koffuxu on X: \"刷到 QwenLM/qwen-code：Qwen 官方开源 AI 编程 …",
+            "url": "https://x.com/koffuxu/status/2092083388039803345",
+            "date": "Aug 25, 2026"
+          },
+          {
+            "title": "Qwen on X: \" Qwen Code v0.14.0 – v0.14.2 are now ... - x.com",
+            "url": "https://x.com/Alibaba_Qwen/status/2042551216769765449",
+            "date": "Apr 10, 2026"
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"QwenLM/Qwen3.8 technical report\", \"engine\": \"bing\", \"url\": \"https://www.bing.com/search?q=QwenLM%2FQwen3.8+technical+report&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=F7A50E214361459C95A8F0EDCF5B3DFE&filt=custom&sc=0-y-0\", \"title\": \"QwenLM/Qwen3.8 technical report - Search\", \"search_attempts\": [{\"engine\": \"duckduckgo\", \"outcome\": \"failed\", \"failure_category\": \"challenge_or_block\", \"error\": \"DuckDuckGo bot challenge detected\"}, {\"engine\": \"bing\", \"outcome\": \"success\"}], \"search_market\": \"en-US\", \"results\": [{\"title\": \"Qwen on X: \\\" Exciting News! We're thrilled to announce the launch of ...\", \"url\": \"https://x.com/Alibaba_Qwen/status/1877426465349972113\", \"date\": \"Jan 9, 2025\"}, {\"title\": \"X. It’s what’s happening / X\", \"url\": \"https://x.com/\", \"date\": \"\"}, {\"title\": \"Qwen just open sourced a plugin layer that gives any AI agent ...\", \"url\": \"https://x.com/AGTPinsights/status/2086789169976689053\", \"date\": \"Aug 10, 2026\"}, {\"title\": \"elvis on X: \\\"What's better than an open-weight multimodal model …\", \"url\": \"https://x.com/omarsar0/status/2092634019473015218\", \"date\": \"6 days ago\"}, {\"title\": \"Qwen on X: \\\" Meet Qwen3.6-27B, our latest dense, open-source …\", \"url\": \"https://x.com/Alibaba_Qwen/status/2046939764428009914\", \"date\": \"Apr 22, 2026\"}, {\"title\": \"Qwen 3.6 27B model is available on Ollama! Use it with all the ...\", \"url\": \"https://x.com/ollama/status/2047066252523507916\", \"date\": \"Apr 22, 2026\"}, {\"title\": \"Qwen on X: \\\" Seeing is just the beginning. With Qwen-MM-Plugins, …\", \"url\": \"https://x.com/Alibaba_Qwen/status/2086664887560970531\", \"date\": \"Aug 10, 2026\"}, {\"title\": \"kadd on X: \\\"125B parameters only 6B active per token and you can ...\", \"url\": \"https://x.com/kaddisdeployed/status/2093341368332484744\", \"date\": \"4 days ago\"}, {\"title\": \"koffuxu on X: \\\"刷到 QwenLM/qwen-code：Qwen 官方开源 AI 编程 …\", \"url\": \"https://x.com/koffuxu/status/2092083388039803345\", \"date\": \"Aug 25, 2026\"}, {\"title\": \"Qwen on X: \\\" Qwen Code v0.14.0 – v0.14.2 are now ... - x.com\", \"url\": \"https://x.com/Alibaba_Qwen/status/2042551216769765449\", \"date\": \"Apr 10, 2026\"}]}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser search provides grounded discovery",
+        "policy_step": 11,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 9,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 7,
+        "observed_url_count": 171,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 56.380709171295166,
+      "tool_duration_seconds": 34.18592596054077
+    },
+    {
+      "step_number": 13,
+      "run_id": "85f02705-dc40-46ba-ab68-a765deebf5ae",
+      "timestamp": "2026-09-01T16:24:42.638765+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "github.com/QwenLM/Qwen3.8",
+        "engine": "bing"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "github.com/QwenLM/Qwen3.8",
+        "engine": "bing",
+        "url": "https://www.bing.com/search?q=github.com%2FQwenLM%2FQwen3.8&mkt=en-US&cc=us&setlang=en-US",
+        "title": "github.com/QwenLM/Qwen3.8 - Search",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "success"
+          }
+        ],
+        "search_market": "en-US",
+        "results": [
+          {
+            "title": "GitHub · Change is constant. GitHub keeps you ahead.",
+            "url": "https://github.com/",
+            "date": "",
+            "snippet": "Whether you’re scaling your development process or just learning how to code, GitHub is where you belong. Join the world’s most …"
+          },
+          {
+            "title": "Sign in to GitHub · GitHub",
+            "url": "https://github.com/login",
+            "date": "",
+            "snippet": "GitHub is where people build software. More than 150 million people use GitHub to discover, fork, and contribute to over 420 million …"
+          },
+          {
+            "title": "GitHub - LinkedIn",
+            "url": "https://www.linkedin.com/company/github",
+            "date": "",
+            "snippet": "The home of software development | As the global home for all developers, GitHub is the complete AI-powered developer platform to …"
+          },
+          {
+            "title": "Download GitHub Desktop",
+            "url": "https://desktop.github.com/download/",
+            "date": "",
+            "snippet": "Download GitHub Desktop Focus on what matters instead of fighting with Git. Whether you're new to Git or a seasoned user, GitHub …"
+          },
+          {
+            "title": "What Is GitHub? Use Cases and FAQ - Coursera",
+            "url": "https://www.coursera.org/articles/what-is-github?msockid=098f9aa40c8b6956254c8d630d2f68c9",
+            "date": "",
+            "snippet": "Jun 27, 2026 · GitHub is a cloud-based platform that hosts Git repositories and adds collaboration tools on top of Git. It allows teams …"
+          },
+          {
+            "title": "GitHub - Wikipedia",
+            "url": "https://en.wikipedia.org/wiki/GitHub",
+            "date": "",
+            "snippet": "GitHub, headquartered in San Francisco, is operated by Github, Inc., a subsidiary of Microsoft since 2018. [10] It is commonly used to …"
+          },
+          {
+            "title": "Home - The GitHub Blog",
+            "url": "https://github.blog/",
+            "date": "",
+            "snippet": "Updates, ideas, and inspiration from GitHub to help developers build and design software."
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"github.com/QwenLM/Qwen3.8\", \"engine\": \"bing\", \"url\": \"https://www.bing.com/search?q=github.com%2FQwenLM%2FQwen3.8&mkt=en-US&cc=us&setlang=en-US\", \"title\": \"github.com/QwenLM/Qwen3.8 - Search\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"success\"}], \"search_market\": \"en-US\", \"results\": [{\"title\": \"GitHub · Change is constant. GitHub keeps you ahead.\", \"url\": \"https://github.com/\", \"date\": \"\", \"snippet\": \"Whether you’re scaling your development process or just learning how to code, GitHub is where you belong. Join the world’s most …\"}, {\"title\": \"Sign in to GitHub · GitHub\", \"url\": \"https://github.com/login\", \"date\": \"\", \"snippet\": \"GitHub is where people build software. More than 150 million people use GitHub to discover, fork, and contribute to over 420 million …\"}, {\"title\": \"GitHub - LinkedIn\", \"url\": \"https://www.linkedin.com/company/github\", \"date\": \"\", \"snippet\": \"The home of software development | As the global home for all developers, GitHub is the complete AI-powered developer platform to …\"}, {\"title\": \"Download GitHub Desktop\", \"url\": \"https://desktop.github.com/download/\", \"date\": \"\", \"snippet\": \"Download GitHub Desktop Focus on what matters instead of fighting with Git. Whether you're new to Git or a seasoned user, GitHub …\"}, {\"title\": \"What Is GitHub? Use Cases and FAQ - Coursera\", \"url\": \"https://www.coursera.org/articles/what-is-github?msockid=098f9aa40c8b6956254c8d630d2f68c9\", \"date\": \"\", \"snippet\": \"Jun 27, 2026 · GitHub is a cloud-based platform that hosts Git repositories and adds collaboration tools on top of Git. It allows teams …\"}, {\"title\": \"GitHub - Wikipedia\", \"url\": \"https://en.wikipedia.org/wiki/GitHub\", \"date\": \"\", \"snippet\": \"GitHub, headquartered in San Francisco, is operated by Github, Inc., a subsidiary of Microsoft since 2018. [10] It is commonly used to …\"}, {\"title\": \"Home - The GitHub Blog\", \"url\": \"https://github.blog/\", \"date\": \"\", \"snippet\": \"Updates, ideas, and inspiration from GitHub to help developers build and design software.\"}]}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser search provides grounded discovery",
+        "policy_step": 12,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 10,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 23,
+        "observed_url_count": 194,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 19.961094856262207,
+      "tool_duration_seconds": 0.7307977676391602
+    },
+    {
+      "step_number": 14,
+      "run_id": "85f02705-dc40-46ba-ab68-a765deebf5ae",
+      "timestamp": "2026-09-01T16:25:22.439328+00:00",
+      "tool": "goto",
+      "parameters": {
+        "url": "https://github.com/QwenLM/Qwen3.8",
+        "wait_until": "load"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "url": "https://github.com/QwenLM/Qwen3.8",
+        "title": "GitHub - QwenLM/Qwen3.8: Qwen3.8 is the large language model series developed by Qwen team, Alibaba Group. · GitHub"
+      },
+      "planner_visible_result": "{\"url\": \"https://github.com/QwenLM/Qwen3.8\", \"title\": \"GitHub - QwenLM/Qwen3.8: Qwen3.8 is the large language model series developed by Qwen team, Alibaba Group. · GitHub\"}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "target URL is grounded in prior browser evidence",
+        "policy_step": 13,
+        "target": "https://github.com/QwenLM/Qwen3.8",
+        "provenance": {
+          "source": "search_planner_visible",
+          "policy_step": 2,
+          "page_url": "https://www.bing.com/search?q=Qwen3.8&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=DCF153F024494E11953EF3AD51B1C250&filt=custom&sc=0-y-0"
+        },
+        "search_completed": true,
+        "successful_searches": 10,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 0,
+        "observed_url_count": 195,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 39.790419816970825,
+      "tool_duration_seconds": 2.1827750205993652
+    },
+    {
+      "step_number": 15,
+      "run_id": "85f02705-dc40-46ba-ab68-a765deebf5ae",
+      "timestamp": "2026-09-01T16:26:10.276796+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "QwenLM Qwen3.8 large language model series developed by Qwen team Alibaba Group",
+        "engine": "bing",
+        "recency": "year"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "QwenLM Qwen3.8 large language model series developed by Qwen team Alibaba Group",
+        "engine": "bing",
+        "url": "https://www.bing.com/search?q=QwenLM+Qwen3.8+large+language+model+series+developed+by+Qwen+team+Alibaba+Group&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=37018EF1F3814FDE9E41486F72CE06EB&filt=custom&sc=0-y-0",
+        "title": "QwenLM Qwen3.8 large language model series developed by Qwen team Alibaba Group - Search",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "success"
+          }
+        ],
+        "search_market": "en-US",
+        "results": [
+          {
+            "title": "Qwen on X: \" Exciting News! We're thrilled to announce the launch of ...",
+            "url": "https://x.com/Alibaba_Qwen/status/1877426465349972113",
+            "date": "Jan 9, 2025"
+          },
+          {
+            "title": "X. It’s what’s happening / X",
+            "url": "https://x.com/",
+            "date": ""
+          },
+          {
+            "title": "Qwen just open sourced a plugin layer that gives any AI agent ...",
+            "url": "https://x.com/AGTPinsights/status/2086789169976689053",
+            "date": "Aug 10, 2026"
+          },
+          {
+            "title": "elvis on X: \"What's better than an open-weight multimodal model …",
+            "url": "https://x.com/omarsar0/status/2092634019473015218",
+            "date": "6 days ago"
+          },
+          {
+            "title": "Qwen on X: \" Meet Qwen3.6-27B, our latest dense, open-source …",
+            "url": "https://x.com/Alibaba_Qwen/status/2046939764428009914",
+            "date": "Apr 22, 2026"
+          },
+          {
+            "title": "Qwen 3.6 27B model is available on Ollama! Use it with all the ...",
+            "url": "https://x.com/ollama/status/2047066252523507916",
+            "date": "Apr 22, 2026"
+          },
+          {
+            "title": "Qwen on X: \" Seeing is just the beginning. With Qwen-MM-Plugins, …",
+            "url": "https://x.com/Alibaba_Qwen/status/2086664887560970531",
+            "date": "Aug 10, 2026"
+          },
+          {
+            "title": "kadd on X: \"125B parameters only 6B active per token and you can ...",
+            "url": "https://x.com/kaddisdeployed/status/2093341368332484744",
+            "date": "4 days ago"
+          },
+          {
+            "title": "koffuxu on X: \"刷到 QwenLM/qwen-code：Qwen 官方开源 AI 编程 …",
+            "url": "https://x.com/koffuxu/status/2092083388039803345",
+            "date": "Aug 25, 2026"
+          },
+          {
+            "title": "Qwen on X: \" Qwen Code v0.14.0 – v0.14.2 are now ... - x.com",
+            "url": "https://x.com/Alibaba_Qwen/status/2042551216769765449",
+            "date": "Apr 10, 2026"
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"QwenLM Qwen3.8 large language model series developed by Qwen team Alibaba Group\", \"engine\": \"bing\", \"url\": \"https://www.bing.com/search?q=QwenLM+Qwen3.8+large+language+model+series+developed+by+Qwen+team+Alibaba+Group&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=37018EF1F3814FDE9E41486F72CE06EB&filt=custom&sc=0-y-0\", \"title\": \"QwenLM Qwen3.8 large language model series developed by Qwen team Alibaba Group - Search\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"success\"}], \"search_market\": \"en-US\", \"results\": [{\"title\": \"Qwen on X: \\\" Exciting News! We're thrilled to announce the launch of ...\", \"url\": \"https://x.com/Alibaba_Qwen/status/1877426465349972113\", \"date\": \"Jan 9, 2025\"}, {\"title\": \"X. It’s what’s happening / X\", \"url\": \"https://x.com/\", \"date\": \"\"}, {\"title\": \"Qwen just open sourced a plugin layer that gives any AI agent ...\", \"url\": \"https://x.com/AGTPinsights/status/2086789169976689053\", \"date\": \"Aug 10, 2026\"}, {\"title\": \"elvis on X: \\\"What's better than an open-weight multimodal model …\", \"url\": \"https://x.com/omarsar0/status/2092634019473015218\", \"date\": \"6 days ago\"}, {\"title\": \"Qwen on X: \\\" Meet Qwen3.6-27B, our latest dense, open-source …\", \"url\": \"https://x.com/Alibaba_Qwen/status/2046939764428009914\", \"date\": \"Apr 22, 2026\"}, {\"title\": \"Qwen 3.6 27B model is available on Ollama! Use it with all the ...\", \"url\": \"https://x.com/ollama/status/2047066252523507916\", \"date\": \"Apr 22, 2026\"}, {\"title\": \"Qwen on X: \\\" Seeing is just the beginning. With Qwen-MM-Plugins, …\", \"url\": \"https://x.com/Alibaba_Qwen/status/2086664887560970531\", \"date\": \"Aug 10, 2026\"}, {\"title\": \"kadd on X: \\\"125B parameters only 6B active per token and you can ...\", \"url\": \"https://x.com/kaddisdeployed/status/2093341368332484744\", \"date\": \"4 days ago\"}, {\"title\": \"koffuxu on X: \\\"刷到 QwenLM/qwen-code：Qwen 官方开源 AI 编程 …\", \"url\": \"https://x.com/koffuxu/status/2092083388039803345\", \"date\": \"Aug 25, 2026\"}, {\"title\": \"Qwen on X: \\\" Qwen Code v0.14.0 – v0.14.2 are now ... - x.com\", \"url\": \"https://x.com/Alibaba_Qwen/status/2042551216769765449\", \"date\": \"Apr 10, 2026\"}]}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser search provides grounded discovery",
+        "policy_step": 14,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 11,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 3,
+        "observed_url_count": 198,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 47.827462911605835,
+      "tool_duration_seconds": 4.038196086883545
+    },
+    {
+      "step_number": 16,
+      "run_id": "85f02705-dc40-46ba-ab68-a765deebf5ae",
+      "timestamp": "2026-09-01T16:26:44.152799+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "QwenLM Qwen3.8 github technical report",
+        "engine": "bing"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "QwenLM Qwen3.8 github technical report",
+        "engine": "bing",
+        "url": "https://www.bing.com/search?q=QwenLM+Qwen3.8+github+technical+report&mkt=en-US&cc=us&setlang=en-US",
+        "title": "QwenLM Qwen3.8 github technical report - Search",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "success"
+          }
+        ],
+        "search_market": "en-US",
+        "results": [
+          {
+            "title": "Qwen on X: \" Exciting News! We're thrilled to announce the launch of ...",
+            "url": "https://x.com/Alibaba_Qwen/status/1877426465349972113",
+            "date": "Jan 9, 2025"
+          },
+          {
+            "title": "X. It’s what’s happening / X",
+            "url": "https://x.com/",
+            "date": ""
+          },
+          {
+            "title": "Qwen just open sourced a plugin layer that gives any AI agent ...",
+            "url": "https://x.com/AGTPinsights/status/2086789169976689053",
+            "date": "Aug 10, 2026"
+          },
+          {
+            "title": "elvis on X: \"What's better than an open-weight multimodal model …",
+            "url": "https://x.com/omarsar0/status/2092634019473015218",
+            "date": "6 days ago"
+          },
+          {
+            "title": "Qwen on X: \" Meet Qwen3.6-27B, our latest dense, open-source …",
+            "url": "https://x.com/Alibaba_Qwen/status/2046939764428009914",
+            "date": "Apr 22, 2026"
+          },
+          {
+            "title": "Qwen 3.6 27B model is available on Ollama! Use it with all the ...",
+            "url": "https://x.com/ollama/status/2047066252523507916",
+            "date": "Apr 22, 2026"
+          },
+          {
+            "title": "Qwen on X: \" Seeing is just the beginning. With Qwen-MM-Plugins, …",
+            "url": "https://x.com/Alibaba_Qwen/status/2086664887560970531",
+            "date": "Aug 10, 2026"
+          },
+          {
+            "title": "kadd on X: \"125B parameters only 6B active per token and you can ...",
+            "url": "https://x.com/kaddisdeployed/status/2093341368332484744",
+            "date": "4 days ago"
+          },
+          {
+            "title": "koffuxu on X: \"刷到 QwenLM/qwen-code：Qwen 官方开源 AI 编程 …",
+            "url": "https://x.com/koffuxu/status/2092083388039803345",
+            "date": "Aug 25, 2026"
+          },
+          {
+            "title": "Qwen on X: \" Qwen Code v0.14.0 – v0.14.2 are now ... - x.com",
+            "url": "https://x.com/Alibaba_Qwen/status/2042551216769765449",
+            "date": "Apr 10, 2026"
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"QwenLM Qwen3.8 github technical report\", \"engine\": \"bing\", \"url\": \"https://www.bing.com/search?q=QwenLM+Qwen3.8+github+technical+report&mkt=en-US&cc=us&setlang=en-US\", \"title\": \"QwenLM Qwen3.8 github technical report - Search\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"success\"}], \"search_market\": \"en-US\", \"results\": [{\"title\": \"Qwen on X: \\\" Exciting News! We're thrilled to announce the launch of ...\", \"url\": \"https://x.com/Alibaba_Qwen/status/1877426465349972113\", \"date\": \"Jan 9, 2025\"}, {\"title\": \"X. It’s what’s happening / X\", \"url\": \"https://x.com/\", \"date\": \"\"}, {\"title\": \"Qwen just open sourced a plugin layer that gives any AI agent ...\", \"url\": \"https://x.com/AGTPinsights/status/2086789169976689053\", \"date\": \"Aug 10, 2026\"}, {\"title\": \"elvis on X: \\\"What's better than an open-weight multimodal model …\", \"url\": \"https://x.com/omarsar0/status/2092634019473015218\", \"date\": \"6 days ago\"}, {\"title\": \"Qwen on X: \\\" Meet Qwen3.6-27B, our latest dense, open-source …\", \"url\": \"https://x.com/Alibaba_Qwen/status/2046939764428009914\", \"date\": \"Apr 22, 2026\"}, {\"title\": \"Qwen 3.6 27B model is available on Ollama! Use it with all the ...\", \"url\": \"https://x.com/ollama/status/2047066252523507916\", \"date\": \"Apr 22, 2026\"}, {\"title\": \"Qwen on X: \\\" Seeing is just the beginning. With Qwen-MM-Plugins, …\", \"url\": \"https://x.com/Alibaba_Qwen/status/2086664887560970531\", \"date\": \"Aug 10, 2026\"}, {\"title\": \"kadd on X: \\\"125B parameters only 6B active per token and you can ...\", \"url\": \"https://x.com/kaddisdeployed/status/2093341368332484744\", \"date\": \"4 days ago\"}, {\"title\": \"koffuxu on X: \\\"刷到 QwenLM/qwen-code：Qwen 官方开源 AI 编程 …\", \"url\": \"https://x.com/koffuxu/status/2092083388039803345\", \"date\": \"Aug 25, 2026\"}, {\"title\": \"Qwen on X: \\\" Qwen Code v0.14.0 – v0.14.2 are now ... - x.com\", \"url\": \"https://x.com/Alibaba_Qwen/status/2042551216769765449\", \"date\": \"Apr 10, 2026\"}]}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser search provides grounded discovery",
+        "policy_step": 15,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 12,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 3,
+        "observed_url_count": 201,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 33.865787744522095,
+      "tool_duration_seconds": 0.9097862243652344
+    },
+    {
+      "step_number": 17,
+      "run_id": "85f02705-dc40-46ba-ab68-a765deebf5ae",
+      "timestamp": "2026-09-01T16:27:10.423371+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "\"QwenLM/Qwen3.8\" github repository technical report",
+        "engine": "bing"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "\"QwenLM/Qwen3.8\" github repository technical report",
+        "engine": "yahoo_japan",
+        "url": "https://search.yahoo.co.jp/search?p=%22QwenLM%2FQwen3.8%22+github+repository+technical+report",
+        "title": "「\"QwenLM/Qwen3.8\" github repository technical report」の検索結果 - Yahoo!検索",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "failed",
+            "failure_category": "quality_failure",
+            "error": "bing returned irrelevant results: results ignored the quoted title constraint"
+          },
+          {
+            "engine": "yahoo_japan",
+            "outcome": "success"
+          }
+        ],
+        "results": [
+          {
+            "title": "Qwen3.8 is the large language model series ... - GitHub",
+            "url": "https://github.com/QwenLM/Qwen3.8",
+            "date": ""
+          },
+          {
+            "title": "Qwen - GitHub",
+            "url": "https://github.com/QwenLM",
+            "date": ""
+          },
+          {
+            "title": "Alibaba's Qwen team releases Qwen3.8-Flash-Next ...",
+            "url": "https://www.facebook.com/groups/DeepNetGroup/posts/2914233628969500/",
+            "date": ""
+          },
+          {
+            "title": "[Megathread] Qwen3.8-Flash-Next - Release Day - Reddit",
+            "url": "https://www.reddit.com/r/LocalLLaMA/comments/1vyq2v4/megathread_qwen38flashnext_release_day/",
+            "date": ""
+          },
+          {
+            "title": "Qwen3.8-Flash-Next API Pricing, Context Window ... - LLM Stats",
+            "url": "https://llm-stats.com/models/qwen3.8-flash-next",
+            "date": ""
+          },
+          {
+            "title": "Mitko Vasilev's Post - LinkedIn",
+            "url": "https://www.linkedin.com/posts/mitkox_qwen-qwen-qwen-qwen-qwen38-flash-next-just-activity-7498362391508992000-XiiA",
+            "date": ""
+          },
+          {
+            "title": "Qwen3.6-27B frequently stopped with empty tool call #150",
+            "url": "https://github.com/QwenLM/Qwen3.8/issues/150",
+            "date": ""
+          },
+          {
+            "title": "Qwen3.8-Flash-Next-FP8 多模态大模型 | 教程 | HyperAI超神经",
+            "url": "https://hyper.ai/cn/notebooks/qwen3-8-flash-next-fp8-demo",
+            "date": ""
+          },
+          {
+            "title": "Add model card · Qwen/Qwen3.8-Flash-Next-FP8 at bcd9f01",
+            "url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next-FP8/commit/bcd9f01ddc9cff2316eb84281bebcd5b058bddce",
+            "date": ""
+          },
+          {
+            "title": "Qwen3.8/LICENSE at main · QwenLM/Qwen3.8 · GitHub",
+            "url": "https://github.com/QwenLM/Qwen3.8/blob/main/LICENSE",
+            "date": ""
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"\\\"QwenLM/Qwen3.8\\\" github repository technical report\", \"engine\": \"yahoo_japan\", \"url\": \"https://search.yahoo.co.jp/search?p=%22QwenLM%2FQwen3.8%22+github+repository+technical+report\", \"title\": \"「\\\"QwenLM/Qwen3.8\\\" github repository technical report」の検索結果 - Yahoo!検索\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"failed\", \"failure_category\": \"quality_failure\", \"error\": \"bing returned irrelevant results: results ignored the quoted title constraint\"}, {\"engine\": \"yahoo_japan\", \"outcome\": \"success\"}], \"results\": [{\"title\": \"Qwen3.8 is the large language model series ... - GitHub\", \"url\": \"https://github.com/QwenLM/Qwen3.8\", \"date\": \"\"}, {\"title\": \"Qwen - GitHub\", \"url\": \"https://github.com/QwenLM\", \"date\": \"\"}, {\"title\": \"Alibaba's Qwen team releases Qwen3.8-Flash-Next ...\", \"url\": \"https://www.facebook.com/groups/DeepNetGroup/posts/2914233628969500/\", \"date\": \"\"}, {\"title\": \"[Megathread] Qwen3.8-Flash-Next - Release Day - Reddit\", \"url\": \"https://www.reddit.com/r/LocalLLaMA/comments/1vyq2v4/megathread_qwen38flashnext_release_day/\", \"date\": \"\"}, {\"title\": \"Qwen3.8-Flash-Next API Pricing, Context Window ... - LLM Stats\", \"url\": \"https://llm-stats.com/models/qwen3.8-flash-next\", \"date\": \"\"}, {\"title\": \"Mitko Vasilev's Post - LinkedIn\", \"url\": \"https://www.linkedin.com/posts/mitkox_qwen-qwen-qwen-qwen-qwen38-flash-next-just-activity-7498362391508992000-XiiA\", \"date\": \"\"}, {\"title\": \"Qwen3.6-27B frequently stopped with empty tool call #150\", \"url\": \"https://github.com/QwenLM/Qwen3.8/issues/150\", \"date\": \"\"}, {\"title\": \"Qwen3.8-Flash-Next-FP8 多模态大模型 | 教程 | HyperAI超神经\", \"url\": \"https://hyper.ai/cn/notebooks/qwen3-8-flash-next-fp8-demo\", \"date\": \"\"}, {\"title\": \"Add model card · Qwen/Qwen3.8-Flash-Next-FP8 at bcd9f01\", \"url\": \"https://huggingface.co/Qwen/Qwen3.8-Flash-Next-FP8/commit/bcd9f01ddc9cff2316eb84281bebcd5b058bddce\", \"date\": \"\"}, {\"title\": \"Qwen3.8/LICENSE at main · QwenLM/Qwen3.8 · GitHub\", \"url\": \"https://github.com/QwenLM/Qwen3.8/blob/main/LICENSE\", \"date\": \"\"}]}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser search provides grounded discovery",
+        "policy_step": 16,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 13,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 28,
+        "observed_url_count": 229,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 26.259426832199097,
+      "tool_duration_seconds": 5.011324167251587
+    },
+    {
+      "step_number": 19,
+      "run_id": "85f02705-dc40-46ba-ab68-a765deebf5ae",
+      "timestamp": "2026-09-01T16:28:35.623872+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "github.com/QwenLM Qwen3.8 technical report",
+        "engine": "yahoo_japan"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "github.com/QwenLM Qwen3.8 technical report",
+        "engine": "yahoo_japan",
+        "url": "https://search.yahoo.co.jp/search?p=github.com%2FQwenLM+Qwen3.8+technical+report",
+        "title": "「github.com/QwenLM Qwen3.8 technical report」の検索結果 - Yahoo!検索",
+        "search_attempts": [
+          {
+            "engine": "yahoo_japan",
+            "outcome": "success"
+          }
+        ],
+        "results": [
+          {
+            "title": "Qwen3.8 is the large language model series ... - GitHub",
+            "url": "https://github.com/QwenLM/Qwen3.8",
+            "date": ""
+          },
+          {
+            "title": "Qwen3 is the large language model series ... - GitHub",
+            "url": "https://github.com/qwenLM/qwen3",
+            "date": ""
+          },
+          {
+            "title": "Qwen3.8-Flash-Next Technical Report [pdf] - Hacker News",
+            "url": "https://news.ycombinator.com/item?id=49448378",
+            "date": ""
+          },
+          {
+            "title": "Qwen3 Technical Report : r/LocalLLaMA - Reddit",
+            "url": "https://www.reddit.com/r/LocalLLaMA/comments/1klkmah/qwen3_technical_report/",
+            "date": ""
+          },
+          {
+            "title": "Qwen3-VL is the multimodal large language model ... - GitHub",
+            "url": "https://github.com/qwenlm/qwen3-vl",
+            "date": ""
+          },
+          {
+            "title": "Qwen3.8-Max: A New Bar for Coding and Cowork",
+            "url": "https://qwen.ai/blog?id=qwen3.8",
+            "date": ""
+          },
+          {
+            "title": "Qwen3: Think Deeper, Act Faster | Qwen",
+            "url": "https://qwenlm.github.io/blog/qwen3/",
+            "date": ""
+          },
+          {
+            "title": "[2505.09388] Qwen3 Technical Report - arXiv",
+            "url": "https://arxiv.org/abs/2505.09388",
+            "date": ""
+          },
+          {
+            "title": "QwenLM/Qwen3.8-Flash-Next - Trendshift",
+            "url": "https://trendshift.io/repositories/186403",
+            "date": ""
+          },
+          {
+            "title": "Paper page - Qwen3 Technical Report - Hugging Face",
+            "url": "https://huggingface.co/papers/2505.09388",
+            "date": ""
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"github.com/QwenLM Qwen3.8 technical report\", \"engine\": \"yahoo_japan\", \"url\": \"https://search.yahoo.co.jp/search?p=github.com%2FQwenLM+Qwen3.8+technical+report\", \"title\": \"「github.com/QwenLM Qwen3.8 technical report」の検索結果 - Yahoo!検索\", \"search_attempts\": [{\"engine\": \"yahoo_japan\", \"outcome\": \"success\"}], \"results\": [{\"title\": \"Qwen3.8 is the large language model series ... - GitHub\", \"url\": \"https://github.com/QwenLM/Qwen3.8\", \"date\": \"\"}, {\"title\": \"Qwen3 is the large language model series ... - GitHub\", \"url\": \"https://github.com/qwenLM/qwen3\", \"date\": \"\"}, {\"title\": \"Qwen3.8-Flash-Next Technical Report [pdf] - Hacker News\", \"url\": \"https://news.ycombinator.com/item?id=49448378\", \"date\": \"\"}, {\"title\": \"Qwen3 Technical Report : r/LocalLLaMA - Reddit\", \"url\": \"https://www.reddit.com/r/LocalLLaMA/comments/1klkmah/qwen3_technical_report/\", \"date\": \"\"}, {\"title\": \"Qwen3-VL is the multimodal large language model ... - GitHub\", \"url\": \"https://github.com/qwenlm/qwen3-vl\", \"date\": \"\"}, {\"title\": \"Qwen3.8-Max: A New Bar for Coding and Cowork\", \"url\": \"https://qwen.ai/blog?id=qwen3.8\", \"date\": \"\"}, {\"title\": \"Qwen3: Think Deeper, Act Faster | Qwen\", \"url\": \"https://qwenlm.github.io/blog/qwen3/\", \"date\": \"\"}, {\"title\": \"[2505.09388] Qwen3 Technical Report - arXiv\", \"url\": \"https://arxiv.org/abs/2505.09388\", \"date\": \"\"}, {\"title\": \"QwenLM/Qwen3.8-Flash-Next - Trendshift\", \"url\": \"https://trendshift.io/repositories/186403\", \"date\": \"\"}, {\"title\": \"Paper page - Qwen3 Technical Report - Hugging Face\", \"url\": \"https://huggingface.co/papers/2505.09388\", \"date\": \"\"}]}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser search provides grounded discovery",
+        "policy_step": 17,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 14,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 17,
+        "observed_url_count": 246,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 26.252918004989624,
+      "tool_duration_seconds": 2.005902051925659
+    },
+    {
+      "step_number": 20,
+      "run_id": "85f02705-dc40-46ba-ab68-a765deebf5ae",
+      "timestamp": "2026-09-01T16:28:54.015262+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "github.com/QwenLM Qwen3.8-Flash-Next technical report",
+        "engine": "yahoo_japan"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "github.com/QwenLM Qwen3.8-Flash-Next technical report",
+        "engine": "yahoo_japan",
+        "url": "https://search.yahoo.co.jp/search?p=github.com%2FQwenLM+Qwen3.8-Flash-Next+technical+report",
+        "title": "「github.com/QwenLM Qwen3.8-Flash-Next technical report」の検索結果 - Yahoo!検索",
+        "search_attempts": [
+          {
+            "engine": "yahoo_japan",
+            "outcome": "success"
+          }
+        ],
+        "results": [
+          {
+            "title": "tech_report.pdf - GitHub",
+            "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf",
+            "date": ""
+          },
+          {
+            "title": "Qwen3.8 is the large language model series ... - GitHub",
+            "url": "https://github.com/QwenLM/Qwen3.8",
+            "date": ""
+          },
+          {
+            "title": "[Megathread] Qwen3.8-Flash-Next - Release Day - Reddit",
+            "url": "https://www.reddit.com/r/LocalLLaMA/comments/1vyq2v4/megathread_qwen38flashnext_release_day/",
+            "date": ""
+          },
+          {
+            "title": "Qwen3.8-Flash-Next Technical Report [pdf] - Hacker News",
+            "url": "https://news.ycombinator.com/item?id=49448378",
+            "date": ""
+          },
+          {
+            "title": "Qwen/Qwen3.8-Flash-Next - Hugging Face",
+            "url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next",
+            "date": ""
+          },
+          {
+            "title": "Qwen3.8-Flash-Next: A Deep-Dive into Alibaba Qwen4 ...",
+            "url": "https://local-ai-zone.github.io/blog/qwen3-8-flash-next-deep-dive.html",
+            "date": ""
+          },
+          {
+            "title": "Qwen3.8-Flash-Next: A New Architecture, Towards",
+            "url": "https://qwen.ai/blog?id=qwen3.8-flash-next",
+            "date": ""
+          },
+          {
+            "title": "QwenLM/Qwen3.8-Flash-Next - Trendshift",
+            "url": "https://trendshift.io/repositories/186403",
+            "date": ""
+          },
+          {
+            "title": "Marc'Antonio Lopez's Post - LinkedIn",
+            "url": "https://www.linkedin.com/posts/marc-antonio-lopez_qwen38-flash-nexttechreportpdf-at-main-activity-7498694270502084608-K9H7",
+            "date": ""
+          },
+          {
+            "title": "Qwen3.8 Flash Next Review: Benchmarks, Architecture ...",
+            "url": "https://kaitchup.substack.com/p/qwen38-flash-next-review-benchmarks",
+            "date": ""
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"github.com/QwenLM Qwen3.8-Flash-Next technical report\", \"engine\": \"yahoo_japan\", \"url\": \"https://search.yahoo.co.jp/search?p=github.com%2FQwenLM+Qwen3.8-Flash-Next+technical+report\", \"title\": \"「github.com/QwenLM Qwen3.8-Flash-Next technical report」の検索結果 - Yahoo!検索\", \"search_attempts\": [{\"engine\": \"yahoo_japan\", \"outcome\": \"success\"}], \"results\": [{\"title\": \"tech_report.pdf - GitHub\", \"url\": \"https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf\", \"date\": \"\"}, {\"title\": \"Qwen3.8 is the large language model series ... - GitHub\", \"url\": \"https://github.com/QwenLM/Qwen3.8\", \"date\": \"\"}, {\"title\": \"[Megathread] Qwen3.8-Flash-Next - Release Day - Reddit\", \"url\": \"https://www.reddit.com/r/LocalLLaMA/comments/1vyq2v4/megathread_qwen38flashnext_release_day/\", \"date\": \"\"}, {\"title\": \"Qwen3.8-Flash-Next Technical Report [pdf] - Hacker News\", \"url\": \"https://news.ycombinator.com/item?id=49448378\", \"date\": \"\"}, {\"title\": \"Qwen/Qwen3.8-Flash-Next - Hugging Face\", \"url\": \"https://huggingface.co/Qwen/Qwen3.8-Flash-Next\", \"date\": \"\"}, {\"title\": \"Qwen3.8-Flash-Next: A Deep-Dive into Alibaba Qwen4 ...\", \"url\": \"https://local-ai-zone.github.io/blog/qwen3-8-flash-next-deep-dive.html\", \"date\": \"\"}, {\"title\": \"Qwen3.8-Flash-Next: A New Architecture, Towards\", \"url\": \"https://qwen.ai/blog?id=qwen3.8-flash-next\", \"date\": \"\"}, {\"title\": \"QwenLM/Qwen3.8-Flash-Next - Trendshift\", \"url\": \"https://trendshift.io/repositories/186403\", \"date\": \"\"}, {\"title\": \"Marc'Antonio Lopez's Post - LinkedIn\", \"url\": \"https://www.linkedin.com/posts/marc-antonio-lopez_qwen38-flash-nexttechreportpdf-at-main-activity-7498694270502084608-K9H7\", \"date\": \"\"}, {\"title\": \"Qwen3.8 Flash Next Review: Benchmarks, Architecture ...\", \"url\": \"https://kaitchup.substack.com/p/qwen38-flash-next-review-benchmarks\", \"date\": \"\"}]}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser search provides grounded discovery",
+        "policy_step": 18,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 15,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 12,
+        "observed_url_count": 258,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 18.37830400466919,
+      "tool_duration_seconds": 1.523728847503662
+    },
+    {
+      "step_number": 21,
+      "run_id": "85f02705-dc40-46ba-ab68-a765deebf5ae",
+      "timestamp": "2026-09-01T16:29:11.413078+00:00",
+      "tool": "goto",
+      "parameters": {
+        "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf",
+        "wait_until": "load"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf",
+        "title": "History for tech_report.pdf - QwenLM/Qwen3.8-Flash-Next · GitHub"
+      },
+      "planner_visible_result": "{\"url\": \"https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf\", \"title\": \"History for tech_report.pdf - QwenLM/Qwen3.8-Flash-Next · GitHub\"}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "target URL is grounded in prior browser evidence",
+        "policy_step": 19,
+        "target": "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf",
+        "provenance": {
+          "source": "search_planner_visible",
+          "policy_step": 18,
+          "page_url": "https://search.yahoo.co.jp/search?p=github.com%2FQwenLM+Qwen3.8-Flash-Next+technical+report"
+        },
+        "search_completed": true,
+        "successful_searches": 15,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf",
+        "selected_candidate_identity_endorsed": false,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "a non-site official identity search whose results endorse the selected target host/owner (github.com/qwenlm)",
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 1,
+        "observed_url_count": 259,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 17.383568286895752,
+      "tool_duration_seconds": 3.6139512062072754
+    },
+    {
+      "step_number": 22,
+      "run_id": "85f02705-dc40-46ba-ab68-a765deebf5ae",
+      "timestamp": "2026-09-01T16:29:48.353623+00:00",
+      "tool": "screenshot",
+      "parameters": {
+        "full_page": true,
+        "label": "tech_report_commits_history"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "path": "artifacts/figures/screenshots/tech_report_commits_history.jpg",
+        "width": 1280,
+        "height": 952,
+        "deduplicated": false
+      },
+      "planner_visible_result": "{\"path\": \"artifacts/figures/screenshots/tech_report_commits_history.jpg\", \"width\": 1280, \"height\": 952, \"deduplicated\": false}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 20,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 15,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf",
+        "selected_candidate_identity_endorsed": false,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "a non-site official identity search whose results endorse the selected target host/owner (github.com/qwenlm)",
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 1,
+        "observed_url_count": 260,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 36.92688202857971,
+      "tool_duration_seconds": 0.1178290843963623
+    },
+    {
+      "step_number": 23,
+      "run_id": "85f02705-dc40-46ba-ab68-a765deebf5ae",
+      "timestamp": "2026-09-01T16:30:28.789094+00:00",
+      "tool": "analyze_image",
+      "parameters": {
+        "path": "artifacts/figures/screenshots/tech_report_commits_history.jpg",
+        "question": "This is a GitHub commits-history page for the file tech_report.pdf in the repository QwenLM/Qwen3.8-Flash-Next. Describe exactly what is visible: list every commit entry with its commit message, author, and date/time, the branch/file breadcrumb, and any buttons or links (e.g., History, raw, blame). What is the most recent commit shown for this file?"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "path": "artifacts/figures/screenshots/tech_report_commits_history.jpg",
+        "question": "This is a GitHub commits-history page for the file tech_report.pdf in the repository QwenLM/Qwen3.8-Flash-Next. Describe exactly what is visible: list every commit entry with its commit message, author, and date/time, the branch/file breadcrumb, and any buttons or links (e.g., History, raw, blame). What is the most recent commit shown for this file?",
+        "analysis": "# GitHub Commits Page — QwenLM/Qwen3.8-Flash-Next, file: tech_report.pdf\n\n## Page Header / Repository Info\n- **Repository:** QwenLM / **Qwen3.8-Flash-Next** with a \"Public\" badge\n- **Stats buttons:** Notifications, Fork (14), Star (302)\n- **Repo tabs:** Code, Issues (6), Pull requests, Actions, Security and quality, Insights\n- **Top nav:** Platform, Solutions, Resources, Open Source, Enterprise, Pricing; search, Sign in, Sign up\n\n## Page Title & Breadcrumb\n- Heading: **Commits**\n- Breadcrumb: \"History for **Qwen3.8-Flash-Next** / **tech_report.pdf** on **main**\" (branch \"main\" shown as a blue pill)\n\n## Filters (right side)\n- \"All users\" dropdown (people icon)\n- \"All time\" dropdown (calendar icon)\n\n## Commit Entries\nThere is exactly **one** commit entry, listed under the date-group header:\n\n**\"Commits on Aug 26, 2026\"**\n- **Commit message:** \"Initial committ\" (note the apparent typo — \"committ\" with a double \"t\")\n- **Author:** jkij077 (shown with a small avatar icon)\n- **Date/relative time:** \"committed last week\" (no exact timestamp is shown beyond the group header date Aug 26, 2026)\n- **Commit hash:** 4f58f4d\n- **Icon buttons next to the hash:** copy-to-clipboard icon, browse-repository-at-this-commit icon (split/history-style), and a code \"‹›\" (compare/browse) icon\n\nBelow the entry: **\"End of commit history for this file\"** — indicating this is the only commit touching this file.\n\n## Footer\n© 2026 GitHub, Inc., with links: Terms, Privacy, Security, Status, Community, Docs, Contact, Manage cookies, Do not share my personal information.\n\n## Most Recent Commit\nThe most recent (and only) commit shown for tech_report.pdf is **\"Initial committ\"** by **jkij077**, hash **4f58f4d**, under the group \"Commits on Aug 26, 2026,\" noted as \"committed last week.\"\n\n## Note on Requested Buttons\n\"History\" appears only as the breadcrumb label (\"History for…\"). Buttons like **raw** and **blame** are not visible — those appear on a file-view page, not a commit-history page, so they are not present in this screenshot.",
+        "browser_url": "file:///Users/lixiuyin/Materials/Selected/web-agent/outputs/runs/qwen-report-figure1-20260902/browser-grounded-r2/artifacts/figures/screenshots/tech_report_commits_history.jpg"
+      },
+      "planner_visible_result": "{\"path\": \"artifacts/figures/screenshots/tech_report_commits_history.jpg\", \"question\": \"This is a GitHub commits-history page for the file tech_report.pdf in the repository QwenLM/Qwen3.8-Flash-Next. Describe exactly what is visible: list every commit entry with its commit message, author, and date/time, the branch/file breadcrumb, and any buttons or links (e.g., History, raw, blame). What is the most recent commit shown for this file?\", \"analysis\": \"# GitHub Commits Page — QwenLM/Qwen3.8-Flash-N...",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 21,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 15,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf",
+        "selected_candidate_identity_endorsed": false,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "a non-site official identity search whose results endorse the selected target host/owner (github.com/qwenlm)",
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 0,
+        "observed_url_count": 260,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 40.41941022872925,
+      "tool_duration_seconds": 24.291123867034912
+    }
+  ],
+  "resume_count": 0,
+  "checkpoint_schema_version": null,
+  "resumed_from_checkpoint": false
+}

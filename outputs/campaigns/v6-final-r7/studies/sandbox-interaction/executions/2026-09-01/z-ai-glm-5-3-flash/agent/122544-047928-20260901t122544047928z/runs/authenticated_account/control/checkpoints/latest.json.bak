@@ -1,0 +1,568 @@
+{
+  "format": "webagent-checkpoint",
+  "schema_version": 2,
+  "checkpoint_sha256": "2b285c00f9640c279bf738bfc05391cc869ca4264d4c02a338296dc40ef3bd64",
+  "checkpoint": {
+    "artifacts": [],
+    "browser_state": {
+      "active_tab_index": 0,
+      "current_url": "http://127.0.0.1:55790/account",
+      "tab_urls": [
+        "http://127.0.0.1:55790/account"
+      ]
+    },
+    "checkpoint_id": "ddbe2d56-a528-46c0-8d3d-d1bf931e129c",
+    "config_fingerprint": "e1de73bf78101df7517985ca098998ceed3228093248c5961665f53afbd01412",
+    "consecutive_failures": 0,
+    "created_at": "2026-09-01T13:47:45.235305Z",
+    "elapsed_seconds": 23.312255859375,
+    "events": [],
+    "final_result": {},
+    "history": [
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:47:22.521962+00:00",
+          "title": "normal",
+          "url": "http://127.0.0.1:55790/login"
+        },
+        "duration_seconds": 11.026762008666992,
+        "step_number": 1,
+        "timestamp": "2026-09-01T13:47:32.950041+00:00",
+        "tool_call": {
+          "parameters": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            },
+            "text": "[redacted]"
+          },
+          "reasoning": "",
+          "tool_name": "type"
+        },
+        "tool_duration_seconds": 0.8125791549682617,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 3,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 4,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 1,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            },
+            "text": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "type"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:47:33.520136+00:00",
+          "title": "normal",
+          "url": "http://127.0.0.1:55790/login"
+        },
+        "duration_seconds": 3.109174966812134,
+        "step_number": 2,
+        "timestamp": "2026-09-01T13:47:36.061376+00:00",
+        "tool_call": {
+          "parameters": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            },
+            "text": "[redacted]"
+          },
+          "reasoning": "",
+          "tool_name": "type"
+        },
+        "tool_duration_seconds": 0.37716078758239746,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 1,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 5,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 2,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "[omitted]",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            },
+            "text": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "type"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:47:36.653157+00:00",
+          "title": "normal",
+          "url": "http://127.0.0.1:55790/login"
+        },
+        "duration_seconds": 4.004974126815796,
+        "step_number": 3,
+        "timestamp": "2026-09-01T13:47:40.068738+00:00",
+        "tool_call": {
+          "parameters": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "click"
+        },
+        "tool_duration_seconds": 0.5828728675842285,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 2,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 7,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 3,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": true,
+              "approval_required": true,
+              "decision": "allow",
+              "external_effect": "[omitted]",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "click"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T13:47:40.669211+00:00",
+          "title": "normal",
+          "url": "http://127.0.0.1:55790/account"
+        },
+        "duration_seconds": 5.163114070892334,
+        "step_number": 4,
+        "timestamp": "2026-09-01T13:47:45.234712+00:00",
+        "tool_call": {
+          "parameters": {
+            "success_probability": 1,
+            "summary": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "done"
+        },
+        "tool_duration_seconds": 0.00015091896057128906,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 7,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 4,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "attachments": [],
+            "success_probability": 1.0,
+            "summary": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "done"
+        }
+      }
+    ],
+    "last_figure_path": null,
+    "loop_state": {
+      "in_loop": false,
+      "loop_type": "",
+      "page_hash_history": [
+        "7ad1a1c440a35905f59d51490455480c",
+        "7d37f377cbdfe737a67b0d71605bf32e",
+        "04eb5fd3278b8c86ba34837217bbe45a",
+        "c15f384c6f42bec916e13d6131e0ff5c"
+      ],
+      "recent_actions": [
+        "8df49384442d5c0d14b1f1df663461e2fd8f4570ca1e292868539fd7192ecdfb",
+        "def101224fffaa1f25af3e7edaf6f8557de204ffbd2f8e66e97547e496c40696",
+        "c5e0c75ee6257f455e33d3f7c790e6d78a1037d1d63e0ccd1a7739ea573d8890",
+        "456f77d56286ff8d3234e992046e0bc563ab4c85cf2f61f6ab2300624c98a2ef"
+      ],
+      "recent_pages": [
+        "f7dd1955c045a828ec7ef3b851b5600b9e76354f64bb8560309f29ca241b30be",
+        "d6b9a675f97b8c654a60123b459532ecb47e073ba70c740210039c213d8ee8a2",
+        "81c9f04cd60c4e18800f584a20cf7144f935bb7e36ef656b75ae19f287e6c896",
+        "fb49ce54e834ae47156328243746051d84620e37d81c4044722cb22fd5457bfa"
+      ],
+      "schema_version": 1,
+      "threshold": 5,
+      "url_history": [
+        "http://127.0.0.1:55790/login",
+        "http://127.0.0.1:55790/login",
+        "http://127.0.0.1:55790/login",
+        "http://127.0.0.1:55790/account"
+      ],
+      "window_size": 9
+    },
+    "next_step": 5,
+    "pending_action": null,
+    "planner_attempts": [
+      {
+        "attempt_number": 1,
+        "completion_tokens": 381,
+        "duration_seconds": 7.096781015396118,
+        "effective_output_mode": "native-tools",
+        "error": "planner attempt failed; details omitted",
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6021,
+        "requested_output_mode": "auto",
+        "response_length": 1403,
+        "step_number": 1,
+        "structured_fallbacks": [],
+        "success": false,
+        "timestamp": "2026-09-01T13:47:29.618790+00:00",
+        "total_tokens": 6402,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 2,
+        "completion_tokens": 31,
+        "duration_seconds": 1.8910508155822754,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6062,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 1,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:47:31.509919+00:00",
+        "total_tokens": 6093,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 76,
+        "duration_seconds": 1.5689270496368408,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6133,
+        "requested_output_mode": "auto",
+        "response_length": 160,
+        "step_number": 2,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:47:35.089145+00:00",
+        "total_tokens": 6209,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 145,
+        "duration_seconds": 2.2430357933044434,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6242,
+        "requested_output_mode": "auto",
+        "response_length": 473,
+        "step_number": 3,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:47:38.896290+00:00",
+        "total_tokens": 6387,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 319,
+        "duration_seconds": 4.561033010482788,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6247,
+        "requested_output_mode": "auto",
+        "response_length": 736,
+        "step_number": 4,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T13:47:45.230351+00:00",
+        "total_tokens": 6566,
+        "transport_retries": 0
+      }
+    ],
+    "planning_state": {
+      "active_milestone_id": "m1",
+      "evidence": [
+        {
+          "id": "e1",
+          "kind": "checkpoint",
+          "source": "http://127.0.0.1:55790/login",
+          "step_number": 1,
+          "summary": "evidence retained from step 1"
+        },
+        {
+          "id": "e2",
+          "kind": "checkpoint",
+          "source": "http://127.0.0.1:55790/login",
+          "step_number": 2,
+          "summary": "evidence retained from step 2"
+        },
+        {
+          "id": "e3",
+          "kind": "checkpoint",
+          "source": "http://127.0.0.1:55790/account",
+          "step_number": 3,
+          "summary": "evidence retained from step 3"
+        },
+        {
+          "id": "e4",
+          "kind": "checkpoint",
+          "source": "http://127.0.0.1:55790/account",
+          "step_number": 4,
+          "summary": "evidence retained from step 4"
+        }
+      ],
+      "milestones": [
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 1",
+          "id": "m1",
+          "status": "active"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 2",
+          "id": "m2",
+          "status": "pending"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 3",
+          "id": "m3",
+          "status": "pending"
+        }
+      ],
+      "objective": "task bound by checkpoint task_sha256",
+      "revisions": []
+    },
+    "policy_state": {
+      "broad_current_year_search_completed": false,
+      "current_year": 2026,
+      "downloaded_paths": {},
+      "figure_analysis_completed": false,
+      "hybrid": {
+        "candidate_date": null,
+        "candidate_owner": null,
+        "candidate_url": null,
+        "candidate_version_key": [],
+        "cross_check_exhausted": false,
+        "direct_evidence_verified": false,
+        "missing_repeat_count": 0,
+        "missing_signature": [],
+        "official_report_attempts": {},
+        "required_next_action": null,
+        "subject": "[omitted]",
+        "successful_topics": []
+      },
+      "observed_urls": {
+        "field_31d7505b98c3": {
+          "page_url": "http://127.0.0.1:55790/account",
+          "policy_step": 3,
+          "source": "[omitted]"
+        },
+        "field_406e53551576": {
+          "page_url": "http://127.0.0.1:55790/login",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_4fa2b6c1f4a0": {
+          "page_url": "http://127.0.0.1:55790/login",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_509e573ee34f": {
+          "page_url": "http://127.0.0.1:55790/login",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_a1845b1d1610": {
+          "page_url": "http://127.0.0.1:55790/login",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_e8626606f5ed": {
+          "page_url": "http://127.0.0.1:55790/account",
+          "policy_step": 4,
+          "source": "[omitted]"
+        },
+        "field_f875202697ae": {
+          "page_url": "http://127.0.0.1:55790/login",
+          "policy_step": 1,
+          "source": "[omitted]"
+        }
+      },
+      "official_identity_search_completed": false,
+      "official_identity_urls": [],
+      "official_scope_result_urls": [],
+      "official_scope_search_completed": false,
+      "pending_url_evidence_target": null,
+      "pending_url_search_attempts": 0,
+      "policy": "browser_grounded",
+      "release_landscape_evidence_urls": [],
+      "release_landscape_search_completed": false,
+      "schema_version": 3,
+      "search_completed": false,
+      "selected_candidate_url": null,
+      "step": 4,
+      "successful_queries": [],
+      "successful_searches": 0,
+      "task_sha256": "0018ec8c426ebcbf9faee9db8d49d58c11c15876a292a2d39bccf6826514f5b9",
+      "version_frontier": null,
+      "version_frontier_key": [],
+      "version_frontier_resolved": true,
+      "visited_urls": [
+        "http://127.0.0.1:55790/account",
+        "http://127.0.0.1:55790/login"
+      ]
+    },
+    "previous_checkpoint_sha256": "a7a5eaa5aaefa292ebb3926bf88f9ac4ee36bccdadcc9e09f9c0940576ed2bd3",
+    "resume_count": 0,
+    "run_id": "1cfe7513-7a9c-4398-a34e-ae53fc39df81",
+    "schema_version": 2,
+    "source_fingerprint": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "status": "running",
+    "strategy_state": {
+      "attempted": [
+        "default"
+      ],
+      "consecutive_failures": 0,
+      "consecutive_no_progress": 0,
+      "current": "default",
+      "exhausted": false,
+      "switch_count": 0,
+      "switches": []
+    },
+    "task_sha256": "0018ec8c426ebcbf9faee9db8d49d58c11c15876a292a2d39bccf6826514f5b9",
+    "updated_at": "2026-09-01T13:47:45.235318Z"
+  }
+}

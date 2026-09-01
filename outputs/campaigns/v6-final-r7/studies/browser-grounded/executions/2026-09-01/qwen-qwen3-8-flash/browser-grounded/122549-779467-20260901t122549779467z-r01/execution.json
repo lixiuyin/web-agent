@@ -1,0 +1,9 @@
+{
+  "format": "webagent-study-execution",
+  "layout_version": 2,
+  "execution_id": "90f5c56c13d14df89486887bc96f1125",
+  "claimed_at": "2026-09-01T13:01:33.483562+00:00",
+  "study_id": "browser-grounded",
+  "task_manifest_sha256": "611ee2574de9cc725755a35e9a0c26ff368bd8843f9949b201f9a1239c21d6f8",
+  "task_set_sha256": "57289e4a07d6b5b9ef58776a30a5c3d854977445dd60f0cdc02fd33548ce765d"
+}

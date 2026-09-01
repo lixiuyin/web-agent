@@ -1,0 +1,124 @@
+{
+  "task_id": "python_asyncio",
+  "category": "documentation",
+  "goal": "Explain what asyncio is used for according to its official page and cite the exact URL.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 37.03869390487671,
+  "steps": 5,
+  "action_count": 4,
+  "failed_action_count": 0,
+  "planner_attempt_count": 5,
+  "planner_failure_count": 0,
+  "planner_tokens": 39997,
+  "answer_assertion_count": 3,
+  "answer_assertion_passed": 3,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "development",
+  "task_family": "programming_language_documentation",
+  "setting_id": "versioned_official_documentation",
+  "leakage_group": "host_docs_python_org",
+  "target_failure_modes": [
+    "information_extraction",
+    "tool_use",
+    "answer_grounding"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "short",
+  "scenario": "document_read",
+  "environment": "public_web",
+  "entry_mode": "direct",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://docs.python.org"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 4,
+    "distinct_tool_count": 1,
+    "tool_entropy_bits": -0.0,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 1,
+    "recovery_count": 0,
+    "minimum_window_entropy_bits": null,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 4,
+    "stagnation_onset_step": null,
+    "replan_count": 1,
+    "strategy_switch_count": 1,
+    "replan_rate": 0.25,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 0.97,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 5,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "concurrent",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "**What asyncio is used for (per its official Python documentation page)**\n\nSource URL (exact): https://docs.python.org/3/library/asyncio.html — page title: \"asyncio — Asynchronous I/O — Python 3.14.7 documentation\" (docs.python.org, the official Python documentation site).\n\nPurpose, as stated on the page:\n1. **Concurrent code via async/await** — \"asyncio is a library to write concurrent code using the async/await syntax.\"\n2. **Foundation for other async frameworks** — \"asyncio is used as a foundation for multiple Python asynchronous frameworks that provide high-performance network and web-servers, database connection libraries, distributed task queues, etc.\"\n3. **Best-fit workload** — \"asyncio is often a perfect fit for IO-bound and high-level structured network code.\"\n\nHigh-level APIs it provides (verbatim bullets from the page), to:\n- run Python coroutines concurrently and have full control over their execution;\n- perform network IO and IPC;\n- control subprocesses;\n- distribute tasks via queues;\n- synchronize concurrent code.\n\nFor introspection, it provides APIs for:\n- inspecting the async call graph of tasks and futures;\n- inspecting tasks in another running Python process with command-line tools.\n\nLow-level capability:\n- \"create and manage event loops, which provide asynchronous APIs for networking, running subprocesses, handling [OS/POSIX] signals…\" (the event-loop bullet continues in the same sentence on the page).\n\nTypical usage pattern shown on the page (the \"Hello World!\" example): define a coroutine and drive it with the runner, e.g. `async def main(): ... await asyncio.sleep(1) ...` then `asyncio.run(main())`.\n\nPage structure (documented sub-areas of the library): High-level APIs (Runners, Coroutines and tasks, Streams, Synchronization Primitives, Subprocesses, Queues, Exceptions); Introspection APIs (Call graph introspection, Command-line introspection tools); Low-level APIs (Event loop, Futures, Transports and Protocols, Policies, Platform Support, Extending); plus Guides and Tutorials (High-level API Index, Low-level API Index, Developing with asyncio, asyncio and free-threaded Python). It sits under \"Networking and Interprocess Communication\" in the Python Standard Library docs.\n\nIn short: asyncio is Python's official library for writing asynchronous, concurrent code with `async`/`await`, mainly for IO-bound and structured network programs — powering network/IPC handling, subprocess control, task queues, synchronization primitives, and event-loop management, and serving as the base layer for many third-party async frameworks and servers.",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "https://docs.python.org/3/library/asyncio.html",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "**What asyncio is used for (per its official Python documentation page)**\n\nSource URL (exact): https://docs.python.org/3/library/asyncio.html — page title: \"asyncio — Asynchronous I/O — Python 3.14.7 documentation\" (docs.python.org, the official Python documentation site).\n\nPurpose, as stated on the page:\n1. **Concurrent code via async/await** — \"asyncio is a library to write concurrent code using the async/await syntax.\"\n2. **Foundation for other async frameworks** — \"asyncio is used as a foundation for multiple Python asynchronous frameworks that provide high-performance network and web-servers, database connection libraries, distributed task queues, etc.\"\n3. **Best-fit workload** — \"asyncio is often a perfect fit for IO-bound and high-level structured network code.\"\n\nHigh-level APIs it provides (verbatim bullets from the page), to:\n- run Python coroutines concurrently and have full control over their execution;\n- perform network IO and IPC;\n- control subprocesses;\n- distribute tasks via queues;\n- synchronize concurrent code.\n\nFor introspection, it provides APIs for:\n- inspecting the async call graph of tasks and futures;\n- inspecting tasks in another running Python process with command-line tools.\n\nLow-level capability:\n- \"create and manage event loops, which provide asynchronous APIs for networking, running subprocesses, handling [OS/POSIX] signals…\" (the event-loop bullet continues in the same sentence on the page).\n\nTypical usage pattern shown on the page (the \"Hello World!\" example): define a coroutine and drive it with the runner, e.g. `async def main(): ... await asyncio.sleep(1) ...` then `asyncio.run(main())`.\n\nPage structure (documented sub-areas of the library): High-level APIs (Runners, Coroutines and tasks, Streams, Synchronization Primitives, Subprocesses, Queues, Exceptions); Introspection APIs (Call graph introspection, Command-line introspection tools); Low-level APIs (Event loop, Futures, Transports and Protocols, Policies, Platform Support, Extending); plus Guides and Tutorials (High-level API Index, Low-level API Index, Developing with asyncio, asyncio and free-threaded Python). It sits under \"Networking and Interprocess Communication\" in the Python Standard Library docs.\n\nIn short: asyncio is Python's official library for writing asynchronous, concurrent code with `async`/`await`, mainly for IO-bound and structured network programs — powering network/IPC handling, subprocess control, task queues, synchronization primitives, and event-loop management, and serving as the base layer for many third-party async frameworks and servers.",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_url_observed",
+        "expected": "https://docs.python.org/3/library/asyncio.html",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

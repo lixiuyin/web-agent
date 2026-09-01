@@ -1,0 +1,124 @@
+{
+  "task_id": "go_effective",
+  "category": "programming_language",
+  "goal": "Explain the purpose of Effective Go and cite the exact URL.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 30.807148694992065,
+  "steps": 5,
+  "action_count": 4,
+  "failed_action_count": 1,
+  "planner_attempt_count": 5,
+  "planner_failure_count": 0,
+  "planner_tokens": 34417,
+  "answer_assertion_count": 3,
+  "answer_assertion_passed": 3,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "held_out_setting",
+  "task_family": "programming_language_documentation",
+  "setting_id": "language_portal_documentation",
+  "leakage_group": "host_go_dev",
+  "target_failure_modes": [
+    "information_extraction",
+    "tool_use",
+    "answer_grounding"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "short",
+  "scenario": "document_read",
+  "environment": "public_web",
+  "entry_mode": "direct",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://go.dev"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 4,
+    "distinct_tool_count": 2,
+    "tool_entropy_bits": 0.8112781244591328,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 1,
+    "recovery_count": 1,
+    "minimum_window_entropy_bits": null,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 4,
+    "stagnation_onset_step": null,
+    "replan_count": 2,
+    "strategy_switch_count": 2,
+    "replan_rate": 0.5,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 0.95,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 5,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "idiomatic",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "Effective Go (https://go.dev/doc/effective_go) is the official Go documentation guide that explains how to write idiomatic, effective Go code. Its stated purpose (from the Introduction): because Go focuses on simplicity, reliability, and efficiency and has unusual properties that make effective Go programs differ in character from programs in related languages like C++ or Java, a straightforward translation of such a program into Go is unlikely to be satisfactory. The document therefore teaches Go programmers how to use the language well—covering topics such as formatting, commentary, names, control structures, functions, data (slices, maps, allocation), initialization, methods, interfaces, embedding, concurrency, errors, and examples—so that programs feel properly Go-like rather than transliterated from other languages. Exact URL: https://go.dev/doc/effective_go (page title: \"Effective Go - The Go Programming Language\").",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "https://go.dev/doc/effective_go",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "Effective Go (https://go.dev/doc/effective_go) is the official Go documentation guide that explains how to write idiomatic, effective Go code. Its stated purpose (from the Introduction): because Go focuses on simplicity, reliability, and efficiency and has unusual properties that make effective Go programs differ in character from programs in related languages like C++ or Java, a straightforward translation of such a program into Go is unlikely to be satisfactory. The document therefore teaches Go programmers how to use the language well—covering topics such as formatting, commentary, names, control structures, functions, data (slices, maps, allocation), initialization, methods, interfaces, embedding, concurrency, errors, and examples—so that programs feel properly Go-like rather than transliterated from other languages. Exact URL: https://go.dev/doc/effective_go (page title: \"Effective Go - The Go Programming Language\").",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_url_observed",
+        "expected": "https://go.dev/doc/effective_go",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

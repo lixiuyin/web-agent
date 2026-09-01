@@ -1,0 +1,12 @@
+**Found via browser search → pandas official docs (first-party source, pandas.pydata.org)**
+
+**Tutorial:** "What kind of data does pandas handle?" — part of the official *Getting started tutorials* ("Get started guides", tutorial 01) in the pandas documentation (page renders as "What kind of data does pandas handle? — pandas 3.0.5 documentation").
+
+**Exact URL:** https://pandas.pydata.org/docs/getting_started/intro_tutorials/01_table_oriented.html
+
+**Tabular structure it introduces: the `DataFrame` — pandas' tabular data structure.**
+Evidence from the page (section "pandas data table representation", the first content section after the tutorial's intro):
+- The tutorial builds a table of Titanic passenger data with the example code `df = pd.DataFrame({"Name": [...], "Age": [22, 35, 58], "Sex": [...]})`, i.e. a **2-dimensional, labeled, size-mutable, potentially heterogeneous tabular data structure** made of **rows and columns** (here: columns `Name`, `Age`, `Sex`; one row per passenger; each column holding a different data type — text, integers, categorical).
+- It stresses that pandas is **table-oriented**: all data is stored and manipulated as (labeled columns and rows of) a `DataFrame`, and you can inspect it with `df.head()`, `df.tail()`, `df.info()`, `df["Age"]`, `df.mean(numeric_only=True)`, etc. Selecting a single column yields a one-dimensional labeled array (a pandas `Series`), and the tutorial's closing "Things you have learned" bullets are all about creating/inspecting this tabular `DataFrame` and its summary statistics.
+
+**Search path used:** web search for the exact tutorial title (results included https://pandas.pydata.org/docs/getting_started/intro_tutorials/01_table_oriented.html alongside the Getting started / Getting started tutorials index pages), then opened that primary source and read its content directly.

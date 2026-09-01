@@ -1,0 +1,442 @@
+{
+  "schema_version": 8,
+  "$schema": "https://raw.githubusercontent.com/lixiuyin/web-agent/main/src/webagent/schemas/run-trace-v8.schema.json",
+  "producer": {
+    "name": "lixiuyin-webagent",
+    "version": "0.2.0",
+    "source_sha256": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c"
+  },
+  "created_at": "2026-09-01T13:04:20.876434+00:00",
+  "run_id": "a365d9cd-11b8-407d-9d1f-5c68eb24ba4c",
+  "run_kind": "agent_e2e",
+  "task": "Report what IANA says about reserved domains and cite the exact URL.",
+  "status": "completed",
+  "success": true,
+  "steps_taken": 5,
+  "total_duration": 37.95340299606323,
+  "final_result": {
+    "summary": "WHAT IANA SAYS ABOUT RESERVED DOMAINS\n\nExact source URL (as requested): https://www.iana.org/domains/reserved\nPage title: \"IANA-managed Reserved Domains\"\n\nKey statements published by IANA on that page:\n\n1. General framing / overview:\n   \"Certain domains are set aside, and nominally registered to 'IANA', for specific policy or technical purposes.\"\n\n2. Example (documentation) domains:\n   \"As described in RFC 2606 and RFC 6761, a number of domains such as example.com and example.org are maintained for documentation purposes. These domains may be used as illustrative examples in documents without prior coordination with us. They are not available for registration or transfer.\"\n   - Supporting RFC links given on the page: RFC 2606 (\"Reserved Top Level DNS Names\") and RFC 6761 (\"Alternative Usage of the IETF Stream and Its Subtypes\"), i.e. the RFCs that define reserved/special-use domain names.\n   - IANA also links its IDN Evaluation / ICANN-related material in the adjacent paragraph on that page.\n\n3. Policy-reserved domains and IANA's role:\n   \"We act as both the registrant and registrar for a select number of domains which have been reserved under policy grounds. These exclusions are typically indicated in either technical standards (RFC documents), or contractual limitations.\"\n   - The phrase \"contractual limitations\" is a hyperlink on the page (pointing to IANA's contractual/agreement material), and the RFC references link to the IETF RFC documents.\n\nIn short, IANA states that reserved domains are names deliberately set aside (nominally registered to IANA) for policy or technical reasons; the \"example\" TLDs such as example.com/example.org (per RFC 2606 and RFC 6761) are reserved purely for documentation use, may be used illustratively in documents without coordinating with IANA, and are NOT available for registration or transfer; and for a select set of policy-reserved domains IANA serves as both registrant and registrar, with those exclusions defined either by technical standards (RFCs) or by contractual limitations.\n\nNavigation context observed on the page: this content sits under IANA's \"Domain Names\" section (site nav item \"Reserved Domains\"), alongside related IANA functions pages such as Root Zone Management, .INT Registry, .ARPA Registry, IDN Practices Repository, and Root Key Signing Key (DNSSEC).",
+    "attachments": [],
+    "success_probability": 0.96
+  },
+  "evaluation": {
+    "agent_source_sha256": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "mode": "browser_grounded",
+    "discovery_mode": "browser-grounded",
+    "direct_source_tools_enabled": false,
+    "high_risk_action_policy": "deny",
+    "stealth_mode": false,
+    "anti_shortcut_contract": null,
+    "certificate_required": false,
+    "strict_eval_mode": false,
+    "search_engine_only": false,
+    "browser_profile_mode": "temporary",
+    "browser_channel": "bundled",
+    "persistent_pdf_cache": false
+  },
+  "planner_attempts": [
+    {
+      "step_number": 1,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:03:47.537297+00:00",
+      "duration_seconds": 3.916450023651123,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 7165,
+      "completion_tokens": 194,
+      "total_tokens": 7359,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 2,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:03:53.009166+00:00",
+      "duration_seconds": 3.5804920196533203,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 7462,
+      "completion_tokens": 158,
+      "total_tokens": 7620,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 3,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:03:59.783717+00:00",
+      "duration_seconds": 4.877424955368042,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 7628,
+      "completion_tokens": 313,
+      "total_tokens": 7941,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 4,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:04:08.894528+00:00",
+      "duration_seconds": 7.1535749435424805,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 7753,
+      "completion_tokens": 566,
+      "total_tokens": 8319,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 5,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:04:20.851246+00:00",
+      "duration_seconds": 10.052886009216309,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 300,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 7994,
+      "completion_tokens": 890,
+      "total_tokens": 8884,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    }
+  ],
+  "events": [
+    {
+      "type": "strategy_switch",
+      "timestamp": "2026-09-01T13:04:10.798354+00:00",
+      "step_number": 5,
+      "previous": "default",
+      "current": "alternate-navigation",
+      "reason": "loop detector reported action_repeat"
+    },
+    {
+      "type": "replan",
+      "timestamp": "2026-09-01T13:04:10.798372+00:00",
+      "step_number": 5,
+      "reason": "loop detector reported action_repeat",
+      "strategy": "alternate-navigation",
+      "exhausted": false
+    }
+  ],
+  "steps": [
+    {
+      "step_number": 1,
+      "run_id": "a365d9cd-11b8-407d-9d1f-5c68eb24ba4c",
+      "timestamp": "2026-09-01T13:03:48.765194+00:00",
+      "tool": "frame_interact",
+      "parameters": {
+        "frame_index": 0,
+        "action": "extract_text",
+        "selector": {
+          "type": "css",
+          "value": "div#body"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "frame_index": 0,
+        "action": "extract_text",
+        "text": "IANA-managed Reserved Domains\n\nCertain domains are set aside, and nominally registered to “IANA”, for specific policy or technical purposes.\n\nExample domains\n\nAs described in RFC 2606 and RFC 6761, a number of domains such as example.com and example.org are maintained for documentation purposes. These domains may be used as illustrative examples in documents without prior coordination with us. They are not available for registration or transfer.\n\nTest IDN top-level domains\n\nThese domains were temporarily delegated by IANA for the IDN Evaluation being conducted by ICANN.\n\nDomain\tDomain (A-label)\tLanguage\tScript\nإختبار\txn--kgbechtv\tArabic\tArabic\nآزمایشی\txn--hgbk6aj7f53bba\tPersian\tArabic\n测试\txn--0zwm56d\tChinese\tHan (Simplified variant)\n測試\txn--g6w251d\tChinese\tHan (Traditional variant)\nиспытание\txn--80akhbyknj4f\tRussian\tCyrillic\nपरीक्षा\txn--11b5bs3a9aj6g\tHindi\tDevanagari (Nagari)\nδοκιμή\txn--jxalpdlp\tGreek, Modern (1453-)\tGreek\n테스트\txn--9t4b11yi5a\tKorean\tHangul (Hangŭl, Hangeul)\nטעסט\txn--deba0ad\tYiddish\tHebrew\nテスト\txn--zckzah\tJapanese\tKatakana\nபரிட்சை\txn--hlcj6aya9esc7a\tTamil\tTamil\nPolicy-reserved domains\n\nWe act as both the registrant and registrar for a select number of domains which have been reserved under policy grounds. These exclusions are typically indicated in either technical standards (RFC documents), or contractual limitations.\n\nDomains which are described as registered to IANA or ICANN on policy grounds are not available for registration or transfer, with the exception of country-name.info domains. These domains are available for release by the ICANN Governmental Advisory Committee Secretariat.\n\nOther Special-Use Domains\n\nThere is additionally a Special-Use Domain Names registry documenting special-use domains designated by technical standards. For further information, see Special-Use Domain Names (RFC 6761).\n\nDomain Names\nOverview\nRoot Zone Management\n.INT Registry\n.ARPA Registry\nIDN Practices Repository\nRoot Key Signing Key (DNSSEC)\nReserved Domains",
+        "match_count": 1
+      },
+      "planner_visible_result": "{\"frame_index\": 0, \"action\": \"extract_text\", \"text\": \"IANA-managed Reserved Domains\\n\\nCertain domains are set aside, and nominally registered to “IANA”, for specific policy or technical purposes.\\n\\nExample domains\\n\\nAs described in RFC 2606 and RFC 6761, a number of domains such as example.com and example.org are maintained for documentation purposes. These domains may be used as illustrative examples in documents without prior coordination with us. They are not available for registration or ...",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 1,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 1,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 5.847352027893066,
+      "tool_duration_seconds": 0.020478010177612305
+    },
+    {
+      "step_number": 2,
+      "run_id": "a365d9cd-11b8-407d-9d1f-5c68eb24ba4c",
+      "timestamp": "2026-09-01T13:03:54.207076+00:00",
+      "tool": "frame_interact",
+      "parameters": {
+        "frame_index": 0,
+        "action": "extract_text",
+        "selector": {
+          "type": "css",
+          "value": "div#body > article.hemmed.sidenav > main"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "frame_index": 0,
+        "action": "extract_text",
+        "text": "IANA-managed Reserved Domains\n\nCertain domains are set aside, and nominally registered to “IANA”, for specific policy or technical purposes.\n\nExample domains\n\nAs described in RFC 2606 and RFC 6761, a number of domains such as example.com and example.org are maintained for documentation purposes. These domains may be used as illustrative examples in documents without prior coordination with us. They are not available for registration or transfer.\n\nTest IDN top-level domains\n\nThese domains were temporarily delegated by IANA for the IDN Evaluation being conducted by ICANN.\n\nDomain\tDomain (A-label)\tLanguage\tScript\nإختبار\txn--kgbechtv\tArabic\tArabic\nآزمایشی\txn--hgbk6aj7f53bba\tPersian\tArabic\n测试\txn--0zwm56d\tChinese\tHan (Simplified variant)\n測試\txn--g6w251d\tChinese\tHan (Traditional variant)\nиспытание\txn--80akhbyknj4f\tRussian\tCyrillic\nपरीक्षा\txn--11b5bs3a9aj6g\tHindi\tDevanagari (Nagari)\nδοκιμή\txn--jxalpdlp\tGreek, Modern (1453-)\tGreek\n테스트\txn--9t4b11yi5a\tKorean\tHangul (Hangŭl, Hangeul)\nטעסט\txn--deba0ad\tYiddish\tHebrew\nテスト\txn--zckzah\tJapanese\tKatakana\nபரிட்சை\txn--hlcj6aya9esc7a\tTamil\tTamil\nPolicy-reserved domains\n\nWe act as both the registrant and registrar for a select number of domains which have been reserved under policy grounds. These exclusions are typically indicated in either technical standards (RFC documents), or contractual limitations.\n\nDomains which are described as registered to IANA or ICANN on policy grounds are not available for registration or transfer, with the exception of country-name.info domains. These domains are available for release by the ICANN Governmental Advisory Committee Secretariat.\n\nOther Special-Use Domains\n\nThere is additionally a Special-Use Domain Names registry documenting special-use domains designated by technical standards. For further information, see Special-Use Domain Names (RFC 6761).",
+        "match_count": 1
+      },
+      "planner_visible_result": "{\"frame_index\": 0, \"action\": \"extract_text\", \"text\": \"IANA-managed Reserved Domains\\n\\nCertain domains are set aside, and nominally registered to “IANA”, for specific policy or technical purposes.\\n\\nExample domains\\n\\nAs described in RFC 2606 and RFC 6761, a number of domains such as example.com and example.org are maintained for documentation purposes. These domains may be used as illustrative examples in documents without prior coordination with us. They are not available for registration or ...",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 2,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 1,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 5.439828872680664,
+      "tool_duration_seconds": 0.013829708099365234
+    },
+    {
+      "step_number": 3,
+      "run_id": "a365d9cd-11b8-407d-9d1f-5c68eb24ba4c",
+      "timestamp": "2026-09-01T13:04:01.021433+00:00",
+      "tool": "frame_interact",
+      "parameters": {
+        "frame_index": 0,
+        "action": "extract_text",
+        "selector": {
+          "type": "css",
+          "value": "div#body > article.hemmed.sidenav > main > p:nth-of-type(4)"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "frame_index": 0,
+        "action": "extract_text",
+        "text": "We act as both the registrant and registrar for a select number of domains which have been reserved under policy grounds. These exclusions are typically indicated in either technical standards (RFC documents), or contractual limitations.",
+        "match_count": 1
+      },
+      "planner_visible_result": "{\"frame_index\": 0, \"action\": \"extract_text\", \"text\": \"We act as both the registrant and registrar for a select number of domains which have been reserved under policy grounds. These exclusions are typically indicated in either technical standards (RFC documents), or contractual limitations.\", \"match_count\": 1}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 3,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 2,
+        "observed_url_count": 3,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 6.81203293800354,
+      "tool_duration_seconds": 0.017685890197753906
+    },
+    {
+      "step_number": 4,
+      "run_id": "a365d9cd-11b8-407d-9d1f-5c68eb24ba4c",
+      "timestamp": "2026-09-01T13:04:10.109173+00:00",
+      "tool": "frame_interact",
+      "parameters": {
+        "action": "extract_text",
+        "frame_index": 0,
+        "selector": {
+          "type": "css",
+          "value": "div#body > article.hemmed.sidenav > main > p:nth-of-type(2)"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "frame_index": 0,
+        "action": "extract_text",
+        "text": "As described in RFC 2606 and RFC 6761, a number of domains such as example.com and example.org are maintained for documentation purposes. These domains may be used as illustrative examples in documents without prior coordination with us. They are not available for registration or transfer.",
+        "match_count": 1
+      },
+      "planner_visible_result": "{\"frame_index\": 0, \"action\": \"extract_text\", \"text\": \"As described in RFC 2606 and RFC 6761, a number of domains such as example.com and example.org are maintained for documentation purposes. These domains may be used as illustrative examples in documents without prior coordination with us. They are not available for registration or transfer.\", \"match_count\": 1}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 4,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 1,
+        "observed_url_count": 4,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 9.085316896438599,
+      "tool_duration_seconds": 0.01826786994934082
+    },
+    {
+      "step_number": 5,
+      "run_id": "a365d9cd-11b8-407d-9d1f-5c68eb24ba4c",
+      "timestamp": "2026-09-01T13:04:20.864241+00:00",
+      "tool": "done",
+      "parameters": {
+        "summary": "WHAT IANA SAYS ABOUT RESERVED DOMAINS\n\nExact source URL (as requested): https://www.iana.org/domains/reserved\nPage title: \"IANA-managed Reserved Domains\"\n\nKey statements published by IANA on that page:\n\n1. General framing / overview:\n   \"Certain domains are set aside, and nominally registered to 'IANA', for specific policy or technical purposes.\"\n\n2. Example (documentation) domains:\n   \"As described in RFC 2606 and RFC 6761, a number of domains such as example.com and example.org are maintained for documentation purposes. These domains may be used as illustrative examples in documents without prior coordination with us. They are not available for registration or transfer.\"\n   - Supporting RFC links given on the page: RFC 2606 (\"Reserved Top Level DNS Names\") and RFC 6761 (\"Alternative Usage of the IETF Stream and Its Subtypes\"), i.e. the RFCs that define reserved/special-use domain names.\n   - IANA also links its IDN Evaluation / ICANN-related material in the adjacent paragraph on that page.\n\n3. Policy-reserved domains and IANA's role:\n   \"We act as both the registrant and registrar for a select number of domains which have been reserved under policy grounds. These exclusions are typically indicated in either technical standards (RFC documents), or contractual limitations.\"\n   - The phrase \"contractual limitations\" is a hyperlink on the page (pointing to IANA's contractual/agreement material), and the RFC references link to the IETF RFC documents.\n\nIn short, IANA states that reserved domains are names deliberately set aside (nominally registered to IANA) for policy or technical reasons; the \"example\" TLDs such as example.com/example.org (per RFC 2606 and RFC 6761) are reserved purely for documentation use, may be used illustratively in documents without coordinating with IANA, and are NOT available for registration or transfer; and for a select set of policy-reserved domains IANA serves as both registrant and registrar, with those exclusions defined either by technical standards (RFCs) or by contractual limitations.\n\nNavigation context observed on the page: this content sits under IANA's \"Domain Names\" section (site nav item \"Reserved Domains\"), alongside related IANA functions pages such as Root Zone Management, .INT Registry, .ARPA Registry, IDN Practices Repository, and Root Key Signing Key (DNSSEC).",
+        "success_probability": 0.96
+      },
+      "reasoning": "I have collected the substantive content from the IANA reserved-domains page across multiple extractions (intro, example-domain paragraph, and policy-reserved paragraph). The task is a read-only reporting task, and the exact URL is confirmed as the current page. I'll now provide the complete answer.",
+      "success": true,
+      "error": null,
+      "result": {
+        "summary": "WHAT IANA SAYS ABOUT RESERVED DOMAINS\n\nExact source URL (as requested): https://www.iana.org/domains/reserved\nPage title: \"IANA-managed Reserved Domains\"\n\nKey statements published by IANA on that page:\n\n1. General framing / overview:\n   \"Certain domains are set aside, and nominally registered to 'IANA', for specific policy or technical purposes.\"\n\n2. Example (documentation) domains:\n   \"As described in RFC 2606 and RFC 6761, a number of domains such as example.com and example.org are maintained for documentation purposes. These domains may be used as illustrative examples in documents without prior coordination with us. They are not available for registration or transfer.\"\n   - Supporting RFC links given on the page: RFC 2606 (\"Reserved Top Level DNS Names\") and RFC 6761 (\"Alternative Usage of the IETF Stream and Its Subtypes\"), i.e. the RFCs that define reserved/special-use domain names.\n   - IANA also links its IDN Evaluation / ICANN-related material in the adjacent paragraph on that page.\n\n3. Policy-reserved domains and IANA's role:\n   \"We act as both the registrant and registrar for a select number of domains which have been reserved under policy grounds. These exclusions are typically indicated in either technical standards (RFC documents), or contractual limitations.\"\n   - The phrase \"contractual limitations\" is a hyperlink on the page (pointing to IANA's contractual/agreement material), and the RFC references link to the IETF RFC documents.\n\nIn short, IANA states that reserved domains are names deliberately set aside (nominally registered to IANA) for policy or technical reasons; the \"example\" TLDs such as example.com/example.org (per RFC 2606 and RFC 6761) are reserved purely for documentation use, may be used illustratively in documents without coordinating with IANA, and are NOT available for registration or transfer; and for a select set of policy-reserved domains IANA serves as both registrant and registrar, with those exclusions defined either by technical standards (RFCs) or by contractual limitations.\n\nNavigation context observed on the page: this content sits under IANA's \"Domain Names\" section (site nav item \"Reserved Domains\"), alongside related IANA functions pages such as Root Zone Management, .INT Registry, .ARPA Registry, IDN Practices Repository, and Root Key Signing Key (DNSSEC).",
+        "attachments": [],
+        "success_probability": 0.96
+      },
+      "planner_visible_result": "{\"summary\": \"WHAT IANA SAYS ABOUT RESERVED DOMAINS\\n\\nExact source URL (as requested): https://www.iana.org/domains/reserved\\nPage title: \\\"IANA-managed Reserved Domains\\\"\\n\\nKey statements published by IANA on that page:\\n\\n1. General framing / overview:\\n   \\\"Certain domains are set aside, and nominally registered to 'IANA', for specific policy or technical purposes.\\\"\\n\\n2. Example (documentation) domains:\\n   \\\"As described in RFC 2606 and RFC 6761, a number of domains such as example.com an...",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "completion is grounded in a visited evidence page",
+        "policy_step": 5,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 4,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 10.750720024108887,
+      "tool_duration_seconds": 0.0004761219024658203
+    }
+  ],
+  "resume_count": 0,
+  "checkpoint_schema_version": null,
+  "resumed_from_checkpoint": false
+}

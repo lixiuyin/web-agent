@@ -1,0 +1,511 @@
+{
+  "format": "webagent-checkpoint",
+  "schema_version": 2,
+  "checkpoint_sha256": "b781df1cb6f8eba13a97ad239c86b35e3329923618a5357f0f34c7f7bf72be88",
+  "checkpoint": {
+    "artifacts": [],
+    "browser_state": {
+      "active_tab_index": 0,
+      "current_url": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github",
+      "tab_urls": [
+        "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github"
+      ]
+    },
+    "checkpoint_id": "d0dbbca8-7740-49fc-9e82-8002acbe1478",
+    "config_fingerprint": "8cec5c2d9a8383b4a581dc3e28b7de4baf7cbe53b378af61437660b1eef435c3",
+    "consecutive_failures": 0,
+    "created_at": "2026-09-01T12:41:53.392672Z",
+    "elapsed_seconds": 32.74944710731506,
+    "events": [
+      {
+        "current": "search-discovery",
+        "previous": "default",
+        "reason": "[omitted]",
+        "step_number": 2,
+        "timestamp": "2026-09-01T12:41:29.151564+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 2,
+        "strategy": "search-discovery",
+        "timestamp": "2026-09-01T12:41:29.151575+00:00",
+        "type": "replan"
+      }
+    ],
+    "final_result": {},
+    "history": [
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:41:21.483232+00:00",
+          "title": "normal",
+          "url": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github"
+        },
+        "duration_seconds": 4.184875011444092,
+        "step_number": 1,
+        "timestamp": "2026-09-01T12:41:24.827828+00:00",
+        "tool_call": {
+          "parameters": {},
+          "reasoning": "",
+          "tool_name": "get_url"
+        },
+        "tool_duration_seconds": 0.00030612945556640625,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 1,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 1,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "url": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "get_url"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:41:25.554141+00:00",
+          "title": "normal",
+          "url": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github"
+        },
+        "duration_seconds": 4.321753025054932,
+        "step_number": 2,
+        "timestamp": "2026-09-01T12:41:29.151505+00:00",
+        "tool_call": {
+          "parameters": {
+            "url": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github",
+            "wait_until": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "goto"
+        },
+        "tool_duration_seconds": 7.295608520507812e-05,
+        "tool_result": {
+          "audit": {
+            "decision": "deny",
+            "policy": "browser_grounded",
+            "policy_step": 2,
+            "provenance": {},
+            "reason": "[omitted]",
+            "target": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github"
+          },
+          "data": {},
+          "error": "tool action failed; details omitted",
+          "success": false,
+          "tool_name": "goto"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:41:29.906267+00:00",
+          "title": "normal",
+          "url": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github"
+        },
+        "duration_seconds": 5.206597089767456,
+        "step_number": 3,
+        "timestamp": "2026-09-01T12:41:34.360874+00:00",
+        "tool_call": {
+          "parameters": {
+            "amount_px": 500,
+            "direction": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "scroll"
+        },
+        "tool_duration_seconds": 0.10740995407104492,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 1,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 2,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 3,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "amount": 500,
+            "direction": "[omitted]",
+            "success": true
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "scroll"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:41:35.146451+00:00",
+          "title": "normal",
+          "url": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github"
+        },
+        "duration_seconds": 19.023035049438477,
+        "step_number": 4,
+        "timestamp": "2026-09-01T12:41:53.386340+00:00",
+        "tool_call": {
+          "parameters": {
+            "success_probability": 0.9,
+            "summary": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "done"
+        },
+        "tool_duration_seconds": 0.0004000663757324219,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 2,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 4,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "attachments": [],
+            "success_probability": 0.9,
+            "summary": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "done"
+        }
+      }
+    ],
+    "last_figure_path": null,
+    "loop_state": {
+      "in_loop": true,
+      "loop_type": "action_variety_no_progress",
+      "page_hash_history": [
+        "c3f22e5952c380b887b67ff0058be05d",
+        "c3f22e5952c380b887b67ff0058be05d",
+        "c3f22e5952c380b887b67ff0058be05d",
+        "e04d4c39ff3b16cb103c4071ae3fc588"
+      ],
+      "recent_actions": [
+        "26907555b0324b8a5de84cc72a6d845e2dcd6db0db62fd56d165c8164ac98628",
+        "b33c1c0168b891db69ce896f573d7d8dfad941e5993d5145739531128676cde2",
+        "f60aa8d4973e41f9ec5409912c178981d0293025efd133a0c544135ecaeeb853",
+        "6ca33a8057dfd0b8fb75bfb8573eb8de39551d2901ae72df2c01ccab1205e166"
+      ],
+      "recent_pages": [
+        "562c0fed2715b5452d20db2777c9acf236f14051004230400016a582dcc4eab6",
+        "562c0fed2715b5452d20db2777c9acf236f14051004230400016a582dcc4eab6",
+        "562c0fed2715b5452d20db2777c9acf236f14051004230400016a582dcc4eab6",
+        "b6abd0cd388ba0601281472c57a05c288dbf7b00211a3fc19cfd57c646fc702f"
+      ],
+      "schema_version": 1,
+      "threshold": 4,
+      "url_history": [
+        "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github",
+        "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github",
+        "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github",
+        "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github"
+      ],
+      "window_size": 4
+    },
+    "next_step": 5,
+    "pending_action": null,
+    "planner_attempts": [
+      {
+        "attempt_number": 1,
+        "completion_tokens": 16,
+        "duration_seconds": 2.029507875442505,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6510,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 1,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:41:23.548583+00:00",
+        "total_tokens": 6526,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 38,
+        "duration_seconds": 2.2835357189178467,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6612,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 2,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:41:27.868597+00:00",
+        "total_tokens": 6650,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 26,
+        "duration_seconds": 3.0624101161956787,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6708,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 3,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:41:32.997553+00:00",
+        "total_tokens": 6734,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 375,
+        "duration_seconds": 18.198972940444946,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6947,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 4,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:41:53.375055+00:00",
+        "total_tokens": 7322,
+        "transport_retries": 0
+      }
+    ],
+    "planning_state": {
+      "active_milestone_id": "m4",
+      "evidence": [
+        {
+          "id": "e1",
+          "kind": "checkpoint",
+          "source": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github",
+          "step_number": 1,
+          "summary": "evidence retained from step 1"
+        },
+        {
+          "id": "e2",
+          "kind": "checkpoint",
+          "source": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github",
+          "step_number": 3,
+          "summary": "evidence retained from step 3"
+        },
+        {
+          "id": "e3",
+          "kind": "checkpoint",
+          "source": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github",
+          "step_number": 4,
+          "summary": "evidence retained from step 4"
+        }
+      ],
+      "milestones": [
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 1",
+          "id": "m1",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 2",
+          "id": "m2",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 3",
+          "id": "m3",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 4",
+          "id": "m4",
+          "status": "active"
+        }
+      ],
+      "objective": "task bound by checkpoint task_sha256",
+      "revisions": [
+        {
+          "added_milestone_ids": [
+            "m4"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 1,
+          "step_number": 2,
+          "strategy": "search-discovery"
+        }
+      ]
+    },
+    "policy_state": {
+      "broad_current_year_search_completed": false,
+      "current_year": 2026,
+      "downloaded_paths": {},
+      "figure_analysis_completed": false,
+      "hybrid": {
+        "candidate_date": null,
+        "candidate_owner": null,
+        "candidate_url": null,
+        "candidate_version_key": [],
+        "cross_check_exhausted": false,
+        "direct_evidence_verified": false,
+        "missing_repeat_count": 0,
+        "missing_signature": [],
+        "official_report_attempts": {},
+        "required_next_action": null,
+        "subject": "[omitted]",
+        "successful_topics": []
+      },
+      "observed_urls": {
+        "field_094b941a541d": {
+          "page_url": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_802123278875": {
+          "page_url": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github",
+          "policy_step": 3,
+          "source": "[omitted]"
+        }
+      },
+      "official_identity_search_completed": false,
+      "official_identity_urls": [],
+      "official_scope_result_urls": [],
+      "official_scope_search_completed": false,
+      "pending_url_evidence_target": null,
+      "pending_url_search_attempts": 0,
+      "policy": "browser_grounded",
+      "release_landscape_evidence_urls": [],
+      "release_landscape_search_completed": false,
+      "schema_version": 3,
+      "search_completed": false,
+      "selected_candidate_url": null,
+      "step": 4,
+      "successful_queries": [],
+      "successful_searches": 0,
+      "task_sha256": "fdc21bce0e1bf90281b5b310f05620e541dc48254bc78fd73f2dfd39780e7bde",
+      "version_frontier": null,
+      "version_frontier_key": [],
+      "version_frontier_resolved": true,
+      "visited_urls": [
+        "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github"
+      ]
+    },
+    "previous_checkpoint_sha256": "29a222692c2bfddb6629163d1fd2b9121483f3524a110e2c0a450ad8777ba635",
+    "resume_count": 0,
+    "run_id": "2d8c6754-8811-4759-a678-e79d04521564",
+    "schema_version": 2,
+    "source_fingerprint": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "status": "completed",
+    "strategy_state": {
+      "attempted": [
+        "default",
+        "search-discovery"
+      ],
+      "consecutive_failures": 0,
+      "consecutive_no_progress": 0,
+      "current": "search-discovery",
+      "exhausted": false,
+      "switch_count": 1,
+      "switches": [
+        {
+          "current": "search-discovery",
+          "previous": "default",
+          "reason": "runtime strategy switch",
+          "step_number": 2
+        }
+      ]
+    },
+    "task_sha256": "fdc21bce0e1bf90281b5b310f05620e541dc48254bc78fd73f2dfd39780e7bde",
+    "updated_at": "2026-09-01T12:41:53.392691Z"
+  }
+}

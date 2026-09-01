@@ -1,0 +1,124 @@
+{
+  "task_id": "github_clone",
+  "category": "collaboration",
+  "goal": "Summarize what cloning a repository does and cite the exact GitHub Docs URL.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 32.480677127838135,
+  "steps": 5,
+  "action_count": 4,
+  "failed_action_count": 1,
+  "planner_attempt_count": 5,
+  "planner_failure_count": 0,
+  "planner_tokens": 35188,
+  "answer_assertion_count": 3,
+  "answer_assertion_passed": 3,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "held_out_task",
+  "task_family": "collaboration_platform_documentation",
+  "setting_id": "versioned_official_documentation",
+  "leakage_group": "host_docs_github_com",
+  "target_failure_modes": [
+    "information_extraction",
+    "tool_use",
+    "answer_grounding"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "short",
+  "scenario": "document_read",
+  "environment": "public_web",
+  "entry_mode": "direct",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://docs.github.com"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 4,
+    "distinct_tool_count": 2,
+    "tool_entropy_bits": 0.8112781244591328,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 1,
+    "recovery_count": 1,
+    "minimum_window_entropy_bits": null,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 4,
+    "stagnation_onset_step": null,
+    "replan_count": 2,
+    "strategy_switch_count": 2,
+    "replan_rate": 0.5,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 0.95,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 5,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "copy",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "Cloning a repository copies the full repository from GitHub.com to your local machine (or to a remote virtual machine when you create a codespace). This gives you a local copy so you can fix merge conflicts, add or remove files, and push larger commits more easily. You can clone using HTTPS, SSH, or the GitHub CLI by copying the repository URL from the Code button on the repo page and running git clone. Cloning an empty repository works too. Source: GitHub Docs — \"Cloning a repository\": https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "Cloning a repository copies the full repository from GitHub.com to your local machine (or to a remote virtual machine when you create a codespace). This gives you a local copy so you can fix merge conflicts, add or remove files, and push larger commits more easily. You can clone using HTTPS, SSH, or the GitHub CLI by copying the repository URL from the Code button on the repo page and running git clone. Cloning an empty repository works too. Source: GitHub Docs — \"Cloning a repository\": https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_url_observed",
+        "expected": "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

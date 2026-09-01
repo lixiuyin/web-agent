@@ -1,0 +1,1 @@
+pandas.read_csv reads a comma-separated values (csv) file into a DataFrame (also supports optionally iterating or breaking the file into chunks). Exact API URL: https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html (pandas 3.0.5 documentation).

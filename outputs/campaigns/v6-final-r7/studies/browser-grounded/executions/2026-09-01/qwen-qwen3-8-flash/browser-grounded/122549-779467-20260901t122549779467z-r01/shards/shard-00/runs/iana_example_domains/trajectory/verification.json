@@ -1,0 +1,19 @@
+{
+  "valid": true,
+  "run_id": "c5afd33e-90bb-45a9-9909-b114302d0150",
+  "checks": {
+    "single_continuous_run": true,
+    "search_engine_only": true,
+    "first_successful_action_is_search": true,
+    "planner_visible_url_provenance": true,
+    "producer_source_bound": true,
+    "schema_supported": true
+  },
+  "failures": [],
+  "warnings": [],
+  "source_schema_version": 8,
+  "verified_schema_version": 8,
+  "certificate_schema_version": 1,
+  "trace_sha256": "624ad3ee722dda031fa8cb2c47a74e5ddf2b92aa7bf4e063f61b053ecf313bfa",
+  "trace_path": "trace.json"
+}

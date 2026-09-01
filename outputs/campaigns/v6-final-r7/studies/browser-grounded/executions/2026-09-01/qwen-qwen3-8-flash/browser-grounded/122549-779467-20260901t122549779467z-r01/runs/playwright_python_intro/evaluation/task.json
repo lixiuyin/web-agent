@@ -1,0 +1,142 @@
+{
+  "task_id": "playwright_python_intro",
+  "category": "browser_automation",
+  "goal": "Starting from a blank page, use browser search to find Playwright Python's official introduction, report its package installation command, and cite the exact URL.",
+  "passed": false,
+  "score": 0.5,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 68.42849779129028,
+  "steps": 7,
+  "action_count": 6,
+  "failed_action_count": 2,
+  "planner_attempt_count": 7,
+  "planner_failure_count": 0,
+  "planner_tokens": 95213,
+  "answer_assertion_count": 3,
+  "answer_assertion_passed": 1,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "development",
+  "task_family": "browser_automation_documentation",
+  "setting_id": "versioned_official_documentation",
+  "leakage_group": "host_playwright_dev",
+  "target_failure_modes": [
+    "search_discovery",
+    "tool_use",
+    "answer_grounding"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "medium",
+  "scenario": "search_discovery",
+  "environment": "public_web",
+  "entry_mode": "search",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://playwright.dev"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 6,
+    "distinct_tool_count": 4,
+    "tool_entropy_bits": 1.792481250360578,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 1,
+    "recovery_count": 2,
+    "minimum_window_entropy_bits": 1.3709505944546687,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 2,
+    "stagnation_onset_step": null,
+    "replan_count": 0,
+    "strategy_switch_count": 0,
+    "replan_rate": 0.0,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 0.95,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 7,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "playwright install",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "**Playwright Python — official introduction (Getting Started / Library) and package installation command**\n\n**Official source (exact URL):** https://playwright.dev/python/docs/library — page title: \"Getting started - Library | Playwright Python\" (Playwright's official documentation site, playwright.dev, Python section). Found via browser search (Bing query \"Playwright Python official documentation introduction\", which surfaced https://playwright.dev/ and https://playwright.dev/docs/intro; a follow-up Yahoo Japan search surfaced the Python-specific page https://playwright.dev/python/docs/library, which was then opened and read).\n\n**Package installation command (Pip tab, as shown on that page):**\n```bash\npip install --upgrade pip\npip install playwright\nplaywright install\n```\n- `pip install playwright` is the package installation command itself; `playwright install` then downloads the browser binaries.\n- The page states: \"These commands download the Playwright package and install browser binaries for Chromium, Firefox and WebKit. To modify this behavior see installation parameters.\"\n\n**Alternative package managers offered on the same page (tabs):**\n- Poetry: `poetry self update` → `poetry add playwright` → `playwright install`\n- uv: `uv self update` → `uv add playwright` → `playwright install`\n\n**Usage note from the same page:** once installed, you import Playwright in your Python script (e.g. `from playwright.sync_api import sync_playwright`).\n\nRelated official URLs seen in search results: https://playwright.dev/ (project home) and https://playwright.dev/docs/intro (Getting Started / Introduction for Node.js). The Python-language introduction/installation page cited above is https://playwright.dev/python/docs/library.",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "https://playwright.dev/python/docs/intro",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": false,
+      "observed": "**Playwright Python — official introduction (Getting Started / Library) and package installation command**\n\n**Official source (exact URL):** https://playwright.dev/python/docs/library — page title: \"Getting started - Library | Playwright Python\" (Playwright's official documentation site, playwright.dev, Python section). Found via browser search (Bing query \"Playwright Python official documentation introduction\", which surfaced https://playwright.dev/ and https://playwright.dev/docs/intro; a follow-up Yahoo Japan search surfaced the Python-specific page https://playwright.dev/python/docs/library, which was then opened and read).\n\n**Package installation command (Pip tab, as shown on that page):**\n```bash\npip install --upgrade pip\npip install playwright\nplaywright install\n```\n- `pip install playwright` is the package installation command itself; `playwright install` then downloads the browser binaries.\n- The page states: \"These commands download the Playwright package and install browser binaries for Chromium, Firefox and WebKit. To modify this behavior see installation parameters.\"\n\n**Alternative package managers offered on the same page (tabs):**\n- Poetry: `poetry self update` → `poetry add playwright` → `playwright install`\n- uv: `uv self update` → `uv add playwright` → `playwright install`\n\n**Usage note from the same page:** once installed, you import Playwright in your Python script (e.g. `from playwright.sync_api import sync_playwright`).\n\nRelated official URLs seen in search results: https://playwright.dev/ (project home) and https://playwright.dev/docs/intro (Getting Started / Introduction for Node.js). The Python-language introduction/installation page cited above is https://playwright.dev/python/docs/library.",
+      "error": null,
+      "adjudication_candidate": true,
+      "adjudication_reason": "semantic or URL assertion failed; inspect trace before assigning cause"
+    },
+    {
+      "assertion": {
+        "kind": "history_url_observed",
+        "expected": "https://playwright.dev/python/docs/intro",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": false,
+      "observed": false,
+      "error": null,
+      "adjudication_candidate": true,
+      "adjudication_reason": "semantic or URL assertion failed; inspect trace before assigning cause"
+    },
+    {
+      "assertion": {
+        "kind": "certificate_valid",
+        "expected": true,
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

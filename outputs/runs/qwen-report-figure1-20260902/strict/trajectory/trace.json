@@ -1,0 +1,1804 @@
+{
+  "schema_version": 8,
+  "$schema": "https://raw.githubusercontent.com/lixiuyin/web-agent/main/src/webagent/schemas/run-trace-v8.schema.json",
+  "producer": {
+    "name": "lixiuyin-webagent",
+    "version": "0.2.0",
+    "source_sha256": "44a2ddfd1b04b204f5fbae16e55589ee5b4dd2f8d6d247d9230501a7bfc5bf05"
+  },
+  "created_at": "2026-09-01T16:19:06.237922+00:00",
+  "run_id": "0e0f44c4-38ac-479f-a0c8-2d0bf29cfe4f",
+  "run_kind": "agent_e2e",
+  "task": "Find the most recent technical report (PDF) about Qwen, then interpret Figure 1 by describing its purpose and key findings",
+  "status": "completed",
+  "success": true,
+  "steps_taken": 17,
+  "total_duration": 233.95905685424805,
+  "final_result": {
+    "summary": "Most recent Qwen technical report (PDF): the Qwen3.8-Flash-Next technical report, published in the official QwenLM repository at https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf (repo/file dated Aug 26, 2026; announced ~6 days before the search via the official blog https://qwen.ai/blog?id=qwen3.8-flash-next). This is newer than the Qwen3 Technical Report (arXiv 2505.09388, May 2025) and matches the current Qwen release landscape (Qwen3.8 series, Qwen3.8-Flash-Next being the newest entry). Downloaded and validated from https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf.\n\nFigure 1 (page 2) — \"Qwen3.8-Flash-Next architecture\":\n\nPurpose: The figure is an architecture diagram that explains how Qwen3.8-Flash-Next is assembled: it illustrates the hybrid token-mixing layout, the Gated Residual (GR) data path used by every sublayer, and how auxiliary components (n-gram embeddings, MoE, and Multi-Token Prediction) integrate into the model to achieve low-cost, high-throughput inference.\n\nKey findings / design choices shown:\n1. Hybrid token mixing: the layer stack alternates three GDN (Gated DeltaNet, linear-attention) layers with one QSA (Qwen Sparse Attention) layer per block of four (3:1 ratio). The left side shows the repeated stack (Vocabulary Embedding at the bottom → GDN, GDN, GDN, QSA blocks → ... → Prediction Head at top), and the right side expands each layer type (GDN \"3×\", QSA \"1×\").\n2. GR (Gated Residual) everywhere: every sublayer reads from and writes to an expanded (widened) residual stream; the read is elementwise-gated. Data flow in each sublayer: Hidden States → GR Read → elementwise gate (⊙) → token mixer (Qwen Sparse Attn or Gated DeltaNet) → elementwise gate (⊙) → GR Write → back to the expanded residual, with an MoE feed-forward branch attached.\n3. Off-accelerator capacity scaling: an n-gram Embedding Layer at Layer 2 scales model capacity off the accelerator via host-memory prefetching, reducing accelerator memory pressure.\n4. Speculative decoding integration: the MTP (Multi-Token Prediction) modules at the top reuse QSA indices across speculative decoding steps, making multi-token speculation cheap.\n\nOverall takeaway: the figure communicates that Qwen3.8-Flash-Next's efficiency comes from combining cheap linear attention (GDN) with occasional sparse attention (QSA), a uniformly gated widened residual stream, off-chip n-gram embedding capacity, and MTP-based speculative decoding that exploits the sparse-attention structure.",
+    "attachments": [
+      "result/attachments/figure.png"
+    ],
+    "success_probability": 0.9
+  },
+  "evaluation": {
+    "agent_source_sha256": "44a2ddfd1b04b204f5fbae16e55589ee5b4dd2f8d6d247d9230501a7bfc5bf05",
+    "mode": "search_engine_only",
+    "discovery_mode": "browser-grounded",
+    "direct_source_tools_enabled": false,
+    "high_risk_action_policy": "deny",
+    "stealth_mode": false,
+    "anti_shortcut_contract": "search_engine_only_v8",
+    "certificate_required": true,
+    "strict_eval_mode": true,
+    "search_engine_only": true,
+    "browser_profile_mode": "temporary",
+    "browser_channel": "bundled",
+    "persistent_pdf_cache": false
+  },
+  "planner_attempts": [
+    {
+      "step_number": 1,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:15:30.787541+00:00",
+      "duration_seconds": 17.89549231529236,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 9259,
+      "completion_tokens": 40,
+      "total_tokens": 9299,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 2,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:15:45.891057+00:00",
+      "duration_seconds": 3.7288818359375,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 11894,
+      "completion_tokens": 17,
+      "total_tokens": 11911,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 3,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:15:55.123238+00:00",
+      "duration_seconds": 4.822894096374512,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 156,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 13114,
+      "completion_tokens": 54,
+      "total_tokens": 13168,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 4,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:16:03.860045+00:00",
+      "duration_seconds": 2.7861337661743164,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 131,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 13571,
+      "completion_tokens": 48,
+      "total_tokens": 13619,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 5,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:16:13.174503+00:00",
+      "duration_seconds": 4.036689281463623,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 14032,
+      "completion_tokens": 25,
+      "total_tokens": 14057,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 6,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:16:24.143315+00:00",
+      "duration_seconds": 6.427830934524536,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 270,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 14730,
+      "completion_tokens": 100,
+      "total_tokens": 14830,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 7,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:16:37.669710+00:00",
+      "duration_seconds": 3.0597970485687256,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 15974,
+      "completion_tokens": 32,
+      "total_tokens": 16006,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 8,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:16:49.944162+00:00",
+      "duration_seconds": 4.237070083618164,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 213,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 15772,
+      "completion_tokens": 76,
+      "total_tokens": 15848,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 9,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:16:58.260038+00:00",
+      "duration_seconds": 3.3388140201568604,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 16986,
+      "completion_tokens": 33,
+      "total_tokens": 17019,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 10,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:17:03.907638+00:00",
+      "duration_seconds": 3.67986798286438,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 17045,
+      "completion_tokens": 29,
+      "total_tokens": 17074,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 11,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:17:11.880091+00:00",
+      "duration_seconds": 3.5890541076660156,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 17663,
+      "completion_tokens": 33,
+      "total_tokens": 17696,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 12,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:17:18.976084+00:00",
+      "duration_seconds": 3.791857957839966,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 109,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 17535,
+      "completion_tokens": 30,
+      "total_tokens": 17565,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 13,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:17:31.346506+00:00",
+      "duration_seconds": 10.39179277420044,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 198,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 17194,
+      "completion_tokens": 80,
+      "total_tokens": 17274,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 14,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:17:37.009667+00:00",
+      "duration_seconds": 2.0025057792663574,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 16979,
+      "completion_tokens": 7,
+      "total_tokens": 16986,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 15,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:17:43.880674+00:00",
+      "duration_seconds": 4.810568332672119,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 17254,
+      "completion_tokens": 37,
+      "total_tokens": 17291,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 16,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:17:52.230143+00:00",
+      "duration_seconds": 2.742945909500122,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 17335,
+      "completion_tokens": 73,
+      "total_tokens": 17408,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 17,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T16:19:06.200287+00:00",
+      "duration_seconds": 19.41437792778015,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 16644,
+      "completion_tokens": 644,
+      "total_tokens": 17288,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    }
+  ],
+  "events": [
+    {
+      "type": "strategy_switch",
+      "timestamp": "2026-09-01T16:16:17.715414+00:00",
+      "step_number": 6,
+      "previous": "default",
+      "current": "alternate-navigation",
+      "reason": "loop detector reported search_churn"
+    },
+    {
+      "type": "replan",
+      "timestamp": "2026-09-01T16:16:17.715453+00:00",
+      "step_number": 6,
+      "reason": "loop detector reported search_churn",
+      "strategy": "alternate-navigation",
+      "exhausted": false
+    },
+    {
+      "type": "strategy_switch",
+      "timestamp": "2026-09-01T16:16:34.609872+00:00",
+      "step_number": 7,
+      "previous": "alternate-navigation",
+      "current": "semantic-dom",
+      "reason": "loop detector reported search_churn"
+    },
+    {
+      "type": "replan",
+      "timestamp": "2026-09-01T16:16:34.609894+00:00",
+      "step_number": 7,
+      "reason": "loop detector reported search_churn",
+      "strategy": "semantic-dom",
+      "exhausted": false
+    },
+    {
+      "type": "strategy_switch",
+      "timestamp": "2026-09-01T16:16:59.496799+00:00",
+      "step_number": 9,
+      "previous": "semantic-dom",
+      "current": "search-discovery",
+      "reason": "execution policy denied download_pdf"
+    },
+    {
+      "type": "replan",
+      "timestamp": "2026-09-01T16:16:59.496825+00:00",
+      "step_number": 9,
+      "reason": "execution policy denied download_pdf",
+      "strategy": "search-discovery",
+      "exhausted": false
+    }
+  ],
+  "steps": [
+    {
+      "step_number": 1,
+      "run_id": "0e0f44c4-38ac-479f-a0c8-2d0bf29cfe4f",
+      "timestamp": "2026-09-01T16:15:41.469806+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "Qwen technical report 2026",
+        "engine": "bing",
+        "recency": "year"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "Qwen technical report 2026",
+        "engine": "bing",
+        "url": "https://www.bing.com/search?q=Qwen+technical+report+2026&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=E7CBB69CB39A4AEFBBE50990E2A0C052&filt=custom&sc=0-y-0",
+        "title": "Qwen technical report 2026 - Search",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "success"
+          }
+        ],
+        "search_market": "en-US",
+        "results": [
+          {
+            "title": "Qwen",
+            "url": "https://qwen.ai/home",
+            "date": ""
+          },
+          {
+            "title": "Qwen Studio",
+            "url": "https://chat.qwen.ai/auth?action=signin",
+            "date": ""
+          },
+          {
+            "title": "Qwen",
+            "url": "https://qwen.ai/blog?id=qwen3.6",
+            "date": ""
+          },
+          {
+            "title": "Qwen - Wikipedia",
+            "url": "https://en.wikipedia.org/wiki/Qwen",
+            "date": ""
+          },
+          {
+            "title": "Qwen (Qwen) - Hugging Face",
+            "url": "https://huggingface.co/Qwen",
+            "date": "Nov 27, 2024"
+          },
+          {
+            "title": "Qwen - Alibaba AI Assistant - Apps on Google Play",
+            "url": "https://play.google.com/store/apps/details?id=com.tongyi.intl&hl=en-US",
+            "date": ""
+          },
+          {
+            "title": "Qwen3.8 | OpenLM.ai",
+            "url": "https://openlm.ai/qwen3.8/",
+            "date": "Aug 2, 2026"
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"Qwen technical report 2026\", \"engine\": \"bing\", \"url\": \"https://www.bing.com/search?q=Qwen+technical+report+2026&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=E7CBB69CB39A4AEFBBE50990E2A0C052&filt=custom&sc=0-y-0\", \"title\": \"Qwen technical report 2026 - Search\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"success\"}], \"search_market\": \"en-US\", \"results\": [{\"title\": \"Qwen\", \"url\": \"https://qwen.ai/home\", \"date\": \"\"}, {\"title\": \"Qwen Studio\", \"url\": \"https://chat.qwen.ai/auth?action=signin\", \"date\": \"\"}, {\"title\": \"Qwen\", \"url\": \"https://qwen.ai/blog?id=qwen3.6\", \"date\": \"\"}, {\"title\": \"Qwen - Wikipedia\", \"url\": \"https://en.wikipedia.org/wiki/Qwen\", \"date\": \"\"}, {\"title\": \"Qwen (Qwen) - Hugging Face\", \"url\": \"https://huggingface.co/Qwen\", \"date\": \"Nov 27, 2024\"}, {\"title\": \"Qwen - Alibaba AI Assistant - Apps on Google Play\", \"url\": \"https://play.google.com/store/apps/details?id=com.tongyi.intl&hl=en-US\", \"date\": \"\"}, {\"title\": \"Qwen3.8 | OpenLM.ai\", \"url\": \"https://openlm.ai/qwen3.8/\", \"date\": \"Aug 2, 2026\"}]}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser search is the required discovery action",
+        "policy_step": 1,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 1,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": false,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "at least two successful browser searches with distinct queries",
+          "a subject-wide current-year release landscape search whose results show relevant model/version/release evidence",
+          "a non-site official identity search for the subject",
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)",
+          "an exact version follow-up search for the highest observed version 'qwen3.8'"
+        ],
+        "new_urls_observed": 21,
+        "observed_url_count": 21,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 29.222705841064453,
+      "tool_duration_seconds": 8.767836809158325
+    },
+    {
+      "step_number": 2,
+      "run_id": "0e0f44c4-38ac-479f-a0c8-2d0bf29cfe4f",
+      "timestamp": "2026-09-01T16:15:49.577439+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "Qwen3.8 technical report"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "Qwen3.8 technical report",
+        "engine": "bing",
+        "url": "https://www.bing.com/search?q=Qwen3.8+technical+report&mkt=en-US&cc=us&setlang=en-US",
+        "title": "Qwen3.8 technical report - Search",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "success"
+          }
+        ],
+        "search_market": "en-US",
+        "results": [
+          {
+            "title": "Qwen3.8-Flash-Next/tech_report.pdf at main - GitHub",
+            "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+            "date": ""
+          },
+          {
+            "title": "GitHub - QwenLM/Qwen3.8: Qwen3.8 is the large language model ...",
+            "url": "https://github.com/QwenLM/Qwen3.8",
+            "date": ""
+          },
+          {
+            "title": "Qwen3 Technical Report - arXiv.org",
+            "url": "https://arxiv.org/pdf/2505.09388",
+            "date": "May 15, 2025"
+          },
+          {
+            "title": "[2505.09388] Qwen3 Technical Report - arXiv.org",
+            "url": "https://arxiv.org/abs/2505.09388",
+            "date": "May 14, 2025"
+          },
+          {
+            "title": "Qwen3.8-Max: A New Bar for Coding and Cowork",
+            "url": "https://qwen.ai/blog?id=qwen3.8",
+            "date": ""
+          },
+          {
+            "title": "Qwen3.8-Flash-Next: A New Architecture, Towards Ultimate Cost ...",
+            "url": "https://qwen.ai/blog?id=qwen3.8-flash-next",
+            "date": "6 days ago"
+          },
+          {
+            "title": "QWEN TECHNICAL REPORT",
+            "url": "https://qianwen-res.oss-cn-beijing.aliyuncs.com/QWEN_TECHNICAL_REPORT.pdf",
+            "date": ""
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"Qwen3.8 technical report\", \"engine\": \"bing\", \"url\": \"https://www.bing.com/search?q=Qwen3.8+technical+report&mkt=en-US&cc=us&setlang=en-US\", \"title\": \"Qwen3.8 technical report - Search\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"success\"}], \"search_market\": \"en-US\", \"results\": [{\"title\": \"Qwen3.8-Flash-Next/tech_report.pdf at main - GitHub\", \"url\": \"https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf\", \"date\": \"\"}, {\"title\": \"GitHub - QwenLM/Qwen3.8: Qwen3.8 is the large language model ...\", \"url\": \"https://github.com/QwenLM/Qwen3.8\", \"date\": \"\"}, {\"title\": \"Qwen3 Technical Report - arXiv.org\", \"url\": \"https://arxiv.org/pdf/2505.09388\", \"date\": \"May 15, 2025\"}, {\"title\": \"[2505.09388] Qwen3 Technical Report - arXiv.org\", \"url\": \"https://arxiv.org/abs/2505.09388\", \"date\": \"May 14, 2025\"}, {\"title\": \"Qwen3.8-Max: A New Bar for Coding and Cowork\", \"url\": \"https://qwen.ai/blog?id=qwen3.8\", \"date\": \"\"}, {\"title\": \"Qwen3.8-Flash-Next: A New Architecture, Towards Ultimate Cost ...\", \"url\": \"https://qwen.ai/blog?id=qwen3.8-flash-next\", \"date\": \"6 days ago\"}, {\"title\": \"QWEN TECHNICAL REPORT\", \"url\": \"https://qianwen-res.oss-cn-beijing.aliyuncs.com/QWEN_TECHNICAL_REPORT.pdf\", \"date\": \"\"}]}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser search is the required discovery action",
+        "policy_step": 2,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 2,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "a subject-wide current-year release landscape search whose results show relevant model/version/release evidence",
+          "a non-site official identity search for the subject",
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 18,
+        "observed_url_count": 39,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 8.107424020767212,
+      "tool_duration_seconds": 0.8772706985473633
+    },
+    {
+      "step_number": 3,
+      "run_id": "0e0f44c4-38ac-479f-a0c8-2d0bf29cfe4f",
+      "timestamp": "2026-09-01T16:16:00.278516+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "Qwen model series latest release 2026",
+        "recency": "year"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "Qwen model series latest release 2026",
+        "engine": "bing",
+        "url": "https://www.bing.com/search?q=Qwen+model+series+latest+release+2026&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=097F2011080141DEAB2DB414F3DA8304&filt=custom&sc=0-y-0",
+        "title": "Qwen model series latest release 2026 - Search",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "success"
+          }
+        ],
+        "search_market": "en-US",
+        "results": [
+          {
+            "title": "Qwen",
+            "url": "https://qwen.ai/home",
+            "date": ""
+          },
+          {
+            "title": "Qwen Studio",
+            "url": "https://chat.qwen.ai/auth?action=signin",
+            "date": ""
+          },
+          {
+            "title": "Qwen",
+            "url": "https://qwen.ai/blog?id=qwen3.6",
+            "date": ""
+          },
+          {
+            "title": "Qwen - Wikipedia",
+            "url": "https://en.wikipedia.org/wiki/Qwen",
+            "date": ""
+          },
+          {
+            "title": "Qwen (Qwen) - Hugging Face",
+            "url": "https://huggingface.co/Qwen",
+            "date": "Nov 27, 2024"
+          },
+          {
+            "title": "Qwen - Alibaba AI Assistant - Apps on Google Play",
+            "url": "https://play.google.com/store/apps/details?id=com.tongyi.intl&hl=en-US",
+            "date": ""
+          },
+          {
+            "title": "Qwen3.8 | OpenLM.ai",
+            "url": "https://openlm.ai/qwen3.8/",
+            "date": "Aug 2, 2026"
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"Qwen model series latest release 2026\", \"engine\": \"bing\", \"url\": \"https://www.bing.com/search?q=Qwen+model+series+latest+release+2026&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=097F2011080141DEAB2DB414F3DA8304&filt=custom&sc=0-y-0\", \"title\": \"Qwen model series latest release 2026 - Search\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"success\"}], \"search_market\": \"en-US\", \"results\": [{\"title\": \"Qwen\", \"url\": \"https://qwen.ai/home\", \"date\": \"\"}, {\"title\": \"Qwen Studio\", \"url\": \"https://chat.qwen.ai/auth?action=signin\", \"date\": \"\"}, {\"title\": \"Qwen\", \"url\": \"https://qwen.ai/blog?id=qwen3.6\", \"date\": \"\"}, {\"title\": \"Qwen - Wikipedia\", \"url\": \"https://en.wikipedia.org/wiki/Qwen\", \"date\": \"\"}, {\"title\": \"Qwen (Qwen) - Hugging Face\", \"url\": \"https://huggingface.co/Qwen\", \"date\": \"Nov 27, 2024\"}, {\"title\": \"Qwen - Alibaba AI Assistant - Apps on Google Play\", \"url\": \"https://play.google.com/store/apps/details?id=com.tongyi.intl&hl=en-US\", \"date\": \"\"}, {\"title\": \"Qwen3.8 | OpenLM.ai\", \"url\": \"https://openlm.ai/qwen3.8/\", \"date\": \"Aug 2, 2026\"}]}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser search is the required discovery action",
+        "policy_step": 3,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 3,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "a non-site official identity search for the subject",
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 3,
+        "observed_url_count": 42,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 10.700803756713867,
+      "tool_duration_seconds": 3.6661529541015625
+    },
+    {
+      "step_number": 4,
+      "run_id": "0e0f44c4-38ac-479f-a0c8-2d0bf29cfe4f",
+      "timestamp": "2026-09-01T16:16:08.423739+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "Qwen official website technical report"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "Qwen official website technical report",
+        "engine": "bing",
+        "url": "https://www.bing.com/search?q=Qwen+official+website+technical+report&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=2AC1962C397F4CEBB55D477FA160C873",
+        "title": "Qwen official website technical report - Search",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "success"
+          }
+        ],
+        "search_market": "en-US",
+        "results": [
+          {
+            "title": "Qwen",
+            "url": "https://qwen.ai/home",
+            "date": ""
+          },
+          {
+            "title": "Qwen Studio",
+            "url": "https://chat.qwen.ai/auth?action=signin",
+            "date": ""
+          },
+          {
+            "title": "Qwen",
+            "url": "https://qwen.ai/blog?id=qwen3.6",
+            "date": ""
+          },
+          {
+            "title": "Qwen - Wikipedia",
+            "url": "https://en.wikipedia.org/wiki/Qwen",
+            "date": ""
+          },
+          {
+            "title": "Qwen (Qwen) - Hugging Face",
+            "url": "https://huggingface.co/Qwen",
+            "date": "Nov 27, 2024"
+          },
+          {
+            "title": "Qwen - Alibaba AI Assistant - Apps on Google Play",
+            "url": "https://play.google.com/store/apps/details?id=com.tongyi.intl&hl=en-US",
+            "date": ""
+          },
+          {
+            "title": "Qwen3.8 | OpenLM.ai",
+            "url": "https://openlm.ai/qwen3.8/",
+            "date": "Aug 2, 2026"
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"Qwen official website technical report\", \"engine\": \"bing\", \"url\": \"https://www.bing.com/search?q=Qwen+official+website+technical+report&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=2AC1962C397F4CEBB55D477FA160C873\", \"title\": \"Qwen official website technical report - Search\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"success\"}], \"search_market\": \"en-US\", \"results\": [{\"title\": \"Qwen\", \"url\": \"https://qwen.ai/home\", \"date\": \"\"}, {\"title\": \"Qwen Studio\", \"url\": \"https://chat.qwen.ai/auth?action=signin\", \"date\": \"\"}, {\"title\": \"Qwen\", \"url\": \"https://qwen.ai/blog?id=qwen3.6\", \"date\": \"\"}, {\"title\": \"Qwen - Wikipedia\", \"url\": \"https://en.wikipedia.org/wiki/Qwen\", \"date\": \"\"}, {\"title\": \"Qwen (Qwen) - Hugging Face\", \"url\": \"https://huggingface.co/Qwen\", \"date\": \"Nov 27, 2024\"}, {\"title\": \"Qwen - Alibaba AI Assistant - Apps on Google Play\", \"url\": \"https://play.google.com/store/apps/details?id=com.tongyi.intl&hl=en-US\", \"date\": \"\"}, {\"title\": \"Qwen3.8 | OpenLM.ai\", \"url\": \"https://openlm.ai/qwen3.8/\", \"date\": \"Aug 2, 2026\"}]}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser search is the required discovery action",
+        "policy_step": 4,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 4,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 3,
+        "observed_url_count": 45,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 8.145037174224854,
+      "tool_duration_seconds": 3.3846490383148193
+    },
+    {
+      "step_number": 5,
+      "run_id": "0e0f44c4-38ac-479f-a0c8-2d0bf29cfe4f",
+      "timestamp": "2026-09-01T16:16:17.005732+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "GitHub QwenLM Qwen3.8-Flash-Next tech_report"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "GitHub QwenLM Qwen3.8-Flash-Next tech_report",
+        "engine": "bing",
+        "url": "https://www.bing.com/search?q=GitHub+QwenLM+Qwen3.8-Flash-Next+tech_report&mkt=en-US&cc=us&setlang=en-US",
+        "title": "GitHub QwenLM Qwen3.8-Flash-Next tech_report - Search",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "success"
+          }
+        ],
+        "search_market": "en-US",
+        "results": [
+          {
+            "title": "GitHub · Change is constant. GitHub keeps you ahead.",
+            "url": "https://github.com/",
+            "date": ""
+          },
+          {
+            "title": "Sign in to GitHub · GitHub",
+            "url": "https://github.com/login",
+            "date": ""
+          },
+          {
+            "title": "GitHub - LinkedIn",
+            "url": "https://www.linkedin.com/company/github",
+            "date": ""
+          },
+          {
+            "title": "Download GitHub Desktop",
+            "url": "https://desktop.github.com/download/",
+            "date": ""
+          },
+          {
+            "title": "What Is GitHub? Use Cases and FAQ - Coursera",
+            "url": "https://www.coursera.org/articles/what-is-github?msockid=3dd739b2ee07643c0a4f2e75ef166568",
+            "date": "Jun 27, 2026"
+          },
+          {
+            "title": "GitHub - Wikipedia",
+            "url": "https://en.wikipedia.org/wiki/GitHub",
+            "date": ""
+          },
+          {
+            "title": "Home - The GitHub Blog",
+            "url": "https://github.blog/",
+            "date": ""
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"GitHub QwenLM Qwen3.8-Flash-Next tech_report\", \"engine\": \"bing\", \"url\": \"https://www.bing.com/search?q=GitHub+QwenLM+Qwen3.8-Flash-Next+tech_report&mkt=en-US&cc=us&setlang=en-US\", \"title\": \"GitHub QwenLM Qwen3.8-Flash-Next tech_report - Search\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"success\"}], \"search_market\": \"en-US\", \"results\": [{\"title\": \"GitHub · Change is constant. GitHub keeps you ahead.\", \"url\": \"https://github.com/\", \"date\": \"\"}, {\"title\": \"Sign in to GitHub · GitHub\", \"url\": \"https://github.com/login\", \"date\": \"\"}, {\"title\": \"GitHub - LinkedIn\", \"url\": \"https://www.linkedin.com/company/github\", \"date\": \"\"}, {\"title\": \"Download GitHub Desktop\", \"url\": \"https://desktop.github.com/download/\", \"date\": \"\"}, {\"title\": \"What Is GitHub? Use Cases and FAQ - Coursera\", \"url\": \"https://www.coursera.org/articles/what-is-github?msockid=3dd739b2ee07643c0a4f2e75ef166568\", \"date\": \"Jun 27, 2026\"}, {\"title\": \"GitHub - Wikipedia\", \"url\": \"https://en.wikipedia.org/wiki/GitHub\", \"date\": \"\"}, {\"title\": \"Home - The GitHub Blog\", \"url\": \"https://github.blog/\", \"date\": \"\"}]}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser search is the required discovery action",
+        "policy_step": 5,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 5,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 18,
+        "observed_url_count": 63,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 8.581798791885376,
+      "tool_duration_seconds": 0.6571171283721924
+    },
+    {
+      "step_number": 6,
+      "run_id": "0e0f44c4-38ac-479f-a0c8-2d0bf29cfe4f",
+      "timestamp": "2026-09-01T16:16:33.374452+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "site:github.com QwenLM Qwen3.8-Flash-Next"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "site:github.com QwenLM Qwen3.8-Flash-Next",
+        "engine": "yahoo_japan",
+        "url": "https://search.yahoo.co.jp/search?p=site%3Agithub.com+QwenLM+Qwen3.8-Flash-Next",
+        "title": "「site:github.com QwenLM Qwen3.8-Flash-Next」の検索結果 - Yahoo!検索",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "failed",
+            "failure_category": "quality_failure",
+            "error": "bing returned irrelevant results: results ignored the requested domain constraint"
+          },
+          {
+            "engine": "yahoo_japan",
+            "outcome": "success"
+          }
+        ],
+        "results": [
+          {
+            "title": "QwenLM/Qwen3.8-Flash-Next - GitHub",
+            "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next",
+            "date": ""
+          },
+          {
+            "title": "Qwen3.8-Flash-Next/tech_report.pdf at main ... - GitHub",
+            "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+            "date": ""
+          },
+          {
+            "title": "Qwen3.8 is the large language model series ... - GitHub",
+            "url": "https://github.com/QwenLM/Qwen3.8",
+            "date": ""
+          },
+          {
+            "title": "Qwen - GitHub",
+            "url": "https://github.com/QwenLM",
+            "date": ""
+          },
+          {
+            "title": "QwenLM repositories - GitHub",
+            "url": "https://github.com/orgs/QwenLM/repositories",
+            "date": ""
+          },
+          {
+            "title": "Qwen3-VL is the multimodal large language model ... - GitHub",
+            "url": "https://github.com/qwenlm/qwen3-vl",
+            "date": ""
+          },
+          {
+            "title": "GitHub - QwenLM/Qwen3-Coder: Qwen3-Coder is the code ...",
+            "url": "https://github.com/QwenLM/Qwen3-Coder",
+            "date": ""
+          },
+          {
+            "title": "Qwen3 is the large language model series ... - GitHub",
+            "url": "https://github.com/qwenLM/qwen3",
+            "date": ""
+          },
+          {
+            "title": "Qwen3-omni is a natively end-to-end, omni-modal ... - GitHub",
+            "url": "https://github.com/QwenLM/Qwen3-Omni",
+            "date": ""
+          },
+          {
+            "title": "The official repo of Qwen (通义千问) chat & pretrained ... - GitHub",
+            "url": "https://github.com/QwenLM/qwen",
+            "date": ""
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"site:github.com QwenLM Qwen3.8-Flash-Next\", \"engine\": \"yahoo_japan\", \"url\": \"https://search.yahoo.co.jp/search?p=site%3Agithub.com+QwenLM+Qwen3.8-Flash-Next\", \"title\": \"「site:github.com QwenLM Qwen3.8-Flash-Next」の検索結果 - Yahoo!検索\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"failed\", \"failure_category\": \"quality_failure\", \"error\": \"bing returned irrelevant results: results ignored the requested domain constraint\"}, {\"engine\": \"yahoo_japan\", \"outcome\": \"success\"}], \"results\": [{\"title\": \"QwenLM/Qwen3.8-Flash-Next - GitHub\", \"url\": \"https://github.com/QwenLM/Qwen3.8-Flash-Next\", \"date\": \"\"}, {\"title\": \"Qwen3.8-Flash-Next/tech_report.pdf at main ... - GitHub\", \"url\": \"https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf\", \"date\": \"\"}, {\"title\": \"Qwen3.8 is the large language model series ... - GitHub\", \"url\": \"https://github.com/QwenLM/Qwen3.8\", \"date\": \"\"}, {\"title\": \"Qwen - GitHub\", \"url\": \"https://github.com/QwenLM\", \"date\": \"\"}, {\"title\": \"QwenLM repositories - GitHub\", \"url\": \"https://github.com/orgs/QwenLM/repositories\", \"date\": \"\"}, {\"title\": \"Qwen3-VL is the multimodal large language model ... - GitHub\", \"url\": \"https://github.com/qwenlm/qwen3-vl\", \"date\": \"\"}, {\"title\": \"GitHub - QwenLM/Qwen3-Coder: Qwen3-Coder is the code ...\", \"url\": \"https://github.com/QwenLM/Qwen3-Coder\", \"date\": \"\"}, {\"title\": \"Qwen3 is the large language model series ... - GitHub\", \"url\": \"https://github.com/qwenLM/qwen3\", \"date\": \"\"}, {\"title\": \"Qwen3-omni is a natively end-to-end, omni-modal ... - GitHub\", \"url\": \"https://github.com/QwenLM/Qwen3-Omni\", \"date\": \"\"}, {\"title\": \"The official repo of Qwen (通义千问) chat & pretrained ... - GitHub\", \"url\": \"https://github.com/QwenLM/qwen\", \"date\": \"\"}]}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser search is the required discovery action",
+        "policy_step": 6,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 6,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 26,
+        "observed_url_count": 89,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 16.368508100509644,
+      "tool_duration_seconds": 8.026266098022461
+    },
+    {
+      "step_number": 7,
+      "run_id": "0e0f44c4-38ac-479f-a0c8-2d0bf29cfe4f",
+      "timestamp": "2026-09-01T16:16:44.920417+00:00",
+      "tool": "goto",
+      "parameters": {
+        "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+        "title": "Qwen3.8-Flash-Next/tech_report.pdf at main · QwenLM/Qwen3.8-Flash-Next · GitHub"
+      },
+      "planner_visible_result": "{\"url\": \"https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf\", \"title\": \"Qwen3.8-Flash-Next/tech_report.pdf at main · QwenLM/Qwen3.8-Flash-Next · GitHub\"}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "target URL is grounded in prior browser evidence",
+        "policy_step": 7,
+        "target": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+        "provenance": {
+          "source": "search_planner_visible",
+          "policy_step": 2,
+          "page_url": "https://www.bing.com/search?q=Qwen3.8+technical+report&mkt=en-US&cc=us&setlang=en-US"
+        },
+        "search_completed": true,
+        "successful_searches": 6,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+        "selected_candidate_identity_endorsed": false,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "a non-site official identity search whose results endorse the selected target host/owner (github.com/qwenlm)",
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 1,
+        "observed_url_count": 90,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 11.54576301574707,
+      "tool_duration_seconds": 5.9976561069488525
+    },
+    {
+      "step_number": 8,
+      "run_id": "0e0f44c4-38ac-479f-a0c8-2d0bf29cfe4f",
+      "timestamp": "2026-09-01T16:16:54.177921+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "Qwen3.8-Flash-Next technical report"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "Qwen3.8-Flash-Next technical report",
+        "engine": "bing",
+        "url": "https://www.bing.com/search?q=Qwen3.8-Flash-Next+technical+report&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=62741AA5682747098ED8729C3A6792F0",
+        "title": "Qwen3.8-Flash-Next technical report - Search",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "success"
+          }
+        ],
+        "search_market": "en-US",
+        "results": [
+          {
+            "title": "Qwen3.8-Flash-Next - GitHub",
+            "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/",
+            "date": "6 days ago"
+          },
+          {
+            "title": "Qwen3.8-Flash-Next/tech_report.pdf at main - GitHub",
+            "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+            "date": ""
+          },
+          {
+            "title": "GitHub - QwenLM/Qwen3.8: Qwen3.8 is the large language model …",
+            "url": "https://github.com/QwenLM/Qwen3.8",
+            "date": ""
+          },
+          {
+            "title": "GitHub - QwenLM/Qwen3: Qwen3 is the large language model series ...",
+            "url": "https://github.com/QwenLM/Qwen3",
+            "date": ""
+          },
+          {
+            "title": "GitHub - QwenLM/Qwen: The official repo of Qwen (通义千问) chat ...",
+            "url": "https://github.com/QwenLM/Qwen",
+            "date": "Aug 3, 2023"
+          },
+          {
+            "title": "Qwen3/Qwen3_Technical_Report.pdf at main · QwenLM/Qwen3",
+            "url": "https://github.com/QwenLM/Qwen3/blob/main/Qwen3_Technical_Report.pdf",
+            "date": ""
+          },
+          {
+            "title": "GitHub - QwenLM/Qwen3-Omni: Qwen3-omni is a natively end-to …",
+            "url": "https://github.com/QwenLM/Qwen3-Omni",
+            "date": "Sep 23, 2025"
+          },
+          {
+            "title": "GitHub - QwenLM/Qwen3-VL: Qwen3-VL is the multimodal large …",
+            "url": "https://github.com/QwenLM/Qwen3-VL",
+            "date": ""
+          },
+          {
+            "title": "GitHub - QwenLM/Qwen3-ASR: Qwen3-ASR is an open-source …",
+            "url": "https://github.com/QwenLM/Qwen3-ASR",
+            "date": "Jan 29, 2026"
+          },
+          {
+            "title": "GitHub - QwenLM/Qwen3-TTS: Qwen3-TTS is an open-source series …",
+            "url": "https://github.com/QwenLM/Qwen3-TTS",
+            "date": "Jan 22, 2026"
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"Qwen3.8-Flash-Next technical report\", \"engine\": \"bing\", \"url\": \"https://www.bing.com/search?q=Qwen3.8-Flash-Next+technical+report&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=62741AA5682747098ED8729C3A6792F0\", \"title\": \"Qwen3.8-Flash-Next technical report - Search\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"success\"}], \"search_market\": \"en-US\", \"results\": [{\"title\": \"Qwen3.8-Flash-Next - GitHub\", \"url\": \"https://github.com/QwenLM/Qwen3.8-Flash-Next/\", \"date\": \"6 days ago\"}, {\"title\": \"Qwen3.8-Flash-Next/tech_report.pdf at main - GitHub\", \"url\": \"https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf\", \"date\": \"\"}, {\"title\": \"GitHub - QwenLM/Qwen3.8: Qwen3.8 is the large language model …\", \"url\": \"https://github.com/QwenLM/Qwen3.8\", \"date\": \"\"}, {\"title\": \"GitHub - QwenLM/Qwen3: Qwen3 is the large language model series ...\", \"url\": \"https://github.com/QwenLM/Qwen3\", \"date\": \"\"}, {\"title\": \"GitHub - QwenLM/Qwen: The official repo of Qwen (通义千问) chat ...\", \"url\": \"https://github.com/QwenLM/Qwen\", \"date\": \"Aug 3, 2023\"}, {\"title\": \"Qwen3/Qwen3_Technical_Report.pdf at main · QwenLM/Qwen3\", \"url\": \"https://github.com/QwenLM/Qwen3/blob/main/Qwen3_Technical_Report.pdf\", \"date\": \"\"}, {\"title\": \"GitHub - QwenLM/Qwen3-Omni: Qwen3-omni is a natively end-to …\", \"url\": \"https://github.com/QwenLM/Qwen3-Omni\", \"date\": \"Sep 23, 2025\"}, {\"title\": \"GitHub - QwenLM/Qwen3-VL: Qwen3-VL is the multimodal large …\", \"url\": \"https://github.com/QwenLM/Qwen3-VL\", \"date\": \"\"}, {\"title\": \"GitHub - QwenLM/Qwen3-ASR: Qwen3-ASR is an open-source …\", \"url\": \"https://github.com/QwenLM/Qwen3-ASR\", \"date\": \"Jan 29, 2026\"}, {\"title\": \"GitHub - QwenLM/Qwen3-TTS: Qwen3-TTS is an open-source series …\", \"url\": \"https://github.com/QwenLM/Qwen3-TTS\", \"date\": \"Jan 22, 2026\"}]}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser search is the required discovery action",
+        "policy_step": 8,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 7,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+        "selected_candidate_identity_endorsed": true,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [
+          "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+        ],
+        "new_urls_observed": 23,
+        "observed_url_count": 113,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 9.256546974182129,
+      "tool_duration_seconds": 2.7304110527038574
+    },
+    {
+      "step_number": 9,
+      "run_id": "0e0f44c4-38ac-479f-a0c8-2d0bf29cfe4f",
+      "timestamp": "2026-09-01T16:16:59.496563+00:00",
+      "tool": "download_pdf",
+      "parameters": {
+        "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf"
+      },
+      "reasoning": "",
+      "success": false,
+      "error": "Policy denied tool call: latest/newest evidence is incomplete; complete every missing prerequisite before retrying:\n- an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)",
+      "result": {},
+      "planner_visible_result": "{}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "deny",
+        "reason": "latest/newest evidence is incomplete; complete every missing prerequisite before retrying:\n- an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)",
+        "policy_step": 9,
+        "target": "download_pdf",
+        "provenance": {
+          "missing_prerequisites": [
+            "an independent scope search whose query contains the endorsed host/owner and selected candidate name, with results that cover that candidate (paper indexes do not count)"
+          ]
+        }
+      },
+      "duration_seconds": 5.318437814712524,
+      "tool_duration_seconds": 0.00010895729064941406
+    },
+    {
+      "step_number": 10,
+      "run_id": "0e0f44c4-38ac-479f-a0c8-2d0bf29cfe4f",
+      "timestamp": "2026-09-01T16:17:07.589621+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "site:github.com QwenLM Qwen3.8-Flash-Next tech_report.pdf"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "site:github.com QwenLM Qwen3.8-Flash-Next tech_report.pdf",
+        "engine": "yahoo_japan",
+        "url": "https://search.yahoo.co.jp/search?p=site%3Agithub.com+QwenLM+Qwen3.8-Flash-Next+tech_report.pdf",
+        "title": "「site:github.com QwenLM Qwen3.8-Flash-Next tech_report.pdf」の検索結果 - Yahoo!検索",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "failed",
+            "failure_category": "quality_failure",
+            "error": "bing returned irrelevant results: results ignored the requested domain constraint"
+          },
+          {
+            "engine": "yahoo_japan",
+            "outcome": "success"
+          }
+        ],
+        "results": [
+          {
+            "title": "Qwen3.8-Flash-Next/tech_report.pdf at main ... - GitHub",
+            "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+            "date": ""
+          },
+          {
+            "title": "QwenLM/Qwen3.8-Flash-Next - GitHub",
+            "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next",
+            "date": ""
+          },
+          {
+            "title": "Qwen3.8 is the large language model series ... - GitHub",
+            "url": "https://github.com/QwenLM/Qwen3.8",
+            "date": ""
+          },
+          {
+            "title": "GitHub - QwenLM/Qwen3-Coder: Qwen3-Coder is the code ...",
+            "url": "https://github.com/QwenLM/Qwen3-Coder",
+            "date": ""
+          },
+          {
+            "title": "Qwen3-VL is the multimodal large language model ... - GitHub",
+            "url": "https://github.com/qwenlm/qwen3-vl",
+            "date": ""
+          },
+          {
+            "title": "Qwen3-omni is a natively end-to-end, omni-modal ... - GitHub",
+            "url": "https://github.com/QwenLM/Qwen3-Omni",
+            "date": ""
+          },
+          {
+            "title": "The official repo of Qwen (通义千问) chat & pretrained ... - GitHub",
+            "url": "https://github.com/QwenLM/qwen",
+            "date": ""
+          },
+          {
+            "title": "Qwen-Image is a powerful image generation ... - GitHub",
+            "url": "https://github.com/QwenLM/Qwen-Image",
+            "date": ""
+          },
+          {
+            "title": "podman-desktop-extension-ai-lab/packages/backend ... - GitHub",
+            "url": "https://github.com/containers/podman-desktop-extension-ai-lab/blob/main/packages/backend/src/assets/ai.json",
+            "date": ""
+          },
+          {
+            "title": "golang-trending-archive/README.md at main - GitHub",
+            "url": "https://github.com/zengzzzzz/golang-trending-archive/blob/main/README.md",
+            "date": ""
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"site:github.com QwenLM Qwen3.8-Flash-Next tech_report.pdf\", \"engine\": \"yahoo_japan\", \"url\": \"https://search.yahoo.co.jp/search?p=site%3Agithub.com+QwenLM+Qwen3.8-Flash-Next+tech_report.pdf\", \"title\": \"「site:github.com QwenLM Qwen3.8-Flash-Next tech_report.pdf」の検索結果 - Yahoo!検索\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"failed\", \"failure_category\": \"quality_failure\", \"error\": \"bing returned irrelevant results: results ignored the requested domain constraint\"}, {\"engine\": \"yahoo_japan\", \"outcome\": \"success\"}], \"results\": [{\"title\": \"Qwen3.8-Flash-Next/tech_report.pdf at main ... - GitHub\", \"url\": \"https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf\", \"date\": \"\"}, {\"title\": \"QwenLM/Qwen3.8-Flash-Next - GitHub\", \"url\": \"https://github.com/QwenLM/Qwen3.8-Flash-Next\", \"date\": \"\"}, {\"title\": \"Qwen3.8 is the large language model series ... - GitHub\", \"url\": \"https://github.com/QwenLM/Qwen3.8\", \"date\": \"\"}, {\"title\": \"GitHub - QwenLM/Qwen3-Coder: Qwen3-Coder is the code ...\", \"url\": \"https://github.com/QwenLM/Qwen3-Coder\", \"date\": \"\"}, {\"title\": \"Qwen3-VL is the multimodal large language model ... - GitHub\", \"url\": \"https://github.com/qwenlm/qwen3-vl\", \"date\": \"\"}, {\"title\": \"Qwen3-omni is a natively end-to-end, omni-modal ... - GitHub\", \"url\": \"https://github.com/QwenLM/Qwen3-Omni\", \"date\": \"\"}, {\"title\": \"The official repo of Qwen (通义千问) chat & pretrained ... - GitHub\", \"url\": \"https://github.com/QwenLM/qwen\", \"date\": \"\"}, {\"title\": \"Qwen-Image is a powerful image generation ... - GitHub\", \"url\": \"https://github.com/QwenLM/Qwen-Image\", \"date\": \"\"}, {\"title\": \"podman-desktop-extension-ai-lab/packages/backend ... - GitHub\", \"url\": \"https://github.com/containers/podman-desktop-extension-ai-lab/blob/main/packages/backend/src/assets/ai.json\", \"date\": \"\"}, {\"title\": \"golang-trending-archive/README.md at main - GitHub\", \"url\": \"https://github.com/zengzzzzz/golang-trending-archive/blob/main/README.md\", \"date\": \"\"}]}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser search is the required discovery action",
+        "policy_step": 10,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 8,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": true,
+        "official_scope_result_count": 10,
+        "selected_candidate_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+        "selected_candidate_identity_endorsed": true,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": true,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 8,
+        "observed_url_count": 121,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 8.092717170715332,
+      "tool_duration_seconds": 2.4723410606384277
+    },
+    {
+      "step_number": 11,
+      "run_id": "0e0f44c4-38ac-479f-a0c8-2d0bf29cfe4f",
+      "timestamp": "2026-09-01T16:17:14.487682+00:00",
+      "tool": "download_pdf",
+      "parameters": {
+        "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf"
+      },
+      "reasoning": "",
+      "success": false,
+      "error": "Downloaded content is not a PDF (missing %PDF header). The URL may be an HTML preview page; navigate to it and call inspect_download_links before retrying an explicitly reported URL.",
+      "result": {
+        "source_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+        "downloaded_bytes": 220899
+      },
+      "planner_visible_result": "{\"source_url\": \"https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf\", \"downloaded_bytes\": 220899}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "target URL is grounded in prior browser evidence",
+        "policy_step": 11,
+        "target": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+        "provenance": {
+          "source": "search_planner_visible",
+          "policy_step": 2,
+          "page_url": "https://www.bing.com/search?q=Qwen3.8+technical+report&mkt=en-US&cc=us&setlang=en-US"
+        },
+        "search_completed": true,
+        "successful_searches": 8,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": true,
+        "official_scope_result_count": 10,
+        "selected_candidate_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+        "selected_candidate_identity_endorsed": true,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": true,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 121,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 6.897850751876831,
+      "tool_duration_seconds": 1.4115240573883057
+    },
+    {
+      "step_number": 12,
+      "run_id": "0e0f44c4-38ac-479f-a0c8-2d0bf29cfe4f",
+      "timestamp": "2026-09-01T16:17:20.266428+00:00",
+      "tool": "inspect_download_links",
+      "parameters": {},
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "source_url": "https://search.yahoo.co.jp/search?p=site%3Agithub.com+QwenLM+Qwen3.8-Flash-Next+tech_report.pdf",
+        "candidate_count": 1,
+        "candidates": [
+          {
+            "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+            "evidence_type": "dom_attribute",
+            "element": "a",
+            "text": "Qwen3.8-Flash-Next/tech_report.pdf at main ... - GitHub\ngithub.com\nhttps://github.com>main>tech_report"
+          }
+        ],
+        "date_evidence": [],
+        "history_links": []
+      },
+      "planner_visible_result": "{\"source_url\": \"https://search.yahoo.co.jp/search?p=site%3Agithub.com+QwenLM+Qwen3.8-Flash-Next+tech_report.pdf\", \"candidate_count\": 1, \"candidates\": [{\"url\": \"https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf\", \"evidence_type\": \"dom_attribute\", \"element\": \"a\", \"text\": \"Qwen3.8-Flash-Next/tech_report.pdf at main ... - GitHub\\ngithub.com\\nhttps://github.com>main>tech_report\"}], \"date_evidence\": [], \"history_links\": []}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page",
+        "policy_step": 12,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 8,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": true,
+        "official_scope_result_count": 10,
+        "selected_candidate_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+        "selected_candidate_identity_endorsed": true,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": true,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 3,
+        "observed_url_count": 124,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 5.778549909591675,
+      "tool_duration_seconds": 0.033841848373413086
+    },
+    {
+      "step_number": 13,
+      "run_id": "0e0f44c4-38ac-479f-a0c8-2d0bf29cfe4f",
+      "timestamp": "2026-09-01T16:17:34.239289+00:00",
+      "tool": "goto",
+      "parameters": {
+        "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+        "title": "Qwen3.8-Flash-Next/tech_report.pdf at main · QwenLM/Qwen3.8-Flash-Next · GitHub"
+      },
+      "planner_visible_result": "{\"url\": \"https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf\", \"title\": \"Qwen3.8-Flash-Next/tech_report.pdf at main · QwenLM/Qwen3.8-Flash-Next · GitHub\"}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "target URL is grounded in prior browser evidence",
+        "policy_step": 13,
+        "target": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+        "provenance": {
+          "source": "search_planner_visible",
+          "policy_step": 2,
+          "page_url": "https://www.bing.com/search?q=Qwen3.8+technical+report&mkt=en-US&cc=us&setlang=en-US"
+        },
+        "search_completed": true,
+        "successful_searches": 8,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": true,
+        "official_scope_result_count": 10,
+        "selected_candidate_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+        "selected_candidate_identity_endorsed": true,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": true,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 124,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 13.972666025161743,
+      "tool_duration_seconds": 1.3935270309448242
+    },
+    {
+      "step_number": 14,
+      "run_id": "0e0f44c4-38ac-479f-a0c8-2d0bf29cfe4f",
+      "timestamp": "2026-09-01T16:17:38.290968+00:00",
+      "tool": "inspect_download_links",
+      "parameters": {},
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "source_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+        "candidate_count": 1,
+        "candidates": [
+          {
+            "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf",
+            "evidence_type": "declared_page_metadata",
+            "element": "script",
+            "text": "rawBlobUrl"
+          }
+        ],
+        "date_evidence": [
+          {
+            "datetime": "2026-08-26T12:29:38.000Z",
+            "text": "Aug 26, 2026",
+            "element": "relative-time"
+          },
+          {
+            "datetime": "2026-08-26T12:29:38.000Z",
+            "text": "",
+            "element": "relative-time"
+          }
+        ],
+        "history_links": [
+          {
+            "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf",
+            "text": "History"
+          },
+          {
+            "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf",
+            "text": "View commit history for this file."
+          }
+        ]
+      },
+      "planner_visible_result": "{\"source_url\": \"https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf\", \"candidate_count\": 1, \"candidates\": [{\"url\": \"https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf\", \"evidence_type\": \"declared_page_metadata\", \"element\": \"script\", \"text\": \"rawBlobUrl\"}], \"date_evidence\": [{\"datetime\": \"2026-08-26T12:29:38.000Z\", \"text\": \"Aug 26, 2026\", \"element\": \"relative-time\"}, {\"datetime\": \"2026-08-26T12:29:38.000Z\", \"text\": \"\", \"element\": \"relative-time\"}], \"history_links\": [{\"url\": \"https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf\", \"text\": \"History\"}, {\"url\": \"https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf\", \"text\": \"View commit history for this file.\"}]}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page",
+        "policy_step": 14,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 8,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": true,
+        "official_scope_result_count": 10,
+        "selected_candidate_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+        "selected_candidate_identity_endorsed": true,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": true,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 10,
+        "observed_url_count": 134,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 4.05150294303894,
+      "tool_duration_seconds": 0.041110992431640625
+    },
+    {
+      "step_number": 15,
+      "run_id": "0e0f44c4-38ac-479f-a0c8-2d0bf29cfe4f",
+      "timestamp": "2026-09-01T16:17:48.752428+00:00",
+      "tool": "download_pdf",
+      "parameters": {
+        "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "path": "artifacts/downloads/tech_report.pdf",
+        "filename": "tech_report.pdf",
+        "source_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf",
+        "browser_url": null
+      },
+      "planner_visible_result": "{\"path\": \"artifacts/downloads/tech_report.pdf\", \"filename\": \"tech_report.pdf\", \"source_url\": \"https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf\", \"browser_url\": null}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "target URL is grounded in prior browser evidence",
+        "policy_step": 15,
+        "target": "https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf",
+        "provenance": {
+          "source": "inspect_download_links_planner_visible",
+          "policy_step": 14,
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf"
+        },
+        "search_completed": true,
+        "successful_searches": 8,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": true,
+        "official_scope_result_count": 10,
+        "selected_candidate_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+        "selected_candidate_identity_endorsed": true,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": true,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 1,
+        "observed_url_count": 135,
+        "downloaded_artifact_count": 1,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 10.461215257644653,
+      "tool_duration_seconds": 3.6248350143432617
+    },
+    {
+      "step_number": 16,
+      "run_id": "0e0f44c4-38ac-479f-a0c8-2d0bf29cfe4f",
+      "timestamp": "2026-09-01T16:18:46.169360+00:00",
+      "tool": "pdf_analyze_figure",
+      "parameters": {
+        "path": "artifacts/downloads/tech_report.pdf",
+        "figure_number_or_caption": "1",
+        "question": "Describe this figure's purpose and key findings in detail."
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "found": true,
+        "figure_number": "1",
+        "page": 2,
+        "caption": "Figure 1: Qwen3.8-Flash-Next architecture. Token mixing alternates three GDN layers with one QSA layer per block of four. Every sublayer reads and writes through GR, which widens the residual stream and gates the read elementwise. An n-gram embedding layer at Layer 2 scales capacity off the accelerator via host-memory prefetching. The MTP module reuses QSA indices across speculative decoding steps.",
+        "image_path": "artifacts/documents/tech-report-04f263446d74/figures/local/local_figure_1_p2.png",
+        "vision_analysis": "The user wants me to analyze a figure showing the Qwen3.8-Flash-Next architecture. Let me carefully examine the diagram and describe its purpose and key components.\n\nFrom the figure, I can see:\n\n1. Bottom of the diagram: Input Tokens flow into Vocabulary Embedding, and there's also an N-gram Embedding Layer (Layer 2 only) that connects at the bottom.\n\n2. Left side: A vertical stack of layers showing the pattern:\n   - Vocabulary Embedding at bottom\n   - GDN Layer\n   - GDN Layer\n   - GDN Layer\n   - QSA Layer\n   - GDN Layer\n   - GDN Layer\n   - GDN Layer\n   - QSA Layer (highlighted with dashed box)\n   - GDN Layer\n   - GDN Layer\n   - GDN Layer\n   - ... (ellipsis indicating more layers)\n   - MTP Modules at top\n\n3. Right side: Detailed expansion of the two layer types:\n   - QSA Layer (blue box): Shows a repeating pattern with \"1×\" annotation. Inside: Hidden States → GR Read → circle (elementwise gate) → Qwen Sparse Attn → circle → GR Write → back to Expanded Residual. Also MoE connects to the output. The pattern shows three rows (reads/writes) with the attention in the middle.\n   \n   - GDN Layer (green box): Similar structure with \"3×\" annotation. Hidden States → GR Read → circle → Gated DeltaNet → circle → GR Write → Expanded Residual. Also with MoE.\n\n4. Top right: After the final layers, GR Read → circle → Prediction Head\n\n5. Top left: MTP Modules (Multi-Token Prediction) at the top of the layer stack.\n\nKey elements from the caption:\n- Token mixing alternates three GDN layers with one QSA layer per block of four (3:1 ratio)\n- Every sublayer reads and writes through GR (Gated Residual?), which widens the residual stream and gates the read elementwise\n- N-gram embedding layer at Layer 2 scales capacity off the accelerator via host-memory prefetching\n- MTP module reuses QSA indices across speculative decoding steps\n\nLet me structure the analysis:\n\n1. Purpose: To illustrate the hybrid architecture of Qwen3.8-Flash-Next, showing how it interleaves linear attention (Gated DeltaNet) with sparse attention (Qwen Sparse Attention) in a 3:1 ratio, and how auxiliary components (GR, MoE, n-gram embeddings, MTP) integrate.\n\n2. Key components:\n   - Token mixing pattern: 3 GDN + 1 QSA per block\n   - GR (Gated Residual) mechanism: every sublayer reads from and writes to an expanded/widened residual stream; reads are elementwise-gated\n   - MoE feedforward in each sublayer\n   - N-gram Embedding Layer at Layer 2 (host-memory prefetching, off-accelerator capacity)\n   - MTP modules for speculative decoding, reusing QSA indices\n   - Prediction Head at top\n\n3. Data flow: Input tokens → Vocabulary Embedding (+ n-gram at layer 2) → repeated blocks → final GR read → Prediction Head; MTP modules at top.\n\n4. Findings/design choices:\n   - Hybrid design balances efficiency of linear attention (GDN) with precision of sparse attention (QSA)\n   - Widened residual stream with gating (GR) at every sublayer\n   - Capacity scaling off-accelerator via n-gram embeddings\n   - Speculative decoding efficiency by reusing QSA indices in MTP\n\nThe diagram shows the detailed internal structure: each sublayer reads from the expanded residual via GR Read, gates it elementwise (circle with dot symbol = elementwise multiplication), passes through the token mixer (Qwen Sparse Attn or Gated DeltaNet), then another elementwise gate, then GR Write back to the residual. MoE branches off the gated hidden states.\n\nWait, looking more carefully at the QSA layer detail: bottom row shows Hidden States → GR Read → ⊙ → up to Qwen Sparse Attn → ⊙ → GR Write → to the next row above. This repeats — actually the diagram shows three rows within each layer box, suggesting... hmm. Actually the \"1×\" and \"3×\" annotations likely refer to how many times this pattern repeats, or the detailed view shows one sublayer's structure. Let me reconsider.\n\nActually, the three rows in each box might represent... In the QSA Layer box labeled \"1×\" — perhaps the structure is shown once. In the GDN Layer box labeled \"3×\" — since there are 3 GDN layers per block. Hmm, but each box shows three rows of GR Read/Write pairs.\n\nHmm, actually maybe each box shows the internal structure with multiple GR operations. Looking again: the QSA Layer box has three horizontal rows, each with residual circles (⊙⊙⊙), GR Read, ⊙, and GR Write, plus \"Qwen Sparse Attn\" and \"MoE\" boxes on the right side. The arrows show: from bottom row, GR Read → ⊙ → Qwen Sparse Attn → ⊙ → GR Write → up to middle row; middle row: GR Read → ⊙ → MoE → ⊙ → GR Write → up to top row; top row: GR Read → ⊙ → MoE → ⊙ → GR Write → out.\n\nSo each sublayer actually consists of: attention/mixer sublayer followed by MoE sublayer, each with GR read/write. The three rows = mixer sublayer + MoE sublayer + ... wait, that's two. Three rows with two MoE boxes (one in middle-right, one top-right) and one attention box. So: row 1 (bottom): token mixer (Qwen Sparse Attn), row 2: MoE, row 3: MoE? That doesn't quite work.\n\nActually in the QSA box: \"Qwen Sparse Attn...[truncated]",
+        "vision_duration_seconds": 52.51287412500824,
+        "vision_metadata": {
+          "response_length": 7813,
+          "finish_reason": "length",
+          "prompt_tokens": 950,
+          "completion_tokens": 2000,
+          "total_tokens": 2950,
+          "transport_retries": 0
+        },
+        "local_figure_fast_path": {
+          "used": true,
+          "duration_seconds": 0.18473350000567734,
+          "confidence": 0.9946,
+          "caption_position": "below",
+          "visual_kind": "vector",
+          "bbox": [
+            110.22000122070312,
+            50.468170166015625,
+            485.0596923828125,
+            430.65692138671875
+          ],
+          "render_width": 751,
+          "render_height": 762
+        },
+        "related_tables": []
+      },
+      "planner_visible_result": "{\"found\": true, \"figure_number\": \"1\", \"page\": 2, \"caption\": \"Figure 1: Qwen3.8-Flash-Next architecture. Token mixing alternates three GDN layers with one QSA layer per block of four. Every sublayer reads and writes through GR, which widens the residual stream and gates the read elementwise. An n-gram embedding layer at Layer 2 scales capacity off the accelerator via host-memory prefetching. The MTP module reuses QSA indices across speculative decoding steps.\", \"image_path\": \"artifacts/documents/tech-report-04f263446d74/figures/local/local_figure_1_p2.png\", \"vision_analysis\": \"The user wants me to analyze a figure showing the Qwen3.8-Flash-Next architecture. Let me carefully examine the diagram and describe its purpose and key components.\\n\\nFrom the figure, I can see:\\n\\n1. Bottom of the diagram: Input Tokens flow into Vocabulary Embedding, and there's also an N-gram Embedding Layer (Layer 2 only) that connects at the bottom.\\n\\n2. Left side: A vertical stack of layers showing the pattern:\\n   - Vocabulary Embedding at bottom\\n   - GDN Layer\\n   - GDN Layer\\n   - GDN Layer\\n   - QSA Layer\\n   - GDN Layer\\n   - GDN Layer\\n   - GDN Layer\\n   - QSA Layer (highlighted with dashed box)\\n   - GDN Layer\\n   - GDN Layer\\n   - GDN Layer\\n   - ... (ellipsis indicating more layers)\\n   - MTP Modules at top\\n\\n3. Right side: Detailed expansion of the two layer types:\\n   - QSA Layer (blue box): Shows a repeating pattern with \\\"1×\\\" annotation. Inside: Hidden States → GR Read → circle (elementwise gate) → Qwen Sparse Attn → circle → GR Write → back to Expanded Residual. Also MoE connects to the output. The pattern shows three rows (reads/writes) with the attention in the middle.\\n   \\n   - GDN Layer (green box): Similar structure with \\\"3×\\\" annotation. Hidden States → GR Read → circle → Gated DeltaNet → circle → GR Write → Expanded Residual. Also with MoE.\\n\\n4. Top right: After the final layers, GR Read → circle → Prediction Head\\n\\n5. Top left: MTP Modules (Multi-Token Prediction) at the top of the layer stack.\\n\\nKey elements from the caption:\\n- Token mixing alternates three GDN layers with one QSA layer per block of four (3:1 ratio)\\n- Every sublayer reads and writes through GR (Gated Residual?), which widens the residual stream and gates the read elementwise\\n- N-gram embedding layer at Layer 2 scales capacity off the accelerator via host-memory prefetching\\n- MTP module reuses QSA indices across speculative decoding steps\\n\\nLet me structure the analysis:\\n\\n1. Purpose: To illustrate the hybrid architecture of Qwen3.8-Flash-Next, showing how it interleaves linear attention (Gated DeltaNet) with sparse attention (Qwen Sparse Attention) in a 3:1 ratio, and how auxiliary components (GR, MoE, n-gram embeddings, MTP) integrate.\\n\\n2. Key components:\\n   - Token mixing pattern: 3 GDN + 1 QSA per block\\n   - GR (Gated Residual) mechanism: every sublayer reads from and writes to an expanded/widened residual stream; reads are elementwise-gated\\n   - MoE feedforward in each sublayer\\n   - N-gram Embedding Layer at Layer 2 (host-memory prefetching, off-accelerator capacity)\\n   - MTP modules for speculative decoding, reusing QSA indices\\n   - Prediction Head at top\\n\\n3. Data flow: Input tokens → Vocabulary Embedding (+ n-gram at layer 2) → repeated blocks → final GR read → Prediction Head; MTP modules at top.\\n\\n4. Findings/design choices:\\n   - Hybrid design balances efficiency of linear attention (GDN) with precision of sparse attention (QSA)\\n   - Widened residual stream with gating (GR) at every sublayer\\n   - Capacity scaling off-accelerator via n-gram embeddings\\n   - Speculative decoding efficiency by reusing QSA indices in MTP\\n\\nThe diagram shows the detailed internal structure: each sublayer reads from the expanded residual via GR Read, gates it elementwise (circle with dot symbol = elementwise multiplication), passes through the token mixer (Qwen Sparse Attn or Gated DeltaNet), then another elementwise gate, then GR Write back to the residual. MoE branches off the gated hidden states.\\n\\nWait, looking more carefully at the QSA layer detail: bottom row shows Hidden States → GR Read → ⊙ → up to Qwen Sparse Attn → ⊙ → GR Write → to the next row above. This repeats — actually the diagram shows three rows within each layer box, suggesting... hmm. Actually the \\\"1×\\\" and \\\"3×\\\" annotations likely refer to how many times this pattern repeats, or the detailed view shows one sublayer's structure. Let me reconsider.\\n\\nActually, the three rows in each box might represent... In the QSA Layer box labeled \\\"1×\\\" — perhaps the structure is shown once. In the GDN Layer box labeled \\\"3×\\\" — since there are 3 GDN layers per block. Hmm, but each box shows three rows of GR Read/Write pairs.\\n\\nHmm, actually maybe each box shows the internal structure with multiple GR operations. Looking again: the QSA Layer box has three horizontal rows, each with residual circles (⊙⊙⊙), GR Read, ⊙, and GR Write, plus \\\"Qwen Sparse Attn\\\" and \\\"M...",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "PDF path was produced by an evidence-grounded download",
+        "policy_step": 16,
+        "target": "artifacts/downloads/tech_report.pdf",
+        "provenance": {
+          "source_tool": "download_pdf",
+          "policy_step": 15,
+          "source_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf"
+        },
+        "search_completed": true,
+        "successful_searches": 8,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": true,
+        "official_scope_result_count": 10,
+        "selected_candidate_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+        "selected_candidate_identity_endorsed": true,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": true,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 135,
+        "downloaded_artifact_count": 1,
+        "figure_analysis_completed": true,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 57.41672396659851,
+      "tool_duration_seconds": 52.75377798080444
+    },
+    {
+      "step_number": 17,
+      "run_id": "0e0f44c4-38ac-479f-a0c8-2d0bf29cfe4f",
+      "timestamp": "2026-09-01T16:19:06.202877+00:00",
+      "tool": "done",
+      "parameters": {
+        "summary": "Most recent Qwen technical report (PDF): the Qwen3.8-Flash-Next technical report, published in the official QwenLM repository at https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf (repo/file dated Aug 26, 2026; announced ~6 days before the search via the official blog https://qwen.ai/blog?id=qwen3.8-flash-next). This is newer than the Qwen3 Technical Report (arXiv 2505.09388, May 2025) and matches the current Qwen release landscape (Qwen3.8 series, Qwen3.8-Flash-Next being the newest entry). Downloaded and validated from https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf.\n\nFigure 1 (page 2) — \"Qwen3.8-Flash-Next architecture\":\n\nPurpose: The figure is an architecture diagram that explains how Qwen3.8-Flash-Next is assembled: it illustrates the hybrid token-mixing layout, the Gated Residual (GR) data path used by every sublayer, and how auxiliary components (n-gram embeddings, MoE, and Multi-Token Prediction) integrate into the model to achieve low-cost, high-throughput inference.\n\nKey findings / design choices shown:\n1. Hybrid token mixing: the layer stack alternates three GDN (Gated DeltaNet, linear-attention) layers with one QSA (Qwen Sparse Attention) layer per block of four (3:1 ratio). The left side shows the repeated stack (Vocabulary Embedding at the bottom → GDN, GDN, GDN, QSA blocks → ... → Prediction Head at top), and the right side expands each layer type (GDN \"3×\", QSA \"1×\").\n2. GR (Gated Residual) everywhere: every sublayer reads from and writes to an expanded (widened) residual stream; the read is elementwise-gated. Data flow in each sublayer: Hidden States → GR Read → elementwise gate (⊙) → token mixer (Qwen Sparse Attn or Gated DeltaNet) → elementwise gate (⊙) → GR Write → back to the expanded residual, with an MoE feed-forward branch attached.\n3. Off-accelerator capacity scaling: an n-gram Embedding Layer at Layer 2 scales model capacity off the accelerator via host-memory prefetching, reducing accelerator memory pressure.\n4. Speculative decoding integration: the MTP (Multi-Token Prediction) modules at the top reuse QSA indices across speculative decoding steps, making multi-token speculation cheap.\n\nOverall takeaway: the figure communicates that Qwen3.8-Flash-Next's efficiency comes from combining cheap linear attention (GDN) with occasional sparse attention (QSA), a uniformly gated widened residual stream, off-chip n-gram embedding capacity, and MTP-based speculative decoding that exploits the sparse-attention structure.",
+        "success_probability": 0.9
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "summary": "Most recent Qwen technical report (PDF): the Qwen3.8-Flash-Next technical report, published in the official QwenLM repository at https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf (repo/file dated Aug 26, 2026; announced ~6 days before the search via the official blog https://qwen.ai/blog?id=qwen3.8-flash-next). This is newer than the Qwen3 Technical Report (arXiv 2505.09388, May 2025) and matches the current Qwen release landscape (Qwen3.8 series, Qwen3.8-Flash-Next being the newest entry). Downloaded and validated from https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf.\n\nFigure 1 (page 2) — \"Qwen3.8-Flash-Next architecture\":\n\nPurpose: The figure is an architecture diagram that explains how Qwen3.8-Flash-Next is assembled: it illustrates the hybrid token-mixing layout, the Gated Residual (GR) data path used by every sublayer, and how auxiliary components (n-gram embeddings, MoE, and Multi-Token Prediction) integrate into the model to achieve low-cost, high-throughput inference.\n\nKey findings / design choices shown:\n1. Hybrid token mixing: the layer stack alternates three GDN (Gated DeltaNet, linear-attention) layers with one QSA (Qwen Sparse Attention) layer per block of four (3:1 ratio). The left side shows the repeated stack (Vocabulary Embedding at the bottom → GDN, GDN, GDN, QSA blocks → ... → Prediction Head at top), and the right side expands each layer type (GDN \"3×\", QSA \"1×\").\n2. GR (Gated Residual) everywhere: every sublayer reads from and writes to an expanded (widened) residual stream; the read is elementwise-gated. Data flow in each sublayer: Hidden States → GR Read → elementwise gate (⊙) → token mixer (Qwen Sparse Attn or Gated DeltaNet) → elementwise gate (⊙) → GR Write → back to the expanded residual, with an MoE feed-forward branch attached.\n3. Off-accelerator capacity scaling: an n-gram Embedding Layer at Layer 2 scales model capacity off the accelerator via host-memory prefetching, reducing accelerator memory pressure.\n4. Speculative decoding integration: the MTP (Multi-Token Prediction) modules at the top reuse QSA indices across speculative decoding steps, making multi-token speculation cheap.\n\nOverall takeaway: the figure communicates that Qwen3.8-Flash-Next's efficiency comes from combining cheap linear attention (GDN) with occasional sparse attention (QSA), a uniformly gated widened residual stream, off-chip n-gram embedding capacity, and MTP-based speculative decoding that exploits the sparse-attention structure.",
+        "attachments": [
+          "result/attachments/figure.png"
+        ],
+        "success_probability": 0.9
+      },
+      "planner_visible_result": "{\"summary\": \"Most recent Qwen technical report (PDF): the Qwen3.8-Flash-Next technical report, published in the official QwenLM repository at https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf (repo/file dated Aug 26, 2026; announced ~6 days before the search via the official blog https://qwen.ai/blog?id=qwen3.8-flash-next). This is newer than the Qwen3 Technical Report (arXiv 2505.09388, May 2025) and matches the current Qwen release landscape (Qwen3.8 series, Qwen3.8-Flash-...",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "completion is grounded in a visited evidence page",
+        "policy_step": 17,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 8,
+        "broad_current_year_search_completed": true,
+        "release_landscape_search_completed": true,
+        "release_landscape_evidence_count": 2,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": true,
+        "official_scope_result_count": 10,
+        "selected_candidate_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+        "selected_candidate_identity_endorsed": true,
+        "version_frontier": "qwen3.8",
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": true,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 135,
+        "downloaded_artifact_count": 1,
+        "figure_analysis_completed": true,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 20.033263206481934,
+      "tool_duration_seconds": 0.00021886825561523438
+    }
+  ],
+  "resume_count": 0,
+  "checkpoint_schema_version": null,
+  "resumed_from_checkpoint": false
+}

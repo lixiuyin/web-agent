@@ -1,0 +1,564 @@
+{
+  "schema_version": 8,
+  "$schema": "https://raw.githubusercontent.com/lixiuyin/web-agent/main/src/webagent/schemas/run-trace-v8.schema.json",
+  "producer": {
+    "name": "lixiuyin-webagent",
+    "version": "0.2.0",
+    "source_sha256": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c"
+  },
+  "created_at": "2026-09-01T13:55:12.395639+00:00",
+  "run_id": "569b14ac-b3cc-4514-baad-94fd32d91c0f",
+  "run_kind": "agent_e2e",
+  "task": "Add exactly one Orbit Notebook in the sandbox shop, continue to sandbox checkout, enter 42 Orbit Road, accept the sandbox terms, and place the order.",
+  "status": "completed",
+  "success": true,
+  "steps_taken": 7,
+  "total_duration": 66.8057188987732,
+  "final_result": {
+    "summary": "Task completed successfully. All requested steps were performed and confirmed: (1) Added exactly one Orbit Notebook via the sandbox shop's add button (button#add-orbit); (2) Continued to the sandbox checkout page (http://127.0.0.1:55791/checkout), which showed 'Sandbox checkout — No payment method; test credits only.' with Address, Accept sandbox terms, and Place sandbox order controls; (3) Entered '42 Orbit Road' into the order address field (input#order-address); (4) Accepted the sandbox terms by checking input#order-terms; (5) Placed the order via button#place-sandbox-order. The browser then navigated to http://127.0.0.1:55791/order/complete, titled 'Order complete', which displays 'Sandbox order placed' — confirming the order was placed.",
+    "attachments": [],
+    "success_probability": 0.99
+  },
+  "evaluation": {
+    "agent_source_sha256": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "mode": "hybrid_api_augmented",
+    "discovery_mode": "hybrid",
+    "direct_source_tools_enabled": true,
+    "high_risk_action_policy": "deny",
+    "stealth_mode": false,
+    "anti_shortcut_contract": null,
+    "certificate_required": false,
+    "strict_eval_mode": false,
+    "search_engine_only": false,
+    "browser_profile_mode": "temporary",
+    "browser_channel": "bundled",
+    "persistent_pdf_cache": false
+  },
+  "planner_attempts": [
+    {
+      "step_number": 1,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:54:08.015864+00:00",
+      "duration_seconds": 1.8706638813018799,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 320,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 5992,
+      "completion_tokens": 104,
+      "total_tokens": 6096,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 2,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:54:22.884011+00:00",
+      "duration_seconds": 13.059924840927124,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 160,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 4952,
+      "completion_tokens": 40,
+      "total_tokens": 4992,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 3,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:54:32.050981+00:00",
+      "duration_seconds": 7.960638999938965,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 2490,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 5033,
+      "completion_tokens": 607,
+      "total_tokens": 5640,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 4,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:54:43.881522+00:00",
+      "duration_seconds": 10.608773231506348,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 3170,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 5201,
+      "completion_tokens": 790,
+      "total_tokens": 5991,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 5,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:54:49.019699+00:00",
+      "duration_seconds": 3.209925889968872,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 855,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 5343,
+      "completion_tokens": 254,
+      "total_tokens": 5597,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 6,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:55:01.317509+00:00",
+      "duration_seconds": 10.540531873703003,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 2651,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 5408,
+      "completion_tokens": 641,
+      "total_tokens": 6049,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 7,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:55:12.372279+00:00",
+      "duration_seconds": 9.317465782165527,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 551,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 6598,
+      "completion_tokens": 333,
+      "total_tokens": 6931,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    }
+  ],
+  "events": [],
+  "steps": [
+    {
+      "step_number": 1,
+      "run_id": "569b14ac-b3cc-4514-baad-94fd32d91c0f",
+      "timestamp": "2026-09-01T13:54:09.225946+00:00",
+      "tool": "click",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "button#add-orbit"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "selector": {
+          "type": "css",
+          "value": "button#add-orbit"
+        }
+      },
+      "planner_visible_result": "{\"selector\": {\"type\": \"css\", \"value\": \"button#add-orbit\"}}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 1,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 3,
+        "observed_url_count": 4,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "high-risk actions explicitly allowed",
+          "risk_level": "high",
+          "external_effect": "external_state_change",
+          "approval_required": true,
+          "approval_received": true
+        }
+      },
+      "duration_seconds": 3.6416571140289307,
+      "tool_duration_seconds": 0.583449125289917
+    },
+    {
+      "step_number": 2,
+      "run_id": "569b14ac-b3cc-4514-baad-94fd32d91c0f",
+      "timestamp": "2026-09-01T13:54:23.499063+00:00",
+      "tool": "get_url",
+      "parameters": {},
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "url": "http://127.0.0.1:55791/checkout"
+      },
+      "planner_visible_result": "{\"url\": \"http://127.0.0.1:55791/checkout\"}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 2,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 4,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 14.271347045898438,
+      "tool_duration_seconds": 0.0004138946533203125
+    },
+    {
+      "step_number": 3,
+      "run_id": "569b14ac-b3cc-4514-baad-94fd32d91c0f",
+      "timestamp": "2026-09-01T13:54:32.689973+00:00",
+      "tool": "frame_interact",
+      "parameters": {
+        "frame_index": 0,
+        "action": "extract_text",
+        "selector": {
+          "type": "css",
+          "value": "body"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "frame_index": 0,
+        "action": "extract_text",
+        "text": "Sandbox checkout\n\nNo payment method; test credits only.\n\nAddress   Accept sandbox terms Place sandbox order",
+        "match_count": 1
+      },
+      "planner_visible_result": "{\"frame_index\": 0, \"action\": \"extract_text\", \"text\": \"Sandbox checkout\\n\\nNo payment method; test credits only.\\n\\nAddress   Accept sandbox terms Place sandbox order\", \"match_count\": 1}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 3,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 2,
+        "observed_url_count": 6,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 9.188740015029907,
+      "tool_duration_seconds": 0.022047042846679688
+    },
+    {
+      "step_number": 4,
+      "run_id": "569b14ac-b3cc-4514-baad-94fd32d91c0f",
+      "timestamp": "2026-09-01T13:54:45.190793+00:00",
+      "tool": "type",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "input#order-address"
+        },
+        "text": "42 Orbit Road",
+        "clear_first": true
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "selector": {
+          "type": "css",
+          "value": "input#order-address"
+        },
+        "text": "42 Orbit Road"
+      },
+      "planner_visible_result": "{\"selector\": {\"type\": \"css\", \"value\": \"input#order-address\"}, \"text\": \"42 Orbit Road\"}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 4,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 2,
+        "observed_url_count": 8,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 12.497481107711792,
+      "tool_duration_seconds": 0.6992518901824951
+    },
+    {
+      "step_number": 5,
+      "run_id": "569b14ac-b3cc-4514-baad-94fd32d91c0f",
+      "timestamp": "2026-09-01T13:54:50.189395+00:00",
+      "tool": "click",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "input#order-terms"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "selector": {
+          "type": "css",
+          "value": "input#order-terms"
+        }
+      },
+      "planner_visible_result": "{\"selector\": {\"type\": \"css\", \"value\": \"input#order-terms\"}}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 5,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 8,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "high-risk actions explicitly allowed",
+          "risk_level": "high",
+          "external_effect": "external_state_change",
+          "approval_required": true,
+          "approval_received": true
+        }
+      },
+      "duration_seconds": 4.996165990829468,
+      "tool_duration_seconds": 0.5590181350708008
+    },
+    {
+      "step_number": 6,
+      "run_id": "569b14ac-b3cc-4514-baad-94fd32d91c0f",
+      "timestamp": "2026-09-01T13:55:02.479764+00:00",
+      "tool": "click",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "button#place-sandbox-order"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "selector": {
+          "type": "css",
+          "value": "button#place-sandbox-order"
+        }
+      },
+      "planner_visible_result": "{\"selector\": {\"type\": \"css\", \"value\": \"button#place-sandbox-order\"}}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 6,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 3,
+        "observed_url_count": 11,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "high-risk actions explicitly allowed",
+          "risk_level": "high",
+          "external_effect": "external_state_change",
+          "approval_required": true,
+          "approval_received": true
+        }
+      },
+      "duration_seconds": 12.287668943405151,
+      "tool_duration_seconds": 0.564594030380249
+    },
+    {
+      "step_number": 7,
+      "run_id": "569b14ac-b3cc-4514-baad-94fd32d91c0f",
+      "timestamp": "2026-09-01T13:55:12.382619+00:00",
+      "tool": "done",
+      "parameters": {
+        "summary": "Task completed successfully. All requested steps were performed and confirmed: (1) Added exactly one Orbit Notebook via the sandbox shop's add button (button#add-orbit); (2) Continued to the sandbox checkout page (http://127.0.0.1:55791/checkout), which showed 'Sandbox checkout — No payment method; test credits only.' with Address, Accept sandbox terms, and Place sandbox order controls; (3) Entered '42 Orbit Road' into the order address field (input#order-address); (4) Accepted the sandbox terms by checking input#order-terms; (5) Placed the order via button#place-sandbox-order. The browser then navigated to http://127.0.0.1:55791/order/complete, titled 'Order complete', which displays 'Sandbox order placed' — confirming the order was placed.",
+        "success_probability": 0.99
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "summary": "Task completed successfully. All requested steps were performed and confirmed: (1) Added exactly one Orbit Notebook via the sandbox shop's add button (button#add-orbit); (2) Continued to the sandbox checkout page (http://127.0.0.1:55791/checkout), which showed 'Sandbox checkout — No payment method; test credits only.' with Address, Accept sandbox terms, and Place sandbox order controls; (3) Entered '42 Orbit Road' into the order address field (input#order-address); (4) Accepted the sandbox terms by checking input#order-terms; (5) Placed the order via button#place-sandbox-order. The browser then navigated to http://127.0.0.1:55791/order/complete, titled 'Order complete', which displays 'Sandbox order placed' — confirming the order was placed.",
+        "attachments": [],
+        "success_probability": 0.99
+      },
+      "planner_visible_result": "{\"summary\": \"Task completed successfully. All requested steps were performed and confirmed: (1) Added exactly one Orbit Notebook via the sandbox shop's add button (button#add-orbit); (2) Continued to the sandbox checkout page (http://127.0.0.1:55791/checkout), which showed 'Sandbox checkout — No payment method; test credits only.' with Address, Accept sandbox terms, and Place sandbox order controls; (3) Entered '42 Orbit Road' into the order address field (input#order-address); (4) Accepted the ...",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "completion is grounded in a visited evidence page",
+        "policy_step": 7,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 11,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 9.898891925811768,
+      "tool_duration_seconds": 0.00044226646423339844
+    }
+  ],
+  "resume_count": 0,
+  "checkpoint_schema_version": null,
+  "resumed_from_checkpoint": false
+}

@@ -1,0 +1,495 @@
+{
+  "format": "webagent-checkpoint",
+  "schema_version": 2,
+  "checkpoint_sha256": "c101394af925568d3f0107d70c0d0fabcda62a498a0ed137a67a09f341d57a02",
+  "checkpoint": {
+    "artifacts": [],
+    "browser_state": {
+      "active_tab_index": 0,
+      "current_url": "https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html",
+      "tab_urls": [
+        "https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html"
+      ]
+    },
+    "checkpoint_id": "67029c11-3e80-4e45-9a3b-9f06f4d0ba28",
+    "config_fingerprint": "8cec5c2d9a8383b4a581dc3e28b7de4baf7cbe53b378af61437660b1eef435c3",
+    "consecutive_failures": 0,
+    "created_at": "2026-09-01T12:53:22.310045Z",
+    "elapsed_seconds": 53.52135872840881,
+    "events": [
+      {
+        "current": "recovery",
+        "previous": "default",
+        "reason": "[omitted]",
+        "step_number": 1,
+        "timestamp": "2026-09-01T12:52:45.544876+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 1,
+        "strategy": "recovery",
+        "timestamp": "2026-09-01T12:52:45.544910+00:00",
+        "type": "replan"
+      },
+      {
+        "current": "search-discovery",
+        "previous": "recovery",
+        "reason": "[omitted]",
+        "step_number": 2,
+        "timestamp": "2026-09-01T12:52:56.813975+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 2,
+        "strategy": "search-discovery",
+        "timestamp": "2026-09-01T12:52:56.813984+00:00",
+        "type": "replan"
+      }
+    ],
+    "final_result": {},
+    "history": [
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:52:47.254349+00:00",
+          "title": "normal",
+          "url": "https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html"
+        },
+        "duration_seconds": 11.257721185684204,
+        "step_number": 2,
+        "timestamp": "2026-09-01T12:52:56.813929+00:00",
+        "tool_call": {
+          "parameters": {
+            "url": "https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html"
+          },
+          "reasoning": "",
+          "tool_name": "goto"
+        },
+        "tool_duration_seconds": 0.00011014938354492188,
+        "tool_result": {
+          "audit": {
+            "decision": "deny",
+            "policy": "browser_grounded",
+            "policy_step": 1,
+            "provenance": {},
+            "reason": "[omitted]",
+            "target": "https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html"
+          },
+          "data": {},
+          "error": "tool action failed; details omitted",
+          "success": false,
+          "tool_name": "goto"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:52:58.206824+00:00",
+          "title": "normal",
+          "url": "https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html"
+        },
+        "duration_seconds": 11.485631942749023,
+        "step_number": 3,
+        "timestamp": "2026-09-01T12:53:08.301624+00:00",
+        "tool_call": {
+          "parameters": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "frame_interact"
+        },
+        "tool_duration_seconds": 0.02582693099975586,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 1,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 2,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "action": "[omitted]",
+            "frame_index": 0,
+            "match_count": 1,
+            "text": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "frame_interact"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:53:09.701075+00:00",
+          "title": "normal",
+          "url": "https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html"
+        },
+        "duration_seconds": 14.002003908157349,
+        "step_number": 4,
+        "timestamp": "2026-09-01T12:53:22.308753+00:00",
+        "tool_call": {
+          "parameters": {
+            "success_probability": 0.95,
+            "summary": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "done"
+        },
+        "tool_duration_seconds": 0.00023984909057617188,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 1,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 3,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "attachments": [],
+            "success_probability": 0.95,
+            "summary": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "done"
+        }
+      }
+    ],
+    "last_figure_path": null,
+    "loop_state": {
+      "in_loop": false,
+      "loop_type": "",
+      "page_hash_history": [
+        "510a24c00a8650e1f67ff6ced5828748",
+        "510a24c00a8650e1f67ff6ced5828748",
+        "510a24c00a8650e1f67ff6ced5828748"
+      ],
+      "recent_actions": [
+        "50f87aed4effc2444166fbc0d2c78a8e12947a71261fdd648a4c50f3b60fa4eb",
+        "ae7c4ba3b50b192c60c1c2654ff5e4d753fd8452001a7c3964a921f7e8a31552",
+        "1d89aa522728ce88173fad51bf356a84cc5f73d114df15974c28918edb654f28"
+      ],
+      "recent_pages": [
+        "9b1a8507ca31e8ae391226b68a31953c5b3190a0afdbfe86dd2b3af4c810a4c8",
+        "9b1a8507ca31e8ae391226b68a31953c5b3190a0afdbfe86dd2b3af4c810a4c8",
+        "9b1a8507ca31e8ae391226b68a31953c5b3190a0afdbfe86dd2b3af4c810a4c8"
+      ],
+      "schema_version": 1,
+      "threshold": 4,
+      "url_history": [
+        "https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html",
+        "https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html",
+        "https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html"
+      ],
+      "window_size": 4
+    },
+    "next_step": 5,
+    "pending_action": null,
+    "planner_attempts": [
+      {
+        "attempt_number": 1,
+        "completion_tokens": 19,
+        "duration_seconds": 7.107587814331055,
+        "effective_output_mode": "native-tools",
+        "error": "planner attempt failed; details omitted",
+        "finish_reason": "error",
+        "prompt_tokens": 6215,
+        "requested_output_mode": "auto",
+        "response_length": 74,
+        "step_number": 1,
+        "structured_fallbacks": [],
+        "success": false,
+        "timestamp": "2026-09-01T12:52:37.976265+00:00",
+        "total_tokens": 6234,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 2,
+        "completion_tokens": 20,
+        "duration_seconds": 7.568279981613159,
+        "effective_output_mode": "native-tools",
+        "error": "planner attempt failed; details omitted",
+        "finish_reason": "error",
+        "prompt_tokens": 6268,
+        "requested_output_mode": "auto",
+        "response_length": 78,
+        "step_number": 1,
+        "structured_fallbacks": [],
+        "success": false,
+        "timestamp": "2026-09-01T12:52:45.544602+00:00",
+        "total_tokens": 6288,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 24,
+        "duration_seconds": 7.608577013015747,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6670,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 2,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:52:54.901237+00:00",
+        "total_tokens": 6694,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 71,
+        "duration_seconds": 8.103981018066406,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6710,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 3,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:53:06.347381+00:00",
+        "total_tokens": 6781,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 230,
+        "duration_seconds": 12.561199188232422,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 7013,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 4,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:53:22.299367+00:00",
+        "total_tokens": 7243,
+        "transport_retries": 0
+      }
+    ],
+    "planning_state": {
+      "active_milestone_id": "m5",
+      "evidence": [
+        {
+          "id": "e1",
+          "kind": "checkpoint",
+          "source": "https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html",
+          "step_number": 3,
+          "summary": "evidence retained from step 3"
+        },
+        {
+          "id": "e2",
+          "kind": "checkpoint",
+          "source": "https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html",
+          "step_number": 4,
+          "summary": "evidence retained from step 4"
+        }
+      ],
+      "milestones": [
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 1",
+          "id": "m1",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 2",
+          "id": "m2",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 3",
+          "id": "m3",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 4",
+          "id": "m4",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 5",
+          "id": "m5",
+          "status": "active"
+        }
+      ],
+      "objective": "task bound by checkpoint task_sha256",
+      "revisions": [
+        {
+          "added_milestone_ids": [
+            "m4"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 1,
+          "step_number": 1,
+          "strategy": "recovery"
+        },
+        {
+          "added_milestone_ids": [
+            "m5"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 2,
+          "step_number": 2,
+          "strategy": "search-discovery"
+        }
+      ]
+    },
+    "policy_state": {
+      "broad_current_year_search_completed": false,
+      "current_year": 2026,
+      "downloaded_paths": {},
+      "figure_analysis_completed": false,
+      "hybrid": {
+        "candidate_date": null,
+        "candidate_owner": null,
+        "candidate_url": null,
+        "candidate_version_key": [],
+        "cross_check_exhausted": false,
+        "direct_evidence_verified": false,
+        "missing_repeat_count": 0,
+        "missing_signature": [],
+        "official_report_attempts": {},
+        "required_next_action": null,
+        "subject": "[omitted]",
+        "successful_topics": []
+      },
+      "observed_urls": {
+        "field_0b5432359003": {
+          "page_url": "https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html",
+          "policy_step": 1,
+          "source": "[omitted]"
+        }
+      },
+      "official_identity_search_completed": false,
+      "official_identity_urls": [],
+      "official_scope_result_urls": [],
+      "official_scope_search_completed": false,
+      "pending_url_evidence_target": null,
+      "pending_url_search_attempts": 0,
+      "policy": "browser_grounded",
+      "release_landscape_evidence_urls": [],
+      "release_landscape_search_completed": false,
+      "schema_version": 3,
+      "search_completed": false,
+      "selected_candidate_url": null,
+      "step": 3,
+      "successful_queries": [],
+      "successful_searches": 0,
+      "task_sha256": "63790c56d267157ee99bf50c17eb5dcfae7c152df4ad840c54e712f167ac8e16",
+      "version_frontier": null,
+      "version_frontier_key": [],
+      "version_frontier_resolved": true,
+      "visited_urls": [
+        "https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html"
+      ]
+    },
+    "previous_checkpoint_sha256": "58eab18475630d33f007f680640d5f19144f3519446a4e4fd3339b679d3fb8ba",
+    "resume_count": 0,
+    "run_id": "ce0f781d-773c-4c78-8834-3580f4bd4eee",
+    "schema_version": 2,
+    "source_fingerprint": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "status": "running",
+    "strategy_state": {
+      "attempted": [
+        "default",
+        "recovery",
+        "search-discovery"
+      ],
+      "consecutive_failures": 0,
+      "consecutive_no_progress": 0,
+      "current": "search-discovery",
+      "exhausted": false,
+      "switch_count": 2,
+      "switches": [
+        {
+          "current": "recovery",
+          "previous": "default",
+          "reason": "runtime strategy switch",
+          "step_number": 1
+        },
+        {
+          "current": "search-discovery",
+          "previous": "recovery",
+          "reason": "runtime strategy switch",
+          "step_number": 2
+        }
+      ]
+    },
+    "task_sha256": "63790c56d267157ee99bf50c17eb5dcfae7c152df4ad840c54e712f167ac8e16",
+    "updated_at": "2026-09-01T12:53:22.310067Z"
+  }
+}

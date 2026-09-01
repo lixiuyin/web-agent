@@ -1,0 +1,11 @@
+IANA's role, as stated on its "About us" page (https://www.iana.org/about):
+
+The page opens with an "About IANA" section explaining that for the Internet to work as a single seamless network, technical identifiers must mean the same thing everywhere — network identifiers such as domain names and IP addresses must be assigned to a single party and carry the same meaning globally, and communication protocols must use codes that every software implementation interprets identically. Against that need, the Internet Assigned Numbers Authority (IANA) is described as the party that maintains the authoritative public registries of these unique technical identifiers (the extracted text was truncated at "maintains the authoritative public...").
+
+The rest of the page organizes that role into the operational areas IANA is responsible for, shown as the page's own navigation/tiles:
+- Core service lines: Domains (incl. the Root Zone Registry, .INT Registry and .ARPA Registry), Number Resources (Number Registries, RIR Allocation Data), and Protocols (Protocol Registries, Time Zone Database) — i.e., coordinating the identifier registries rather than selling or allocating end-user resources directly.
+- Organizational/accountability functions: "The Organization" (how the IANA functions are governed and overseen), Governance, Oversight, Strategy & Planning, Continuous Improvement, Performance, Reports, Audits, News (announcements, publications and consultations) and Archive (historical documents from prior projects/services), plus a Contact us section for questions, requests and feedback.
+
+In short: the about page presents IANA as the operator of the Internet's authoritative, globally coordinated technical-identifier registries — domain names, IP number resources, and protocol parameter code points — supported by published governance, oversight and performance/accountability information.
+
+Exact URL cited: https://www.iana.org/about (page title: "About us").

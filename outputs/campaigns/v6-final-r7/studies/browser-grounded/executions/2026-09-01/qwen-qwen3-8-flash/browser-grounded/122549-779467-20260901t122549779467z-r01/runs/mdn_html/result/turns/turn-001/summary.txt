@@ -1,0 +1,13 @@
+**MDN's official HTML page (found via browser search)**
+
+- Search used: Bing query "MDN HTML documentation official page" → top relevant result: "HTML: HyperText Markup Language | MDN" (developer.mozilla.org/en-US/docs/Web/HTML), which I then opened directly.
+- **Exact URL cited:** https://developer.mozilla.org/en-US/docs/Web/HTML
+- Page title (verified in browser): "HTML: HyperText Markup Language | MDN"
+
+**HTML's role, as described by MDN (first-party text from that page):**
+- "HTML (HyperText Markup Language) is the most basic building block of the Web. It defines the meaning and structure of web content."
+- MDN places it in the standard three-technology division of labor: "Other technologies besides HTML are generally used to describe a web page's appearance/presentation (CSS) or functionality/behavior (JavaScript)." So HTML supplies structure and semantics, CSS the presentation, JavaScript the behavior.
+- On the "hypertext" part of the name: "'Hypertext' refers to links that connect web pages to one another, either within a site or between sites" — i.e., HTML is what makes the Web a linked document graph.
+- Practically, HTML is written with markup "elements": content is wrapped in tags (e.g., `<p>` for paragraphs, `<a>` for links, `<img>` for images) that mark up text and define types of information such as headings, lists, quotations, code, tables, images, forms, audio/video, and interactive controls. The page also indexes the complete element reference, guides (e.g., HTML cheatsheet, defining terms with HTML, date/time formats, data attributes, cross-origin images, fast-loading HTML pages, form validation), and links onward to CSS and JavaScript docs.
+
+**Summary of the role:** HTML is the foundational, semantic structural layer of every web page — it declares *what* the content is and how it is organized and linked — while CSS styles it and JavaScript adds behavior.

@@ -1,0 +1,14 @@
+What cloning a repository does (per GitHub Docs):
+
+1. Core idea — A repository you create on GitHub exists as a REMOTE repository. Cloning creates a LOCAL copy of that repository on your computer so you can keep the two locations in sync ("When you create a repository on GitHub, it exists as a remote repository. You can clone your repository to create a local copy on your computer and sync between the two locations.").
+
+2. What actually gets copied — When you clone, you copy the repository from GitHub.com to your local machine (or to a remote virtual machine if you clone into a codespace). Cloning can be done from GitHub.com to your local computer or to a codespace.
+
+3. Why it helps — Cloning makes it easier to fix merge conflicts, add or remove files, and push larger commits, because you work against a full local copy that stays linked to the remote.
+
+4. Whose repositories you can clone — You can clone your own existing repository, or clone another person's existing repository in order to contribute to a project.
+
+5. Related cases covered on the same page — Cloning an empty repository (a repository with no files, often created if you don't initialize it with a README), troubleshooting cloning errors, and multiple ways to clone via tool/platform navigation (GitHub CLI, web browser, GitHub Desktop; Mac/Windows/Linux).
+
+Exact GitHub Docs URL (the page visited and quoted): https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository
+Page title: "Cloning a repository - GitHub Docs"

@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "status": "insufficient",
+  "task_count": 30,
+  "category_count": 11,
+  "source_origin_count": 10,
+  "discovery_task_count": 10,
+  "scenario_counts": {
+    "document_read": 20,
+    "search_discovery": 10
+  },
+  "environment_counts": {
+    "public_web": 30
+  },
+  "split_counts": {
+    "development": 18,
+    "held_out_setting": 6,
+    "held_out_task": 6
+  },
+  "source_origins": [
+    "https://developer.mozilla.org",
+    "https://docs.github.com",
+    "https://docs.python.org",
+    "https://fastapi.tiangolo.com",
+    "https://git-scm.com",
+    "https://go.dev",
+    "https://numpy.org",
+    "https://pandas.pydata.org",
+    "https://playwright.dev",
+    "https://www.iana.org"
+  ],
+  "missing_requirements": [
+    "missing scenario coverage: authenticated_session, cross_origin_form, file_workflow, recovery, sandbox_transaction, spa_interaction",
+    "requires both public_web and sandbox evidence"
+  ],
+  "interpretation_notice": "Readiness means the retained task set crosses a preregistered coverage floor. It does not by itself prove performance, robustness, or transfer across the covered settings."
+}

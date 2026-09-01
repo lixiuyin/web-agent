@@ -1,0 +1,20 @@
+**Playwright Python — official introduction (Getting Started / Library) and package installation command**
+
+**Official source (exact URL):** https://playwright.dev/python/docs/library — page title: "Getting started - Library | Playwright Python" (Playwright's official documentation site, playwright.dev, Python section). Found via browser search (Bing query "Playwright Python official documentation introduction", which surfaced https://playwright.dev/ and https://playwright.dev/docs/intro; a follow-up Yahoo Japan search surfaced the Python-specific page https://playwright.dev/python/docs/library, which was then opened and read).
+
+**Package installation command (Pip tab, as shown on that page):**
+```bash
+pip install --upgrade pip
+pip install playwright
+playwright install
+```
+- `pip install playwright` is the package installation command itself; `playwright install` then downloads the browser binaries.
+- The page states: "These commands download the Playwright package and install browser binaries for Chromium, Firefox and WebKit. To modify this behavior see installation parameters."
+
+**Alternative package managers offered on the same page (tabs):**
+- Poetry: `poetry self update` → `poetry add playwright` → `playwright install`
+- uv: `uv self update` → `uv add playwright` → `playwright install`
+
+**Usage note from the same page:** once installed, you import Playwright in your Python script (e.g. `from playwright.sync_api import sync_playwright`).
+
+Related official URLs seen in search results: https://playwright.dev/ (project home) and https://playwright.dev/docs/intro (Getting Started / Introduction for Node.js). The Python-language introduction/installation page cited above is https://playwright.dev/python/docs/library.

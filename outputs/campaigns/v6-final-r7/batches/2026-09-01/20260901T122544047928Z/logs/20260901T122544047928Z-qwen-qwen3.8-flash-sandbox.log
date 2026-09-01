@@ -1,0 +1,3 @@
+sandbox-interaction-v1: 5/5 passed; action validity 95.7%
+API 400: {"error":{"message":"Provider returned error","code":400,"metadata":{"raw":"data: {\"error\":{\"code\":\"invalid_parameter_error\",\"param\":null,\"message\":\"The tool_choice parameter does not support being set to required or object in thinking mode\",\"type\":\"invalid_request_error\"},\"id\":\"chatcmpl-c3d69516-de59-9df5-8930-7272a71b806f\"}\n\n","provider_name":"Alibaba","is_byok":false,"previous_errors":[{"code":400,"message":"Provider returned error","provider_name":"Alibaba","raw":"{\"er
+Planner provider does not support native-tools:required; falling back to native-tools:auto (400)

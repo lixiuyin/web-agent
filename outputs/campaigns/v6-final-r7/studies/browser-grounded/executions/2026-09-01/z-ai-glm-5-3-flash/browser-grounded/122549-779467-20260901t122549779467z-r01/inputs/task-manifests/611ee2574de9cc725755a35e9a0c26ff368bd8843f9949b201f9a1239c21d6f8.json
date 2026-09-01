@@ -1,0 +1,226 @@
+{
+  "schema_version": 2,
+  "suite": "open-web-general-v2",
+  "tasks": [
+    {
+      "id": "iana_example_domains", "category": "standards", "goal": "Starting from a blank page, use browser search to find IANA's official example-domains page, explain its purpose, and cite the exact URL.",
+      "start_url": "about:blank", "source_urls": ["https://www.iana.org/help/example-domains"],
+      "snapshot_id": "iana-example-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "development", "task_family": "official_standards_reference", "setting_id": "stable_official_reference", "leakage_group": "host_www_iana_org", "target_failure_modes": ["search_discovery", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "medium",
+      "discovery_required": true, "scenario": "search_discovery", "environment": "public_web", "entry_mode": "search", "risk_scope": "read_only",
+      "assertions": [{"kind": "answer_contains_any", "expected": ["documentation", "reserved"]}, {"kind": "answer_contains_any", "expected": ["https://www.iana.org/help/example-domains", "https://www.iana.org/domains/reserved"]}, {"kind": "history_url_observed_any", "expected": ["https://www.iana.org/help/example-domains", "https://www.iana.org/domains/reserved"]}, {"kind": "certificate_valid", "expected": true}]
+    },
+    {
+      "id": "iana_reserved_domains", "category": "standards", "goal": "Report what IANA says about reserved domains and cite the exact URL.",
+      "start_url": "https://www.iana.org/domains/reserved", "source_urls": ["https://www.iana.org/domains/reserved"],
+      "snapshot_id": "iana-reserved-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "development", "task_family": "official_standards_reference", "setting_id": "stable_official_reference", "leakage_group": "host_www_iana_org", "target_failure_modes": ["information_extraction", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "short",
+      "assertions": [{"kind": "answer_contains", "expected": "reserved"}, {"kind": "answer_contains", "expected": "https://www.iana.org/domains/reserved"}, {"kind": "history_url_observed", "expected": "https://www.iana.org/domains/reserved"}]
+    },
+    {
+      "id": "iana_about", "category": "organization", "goal": "Summarize IANA's role from its about page and cite the exact URL.",
+      "start_url": "https://www.iana.org/about", "source_urls": ["https://www.iana.org/about"],
+      "snapshot_id": "iana-about-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "development", "task_family": "official_standards_reference", "setting_id": "stable_official_reference", "leakage_group": "host_www_iana_org", "target_failure_modes": ["information_extraction", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "short",
+      "assertions": [{"kind": "answer_contains", "expected": "Internet"}, {"kind": "answer_contains", "expected": "https://www.iana.org/about"}, {"kind": "history_url_observed", "expected": "https://www.iana.org/about"}]
+    },
+    {
+      "id": "python_creator", "category": "documentation", "goal": "Starting from a blank page, use browser search to find the official page titled 'General Python FAQ', identify Python's creator, and cite the exact URL.",
+      "start_url": "about:blank", "source_urls": ["https://docs.python.org/3/faq/general.html"],
+      "snapshot_id": "python-faq-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "development", "task_family": "programming_language_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_docs_python_org", "target_failure_modes": ["search_discovery", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "medium",
+      "discovery_required": true, "scenario": "search_discovery", "environment": "public_web", "entry_mode": "search", "risk_scope": "read_only",
+      "assertions": [{"kind": "answer_contains", "expected": "Guido van Rossum"}, {"kind": "answer_contains", "expected": "https://docs.python.org/3/faq/general.html"}, {"kind": "history_url_observed", "expected": "https://docs.python.org/3/faq/general.html"}, {"kind": "certificate_valid", "expected": true}]
+    },
+    {
+      "id": "python_tutorial", "category": "documentation", "goal": "State the intended audience of the official Python tutorial and cite the exact URL.",
+      "start_url": "https://docs.python.org/3/tutorial/index.html", "source_urls": ["https://docs.python.org/3/tutorial/index.html"],
+      "snapshot_id": "python-tutorial-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "development", "task_family": "programming_language_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_docs_python_org", "target_failure_modes": ["information_extraction", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "short",
+      "assertions": [{"kind": "answer_contains", "expected": "programming"}, {"kind": "answer_contains", "expected": "https://docs.python.org/3/tutorial/index.html"}, {"kind": "history_url_observed", "expected": "https://docs.python.org/3/tutorial/index.html"}]
+    },
+    {
+      "id": "python_asyncio", "category": "documentation", "goal": "Explain what asyncio is used for according to its official page and cite the exact URL.",
+      "start_url": "https://docs.python.org/3/library/asyncio.html", "source_urls": ["https://docs.python.org/3/library/asyncio.html"],
+      "snapshot_id": "python-asyncio-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "development", "task_family": "programming_language_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_docs_python_org", "target_failure_modes": ["information_extraction", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "short",
+      "assertions": [{"kind": "answer_contains", "expected": "concurrent"}, {"kind": "answer_contains", "expected": "https://docs.python.org/3/library/asyncio.html"}, {"kind": "history_url_observed", "expected": "https://docs.python.org/3/library/asyncio.html"}]
+    },
+    {
+      "id": "playwright_python_intro", "category": "browser_automation", "goal": "Starting from a blank page, use browser search to find Playwright Python's official introduction, report its package installation command, and cite the exact URL.",
+      "start_url": "about:blank", "source_urls": ["https://playwright.dev/python/docs/intro"],
+      "snapshot_id": "playwright-intro-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "development", "task_family": "browser_automation_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_playwright_dev", "target_failure_modes": ["search_discovery", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "medium",
+      "discovery_required": true, "scenario": "search_discovery", "environment": "public_web", "entry_mode": "search", "risk_scope": "read_only",
+      "assertions": [{"kind": "answer_contains", "expected": "playwright install"}, {"kind": "answer_contains", "expected": "https://playwright.dev/python/docs/intro"}, {"kind": "history_url_observed", "expected": "https://playwright.dev/python/docs/intro"}, {"kind": "certificate_valid", "expected": true}]
+    },
+    {
+      "id": "playwright_page", "category": "browser_automation", "goal": "Summarize what the Playwright Page class represents and cite the exact URL.",
+      "start_url": "https://playwright.dev/python/docs/api/class-page", "source_urls": ["https://playwright.dev/python/docs/api/class-page"],
+      "snapshot_id": "playwright-page-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "development", "task_family": "browser_automation_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_playwright_dev", "target_failure_modes": ["information_extraction", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "short",
+      "assertions": [{"kind": "answer_contains", "expected": "Page"}, {"kind": "answer_contains", "expected": "https://playwright.dev/python/docs/api/class-page"}, {"kind": "history_url_observed", "expected": "https://playwright.dev/python/docs/api/class-page"}]
+    },
+    {
+      "id": "playwright_locator", "category": "browser_automation", "goal": "Explain the role of Playwright locators and cite the exact API URL.",
+      "start_url": "https://playwright.dev/python/docs/api/class-locator", "source_urls": ["https://playwright.dev/python/docs/api/class-locator"],
+      "snapshot_id": "playwright-locator-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "development", "task_family": "browser_automation_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_playwright_dev", "target_failure_modes": ["information_extraction", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "short",
+      "assertions": [{"kind": "answer_contains", "expected": "Locator"}, {"kind": "answer_contains", "expected": "https://playwright.dev/python/docs/api/class-locator"}, {"kind": "history_url_observed", "expected": "https://playwright.dev/python/docs/api/class-locator"}]
+    },
+    {
+      "id": "git_overview", "category": "developer_tools", "goal": "Starting from a blank page, use browser search to find the official Git manual, report the Git command synopsis, and cite the exact URL.",
+      "start_url": "about:blank", "source_urls": ["https://git-scm.com/docs/git"],
+      "snapshot_id": "git-overview-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "development", "task_family": "developer_tool_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_git_scm_com", "target_failure_modes": ["search_discovery", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "medium",
+      "discovery_required": true, "scenario": "search_discovery", "environment": "public_web", "entry_mode": "search", "risk_scope": "read_only",
+      "assertions": [{"kind": "answer_contains", "expected": "git"}, {"kind": "answer_contains", "expected": "https://git-scm.com/docs/git"}, {"kind": "history_url_observed", "expected": "https://git-scm.com/docs/git"}, {"kind": "certificate_valid", "expected": true}]
+    },
+    {
+      "id": "git_clone", "category": "developer_tools", "goal": "Explain what git clone does according to its official manual and cite the exact URL.",
+      "start_url": "https://git-scm.com/docs/git-clone", "source_urls": ["https://git-scm.com/docs/git-clone"],
+      "snapshot_id": "git-clone-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "development", "task_family": "developer_tool_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_git_scm_com", "target_failure_modes": ["information_extraction", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "short",
+      "assertions": [{"kind": "answer_contains", "expected": "repository"}, {"kind": "answer_contains", "expected": "https://git-scm.com/docs/git-clone"}, {"kind": "history_url_observed", "expected": "https://git-scm.com/docs/git-clone"}]
+    },
+    {
+      "id": "git_status", "category": "developer_tools", "goal": "Explain what git status shows and cite the exact official manual URL.",
+      "start_url": "https://git-scm.com/docs/git-status", "source_urls": ["https://git-scm.com/docs/git-status"],
+      "snapshot_id": "git-status-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "development", "task_family": "developer_tool_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_git_scm_com", "target_failure_modes": ["information_extraction", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "short",
+      "assertions": [{"kind": "answer_contains", "expected": "working tree"}, {"kind": "answer_contains", "expected": "https://git-scm.com/docs/git-status"}, {"kind": "history_url_observed", "expected": "https://git-scm.com/docs/git-status"}]
+    },
+    {
+      "id": "github_git_difference", "category": "collaboration", "goal": "Starting from a blank page, use browser search to find the official GitHub Docs explanation of Git versus GitHub, explain the distinction, and cite the exact URL.",
+      "start_url": "about:blank", "source_urls": ["https://docs.github.com/en/get-started/start-your-journey/what-is-github"],
+      "snapshot_id": "github-git-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "held_out_task", "task_family": "collaboration_platform_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_docs_github_com", "target_failure_modes": ["search_discovery", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "medium",
+      "discovery_required": true, "scenario": "search_discovery", "environment": "public_web", "entry_mode": "search", "risk_scope": "read_only",
+      "assertions": [{"kind": "answer_contains", "expected": "version control"}, {"kind": "answer_contains", "expected": "https://docs.github.com/en/get-started/start-your-journey/what-is-github"}, {"kind": "history_url_observed", "expected": "https://docs.github.com/en/get-started/start-your-journey/what-is-github"}, {"kind": "certificate_valid", "expected": true}]
+    },
+    {
+      "id": "github_clone", "category": "collaboration", "goal": "Summarize what cloning a repository does and cite the exact GitHub Docs URL.",
+      "start_url": "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository", "source_urls": ["https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository"],
+      "snapshot_id": "github-clone-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "held_out_task", "task_family": "collaboration_platform_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_docs_github_com", "target_failure_modes": ["information_extraction", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "short",
+      "assertions": [{"kind": "answer_contains", "expected": "copy"}, {"kind": "answer_contains", "expected": "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository"}, {"kind": "history_url_observed", "expected": "https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository"}]
+    },
+    {
+      "id": "github_authentication", "category": "security", "goal": "Summarize GitHub's authentication guidance and cite the exact Docs URL.",
+      "start_url": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github", "source_urls": ["https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github"],
+      "snapshot_id": "github-auth-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "held_out_task", "task_family": "collaboration_platform_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_docs_github_com", "target_failure_modes": ["information_extraction", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "short",
+      "assertions": [{"kind": "answer_contains", "expected": "authentication"}, {"kind": "answer_contains", "expected": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github"}, {"kind": "history_url_observed", "expected": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github"}]
+    },
+    {
+      "id": "mdn_html", "category": "web_platform", "goal": "Starting from a blank page, use browser search to find MDN's official HTML page, describe HTML's role, and cite the exact URL.",
+      "start_url": "about:blank", "source_urls": ["https://developer.mozilla.org/en-US/docs/Web/HTML", "https://developer.mozilla.org/zh-CN/docs/Web/HTML"],
+      "snapshot_id": "mdn-html-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "held_out_setting", "task_family": "web_platform_documentation", "setting_id": "localized_web_platform_reference", "leakage_group": "host_developer_mozilla_org", "target_failure_modes": ["search_discovery", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "medium",
+      "discovery_required": true, "scenario": "search_discovery", "environment": "public_web", "entry_mode": "search", "risk_scope": "read_only",
+      "assertions": [{"kind": "answer_contains", "expected": "HTML"}, {"kind": "answer_contains_any", "expected": ["https://developer.mozilla.org/en-US/docs/Web/HTML", "https://developer.mozilla.org/zh-CN/docs/Web/HTML"]}, {"kind": "history_url_observed_any", "expected": ["https://developer.mozilla.org/en-US/docs/Web/HTML", "https://developer.mozilla.org/zh-CN/docs/Web/HTML"]}, {"kind": "certificate_valid", "expected": true}]
+    },
+    {
+      "id": "mdn_css", "category": "web_platform", "goal": "Describe CSS's role using MDN and cite the exact URL.",
+      "start_url": "https://developer.mozilla.org/en-US/docs/Web/CSS", "source_urls": ["https://developer.mozilla.org/en-US/docs/Web/CSS"],
+      "snapshot_id": "mdn-css-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "held_out_setting", "task_family": "web_platform_documentation", "setting_id": "localized_web_platform_reference", "leakage_group": "host_developer_mozilla_org", "target_failure_modes": ["information_extraction", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "short",
+      "assertions": [{"kind": "answer_contains", "expected": "style"}, {"kind": "answer_contains", "expected": "https://developer.mozilla.org/en-US/docs/Web/CSS"}, {"kind": "history_url_observed", "expected": "https://developer.mozilla.org/en-US/docs/Web/CSS"}]
+    },
+    {
+      "id": "mdn_javascript", "category": "web_platform", "goal": "Describe JavaScript using MDN and cite the exact URL.",
+      "start_url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript", "source_urls": ["https://developer.mozilla.org/en-US/docs/Web/JavaScript"],
+      "snapshot_id": "mdn-js-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "held_out_setting", "task_family": "web_platform_documentation", "setting_id": "localized_web_platform_reference", "leakage_group": "host_developer_mozilla_org", "target_failure_modes": ["information_extraction", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "short",
+      "assertions": [{"kind": "answer_contains", "expected": "JavaScript"}, {"kind": "answer_contains", "expected": "https://developer.mozilla.org/en-US/docs/Web/JavaScript"}, {"kind": "history_url_observed", "expected": "https://developer.mozilla.org/en-US/docs/Web/JavaScript"}]
+    },
+    {
+      "id": "numpy_beginners", "category": "data_science", "goal": "Starting from a blank page, use browser search to find NumPy's official beginner guide, identify its central array object, and cite the exact URL.",
+      "start_url": "about:blank", "source_urls": ["https://numpy.org/doc/stable/user/absolute_beginners.html", "https://numpy.org/devdocs/user/absolute_beginners.html"],
+      "snapshot_id": "numpy-beginner-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "development", "task_family": "data_library_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_numpy_org", "target_failure_modes": ["search_discovery", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "medium",
+      "discovery_required": true, "scenario": "search_discovery", "environment": "public_web", "entry_mode": "search", "risk_scope": "read_only",
+      "assertions": [{"kind": "answer_contains", "expected": "ndarray"}, {"kind": "answer_contains_any", "expected": ["https://numpy.org/doc/stable/user/absolute_beginners.html", "https://numpy.org/devdocs/user/absolute_beginners.html"]}, {"kind": "history_url_observed_any", "expected": ["https://numpy.org/doc/stable/user/absolute_beginners.html", "https://numpy.org/devdocs/user/absolute_beginners.html"]}, {"kind": "certificate_valid", "expected": true}]
+    },
+    {
+      "id": "numpy_array", "category": "data_science", "goal": "Explain what numpy.array creates and cite the exact reference URL.",
+      "start_url": "https://numpy.org/doc/stable/reference/generated/numpy.array.html", "source_urls": ["https://numpy.org/doc/stable/reference/generated/numpy.array.html"],
+      "snapshot_id": "numpy-array-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "development", "task_family": "data_library_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_numpy_org", "target_failure_modes": ["information_extraction", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "short",
+      "assertions": [{"kind": "answer_contains", "expected": "array"}, {"kind": "answer_contains", "expected": "https://numpy.org/doc/stable/reference/generated/numpy.array.html"}, {"kind": "history_url_observed", "expected": "https://numpy.org/doc/stable/reference/generated/numpy.array.html"}]
+    },
+    {
+      "id": "numpy_mean", "category": "data_science", "goal": "State what numpy.mean computes and cite the exact reference URL.",
+      "start_url": "https://numpy.org/doc/stable/reference/generated/numpy.mean.html", "source_urls": ["https://numpy.org/doc/stable/reference/generated/numpy.mean.html"],
+      "snapshot_id": "numpy-mean-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "development", "task_family": "data_library_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_numpy_org", "target_failure_modes": ["information_extraction", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "short",
+      "assertions": [{"kind": "answer_contains", "expected": "arithmetic mean"}, {"kind": "answer_contains", "expected": "https://numpy.org/doc/stable/reference/generated/numpy.mean.html"}, {"kind": "history_url_observed", "expected": "https://numpy.org/doc/stable/reference/generated/numpy.mean.html"}]
+    },
+    {
+      "id": "pandas_table", "category": "data_science", "goal": "Starting from a blank page, use browser search to find pandas' official tutorial titled 'What kind of data does pandas handle?', identify the tabular structure it introduces, and cite the exact URL.",
+      "start_url": "about:blank", "source_urls": ["https://pandas.pydata.org/docs/getting_started/intro_tutorials/01_table_oriented.html"],
+      "snapshot_id": "pandas-table-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "held_out_task", "task_family": "data_library_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_pandas_pydata_org", "target_failure_modes": ["search_discovery", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "medium",
+      "discovery_required": true, "scenario": "search_discovery", "environment": "public_web", "entry_mode": "search", "risk_scope": "read_only",
+      "assertions": [{"kind": "answer_contains", "expected": "DataFrame"}, {"kind": "answer_contains", "expected": "https://pandas.pydata.org/docs/getting_started/intro_tutorials/01_table_oriented.html"}, {"kind": "history_url_observed", "expected": "https://pandas.pydata.org/docs/getting_started/intro_tutorials/01_table_oriented.html"}, {"kind": "certificate_valid", "expected": true}]
+    },
+    {
+      "id": "pandas_dataframe", "category": "data_science", "goal": "Summarize the pandas DataFrame object and cite the exact API URL.",
+      "start_url": "https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html", "source_urls": ["https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html"],
+      "snapshot_id": "pandas-dataframe-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "held_out_task", "task_family": "data_library_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_pandas_pydata_org", "target_failure_modes": ["information_extraction", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "short",
+      "assertions": [{"kind": "answer_contains", "expected": "two-dimensional"}, {"kind": "answer_contains", "expected": "https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html"}, {"kind": "history_url_observed", "expected": "https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html"}]
+    },
+    {
+      "id": "pandas_read_csv", "category": "data_science", "goal": "State what pandas.read_csv reads and cite the exact API URL.",
+      "start_url": "https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html", "source_urls": ["https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html"],
+      "snapshot_id": "pandas-readcsv-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "held_out_task", "task_family": "data_library_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_pandas_pydata_org", "target_failure_modes": ["information_extraction", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "short",
+      "assertions": [{"kind": "answer_contains", "expected": "comma-separated"}, {"kind": "answer_contains", "expected": "https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html"}, {"kind": "history_url_observed", "expected": "https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html"}]
+    },
+    {
+      "id": "fastapi_home", "category": "web_framework", "goal": "Starting from a blank page, use browser search to find FastAPI's official home page, summarize its purpose, and cite the exact URL.",
+      "start_url": "about:blank", "source_urls": ["https://fastapi.tiangolo.com/"],
+      "snapshot_id": "fastapi-home-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "development", "task_family": "web_framework_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_fastapi_tiangolo_com", "target_failure_modes": ["search_discovery", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "medium",
+      "discovery_required": true, "scenario": "search_discovery", "environment": "public_web", "entry_mode": "search", "risk_scope": "read_only",
+      "assertions": [{"kind": "answer_contains", "expected": "API"}, {"kind": "answer_contains", "expected": "https://fastapi.tiangolo.com/"}, {"kind": "history_url_observed", "expected": "https://fastapi.tiangolo.com/"}, {"kind": "certificate_valid", "expected": true}]
+    },
+    {
+      "id": "fastapi_first_steps", "category": "web_framework", "goal": "Report the application object created in FastAPI's first steps and cite the exact URL.",
+      "start_url": "https://fastapi.tiangolo.com/tutorial/first-steps/", "source_urls": ["https://fastapi.tiangolo.com/tutorial/first-steps/"],
+      "snapshot_id": "fastapi-first-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "development", "task_family": "web_framework_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_fastapi_tiangolo_com", "target_failure_modes": ["information_extraction", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "short",
+      "assertions": [{"kind": "answer_contains", "expected": "FastAPI"}, {"kind": "answer_contains", "expected": "https://fastapi.tiangolo.com/tutorial/first-steps/"}, {"kind": "history_url_observed", "expected": "https://fastapi.tiangolo.com/tutorial/first-steps/"}]
+    },
+    {
+      "id": "fastapi_features", "category": "web_framework", "goal": "Name one standards-based FastAPI feature and cite the exact features URL.",
+      "start_url": "https://fastapi.tiangolo.com/features/", "source_urls": ["https://fastapi.tiangolo.com/features/"],
+      "snapshot_id": "fastapi-features-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "development", "task_family": "web_framework_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_fastapi_tiangolo_com", "target_failure_modes": ["information_extraction", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "short",
+      "assertions": [{"kind": "answer_contains", "expected": "OpenAPI"}, {"kind": "answer_contains", "expected": "https://fastapi.tiangolo.com/features/"}, {"kind": "history_url_observed", "expected": "https://fastapi.tiangolo.com/features/"}]
+    },
+    {
+      "id": "go_documentation", "category": "programming_language", "goal": "Starting from a blank page, use browser search to find the official Go documentation hub, describe what it provides, and cite the exact URL.",
+      "start_url": "about:blank", "source_urls": ["https://go.dev/doc/"],
+      "snapshot_id": "go-doc-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "held_out_setting", "task_family": "programming_language_documentation", "setting_id": "language_portal_documentation", "leakage_group": "host_go_dev", "target_failure_modes": ["search_discovery", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "medium",
+      "discovery_required": true, "scenario": "search_discovery", "environment": "public_web", "entry_mode": "search", "risk_scope": "read_only",
+      "assertions": [{"kind": "answer_contains", "expected": "Go"}, {"kind": "answer_contains", "expected": "https://go.dev/doc/"}, {"kind": "history_url_observed", "expected": "https://go.dev/doc/"}, {"kind": "certificate_valid", "expected": true}]
+    },
+    {
+      "id": "go_getting_started", "category": "programming_language", "goal": "Report the module initialization command from Go's getting-started tutorial and cite the exact URL.",
+      "start_url": "https://go.dev/doc/tutorial/getting-started", "source_urls": ["https://go.dev/doc/tutorial/getting-started"],
+      "snapshot_id": "go-start-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "held_out_setting", "task_family": "programming_language_documentation", "setting_id": "language_portal_documentation", "leakage_group": "host_go_dev", "target_failure_modes": ["information_extraction", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "short",
+      "assertions": [{"kind": "answer_contains", "expected": "go mod init"}, {"kind": "answer_contains", "expected": "https://go.dev/doc/tutorial/getting-started"}, {"kind": "history_url_observed", "expected": "https://go.dev/doc/tutorial/getting-started"}]
+    },
+    {
+      "id": "go_effective", "category": "programming_language", "goal": "Explain the purpose of Effective Go and cite the exact URL.",
+      "start_url": "https://go.dev/doc/effective_go", "source_urls": ["https://go.dev/doc/effective_go"],
+      "snapshot_id": "go-effective-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "held_out_setting", "task_family": "programming_language_documentation", "setting_id": "language_portal_documentation", "leakage_group": "host_go_dev", "target_failure_modes": ["information_extraction", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "short",
+      "assertions": [{"kind": "answer_contains", "expected": "idiomatic"}, {"kind": "answer_contains", "expected": "https://go.dev/doc/effective_go"}, {"kind": "history_url_observed", "expected": "https://go.dev/doc/effective_go"}]
+    }
+  ]
+}

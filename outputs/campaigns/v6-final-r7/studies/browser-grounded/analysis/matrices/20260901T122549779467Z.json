@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-01T13:46:50.169727+00:00",
+  "collection_date": "2026-09-01",
+  "batch_id": "20260901T122549779467Z",
+  "provider": "openrouter",
+  "requested_models": [
+    "z-ai/glm-5.3-flash",
+    "qwen/qwen3.8-flash"
+  ],
+  "execution_model_order": [
+    "z-ai/glm-5.3-flash",
+    "qwen/qwen3.8-flash"
+  ],
+  "model_order_policy": "rotate-by-date",
+  "study_manifest_sha256": "e607cabfa48d300726aff89fe5780b59c32997878ca2a8274d59d893170b5675",
+  "repetitions": 1,
+  "runs": {
+    "z-ai/glm-5.3-flash": [
+      {
+        "schema_version": 5,
+        "evidence_kind": "local-report-bound-v1",
+        "run_id": "36164698-a8f7-46a7-a02d-ffdbc7dbba6c",
+        "created_at": "2026-09-01T13:01:32.735886+00:00",
+        "benchmark_date": "2026-09-01",
+        "suite": "open-web-general-v2",
+        "provider": "openrouter",
+        "model": "z-ai/glm-5.3-flash",
+        "study_id": "browser-grounded",
+        "study_manifest_sha256": "e607cabfa48d300726aff89fe5780b59c32997878ca2a8274d59d893170b5675",
+        "manifest_sha256": "611ee2574de9cc725755a35e9a0c26ff368bd8843f9949b201f9a1239c21d6f8",
+        "benchmark_config_sha256": "73d9cf98e778376224c7a1f73313cda500ed38ca34a4c3da84d7841edf535328",
+        "task_ids_sha256": "92024793ab3539c100e6c9d0110ba7104a85df36770b8f08786e067af22c2007",
+        "agent_source_sha256": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+        "report_path": "executions/2026-09-01/z-ai-glm-5-3-flash/browser-grounded/122549-779467-20260901t122549779467z-r01/results.json",
+        "report_sha256": "d677f44f608704c945c587a5cf887a8f8ff8d4b488a12782cf0d0abf35a0d319",
+        "task_count": 30,
+        "task_ids": [
+          "fastapi_features",
+          "fastapi_first_steps",
+          "fastapi_home",
+          "git_clone",
+          "git_overview",
+          "git_status",
+          "github_authentication",
+          "github_clone",
+          "github_git_difference",
+          "go_documentation",
+          "go_effective",
+          "go_getting_started",
+          "iana_about",
+          "iana_example_domains",
+          "iana_reserved_domains",
+          "mdn_css",
+          "mdn_html",
+          "mdn_javascript",
+          "numpy_array",
+          "numpy_beginners",
+          "numpy_mean",
+          "pandas_dataframe",
+          "pandas_read_csv",
+          "pandas_table",
+          "playwright_locator",
+          "playwright_page",
+          "playwright_python_intro",
+          "python_asyncio",
+          "python_creator",
+          "python_tutorial"
+        ],
+        "success_rate": 0.9666666666666667,
+        "answer_grounding_rate": 0.9888888888888889,
+        "false_completion_rate": 0.03333333333333333,
+        "action_validity_rate": 0.7310344827586207,
+        "timeout_rate": 0.0,
+        "captcha_rate": 0.0,
+        "blocked_rate": 0.0,
+        "max_steps_rate": 0.0,
+        "p95_duration_seconds": 177.08186411857605,
+        "termination_reason_counts": {
+          "completed": 30
+        },
+        "benchmark_source_sha256": "36cb18374b261da649313be261e2dfb2ab5798ff91a05c35aa2563f66b0f49de"
+      }
+    ],
+    "qwen/qwen3.8-flash": [
+      {
+        "schema_version": 5,
+        "evidence_kind": "local-report-bound-v1",
+        "run_id": "0604ef84-0117-47ca-a3af-e248a96e0c39",
+        "created_at": "2026-09-01T13:46:49.863793+00:00",
+        "benchmark_date": "2026-09-01",
+        "suite": "open-web-general-v2",
+        "provider": "openrouter",
+        "model": "qwen/qwen3.8-flash",
+        "study_id": "browser-grounded",
+        "study_manifest_sha256": "e607cabfa48d300726aff89fe5780b59c32997878ca2a8274d59d893170b5675",
+        "manifest_sha256": "611ee2574de9cc725755a35e9a0c26ff368bd8843f9949b201f9a1239c21d6f8",
+        "benchmark_config_sha256": "73d9cf98e778376224c7a1f73313cda500ed38ca34a4c3da84d7841edf535328",
+        "task_ids_sha256": "92024793ab3539c100e6c9d0110ba7104a85df36770b8f08786e067af22c2007",
+        "agent_source_sha256": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+        "report_path": "executions/2026-09-01/qwen-qwen3-8-flash/browser-grounded/122549-779467-20260901t122549779467z-r01/results.json",
+        "report_sha256": "f29265911cfa15acd47019670dec021c891c1826449db6ed1d91bee145066136",
+        "task_count": 30,
+        "task_ids": [
+          "fastapi_features",
+          "fastapi_first_steps",
+          "fastapi_home",
+          "git_clone",
+          "git_overview",
+          "git_status",
+          "github_authentication",
+          "github_clone",
+          "github_git_difference",
+          "go_documentation",
+          "go_effective",
+          "go_getting_started",
+          "iana_about",
+          "iana_example_domains",
+          "iana_reserved_domains",
+          "mdn_css",
+          "mdn_html",
+          "mdn_javascript",
+          "numpy_array",
+          "numpy_beginners",
+          "numpy_mean",
+          "pandas_dataframe",
+          "pandas_read_csv",
+          "pandas_table",
+          "playwright_locator",
+          "playwright_page",
+          "playwright_python_intro",
+          "python_asyncio",
+          "python_creator",
+          "python_tutorial"
+        ],
+        "success_rate": 0.9666666666666667,
+        "answer_grounding_rate": 0.9777777777777777,
+        "false_completion_rate": 0.03333333333333333,
+        "action_validity_rate": 0.8596491228070176,
+        "timeout_rate": 0.0,
+        "captcha_rate": 0.0,
+        "blocked_rate": 0.0,
+        "max_steps_rate": 0.0,
+        "p95_duration_seconds": 185.2591691017151,
+        "termination_reason_counts": {
+          "completed": 30
+        },
+        "benchmark_source_sha256": "36cb18374b261da649313be261e2dfb2ab5798ff91a05c35aa2563f66b0f49de"
+      }
+    ]
+  },
+  "longitudinal_ready": false,
+  "longitudinal_readiness": {
+    "open-web-general-v2": {
+      "suite": "open-web-general-v2",
+      "ready": false,
+      "models": [
+        "openrouter::qwen/qwen3.8-flash",
+        "openrouter::z-ai/glm-5.3-flash"
+      ],
+      "model_count": 2,
+      "common_complete_dates": [
+        "2026-09-01"
+      ],
+      "incomplete_cells": [],
+      "duplicate_run_ids": [],
+      "reasons": [
+        "endpoint openrouter::qwen/qwen3.8-flash has 1 complete dates; requires 3",
+        "endpoint openrouter::z-ai/glm-5.3-flash has 1 complete dates; requires 3",
+        "model matrix has 1 common complete dates; requires 3"
+      ]
+    }
+  },
+  "evidence_notice": "This command records only the current UTC date. Re-run on future real dates; same-day repetitions never count as additional dates. Retained local reports are hash-bound, but local files do not independently attest wall-clock truth."
+}

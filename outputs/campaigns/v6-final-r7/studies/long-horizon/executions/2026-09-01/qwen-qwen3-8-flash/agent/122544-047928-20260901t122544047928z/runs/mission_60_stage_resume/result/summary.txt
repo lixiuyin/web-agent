@@ -1,0 +1,10 @@
+All 60 mission stages were completed (transient feedback recovered, e.g. the re-submitted recall steps), and the four durable cues retained from memory, reported in order of introduction:
+
+1. Stage 4 cue: CEDAR
+2. Stage 14 cue: ORBIT
+3. Stage 24 cue: LANTERN
+4. Stage 34 cue: DELTA
+
+Cue sequence: CEDAR → ORBIT → LANTERN → DELTA
+
+The final page (http://127.0.0.1:61329/mission) displays "Mission complete" with the note that the retained cue sequence must be reported from memory, confirming completion. The two recall checkpoints encountered along the way were answered from memory with LANTERN (stage 24 cue) and DELTA (stage 34 cue), and the run advanced through button#continue-60 to the completion page.

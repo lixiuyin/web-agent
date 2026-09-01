@@ -1,0 +1,617 @@
+{
+  "schema_version": 8,
+  "$schema": "https://raw.githubusercontent.com/lixiuyin/web-agent/main/src/webagent/schemas/run-trace-v8.schema.json",
+  "producer": {
+    "name": "lixiuyin-webagent",
+    "version": "0.2.0",
+    "source_sha256": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c"
+  },
+  "created_at": "2026-09-01T12:44:00.072647+00:00",
+  "run_id": "0d5d0ae0-217c-40e7-bfdb-6318dc0cda19",
+  "run_kind": "agent_e2e",
+  "task": "Starting from a blank page, use browser search to find MDN's official HTML page, describe HTML's role, and cite the exact URL.",
+  "status": "completed",
+  "success": true,
+  "steps_taken": 7,
+  "total_duration": 126.55266261100769,
+  "final_result": {
+    "summary": "Found MDN's official HTML page via browser search: \"HTML: HyperText Markup Language | MDN\" at https://developer.mozilla.org/en-US/docs/Web/HTML.\n\nHTML's role (per MDN): HTML (HyperText Markup Language) is the most basic building block of the Web. It defines the meaning and structure of web content, while other technologies are generally used to describe a web page's appearance/presentation (CSS) or functionality/behavior (JavaScript). \"Hypertext\" refers to links that connect web pages to one another, either within a single website or between websites.\n\nExact URL cited: https://developer.mozilla.org/en-US/docs/Web/HTML",
+    "attachments": [],
+    "success_probability": 0.95
+  },
+  "evaluation": {
+    "agent_source_sha256": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "mode": "search_engine_only",
+    "discovery_mode": "browser-grounded",
+    "direct_source_tools_enabled": false,
+    "high_risk_action_policy": "deny",
+    "stealth_mode": false,
+    "anti_shortcut_contract": "search_engine_only_v8",
+    "certificate_required": true,
+    "strict_eval_mode": true,
+    "search_engine_only": true,
+    "browser_profile_mode": "temporary",
+    "browser_channel": "bundled",
+    "persistent_pdf_cache": false
+  },
+  "planner_attempts": [
+    {
+      "step_number": 1,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T12:41:57.229610+00:00",
+      "duration_seconds": 3.0901341438293457,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 9265,
+      "completion_tokens": 27,
+      "total_tokens": 9292,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 2,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T12:42:06.789881+00:00",
+      "duration_seconds": 2.1847102642059326,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 11811,
+      "completion_tokens": 39,
+      "total_tokens": 11850,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 3,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T12:42:16.982376+00:00",
+      "duration_seconds": 8.328892946243286,
+      "success": false,
+      "error": "invalid tool call: search for the exact quoted URL 'https://developer.mozilla.org/en-US/docs/Web/HTML', not a broad topical rewrite",
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 12308,
+      "completion_tokens": 32,
+      "total_tokens": 12340,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 3,
+      "attempt_number": 2,
+      "timestamp": "2026-09-01T12:42:36.220671+00:00",
+      "duration_seconds": 19.238271951675415,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 12065,
+      "completion_tokens": 30,
+      "total_tokens": 12095,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 4,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T12:42:53.901087+00:00",
+      "duration_seconds": 11.241522073745728,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 12614,
+      "completion_tokens": 116,
+      "total_tokens": 12730,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 5,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T12:43:06.224832+00:00",
+      "duration_seconds": 7.476953029632568,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 12821,
+      "completion_tokens": 43,
+      "total_tokens": 12864,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 6,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T12:43:47.574085+00:00",
+      "duration_seconds": 9.131865978240967,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 12770,
+      "completion_tokens": 23,
+      "total_tokens": 12793,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 7,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T12:44:00.058046+00:00",
+      "duration_seconds": 10.179913997650146,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 12944,
+      "completion_tokens": 167,
+      "total_tokens": 13111,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    }
+  ],
+  "events": [
+    {
+      "type": "strategy_switch",
+      "timestamp": "2026-09-01T12:42:07.970996+00:00",
+      "step_number": 2,
+      "previous": "default",
+      "current": "search-discovery",
+      "reason": "execution policy denied goto"
+    },
+    {
+      "type": "replan",
+      "timestamp": "2026-09-01T12:42:07.971013+00:00",
+      "step_number": 2,
+      "reason": "execution policy denied goto",
+      "strategy": "search-discovery",
+      "exhausted": false
+    }
+  ],
+  "steps": [
+    {
+      "step_number": 1,
+      "run_id": "0d5d0ae0-217c-40e7-bfdb-6318dc0cda19",
+      "timestamp": "2026-09-01T12:42:03.924581+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "MDN HTML documentation official page developer.mozilla.org"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "MDN HTML documentation official page developer.mozilla.org",
+        "engine": "bing",
+        "url": "https://www.bing.com/search?q=MDN+HTML+documentation+official+page+developer.mozilla.org&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=137FF82BEEF347718640C170E8F45C21",
+        "title": "MDN HTML documentation official page developer.mozilla.org - Search",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "success"
+          }
+        ],
+        "search_market": "en-US",
+        "results": [
+          {
+            "title": "MDN Web Docs",
+            "url": "https://developer.mozilla.org/en-US/",
+            "date": ""
+          },
+          {
+            "title": "MDN Web Docs | MDN",
+            "url": "https://developer.mozilla.org/en-US/docs/MDN/index.html",
+            "date": "Feb 6, 2025"
+          },
+          {
+            "title": "MDN Web Docs - Wikipedia",
+            "url": "https://en.wikipedia.org/wiki/MDN_Web_Docs",
+            "date": ""
+          },
+          {
+            "title": "MDN Web Docs - GitHub",
+            "url": "https://github.com/mdn/",
+            "date": ""
+          },
+          {
+            "title": "GitHub - mdn/content: The official source for MDN Web Docs ...",
+            "url": "https://github.com/mdn/content",
+            "date": ""
+          },
+          {
+            "title": "HTML basics - Learn web development | MDN",
+            "url": "https://mdn2.netlify.app/en-us/docs/learn/getting_started_with_the_web/html_basics/",
+            "date": ""
+          },
+          {
+            "title": "MDN Web 文档 - MDN 文档",
+            "url": "https://mdn.org.cn/en-US/",
+            "date": ""
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"MDN HTML documentation official page developer.mozilla.org\", \"engine\": \"bing\", \"url\": \"https://www.bing.com/search?q=MDN+HTML+documentation+official+page+developer.mozilla.org&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=137FF82BEEF347718640C170E8F45C21\", \"title\": \"MDN HTML documentation official page developer.mozilla.org - Search\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"success\"}], \"search_market\": \"en-US\", \"results\": [{\"title\": \"MDN Web Docs\", \"url\": \"https://developer.mozilla.org/en-US/\", \"date\": \"\"}, {\"title\": \"MDN Web Docs | MDN\", \"url\": \"https://developer.mozilla.org/en-US/docs/MDN/index.html\", \"date\": \"Feb 6, 2025\"}, {\"title\": \"MDN Web Docs - Wikipedia\", \"url\": \"https://en.wikipedia.org/wiki/MDN_Web_Docs\", \"date\": \"\"}, {\"title\": \"MDN Web Docs - GitHub\", \"url\": \"https://github.com/mdn/\", \"date\": \"\"}, {\"title\": \"GitHub - mdn/content: The official source for MDN Web Docs ...\", \"url\": \"https://github.com/mdn/content\", \"date\": \"\"}, {\"title\": \"HTML basics - Learn web development | MDN\", \"url\": \"https://mdn2.netlify.app/en-us/docs/learn/getting_started_with_the_web/html_basics/\", \"date\": \"\"}, {\"title\": \"MDN Web 文档 - MDN 文档\", \"url\": \"https://mdn.org.cn/en-US/\", \"date\": \"\"}]}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser search is the required discovery action",
+        "policy_step": 1,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 1,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 21,
+        "observed_url_count": 21,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 10.40689992904663,
+      "tool_duration_seconds": 5.501701831817627
+    },
+    {
+      "step_number": 2,
+      "run_id": "0d5d0ae0-217c-40e7-bfdb-6318dc0cda19",
+      "timestamp": "2026-09-01T12:42:07.970906+00:00",
+      "tool": "goto",
+      "parameters": {
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTML",
+        "wait_until": "load"
+      },
+      "reasoning": "",
+      "success": false,
+      "error": "Policy denied tool call: target URL was not observed in prior browser evidence; recover with a search for the exact quoted URL 'https://developer.mozilla.org/en-US/docs/Web/HTML', or navigate through visible official links instead of guessing the path",
+      "result": {},
+      "planner_visible_result": "{}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "deny",
+        "reason": "target URL was not observed in prior browser evidence; recover with a search for the exact quoted URL 'https://developer.mozilla.org/en-US/docs/Web/HTML', or navigate through visible official links instead of guessing the path",
+        "policy_step": 2,
+        "target": "https://developer.mozilla.org/en-US/docs/Web/HTML",
+        "provenance": {}
+      },
+      "duration_seconds": 4.046206951141357,
+      "tool_duration_seconds": 0.00013184547424316406
+    },
+    {
+      "step_number": 3,
+      "run_id": "0d5d0ae0-217c-40e7-bfdb-6318dc0cda19",
+      "timestamp": "2026-09-01T12:42:41.986978+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "\"https://developer.mozilla.org/en-US/docs/Web/HTML\""
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "\"https://developer.mozilla.org/en-US/docs/Web/HTML\"",
+        "engine": "yahoo_japan",
+        "url": "https://search.yahoo.co.jp/search?p=%22https%3A%2F%2Fdeveloper.mozilla.org%2Fen-US%2Fdocs%2FWeb%2FHTML%22",
+        "title": "「\"https://developer.mozilla.org/en-US/docs/Web/HTML\"」の検索結果 - Yahoo!検索",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "failed",
+            "failure_category": "quality_failure",
+            "error": "bing returned irrelevant results: results ignored the quoted title constraint"
+          },
+          {
+            "engine": "yahoo_japan",
+            "outcome": "success"
+          }
+        ],
+        "results": [
+          {
+            "title": "HTML: HyperText Markup Language - MDN Web Docs",
+            "url": "https://developer.mozilla.org/en-US/docs/Web/HTML",
+            "date": ""
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"\\\"https://developer.mozilla.org/en-US/docs/Web/HTML\\\"\", \"engine\": \"yahoo_japan\", \"url\": \"https://search.yahoo.co.jp/search?p=%22https%3A%2F%2Fdeveloper.mozilla.org%2Fen-US%2Fdocs%2FWeb%2FHTML%22\", \"title\": \"「\\\"https://developer.mozilla.org/en-US/docs/Web/HTML\\\"」の検索結果 - Yahoo!検索\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"failed\", \"failure_category\": \"quality_failure\", \"error\": \"bing returned irrelevant results: results ignored the quoted title constraint\"}, {\"engine\": \"yahoo_japan\", \"outcome\": \"success\"}], \"results\": [{\"title\": \"HTML: HyperText Markup Language - MDN Web Docs\", \"url\": \"https://developer.mozilla.org/en-US/docs/Web/HTML\", \"date\": \"\"}]}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser search is the required discovery action",
+        "policy_step": 3,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 2,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 10,
+        "observed_url_count": 31,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 34.01590871810913,
+      "tool_duration_seconds": 4.2737767696380615
+    },
+    {
+      "step_number": 4,
+      "run_id": "0d5d0ae0-217c-40e7-bfdb-6318dc0cda19",
+      "timestamp": "2026-09-01T12:42:57.779874+00:00",
+      "tool": "click",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "div#contents__wrap > div.Contents__inner.Contents__inner--main:nth-of-type(1) > div.Contents__innerGroupBody:nth-of-type(2) > div.sw-CardBase > div.sw-Card.Algo > section > div.sw-Card__section.sw-Card__section--header:nth-of-type(1) > div.sw-Card__headerSpace > div.sw-Card__title > a.sw-Card__titleInner"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "selector": {
+          "type": "css",
+          "value": "div#contents__wrap > div.Contents__inner.Contents__inner--main:nth-of-type(1) > div.Contents__innerGroupBody:nth-of-type(2) > div.sw-CardBase > div.sw-Card.Algo > section > div.sw-Card__section.sw-Card__section--header:nth-of-type(1) > div.sw-Card__headerSpace > div.sw-Card__title > a.sw-Card__titleInner"
+        }
+      },
+      "planner_visible_result": "{\"selector\": {\"type\": \"css\", \"value\": \"div#contents__wrap > div.Contents__inner.Contents__inner--main:nth-of-type(1) > div.Contents__innerGroupBody:nth-of-type(2) > div.sw-CardBase > div.sw-Card.Algo > section > div.sw-Card__section.sw-Card__section--header:nth-of-type(1) > div.sw-Card__headerSpace > div.sw-Card__title > a.sw-Card__titleInner\"}}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page",
+        "policy_step": 4,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 2,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 2,
+        "observed_url_count": 33,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 15.792796850204468,
+      "tool_duration_seconds": 0.5585510730743408
+    },
+    {
+      "step_number": 5,
+      "run_id": "0d5d0ae0-217c-40e7-bfdb-6318dc0cda19",
+      "timestamp": "2026-09-01T12:43:37.584827+00:00",
+      "tool": "extract_text",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "article#content"
+        }
+      },
+      "reasoning": "",
+      "success": false,
+      "error": "Page.text_content: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"article#content\")\n",
+      "result": {},
+      "planner_visible_result": "{}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page",
+        "policy_step": 5,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 2,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 33,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 39.804850816726685,
+      "tool_duration_seconds": 30.003684043884277
+    },
+    {
+      "step_number": 6,
+      "run_id": "0d5d0ae0-217c-40e7-bfdb-6318dc0cda19",
+      "timestamp": "2026-09-01T12:43:48.989971+00:00",
+      "tool": "extract_text",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "main"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "text": "\n          \n            \n            \n            \n            HTML: HyperText Markup Language\n             \n    \n    HTML (HyperText Markup Language) is the most basic building block of the Web. It defines the meaning and structure of web content. Other technologies besides HTML are generally used to describe a web page's appearance/presentation (CSS) or functionality/behavior (JavaScript).\n\"Hypertext\" refers to links that connect web pages to one another, either within a single website or between websites. Links are a fundamental aspect of the Web. By uploading content to the Internet and linking it to pages created by other people, you become an active participant in the World Wide Web.\nHTML uses \"markup\" to annotate text, images, and other content for display in a Web browser. HTML markup includes special \"elements\" such as <head>, <title>, <body>, <header>, <footer>, <article>, <section>, <p>, <div>, <span>, <img>, <aside>, <audio>, <canvas>, <datalist>, <details>, <embed>, <nav>, <search>, <output>, <progress>, <video>, <ul>, <ol>, <li> and many others.\nAn HTML element is set off from other text in a document by \"tags\", which consist of the element name surrounded by < and >. The name of an element inside a tag is case-insensitive. That is, it can be written in uppercase, lowercase, or a mixture. For example, the <title> tag can be written as <Title>, <TITLE>, or in any other way. However, the convention and recommended practice is to write tags in lowercase.\nThe articles below can help you learn more about HTML.\n  \n          \n          \n            \n      In this article\n      \n        \n              Beginner's tutorials\n            \n              Guides\n            \n              How to\n            \n              Reference\n            \n              Related topics\n            \n      \n    \n            \n          \n          \n            \n    Beginner's tutorials\n    Our learn web development core modules contain modern, up-to-date tutorials covering HTML fundamentals.\n\nYour first website: Creating the content\n\nThis article provides a brief tour of what HTML is and how to use it, aimed at people who are completely new to web development.\n\nStructuring content with HTML\n\nThis module covers the basics of the HTML language, before looking at key areas such as document structure, links, lists, images, forms, and more.\n\nHTML forms\n\nForms are a very important part of the Web — these provide much of the functionality you need for interacting with websites, e.g., registering and logging in, sending feedback, buying products, and more. This module gets you started with creating the client-side/front-end parts of forms.\n\n\n  \n    Guides\n    The HTML guides help you build with HTML on the web. They cover topics such as forms, CORS, content preloading, and responsive images.\n\nHTML cheatsheet for syntax and common tasks\n\nQuick reference for common HTML syntax and tasks.\n\nUsing HTML comments <!-- … -->\n\nHTML comments are used to add explanatory notes to the markup or to prevent the browser from interpreting specific parts of the document.\n\nUsing HTML form validation and the Constraint Validation API\n\nHTML5 introduced constraint validation to ease form validation on the client side. Basic constraints can be checked without JavaScript by setting attributes on form elements.\n\nContent categories\n\nHTML is comprised of several kinds of content, each of which is allowed to be used in certain contexts and is disallowed in others. Similarly, each context has a set of other content categories it can contain and elements that can or can't be used in them. This is a guide to these categories.\n\nUsing date and time formats in HTML\n\nCertain HTML elements use date and/or time values. This guide describes the formats of the strings that specify these values.\n\nUsing microdata in HTML\n\nMicrodata is used to nest metadata within existing content on web pages. Search engines and web crawlers can extract and process microdata to provide a richer browsing experience.\n\nUsing microformats in HTML\n\nMicroformats are standards used to embed semantics and structured data in HTML for use by social web applications, search engines, aggregators, and other tools.\n\nUnderstanding quirks and standards modes\n\nHistorical information on quirks mode and standards mode.\n\nUsing responsive images in HTML\n\nLearn about responsive images that work well on devices with widely differing screen sizes, resolutions, and other features, improving performance across different devices.\n\nMedia types and formats on the web\n\nThe <audio> and <video> elements allow you to play audio and video media natively within your content without the need for external software support.\n\n\n  \n    How to\n    \nDefine terms with HTML\n\nHTML provides several ways to convey description semantics, whether inline or as structured glossaries. This article shows how to properly mark up keywords when defining them.\n\nUse data attributes\n\nHTML5 is designed with extensibility in mind for data that should...[truncated]"
+      },
+      "planner_visible_result": "{\"text\": \"\\n          \\n            \\n            \\n            \\n            HTML: HyperText Markup Language\\n             \\n    \\n    HTML (HyperText Markup Language) is the most basic building block of the Web. It defines the meaning and structure of web content. Other technologies besides HTML are generally used to describe a web page's appearance/presentation (CSS) or functionality/behavior (JavaScript).\\n\\\"Hypertext\\\" refers to links that connect web pages to one another, either within a s...",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page",
+        "policy_step": 6,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 2,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 33,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 11.405065059661865,
+      "tool_duration_seconds": 0.010038137435913086
+    },
+    {
+      "step_number": 7,
+      "run_id": "0d5d0ae0-217c-40e7-bfdb-6318dc0cda19",
+      "timestamp": "2026-09-01T12:44:00.065999+00:00",
+      "tool": "done",
+      "parameters": {
+        "summary": "Found MDN's official HTML page via browser search: \"HTML: HyperText Markup Language | MDN\" at https://developer.mozilla.org/en-US/docs/Web/HTML.\n\nHTML's role (per MDN): HTML (HyperText Markup Language) is the most basic building block of the Web. It defines the meaning and structure of web content, while other technologies are generally used to describe a web page's appearance/presentation (CSS) or functionality/behavior (JavaScript). \"Hypertext\" refers to links that connect web pages to one another, either within a single website or between websites.\n\nExact URL cited: https://developer.mozilla.org/en-US/docs/Web/HTML",
+        "success_probability": 0.95
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "summary": "Found MDN's official HTML page via browser search: \"HTML: HyperText Markup Language | MDN\" at https://developer.mozilla.org/en-US/docs/Web/HTML.\n\nHTML's role (per MDN): HTML (HyperText Markup Language) is the most basic building block of the Web. It defines the meaning and structure of web content, while other technologies are generally used to describe a web page's appearance/presentation (CSS) or functionality/behavior (JavaScript). \"Hypertext\" refers to links that connect web pages to one another, either within a single website or between websites.\n\nExact URL cited: https://developer.mozilla.org/en-US/docs/Web/HTML",
+        "attachments": [],
+        "success_probability": 0.95
+      },
+      "planner_visible_result": "{\"summary\": \"Found MDN's official HTML page via browser search: \\\"HTML: HyperText Markup Language | MDN\\\" at https://developer.mozilla.org/en-US/docs/Web/HTML.\\n\\nHTML's role (per MDN): HTML (HyperText Markup Language) is the most basic building block of the Web. It defines the meaning and structure of web content, while other technologies are generally used to describe a web page's appearance/presentation (CSS) or functionality/behavior (JavaScript). \\\"Hypertext\\\" refers to links that connect w...",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "completion is grounded in a visited evidence page",
+        "policy_step": 7,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 2,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 33,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 11.075954914093018,
+      "tool_duration_seconds": 0.0008780956268310547
+    }
+  ],
+  "resume_count": 0,
+  "checkpoint_schema_version": null,
+  "resumed_from_checkpoint": false
+}

@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/lixiuyin/web-agent/main/src/webagent/schemas/run-manifest-v1.schema.json",
+  "schema_version": 1,
+  "format": "webagent-run",
+  "layout_version": 1,
+  "run_id": "a7f39db4-479c-44e9-a996-a41a312e111b",
+  "created_at": "2026-09-01T12:45:52.082539+00:00",
+  "task_sha256": "a64d41a3f8b453c3a3b001064e5966c719875b623bc60d097b2e8c4b3423ec18",
+  "model": "z-ai/glm-5.3-flash"
+}

@@ -1,0 +1,999 @@
+{
+  "schema_version": 8,
+  "$schema": "https://raw.githubusercontent.com/lixiuyin/web-agent/main/src/webagent/schemas/run-trace-v8.schema.json",
+  "producer": {
+    "name": "lixiuyin-webagent",
+    "version": "0.2.0",
+    "source_sha256": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c"
+  },
+  "created_at": "2026-09-01T13:16:15.884552+00:00",
+  "run_id": "ca51ed2e-1034-4aea-a118-f61e37c2ba72",
+  "run_kind": "agent_e2e",
+  "task": "Starting from a blank page, use browser search to find the official Git manual, report the Git command synopsis, and cite the exact URL.",
+  "status": "completed",
+  "success": true,
+  "steps_taken": 11,
+  "total_duration": 121.66762614250183,
+  "final_result": {
+    "summary": "**Official Git manual found via browser search**\n\nRoute taken: Bing searches for the official Git reference/manual surfaced git-scm.com as the top (first-party) result; from https://git-scm.com/ I used the site's \"Documentation\" nav → https://git-scm.com/docs → the first entry in the reference menu, which is the top-level `git(1)` manual page.\n\n**Primary source URL (exact):** https://git-scm.com/docs/git\n(Manual index: https://git-scm.com/docs ; project home: https://git-scm.com/)\n\n**NAME:** git — the stupid content tracker\n\n**SYNOPSIS (as reported on the official git(1) manual page):**\n\n```\ngit [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]\n    [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]\n    [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--no-lazy-fetch]\n    [--no-optional-locks] [--no-advice] [--bare] [--git-dir=<path>]\n    [--work-tree=<path>] [--namespace=<name>] [--config-env=<name>=<envvar>]\n    <command> [<args>]\n```\n\nReading of the synopsis: these are the options recognized *before* the subcommand (`<command> [<args>]`) — version/help (`-v`/`--version`, `-h`/`--help`), working-directory and config overrides (`-C <path>`, `-c <name>=<value>`, `--config-env=<name>=<envvar>`), path reporters (`--exec-path[=<path>]`, `--html-path`, `--man-path`, `--info-path`), pager control (`-p`/`--paginate`, `-P`/`--no-pager`), and repository-mode flags (`--no-replace-objects`, `--no-lazy-fetch`, `--no-optional-locks`, `--no-advice`, `--bare`, `--git-dir=<path>`, `--work-tree=<path>`, `--namespace=<name>`).\n\nNote: equivalent non-first-party copies of this man page also appeared in search results (e.g. https://man7.org/linux/man-pages/man1/git.1.html, https://www.kernel.org/pub/software/scm/git/docs/git.html, https://linux.die.net/man/1/git), but the cited URL above is the official Git project site (git-scm.com).",
+    "attachments": [],
+    "success_probability": 0.96
+  },
+  "evaluation": {
+    "agent_source_sha256": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "mode": "search_engine_only",
+    "discovery_mode": "browser-grounded",
+    "direct_source_tools_enabled": false,
+    "high_risk_action_policy": "deny",
+    "stealth_mode": false,
+    "anti_shortcut_contract": "search_engine_only_v8",
+    "certificate_required": true,
+    "strict_eval_mode": true,
+    "search_engine_only": true,
+    "browser_profile_mode": "temporary",
+    "browser_channel": "bundled",
+    "persistent_pdf_cache": false
+  },
+  "planner_attempts": [
+    {
+      "step_number": 1,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:14:17.578543+00:00",
+      "duration_seconds": 2.7652978897094727,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 10107,
+      "completion_tokens": 118,
+      "total_tokens": 10225,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 2,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:14:31.301988+00:00",
+      "duration_seconds": 3.913015127182007,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 13132,
+      "completion_tokens": 217,
+      "total_tokens": 13349,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 3,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:14:43.602036+00:00",
+      "duration_seconds": 7.596712112426758,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 90,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 13722,
+      "completion_tokens": 573,
+      "total_tokens": 14295,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 4,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:14:56.488141+00:00",
+      "duration_seconds": 10.445947885513306,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 13491,
+      "completion_tokens": 107,
+      "total_tokens": 13598,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 5,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:15:03.256821+00:00",
+      "duration_seconds": 4.874307870864868,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 13562,
+      "completion_tokens": 343,
+      "total_tokens": 13905,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 6,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:15:12.672102+00:00",
+      "duration_seconds": 7.51641321182251,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 13961,
+      "completion_tokens": 207,
+      "total_tokens": 14168,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 7,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:15:20.019641+00:00",
+      "duration_seconds": 5.479010105133057,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 13289,
+      "completion_tokens": 251,
+      "total_tokens": 13540,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 8,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:15:26.966821+00:00",
+      "duration_seconds": 3.840494155883789,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 14180,
+      "completion_tokens": 162,
+      "total_tokens": 14342,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 9,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:15:40.789366+00:00",
+      "duration_seconds": 10.017580032348633,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 14499,
+      "completion_tokens": 397,
+      "total_tokens": 14896,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 10,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:16:01.017052+00:00",
+      "duration_seconds": 17.163498401641846,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 14893,
+      "completion_tokens": 589,
+      "total_tokens": 15482,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 11,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:16:15.875026+00:00",
+      "duration_seconds": 9.832179069519043,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 15417,
+      "completion_tokens": 879,
+      "total_tokens": 16296,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    }
+  ],
+  "events": [],
+  "steps": [
+    {
+      "step_number": 1,
+      "run_id": "ca51ed2e-1034-4aea-a118-f61e37c2ba72",
+      "timestamp": "2026-09-01T13:14:26.664385+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "Git official manual git(1) man page synopsis",
+        "engine": "bing"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "Git official manual git(1) man page synopsis",
+        "engine": "yahoo_japan",
+        "url": "https://search.yahoo.co.jp/search?p=Git+official+manual+git%281%29+man+page+synopsis",
+        "title": "「Git official manual git(1) man page synopsis」の検索結果 - Yahoo!検索",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "failed",
+            "failure_category": "quality_failure",
+            "error": "bing returned irrelevant results: results are unrelated to the distinctive query terms"
+          },
+          {
+            "engine": "yahoo_japan",
+            "outcome": "success"
+          }
+        ],
+        "results": [
+          {
+            "title": "git(1) - Linux manual page - man7.org",
+            "url": "https://man7.org/linux/man-pages/man1/git.1.html",
+            "date": ""
+          },
+          {
+            "title": "git(1) Manual Page - The Linux Kernel Archives",
+            "url": "https://www.kernel.org/pub/software/scm/git/docs/git.html",
+            "date": ""
+          },
+          {
+            "title": "Is the SYNOPSIS in the manpage of a `git` command ... - Reddit",
+            "url": "https://www.reddit.com/r/git/comments/1ozipxe/is_the_synopsis_in_the_manpage_of_a_git_command/",
+            "date": ""
+          },
+          {
+            "title": "user-manual Documentation - Git",
+            "url": "https://git-scm.com/docs/user-manual",
+            "date": ""
+          },
+          {
+            "title": "How do I access Git User's Manual[1] using the terminal?",
+            "url": "https://stackoverflow.com/questions/53065234/how-do-i-access-git-user-s-manual1-using-the-terminal",
+            "date": ""
+          },
+          {
+            "title": "git(1): stupid content tracker - Linux man page",
+            "url": "https://linux.die.net/man/1/git",
+            "date": ""
+          },
+          {
+            "title": "man pages for git subcommands (beginner - YouTube",
+            "url": "https://www.youtube.com/watch?v=1CYAFPTn_oo",
+            "date": ""
+          },
+          {
+            "title": "git-help",
+            "url": "https://man.he.net/man1/git-help",
+            "date": ""
+          },
+          {
+            "title": "What do git manual sections mean? - Stack Overflow",
+            "url": "https://stackoverflow.com/questions/22457443/what-do-git-manual-sections-mean",
+            "date": ""
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"Git official manual git(1) man page synopsis\", \"engine\": \"yahoo_japan\", \"url\": \"https://search.yahoo.co.jp/search?p=Git+official+manual+git%281%29+man+page+synopsis\", \"title\": \"「Git official manual git(1) man page synopsis」の検索結果 - Yahoo!検索\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"failed\", \"failure_category\": \"quality_failure\", \"error\": \"bing returned irrelevant results: results are unrelated to the distinctive query terms\"}, {\"engine\": \"yahoo_japan\", \"outcome\": \"success\"}], \"results\": [{\"title\": \"git(1) - Linux manual page - man7.org\", \"url\": \"https://man7.org/linux/man-pages/man1/git.1.html\", \"date\": \"\"}, {\"title\": \"git(1) Manual Page - The Linux Kernel Archives\", \"url\": \"https://www.kernel.org/pub/software/scm/git/docs/git.html\", \"date\": \"\"}, {\"title\": \"Is the SYNOPSIS in the manpage of a `git` command ... - Reddit\", \"url\": \"https://www.reddit.com/r/git/comments/1ozipxe/is_the_synopsis_in_the_manpage_of_a_git_command/\", \"date\": \"\"}, {\"title\": \"user-manual Documentation - Git\", \"url\": \"https://git-scm.com/docs/user-manual\", \"date\": \"\"}, {\"title\": \"How do I access Git User's Manual[1] using the terminal?\", \"url\": \"https://stackoverflow.com/questions/53065234/how-do-i-access-git-user-s-manual1-using-the-terminal\", \"date\": \"\"}, {\"title\": \"git(1): stupid content tracker - Linux man page\", \"url\": \"https://linux.die.net/man/1/git\", \"date\": \"\"}, {\"title\": \"man pages for git subcommands (beginner - YouTube\", \"url\": \"https://www.youtube.com/watch?v=1CYAFPTn_oo\", \"date\": \"\"}, {\"title\": \"git-help\", \"url\": \"https://man.he.net/man1/git-help\", \"date\": \"\"}, {\"title\": \"What do git manual sections mean? - Stack Overflow\", \"url\": \"https://stackoverflow.com/questions/22457443/what-do-git-manual-sections-mean\", \"date\": \"\"}]}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser search is the required discovery action",
+        "policy_step": 1,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 1,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 27,
+        "observed_url_count": 27,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 12.450006008148193,
+      "tool_duration_seconds": 7.878901958465576
+    },
+    {
+      "step_number": 2,
+      "run_id": "ca51ed2e-1034-4aea-a118-f61e37c2ba72",
+      "timestamp": "2026-09-01T13:14:35.287119+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "git-scm.com docs git manual page SYNOPSIS stupid content tracker",
+        "engine": "duckduckgo"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "git-scm.com docs git manual page SYNOPSIS stupid content tracker",
+        "engine": "bing",
+        "url": "https://www.bing.com/search?q=git-scm.com+docs+git+manual+page+SYNOPSIS+stupid+content+tracker&mkt=en-US&cc=us&setlang=en-US",
+        "title": "git-scm.com docs git manual page SYNOPSIS stupid content tracker - Search",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "success"
+          }
+        ],
+        "search_market": "en-US",
+        "results": [
+          {
+            "title": "Git",
+            "url": "https://git-scm.com/",
+            "date": ""
+          },
+          {
+            "title": "Git - Install",
+            "url": "https://git-scm.com/install/",
+            "date": ""
+          },
+          {
+            "title": "Git · GitHub",
+            "url": "https://github.com/git-guides",
+            "date": ""
+          },
+          {
+            "title": "GitHub · Change is constant. GitHub keeps you ahead.",
+            "url": "https://github.com/",
+            "date": ""
+          },
+          {
+            "title": "Git for Windows",
+            "url": "https://gitforwindows.org/",
+            "date": ""
+          },
+          {
+            "title": "Git Tutorial - W3Schools",
+            "url": "https://www.w3schools.com/git/default.asp",
+            "date": ""
+          },
+          {
+            "title": "Git - Wikipedia",
+            "url": "https://en.wikipedia.org/wiki/Git",
+            "date": ""
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"git-scm.com docs git manual page SYNOPSIS stupid content tracker\", \"engine\": \"bing\", \"url\": \"https://www.bing.com/search?q=git-scm.com+docs+git+manual+page+SYNOPSIS+stupid+content+tracker&mkt=en-US&cc=us&setlang=en-US\", \"title\": \"git-scm.com docs git manual page SYNOPSIS stupid content tracker - Search\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"success\"}], \"search_market\": \"en-US\", \"results\": [{\"title\": \"Git\", \"url\": \"https://git-scm.com/\", \"date\": \"\"}, {\"title\": \"Git - Install\", \"url\": \"https://git-scm.com/install/\", \"date\": \"\"}, {\"title\": \"Git · GitHub\", \"url\": \"https://github.com/git-guides\", \"date\": \"\"}, {\"title\": \"GitHub · Change is constant. GitHub keeps you ahead.\", \"url\": \"https://github.com/\", \"date\": \"\"}, {\"title\": \"Git for Windows\", \"url\": \"https://gitforwindows.org/\", \"date\": \"\"}, {\"title\": \"Git Tutorial - W3Schools\", \"url\": \"https://www.w3schools.com/git/default.asp\", \"date\": \"\"}, {\"title\": \"Git - Wikipedia\", \"url\": \"https://en.wikipedia.org/wiki/Git\", \"date\": \"\"}]}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser search is the required discovery action",
+        "policy_step": 2,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 2,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": true,
+        "official_scope_result_count": 7,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 20,
+        "observed_url_count": 47,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 8.622367143630981,
+      "tool_duration_seconds": 0.7128689289093018
+    },
+    {
+      "step_number": 3,
+      "run_id": "ca51ed2e-1034-4aea-a118-f61e37c2ba72",
+      "timestamp": "2026-09-01T13:14:45.337765+00:00",
+      "tool": "click",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "ol#b_results > li.b_algo:nth-of-type(1) > h2 > a"
+        }
+      },
+      "reasoning": "I'll navigate to the official Git site from the search results, then find the manual page.",
+      "success": true,
+      "error": null,
+      "result": {
+        "selector": {
+          "type": "css",
+          "value": "ol#b_results > li.b_algo:nth-of-type(1) > h2 > a"
+        }
+      },
+      "planner_visible_result": "{\"selector\": {\"type\": \"css\", \"value\": \"ol#b_results > li.b_algo:nth-of-type(1) > h2 > a\"}}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page",
+        "policy_step": 3,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 2,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": true,
+        "official_scope_result_count": 7,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 2,
+        "observed_url_count": 50,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 10.050535202026367,
+      "tool_duration_seconds": 0.561744213104248
+    },
+    {
+      "step_number": 4,
+      "run_id": "ca51ed2e-1034-4aea-a118-f61e37c2ba72",
+      "timestamp": "2026-09-01T13:14:57.695132+00:00",
+      "tool": "get_url",
+      "parameters": {},
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "url": "https://www.bing.com/search?q=git-scm.com+docs+git+manual+page+SYNOPSIS+stupid+content+tracker&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=01A9917DC2A54CBBA0F84BA9712A2B06"
+      },
+      "planner_visible_result": "{\"url\": \"https://www.bing.com/search?q=git-scm.com+docs+git+manual+page+SYNOPSIS+stupid+content+tracker&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=01A9917DC2A54CBBA0F84BA9712A2B06\"}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page",
+        "policy_step": 4,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 2,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": true,
+        "official_scope_result_count": 7,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 50,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 12.357259035110474,
+      "tool_duration_seconds": 0.00047707557678222656
+    },
+    {
+      "step_number": 5,
+      "run_id": "ca51ed2e-1034-4aea-a118-f61e37c2ba72",
+      "timestamp": "2026-09-01T13:15:04.463387+00:00",
+      "tool": "list_tabs",
+      "parameters": {},
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "tabs": [
+          {
+            "index": 0,
+            "url": "https://www.bing.com/search?q=git-scm.com+docs+git+manual+page+SYNOPSIS+stupid+content+tracker&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=01A9917DC2A54CBBA0F84BA9712A2B06",
+            "title": "git-scm.com docs git manual page SYNOPSIS stupid content tracker - Search",
+            "active": true
+          },
+          {
+            "index": 1,
+            "url": "https://git-scm.com/",
+            "title": "Git",
+            "active": false
+          }
+        ],
+        "count": 2
+      },
+      "planner_visible_result": "{\"tabs\": [{\"index\": 0, \"url\": \"https://www.bing.com/search?q=git-scm.com+docs+git+manual+page+SYNOPSIS+stupid+content+tracker&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=01A9917DC2A54CBBA0F84BA9712A2B06\", \"title\": \"git-scm.com docs git manual page SYNOPSIS stupid content tracker - Search\", \"active\": true}, {\"index\": 1, \"url\": \"https://git-scm.com/\", \"title\": \"Git\", \"active\": false}], \"count\": 2}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page",
+        "policy_step": 5,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 2,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": true,
+        "official_scope_result_count": 7,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 50,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 6.768151044845581,
+      "tool_duration_seconds": 0.0066411495208740234
+    },
+    {
+      "step_number": 6,
+      "run_id": "ca51ed2e-1034-4aea-a118-f61e37c2ba72",
+      "timestamp": "2026-09-01T13:15:13.869589+00:00",
+      "tool": "switch_tab",
+      "parameters": {
+        "index": 1
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "index": 1,
+        "url": "https://git-scm.com/",
+        "title": "Git"
+      },
+      "planner_visible_result": "{\"index\": 1, \"url\": \"https://git-scm.com/\", \"title\": \"Git\"}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page",
+        "policy_step": 6,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 2,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": true,
+        "official_scope_result_count": 7,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 1,
+        "observed_url_count": 51,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 9.406115055084229,
+      "tool_duration_seconds": 0.008522987365722656
+    },
+    {
+      "step_number": 7,
+      "run_id": "ca51ed2e-1034-4aea-a118-f61e37c2ba72",
+      "timestamp": "2026-09-01T13:15:22.340840+00:00",
+      "tool": "click",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "nav#front-nav > ul > li:nth-of-type(4) > a"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "selector": {
+          "type": "css",
+          "value": "nav#front-nav > ul > li:nth-of-type(4) > a"
+        }
+      },
+      "planner_visible_result": "{\"selector\": {\"type\": \"css\", \"value\": \"nav#front-nav > ul > li:nth-of-type(4) > a\"}}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page",
+        "policy_step": 7,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 2,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": true,
+        "official_scope_result_count": 7,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 3,
+        "observed_url_count": 54,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 8.471179008483887,
+      "tool_duration_seconds": 1.0408399105072021
+    },
+    {
+      "step_number": 8,
+      "run_id": "ca51ed2e-1034-4aea-a118-f61e37c2ba72",
+      "timestamp": "2026-09-01T13:15:29.527642+00:00",
+      "tool": "click",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "div#main > div.reference-menu:nth-of-type(3) > div.two-column > div.column-left:nth-of-type(1) > ul.unstyled:nth-of-type(1) > li:nth-of-type(1) > a"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "selector": {
+          "type": "css",
+          "value": "div#main > div.reference-menu:nth-of-type(3) > div.two-column > div.column-left:nth-of-type(1) > ul.unstyled:nth-of-type(1) > li:nth-of-type(1) > a"
+        }
+      },
+      "planner_visible_result": "{\"selector\": {\"type\": \"css\", \"value\": \"div#main > div.reference-menu:nth-of-type(3) > div.two-column > div.column-left:nth-of-type(1) > ul.unstyled:nth-of-type(1) > li:nth-of-type(1) > a\"}}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page",
+        "policy_step": 8,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 2,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": true,
+        "official_scope_result_count": 7,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 3,
+        "observed_url_count": 57,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 7.186697959899902,
+      "tool_duration_seconds": 0.8122527599334717
+    },
+    {
+      "step_number": 9,
+      "run_id": "ca51ed2e-1034-4aea-a118-f61e37c2ba72",
+      "timestamp": "2026-09-01T13:15:42.537652+00:00",
+      "tool": "extract_text",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "div#main"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "text": "\n\t    \n            \nNAME\n\n\ngit - the stupid content tracker\n\n\n\n\nSYNOPSIS\n\n\ngit [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]\n    [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]\n    [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--no-lazy-fetch]\n    [--no-optional-locks] [--no-advice] [--bare] [--git-dir=<path>]\n    [--work-tree=<path>] [--namespace=<name>] [--config-env=<name>=<envvar>]\n    <command> [<args>]\n\n\n\n\nDESCRIPTION\n\n\nGit is a fast, scalable, distributed revision control system with an\nunusually rich command set that provides both high-level operations\nand full access to internals.\n\n\nSee gittutorial[7] to get started, then see\ngiteveryday[7] for a useful minimum set of\ncommands.  The Git User’s Manual has a more\nin-depth introduction.\n\n\nAfter you mastered the basic concepts, you can come back to this\npage to learn what commands Git offers.  You can learn more about\nindividual Git commands with \"git help command\".  gitcli[7]\nmanual page gives you an overview of the command-line command syntax.\n\n\nA formatted and hyperlinked copy of the latest Git documentation\ncan be viewed at https://git.github.io/htmldocs/git.html\nor https://git-scm.com/docs.\n\n\n\n\nOPTIONS\n\n\n\n-v \n--version \n\nPrints the Git suite version that the git program came from.\n\nThis option is internally converted to git version ... and accepts\nthe same options as the git-version[1] command. If --help is\nalso given, it takes precedence over --version.\n\n\n-h \n--help \n\nPrints the synopsis and a list of the most commonly used\ncommands. If the option --all or -a is given then all\navailable commands are printed. If a Git command is named this\noption will bring up the manual page for that command.\n\nOther options are available to control how the manual page is\ndisplayed. See git-help[1] for more information,\nbecause git --help ... is converted internally into git\n\nhelp ....\n\n\n-C <path> \n\nRun as if git was started in <path> instead of the current working\ndirectory.  When multiple -C options are given, each subsequent\nnon-absolute -C <path> is interpreted relative to the preceding -C\n\n<path>.  If <path> is present but empty, e.g. -C \"\", then the\ncurrent working directory is left unchanged.\n\nThis option affects options that expect path name like --git-dir and\n--work-tree in that their interpretations of the path names would be\nmade relative to the working directory caused by the -C option. For\nexample the following invocations are equivalent:\n\n\n\ngit --git-dir=a.git --work-tree=b -C c status\ngit --git-dir=c/a.git --work-tree=c/b status\n\n\n\n-c <name>=<value> \n\nPass a configuration parameter to the command. The value\ngiven will override values from configuration files.\nThe <name> is expected in the same format as listed by\ngit config (subkeys separated by dots).\n\nNote that omitting the = in git -c foo.bar ... is allowed and sets\nfoo.bar to the boolean true value (just like [foo]bar would in a\nconfig file). Including the equals but with an empty value (like git -c\n\nfoo.bar= ...) sets foo.bar to the empty string which git config\n\n--type=bool will convert to false.\n\n\n--config-env=<name>=<envvar> \n\nLike -c <name>=<value>, give configuration variable\n<name> a value, where <envvar> is the name of an\nenvironment variable from which to retrieve the value. Unlike\n-c there is no shortcut for directly setting the value to an\nempty string, instead the environment variable itself must be\nset to the empty string.  It is an error if the <envvar> does not exist\nin the environment. <envvar> may not contain an equals sign\nto avoid ambiguity with <name> containing one.\n\nThis is useful for cases where you want to pass transitory\nconfiguration options to git, but are doing so on operating systems\nwhere other processes might be able to read your command line\n(e.g. /proc/self/cmdline), but not your environment\n(e.g. /proc/self/environ). That behavior is the default on\nLinux, but may not be on your system.\n\n\nNote that this might add security for variables such as\nhttp.extraHeader where the sensitive information is part of\nthe value, but not e.g. url.<base>.insteadOf where the\nsensitive information can be part of the key.\n\n\n--exec-path[=<path>] \n\nPath to wherever your core Git programs are installed.\nThis can also be controlled by setting the GIT_EXEC_PATH\nenvironment variable. If no path is given, git will print\nthe current setting and then exit.\n\n--html-path \n\nPrint the path, without trailing slash, where Git’s HTML\ndocumentation is installed and exit.\n\n--man-path \n\nPrint the manpath (see man(1)) for the man pages for\nthis version of Git and exit.\n\n--info-path \n\nPrint the path where the Info files documenting this\nversion of Git are installed and exit.\n\n-p \n--paginate \n\nPipe all output into less (or if set, $PAGER) if standard\noutput is a terminal.  This overrides the pager.<cmd>\nconfiguration options (see the \"Configuration Mechanism\" section\nbelow).\n\n-P \n--no-pager \n\nDo not pipe Git output into a pager.\n\n--git-dir=<path> \n\nSet the pa...[truncated]"
+      },
+      "planner_visible_result": "{\"text\": \"\\n\\t    \\n            \\nNAME\\n\\n\\ngit - the stupid content tracker\\n\\n\\n\\n\\nSYNOPSIS\\n\\n\\ngit [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]\\n    [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]\\n    [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--no-lazy-fetch]\\n    [--no-optional-locks] [--no-advice] [--bare] [--git-dir=<path>]\\n    [--work-tree=<path>] [--namespace=<name>] [--config-env=<name>=<envvar>]\\n    <command> [<args>]\\n\\n\\n\\n\\nDE...",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page",
+        "policy_step": 9,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 2,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": true,
+        "official_scope_result_count": 7,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 57,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 13.009938955307007,
+      "tool_duration_seconds": 0.013032913208007812
+    },
+    {
+      "step_number": 10,
+      "run_id": "ca51ed2e-1034-4aea-a118-f61e37c2ba72",
+      "timestamp": "2026-09-01T13:16:05.312960+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "Git official documentation website git-scm.com reference manual git command",
+        "engine": "bing"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "Git official documentation website git-scm.com reference manual git command",
+        "engine": "bing",
+        "url": "https://www.bing.com/search?q=Git+official+documentation+website+git-scm.com+reference+manual+git+command&mkt=en-US&cc=us&setlang=en-US",
+        "title": "Git official documentation website git-scm.com reference manual git command - Search",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "success"
+          }
+        ],
+        "search_market": "en-US",
+        "results": [
+          {
+            "title": "Git",
+            "url": "https://git-scm.com/",
+            "date": ""
+          },
+          {
+            "title": "Git - Install",
+            "url": "https://git-scm.com/install/",
+            "date": ""
+          },
+          {
+            "title": "Git · GitHub",
+            "url": "https://github.com/git-guides",
+            "date": ""
+          },
+          {
+            "title": "GitHub · Change is constant. GitHub keeps you ahead.",
+            "url": "https://github.com/",
+            "date": ""
+          },
+          {
+            "title": "Git for Windows",
+            "url": "https://gitforwindows.org/",
+            "date": ""
+          },
+          {
+            "title": "Git Tutorial - W3Schools",
+            "url": "https://www.w3schools.com/git/default.asp",
+            "date": ""
+          },
+          {
+            "title": "Git - Wikipedia",
+            "url": "https://en.wikipedia.org/wiki/Git",
+            "date": ""
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"Git official documentation website git-scm.com reference manual git command\", \"engine\": \"bing\", \"url\": \"https://www.bing.com/search?q=Git+official+documentation+website+git-scm.com+reference+manual+git+command&mkt=en-US&cc=us&setlang=en-US\", \"title\": \"Git official documentation website git-scm.com reference manual git command - Search\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"success\"}], \"search_market\": \"en-US\", \"results\": [{\"title\": \"Git\", \"url\": \"https://git-scm.com/\", \"date\": \"\"}, {\"title\": \"Git - Install\", \"url\": \"https://git-scm.com/install/\", \"date\": \"\"}, {\"title\": \"Git · GitHub\", \"url\": \"https://github.com/git-guides\", \"date\": \"\"}, {\"title\": \"GitHub · Change is constant. GitHub keeps you ahead.\", \"url\": \"https://github.com/\", \"date\": \"\"}, {\"title\": \"Git for Windows\", \"url\": \"https://gitforwindows.org/\", \"date\": \"\"}, {\"title\": \"Git Tutorial - W3Schools\", \"url\": \"https://www.w3schools.com/git/default.asp\", \"date\": \"\"}, {\"title\": \"Git - Wikipedia\", \"url\": \"https://en.wikipedia.org/wiki/Git\", \"date\": \"\"}]}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser search is the required discovery action",
+        "policy_step": 10,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 3,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": true,
+        "official_scope_result_count": 7,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 3,
+        "observed_url_count": 60,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 22.775058031082153,
+      "tool_duration_seconds": 0.7273578643798828
+    },
+    {
+      "step_number": 11,
+      "run_id": "ca51ed2e-1034-4aea-a118-f61e37c2ba72",
+      "timestamp": "2026-09-01T13:16:15.879852+00:00",
+      "tool": "done",
+      "parameters": {
+        "summary": "**Official Git manual found via browser search**\n\nRoute taken: Bing searches for the official Git reference/manual surfaced git-scm.com as the top (first-party) result; from https://git-scm.com/ I used the site's \"Documentation\" nav → https://git-scm.com/docs → the first entry in the reference menu, which is the top-level `git(1)` manual page.\n\n**Primary source URL (exact):** https://git-scm.com/docs/git\n(Manual index: https://git-scm.com/docs ; project home: https://git-scm.com/)\n\n**NAME:** git — the stupid content tracker\n\n**SYNOPSIS (as reported on the official git(1) manual page):**\n\n```\ngit [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]\n    [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]\n    [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--no-lazy-fetch]\n    [--no-optional-locks] [--no-advice] [--bare] [--git-dir=<path>]\n    [--work-tree=<path>] [--namespace=<name>] [--config-env=<name>=<envvar>]\n    <command> [<args>]\n```\n\nReading of the synopsis: these are the options recognized *before* the subcommand (`<command> [<args>]`) — version/help (`-v`/`--version`, `-h`/`--help`), working-directory and config overrides (`-C <path>`, `-c <name>=<value>`, `--config-env=<name>=<envvar>`), path reporters (`--exec-path[=<path>]`, `--html-path`, `--man-path`, `--info-path`), pager control (`-p`/`--paginate`, `-P`/`--no-pager`), and repository-mode flags (`--no-replace-objects`, `--no-lazy-fetch`, `--no-optional-locks`, `--no-advice`, `--bare`, `--git-dir=<path>`, `--work-tree=<path>`, `--namespace=<name>`).\n\nNote: equivalent non-first-party copies of this man page also appeared in search results (e.g. https://man7.org/linux/man-pages/man1/git.1.html, https://www.kernel.org/pub/software/scm/git/docs/git.html, https://linux.die.net/man/1/git), but the cited URL above is the official Git project site (git-scm.com).",
+        "success_probability": 0.96
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "summary": "**Official Git manual found via browser search**\n\nRoute taken: Bing searches for the official Git reference/manual surfaced git-scm.com as the top (first-party) result; from https://git-scm.com/ I used the site's \"Documentation\" nav → https://git-scm.com/docs → the first entry in the reference menu, which is the top-level `git(1)` manual page.\n\n**Primary source URL (exact):** https://git-scm.com/docs/git\n(Manual index: https://git-scm.com/docs ; project home: https://git-scm.com/)\n\n**NAME:** git — the stupid content tracker\n\n**SYNOPSIS (as reported on the official git(1) manual page):**\n\n```\ngit [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]\n    [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]\n    [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--no-lazy-fetch]\n    [--no-optional-locks] [--no-advice] [--bare] [--git-dir=<path>]\n    [--work-tree=<path>] [--namespace=<name>] [--config-env=<name>=<envvar>]\n    <command> [<args>]\n```\n\nReading of the synopsis: these are the options recognized *before* the subcommand (`<command> [<args>]`) — version/help (`-v`/`--version`, `-h`/`--help`), working-directory and config overrides (`-C <path>`, `-c <name>=<value>`, `--config-env=<name>=<envvar>`), path reporters (`--exec-path[=<path>]`, `--html-path`, `--man-path`, `--info-path`), pager control (`-p`/`--paginate`, `-P`/`--no-pager`), and repository-mode flags (`--no-replace-objects`, `--no-lazy-fetch`, `--no-optional-locks`, `--no-advice`, `--bare`, `--git-dir=<path>`, `--work-tree=<path>`, `--namespace=<name>`).\n\nNote: equivalent non-first-party copies of this man page also appeared in search results (e.g. https://man7.org/linux/man-pages/man1/git.1.html, https://www.kernel.org/pub/software/scm/git/docs/git.html, https://linux.die.net/man/1/git), but the cited URL above is the official Git project site (git-scm.com).",
+        "attachments": [],
+        "success_probability": 0.96
+      },
+      "planner_visible_result": "{\"summary\": \"**Official Git manual found via browser search**\\n\\nRoute taken: Bing searches for the official Git reference/manual surfaced git-scm.com as the top (first-party) result; from https://git-scm.com/ I used the site's \\\"Documentation\\\" nav → https://git-scm.com/docs → the first entry in the reference menu, which is the top-level `git(1)` manual page.\\n\\n**Primary source URL (exact):** https://git-scm.com/docs/git\\n(Manual index: https://git-scm.com/docs ; project home: https://git-scm....",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "completion is grounded in a visited evidence page",
+        "policy_step": 11,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 3,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": true,
+        "official_scope_search_completed": true,
+        "official_scope_result_count": 7,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 61,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 10.56672191619873,
+      "tool_duration_seconds": 0.00043511390686035156
+    }
+  ],
+  "resume_count": 0,
+  "checkpoint_schema_version": null,
+  "resumed_from_checkpoint": false
+}

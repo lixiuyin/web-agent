@@ -1,0 +1,5 @@
+Found MDN's official HTML page via browser search: "HTML: HyperText Markup Language | MDN" at https://developer.mozilla.org/en-US/docs/Web/HTML.
+
+HTML's role (per MDN): HTML (HyperText Markup Language) is the most basic building block of the Web. It defines the meaning and structure of web content, while other technologies are generally used to describe a web page's appearance/presentation (CSS) or functionality/behavior (JavaScript). "Hypertext" refers to links that connect web pages to one another, either within a single website or between websites.
+
+Exact URL cited: https://developer.mozilla.org/en-US/docs/Web/HTML

@@ -1,0 +1,18 @@
+**What `git clone` does — per the official Git manual page (git-clone(1))**
+
+**Primary source (exact URL):** https://git-scm.com/docs/git-clone — page title: "Git - git-clone Documentation"
+
+**NAME section (as stated in the manual):**
+> `git-clone` - Clone a repository into a new directory
+
+**DESCRIPTION section (verbatim from the manual):**
+1. "Clones a repository into a newly created directory, creates remote-tracking branches for each branch in the cloned repository (visible using `git branch --remotes`), and creates and checks out an initial branch that is forked from the cloned repository’s currently active branch."
+2. "After the clone, a plain `git fetch` without arguments will update all the remote-tracking branches, and a plain `git pull` without arguments will in addition merge the remote master branch into the current master branch, if any (this is untrue when `--single-branch` is given; see below)."
+3. "This default configuration is achieved by creating references to the remote branch heads under `refs/remotes/origin` and by initializing `remote.origin.url` and `remote.origin.fetch` configuration variables."
+
+**Plain-language summary of those points:**
+- `git clone` copies an existing repository (local path or a URL) into a **brand-new directory** that Git creates for you — it is a full copy, not just a checkout of the latest files: the whole history comes along.
+- Inside the new directory it sets up **remote-tracking branches** — one for each branch that exists in the source repository — which you can list with `git branch --remotes`.
+- It **creates and checks out an initial working branch** (by default `master`/`main`, i.e. `HEAD`) pointing at the source repository's currently active branch, so you can start working immediately.
+- It wires up the new repo's relationship to the source: references to the remote's branch heads are stored under `refs/remotes/origin`, and the config variables `remote.origin.url` and `remote.origin.fetch` are initialized. Because of this, later plain `git fetch` updates all remote-tracking branches and plain `git pull` additionally merges the remote's default branch into the local one (except with `--single-branch`, where that tracking is limited).
+- The manual's SYNOPSIS shows the command form `git clone [--template=<template-directory>] [-l] [-s] [--no-hardlinks] [-q] [-n] [--bare] [--mirror] [-o <name>] [-b <name>] ... <repository> [<directory>]`, i.e. behavior can be modified with options such as `--bare`, `--mirror`, `--depth`, `--single-branch`, `--recurse-submodules`, and `-b <name>` to check out a specific branch instead of the remote's default.

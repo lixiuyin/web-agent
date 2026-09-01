@@ -1,0 +1,7 @@
+Sandbox intake completed successfully.
+
+- Case identifier read from the handoff page: ORBIT-731 (carried through as ?case=ORBIT-731 on the partner-origin intake page and pre-filled in the case field).
+- Continued from the handoff page via the "continue" link to the partner origin intake form at http://127.0.0.1:60362/intake?case=ORBIT-731.
+- Assignee (intake owner) set to: Ada
+- Priority set to: Urgent
+- Submitted the form with the "submit intake" button, which navigated to http://127.0.0.1:60362/intake/complete — the page now shows the heading/title "Intake complete", confirming the submission was accepted.

@@ -1,0 +1,124 @@
+{
+  "task_id": "mdn_css",
+  "category": "web_platform",
+  "goal": "Describe CSS's role using MDN and cite the exact URL.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 110.31887888908386,
+  "steps": 6,
+  "action_count": 4,
+  "failed_action_count": 2,
+  "planner_attempt_count": 9,
+  "planner_failure_count": 4,
+  "planner_tokens": 59888,
+  "answer_assertion_count": 3,
+  "answer_assertion_passed": 3,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "held_out_setting",
+  "task_family": "web_platform_documentation",
+  "setting_id": "localized_web_platform_reference",
+  "leakage_group": "host_developer_mozilla_org",
+  "target_failure_modes": [
+    "information_extraction",
+    "tool_use",
+    "answer_grounding"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "short",
+  "scenario": "document_read",
+  "environment": "public_web",
+  "entry_mode": "direct",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://developer.mozilla.org"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 4,
+    "distinct_tool_count": 4,
+    "tool_entropy_bits": 2.0,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 1,
+    "recovery_count": 2,
+    "minimum_window_entropy_bits": null,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 4,
+    "stagnation_onset_step": null,
+    "replan_count": 3,
+    "strategy_switch_count": 3,
+    "replan_rate": 0.75,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 0.95,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 6,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "style",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "According to MDN (https://developer.mozilla.org/en-US/docs/Web/CSS), CSS (Cascading Style Sheets) is a stylesheet language used to describe the presentation of a document written in HTML or XML (including XML dialects such as SVG, MathML, or XHTML). It describes how elements should be rendered on screen, on paper, in speech, or on other media. CSS is one of the core languages of the open web and is standardized across web browsers according to W3C specifications. Exact cited URL: https://developer.mozilla.org/en-US/docs/Web/CSS (page title: \"CSS: Cascading Style Sheets | MDN\").",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "https://developer.mozilla.org/en-US/docs/Web/CSS",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "According to MDN (https://developer.mozilla.org/en-US/docs/Web/CSS), CSS (Cascading Style Sheets) is a stylesheet language used to describe the presentation of a document written in HTML or XML (including XML dialects such as SVG, MathML, or XHTML). It describes how elements should be rendered on screen, on paper, in speech, or on other media. CSS is one of the core languages of the open web and is standardized across web browsers according to W3C specifications. Exact cited URL: https://developer.mozilla.org/en-US/docs/Web/CSS (page title: \"CSS: Cascading Style Sheets | MDN\").",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_url_observed",
+        "expected": "https://developer.mozilla.org/en-US/docs/Web/CSS",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

@@ -1,0 +1,436 @@
+{
+  "format": "webagent-checkpoint",
+  "schema_version": 2,
+  "checkpoint_sha256": "300ffbb8cc0c4d37a2b7cd19368f59981a66f3cb4c278165c1dfd34d88fca523",
+  "checkpoint": {
+    "artifacts": [],
+    "browser_state": {
+      "active_tab_index": 0,
+      "current_url": "https://fastapi.tiangolo.com/features/",
+      "tab_urls": [
+        "https://fastapi.tiangolo.com/features/"
+      ]
+    },
+    "checkpoint_id": "70f5169e-d33c-4be7-ace1-c4e04e582f24",
+    "config_fingerprint": "8cec5c2d9a8383b4a581dc3e28b7de4baf7cbe53b378af61437660b1eef435c3",
+    "consecutive_failures": 0,
+    "created_at": "2026-09-01T12:58:04.744760Z",
+    "elapsed_seconds": 21.17504382133484,
+    "events": [
+      {
+        "current": "search-discovery",
+        "previous": "default",
+        "reason": "[omitted]",
+        "step_number": 1,
+        "timestamp": "2026-09-01T12:57:49.306539+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 1,
+        "strategy": "search-discovery",
+        "timestamp": "2026-09-01T12:57:49.306550+00:00",
+        "type": "replan"
+      }
+    ],
+    "final_result": {},
+    "history": [
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:57:44.412259+00:00",
+          "title": "normal",
+          "url": "https://fastapi.tiangolo.com/features/"
+        },
+        "duration_seconds": 5.736503839492798,
+        "step_number": 1,
+        "timestamp": "2026-09-01T12:57:49.306486+00:00",
+        "tool_call": {
+          "parameters": {
+            "url": "https://fastapi.tiangolo.com/features/"
+          },
+          "reasoning": "",
+          "tool_name": "goto"
+        },
+        "tool_duration_seconds": 0.00014901161193847656,
+        "tool_result": {
+          "audit": {
+            "decision": "deny",
+            "policy": "browser_grounded",
+            "policy_step": 1,
+            "provenance": {},
+            "reason": "[omitted]",
+            "target": "https://fastapi.tiangolo.com/features/"
+          },
+          "data": {},
+          "error": "tool action failed; details omitted",
+          "success": false,
+          "tool_name": "goto"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:57:50.078236+00:00",
+          "title": "normal",
+          "url": "https://fastapi.tiangolo.com/features/"
+        },
+        "duration_seconds": 6.2074902057647705,
+        "step_number": 2,
+        "timestamp": "2026-09-01T12:57:55.515857+00:00",
+        "tool_call": {
+          "parameters": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "click"
+        },
+        "tool_duration_seconds": 0.5640881061553955,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 2,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 3,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 2,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "click"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:57:56.294861+00:00",
+          "title": "normal",
+          "url": "https://fastapi.tiangolo.com/features/"
+        },
+        "duration_seconds": 9.21888279914856,
+        "step_number": 3,
+        "timestamp": "2026-09-01T12:58:04.736853+00:00",
+        "tool_call": {
+          "parameters": {
+            "success_probability": 0.95,
+            "summary": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "done"
+        },
+        "tool_duration_seconds": 0.0006058216094970703,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 1,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 4,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 3,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "attachments": [],
+            "success_probability": 0.95,
+            "summary": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "done"
+        }
+      }
+    ],
+    "last_figure_path": null,
+    "loop_state": {
+      "in_loop": false,
+      "loop_type": "",
+      "page_hash_history": [
+        "7acb4a1471a54cb6a83114ca6392ccf1",
+        "d77e86c3e51e950a89fc7ffc4dd21b00",
+        "e9ff6e483303c8018eedb852c205ef25"
+      ],
+      "recent_actions": [
+        "bc20db60a7b081a04276a924fd2f3441fff1a27b0748005b14990be8965792c2",
+        "c5e0c75ee6257f455e33d3f7c790e6d78a1037d1d63e0ccd1a7739ea573d8890",
+        "a2805a60a5e41fd7de6f505beca60386d3794939621c67204e0b3db5a39daa0b"
+      ],
+      "recent_pages": [
+        "e3df35b5d6751d2520124cba920853e8b8efd3e0255eabfbb28b000c5ea5ceef",
+        "cd286869d0a58fa591b4ff45a0ca1ec7a88a86261e418313d3b72edfe7f3b283",
+        "84d1bdf59088e6f1c9da5ec4c586e121512ac0962fca335c04e6eb3c497b550b"
+      ],
+      "schema_version": 1,
+      "threshold": 4,
+      "url_history": [
+        "https://fastapi.tiangolo.com/features/",
+        "https://fastapi.tiangolo.com/features/",
+        "https://fastapi.tiangolo.com/features/"
+      ],
+      "window_size": 4
+    },
+    "next_step": 4,
+    "pending_action": null,
+    "planner_attempts": [
+      {
+        "attempt_number": 1,
+        "completion_tokens": 20,
+        "duration_seconds": 3.479383707046509,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6442,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 1,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:57:47.934770+00:00",
+        "total_tokens": 6462,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 131,
+        "duration_seconds": 3.5446360111236572,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6521,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 2,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:57:53.662908+00:00",
+        "total_tokens": 6652,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 130,
+        "duration_seconds": 8.387768030166626,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6941,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 3,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:58:04.722108+00:00",
+        "total_tokens": 7071,
+        "transport_retries": 0
+      }
+    ],
+    "planning_state": {
+      "active_milestone_id": "m4",
+      "evidence": [
+        {
+          "id": "e1",
+          "kind": "checkpoint",
+          "source": "https://fastapi.tiangolo.com/features/",
+          "step_number": 2,
+          "summary": "evidence retained from step 2"
+        },
+        {
+          "id": "e2",
+          "kind": "checkpoint",
+          "source": "https://fastapi.tiangolo.com/features/",
+          "step_number": 3,
+          "summary": "evidence retained from step 3"
+        }
+      ],
+      "milestones": [
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 1",
+          "id": "m1",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 2",
+          "id": "m2",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 3",
+          "id": "m3",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 4",
+          "id": "m4",
+          "status": "active"
+        }
+      ],
+      "objective": "task bound by checkpoint task_sha256",
+      "revisions": [
+        {
+          "added_milestone_ids": [
+            "m4"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 1,
+          "step_number": 1,
+          "strategy": "search-discovery"
+        }
+      ]
+    },
+    "policy_state": {
+      "broad_current_year_search_completed": false,
+      "current_year": 2026,
+      "downloaded_paths": {},
+      "figure_analysis_completed": false,
+      "hybrid": {
+        "candidate_date": null,
+        "candidate_owner": null,
+        "candidate_url": null,
+        "candidate_version_key": [],
+        "cross_check_exhausted": false,
+        "direct_evidence_verified": false,
+        "missing_repeat_count": 0,
+        "missing_signature": [],
+        "official_report_attempts": {},
+        "required_next_action": null,
+        "subject": "[omitted]",
+        "successful_topics": []
+      },
+      "observed_urls": {
+        "field_0de5469030e3": {
+          "page_url": "https://fastapi.tiangolo.com/features/",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_aeb69dabf02e": {
+          "page_url": "https://fastapi.tiangolo.com/features/",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_c1da5613d160": {
+          "page_url": "https://fastapi.tiangolo.com/features/",
+          "policy_step": 3,
+          "source": "[omitted]"
+        },
+        "field_ecfa9f49aa29": {
+          "page_url": "https://fastapi.tiangolo.com/features/",
+          "policy_step": 2,
+          "source": "[omitted]"
+        }
+      },
+      "official_identity_search_completed": false,
+      "official_identity_urls": [],
+      "official_scope_result_urls": [],
+      "official_scope_search_completed": false,
+      "pending_url_evidence_target": null,
+      "pending_url_search_attempts": 0,
+      "policy": "browser_grounded",
+      "release_landscape_evidence_urls": [],
+      "release_landscape_search_completed": false,
+      "schema_version": 3,
+      "search_completed": false,
+      "selected_candidate_url": null,
+      "step": 3,
+      "successful_queries": [],
+      "successful_searches": 0,
+      "task_sha256": "3b811e495d19d900a231fe46694359ca5e110ee0a921aee10b8904c620510660",
+      "version_frontier": null,
+      "version_frontier_key": [],
+      "version_frontier_resolved": true,
+      "visited_urls": [
+        "https://fastapi.tiangolo.com/features/"
+      ]
+    },
+    "previous_checkpoint_sha256": "182201fc2ad2d8b364f663c66e5114e31d410c84d1654c663ab4fb8628dbe033",
+    "resume_count": 0,
+    "run_id": "03e71319-464a-463c-a46d-3b0dc5b147a3",
+    "schema_version": 2,
+    "source_fingerprint": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "status": "completed",
+    "strategy_state": {
+      "attempted": [
+        "default",
+        "search-discovery"
+      ],
+      "consecutive_failures": 0,
+      "consecutive_no_progress": 0,
+      "current": "search-discovery",
+      "exhausted": false,
+      "switch_count": 1,
+      "switches": [
+        {
+          "current": "search-discovery",
+          "previous": "default",
+          "reason": "runtime strategy switch",
+          "step_number": 1
+        }
+      ]
+    },
+    "task_sha256": "3b811e495d19d900a231fe46694359ca5e110ee0a921aee10b8904c620510660",
+    "updated_at": "2026-09-01T12:58:04.744780Z"
+  }
+}

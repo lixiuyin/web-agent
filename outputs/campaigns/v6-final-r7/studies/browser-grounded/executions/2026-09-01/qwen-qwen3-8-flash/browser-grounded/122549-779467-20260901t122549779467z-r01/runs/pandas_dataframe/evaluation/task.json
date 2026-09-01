@@ -1,0 +1,124 @@
+{
+  "task_id": "pandas_dataframe",
+  "category": "data_science",
+  "goal": "Summarize the pandas DataFrame object and cite the exact API URL.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 66.60401511192322,
+  "steps": 6,
+  "action_count": 5,
+  "failed_action_count": 0,
+  "planner_attempt_count": 7,
+  "planner_failure_count": 1,
+  "planner_tokens": 56607,
+  "answer_assertion_count": 3,
+  "answer_assertion_passed": 3,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "held_out_task",
+  "task_family": "data_library_documentation",
+  "setting_id": "versioned_official_documentation",
+  "leakage_group": "host_pandas_pydata_org",
+  "target_failure_modes": [
+    "information_extraction",
+    "tool_use",
+    "answer_grounding"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "short",
+  "scenario": "document_read",
+  "environment": "public_web",
+  "entry_mode": "direct",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://pandas.pydata.org"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 5,
+    "distinct_tool_count": 2,
+    "tool_entropy_bits": 0.7219280948873623,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 1,
+    "recovery_count": 0,
+    "minimum_window_entropy_bits": 0.7219280948873623,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 5,
+    "stagnation_onset_step": null,
+    "replan_count": 2,
+    "strategy_switch_count": 2,
+    "replan_rate": 0.4,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 0.95,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 6,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "two-dimensional",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "**Summary of the `pandas.DataFrame` object** (from the pandas 3.0.5 documentation)\n\n**Signature / constructor**\n```python\nclass pandas.DataFrame(data=None, index=None, columns=None, dtype=None, copy=None)\n```\n\n**What it is**\n- A **two-dimensional, size-mutable, potentially heterogeneous tabular data** structure — the primary pandas data structure.\n- It contains **labeled axes (rows and columns)**; arithmetic operations align on **both** row and column labels.\n- It can be thought of as a **dict-like container for `Series` objects**.\n\n**Parameters**\n- `data` — ndarray (structured or homogeneous), Iterable, dict, or DataFrame.\n  - A dict can contain Series, arrays, constants, dataclass or list-like objects. If `data` is a dict, **column order follows insertion order**. If a dict contains Series with an index defined, it is **aligned by its index** (the same alignment applies when `data` is a Series or DataFrame itself). If `data` is a list of dicts, column order follows insertion order.\n- `index` — Index or array-like: row labels to use for the resulting frame; if `data` is a DataFrame and no `columns` are given, the index is **rebranded**.\n- `columns` — Index or array-like: column labels to use for the resulting frame.\n- `dtype` — dtype, default `None`: dtype to force on the resulting frame; if absent, **dtypes are inferred**.\n- `copy` — bool or None, default `None`: whether to copy the incoming data (default behavior is to copy only when needed / as documented for the version).\n\n**Key attributes (from the Attributes summary on the page)**\n`T` (transpose), `at` (single value by row/column label pair), `attrs` (global attributes dict), `axes` (list of axes), `columns`, `dtypes`, `empty`, `iat`, `index`, `iloc`, `loc`, `ndim` (number of axes = 2), `shape`, `size`, `values` (underlying NumPy array), plus `memory_usage`.\n\n**Main method groups listed in the API navigation**\n- Constructor/inspection & dtype handling: `astype`, `convert_dtypes`, `infer_objects`, `copy`, `to_numpy`, `head`, `info`, `select_dtypes`, `memory_usage`.\n- Indexing/iteration, arithmetic, combination, grouping/reshaping, time-series, plotting, serialization, and I/O methods such as `to_feather` (and the other `to_*` writers) are documented on the same page's Methods summary.\n\n**Exact API URL (cited from the loaded page)**\nhttps://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "**Summary of the `pandas.DataFrame` object** (from the pandas 3.0.5 documentation)\n\n**Signature / constructor**\n```python\nclass pandas.DataFrame(data=None, index=None, columns=None, dtype=None, copy=None)\n```\n\n**What it is**\n- A **two-dimensional, size-mutable, potentially heterogeneous tabular data** structure — the primary pandas data structure.\n- It contains **labeled axes (rows and columns)**; arithmetic operations align on **both** row and column labels.\n- It can be thought of as a **dict-like container for `Series` objects**.\n\n**Parameters**\n- `data` — ndarray (structured or homogeneous), Iterable, dict, or DataFrame.\n  - A dict can contain Series, arrays, constants, dataclass or list-like objects. If `data` is a dict, **column order follows insertion order**. If a dict contains Series with an index defined, it is **aligned by its index** (the same alignment applies when `data` is a Series or DataFrame itself). If `data` is a list of dicts, column order follows insertion order.\n- `index` — Index or array-like: row labels to use for the resulting frame; if `data` is a DataFrame and no `columns` are given, the index is **rebranded**.\n- `columns` — Index or array-like: column labels to use for the resulting frame.\n- `dtype` — dtype, default `None`: dtype to force on the resulting frame; if absent, **dtypes are inferred**.\n- `copy` — bool or None, default `None`: whether to copy the incoming data (default behavior is to copy only when needed / as documented for the version).\n\n**Key attributes (from the Attributes summary on the page)**\n`T` (transpose), `at` (single value by row/column label pair), `attrs` (global attributes dict), `axes` (list of axes), `columns`, `dtypes`, `empty`, `iat`, `index`, `iloc`, `loc`, `ndim` (number of axes = 2), `shape`, `size`, `values` (underlying NumPy array), plus `memory_usage`.\n\n**Main method groups listed in the API navigation**\n- Constructor/inspection & dtype handling: `astype`, `convert_dtypes`, `infer_objects`, `copy`, `to_numpy`, `head`, `info`, `select_dtypes`, `memory_usage`.\n- Indexing/iteration, arithmetic, combination, grouping/reshaping, time-series, plotting, serialization, and I/O methods such as `to_feather` (and the other `to_*` writers) are documented on the same page's Methods summary.\n\n**Exact API URL (cited from the loaded page)**\nhttps://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_url_observed",
+        "expected": "https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

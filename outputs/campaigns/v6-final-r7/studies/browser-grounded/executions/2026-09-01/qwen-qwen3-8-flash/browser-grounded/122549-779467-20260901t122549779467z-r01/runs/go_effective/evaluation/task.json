@@ -1,0 +1,124 @@
+{
+  "task_id": "go_effective",
+  "category": "programming_language",
+  "goal": "Explain the purpose of Effective Go and cite the exact URL.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 127.10219097137451,
+  "steps": 6,
+  "action_count": 4,
+  "failed_action_count": 2,
+  "planner_attempt_count": 8,
+  "planner_failure_count": 3,
+  "planner_tokens": 62265,
+  "answer_assertion_count": 3,
+  "answer_assertion_passed": 3,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "held_out_setting",
+  "task_family": "programming_language_documentation",
+  "setting_id": "language_portal_documentation",
+  "leakage_group": "host_go_dev",
+  "target_failure_modes": [
+    "information_extraction",
+    "tool_use",
+    "answer_grounding"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "short",
+  "scenario": "document_read",
+  "environment": "public_web",
+  "entry_mode": "direct",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://go.dev"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 4,
+    "distinct_tool_count": 1,
+    "tool_entropy_bits": -0.0,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 2,
+    "recovery_count": 1,
+    "minimum_window_entropy_bits": null,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 4,
+    "stagnation_onset_step": null,
+    "replan_count": 3,
+    "strategy_switch_count": 3,
+    "replan_rate": 0.75,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 0.95,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 6,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "idiomatic",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "**Purpose of \"Effective Go\"**\n\n\"Effective Go\" is the Go project's official style-and-idioms guide: a document that explains how to write programs that are not merely valid Go, but *good*, idiomatic Go.\n\nWhat it is for, based on the page itself:\n\n1. **It teaches Go's conventions and best practices, not the language reference.** The introduction states that Go \"is an open-source programming language that focuses on simplicity, reliability, and efficiency, specifically designed to make it easy to build software at scale,\" and warns that \"although it borrows ideas from existing languages, it has unusual properties that make effective Go programs different in character from programs written in its relatives.\" In particular, \"a straightforward translation of a C++ or Java program into Go is unlikely to produce a satisfactory result—Java programs are written in Java, not Go.\" Effective Go exists to steer programmers away from that trap and toward code that is clear, readable, and idiomatic in Go.\n\n2. **It is complementary to the other Go documentation.** It is not a language specification or a tutorial; it sits alongside the Tour of Go, the language specification, and the package documentation, adding the layer of \"how to do it properly\" — formatting, naming, idioms, and conventions.\n\n3. **It gives concrete, section-by-section guidance.** The table of contents on the page shows the scope of that advice: Introduction; Examples; Formatting (gofmt); Commentary; Names (package names, getters, interface names, MixedCaps); Semicolons; Control structures (if, redeclaration and reassignment, for, switch, type switch); Functions (multiple return values, named result parameters, defer); Data (new, constructors and composite literals, make, arrays, slices, two-dimensional slices, maps, printing, appending); Methods (pointers vs. values, interfaces and other types, interface conversions and type assertions, interfaces and methods, the blank identifier, the blank identifier in multiple assignment, unused imports and variables); Generics; Programming with Go; and Errors.\n\nIn short: **Effective Go is the canonical guide for writing clean, well-formatted, properly named, and idiomatic Go code — the set of conventions and practices the Go team recommends so that Go programs look and behave like Go programs rather than translations from other languages.**\n\n**Exact URL (cited from the loaded page):** https://go.dev/doc/effective_go",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "https://go.dev/doc/effective_go",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "**Purpose of \"Effective Go\"**\n\n\"Effective Go\" is the Go project's official style-and-idioms guide: a document that explains how to write programs that are not merely valid Go, but *good*, idiomatic Go.\n\nWhat it is for, based on the page itself:\n\n1. **It teaches Go's conventions and best practices, not the language reference.** The introduction states that Go \"is an open-source programming language that focuses on simplicity, reliability, and efficiency, specifically designed to make it easy to build software at scale,\" and warns that \"although it borrows ideas from existing languages, it has unusual properties that make effective Go programs different in character from programs written in its relatives.\" In particular, \"a straightforward translation of a C++ or Java program into Go is unlikely to produce a satisfactory result—Java programs are written in Java, not Go.\" Effective Go exists to steer programmers away from that trap and toward code that is clear, readable, and idiomatic in Go.\n\n2. **It is complementary to the other Go documentation.** It is not a language specification or a tutorial; it sits alongside the Tour of Go, the language specification, and the package documentation, adding the layer of \"how to do it properly\" — formatting, naming, idioms, and conventions.\n\n3. **It gives concrete, section-by-section guidance.** The table of contents on the page shows the scope of that advice: Introduction; Examples; Formatting (gofmt); Commentary; Names (package names, getters, interface names, MixedCaps); Semicolons; Control structures (if, redeclaration and reassignment, for, switch, type switch); Functions (multiple return values, named result parameters, defer); Data (new, constructors and composite literals, make, arrays, slices, two-dimensional slices, maps, printing, appending); Methods (pointers vs. values, interfaces and other types, interface conversions and type assertions, interfaces and methods, the blank identifier, the blank identifier in multiple assignment, unused imports and variables); Generics; Programming with Go; and Errors.\n\nIn short: **Effective Go is the canonical guide for writing clean, well-formatted, properly named, and idiomatic Go code — the set of conventions and practices the Go team recommends so that Go programs look and behave like Go programs rather than translations from other languages.**\n\n**Exact URL (cited from the loaded page):** https://go.dev/doc/effective_go",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_url_observed",
+        "expected": "https://go.dev/doc/effective_go",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

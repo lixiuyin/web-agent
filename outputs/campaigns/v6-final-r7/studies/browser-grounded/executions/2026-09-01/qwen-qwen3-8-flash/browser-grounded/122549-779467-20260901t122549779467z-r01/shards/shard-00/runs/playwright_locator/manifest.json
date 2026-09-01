@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/lixiuyin/web-agent/main/src/webagent/schemas/run-manifest-v1.schema.json",
+  "schema_version": 1,
+  "format": "webagent-run",
+  "layout_version": 1,
+  "run_id": "ccc406fd-0241-4421-b962-3735838828b9",
+  "created_at": "2026-09-01T13:12:26.527904+00:00",
+  "task_sha256": "d44084f0753893469b4fb6faf4c773e4dc022a62386656f34a703d4d76a37c9f",
+  "model": "qwen/qwen3.8-flash"
+}

@@ -1,0 +1,346 @@
+{
+  "schema_version": 8,
+  "$schema": "https://raw.githubusercontent.com/lixiuyin/web-agent/main/src/webagent/schemas/run-trace-v8.schema.json",
+  "producer": {
+    "name": "lixiuyin-webagent",
+    "version": "0.2.0",
+    "source_sha256": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c"
+  },
+  "created_at": "2026-09-01T14:06:01.854446+00:00",
+  "run_id": "597cb6eb-de92-4d26-b767-59c2faed40b8",
+  "run_kind": "agent_e2e",
+  "task": "Sign in to the sandbox account with username benchmark-agent and password orbit42, then finish on the protected account page.",
+  "status": "completed",
+  "success": true,
+  "steps_taken": 4,
+  "total_duration": 27.683863162994385,
+  "final_result": {
+    "summary": "Signed in successfully and finished on the protected account page. Steps performed: on http://127.0.0.1:60361/login entered username \"benchmark-agent\" in input#username and password in input#password, then clicked button#sign-in. The click navigated to http://127.0.0.1:60361/account (title \"Protected account\"), which now confirms completion by displaying the greeting \"Welcome, benchmark-agent\" along with \"Plan: sandbox\".",
+    "attachments": [],
+    "success_probability": 1.0
+  },
+  "evaluation": {
+    "agent_source_sha256": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "mode": "hybrid_api_augmented",
+    "discovery_mode": "hybrid",
+    "direct_source_tools_enabled": true,
+    "high_risk_action_policy": "deny",
+    "stealth_mode": false,
+    "anti_shortcut_contract": null,
+    "certificate_required": false,
+    "strict_eval_mode": false,
+    "search_engine_only": false,
+    "browser_profile_mode": "temporary",
+    "browser_channel": "bundled",
+    "persistent_pdf_cache": false
+  },
+  "planner_attempts": [
+    {
+      "step_number": 1,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T14:05:43.446041+00:00",
+      "duration_seconds": 8.663400888442993,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 70,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 6218,
+      "completion_tokens": 69,
+      "total_tokens": 6287,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 2,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T14:05:50.150326+00:00",
+      "duration_seconds": 4.6917359828948975,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 60,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 6337,
+      "completion_tokens": 68,
+      "total_tokens": 6405,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 3,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T14:05:55.204048+00:00",
+      "duration_seconds": 3.5020618438720703,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 42,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 6456,
+      "completion_tokens": 53,
+      "total_tokens": 6509,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 4,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T14:06:01.841313+00:00",
+      "duration_seconds": 4.871309041976929,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 116,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 6459,
+      "completion_tokens": 175,
+      "total_tokens": 6634,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    }
+  ],
+  "events": [],
+  "steps": [
+    {
+      "step_number": 1,
+      "run_id": "597cb6eb-de92-4d26-b767-59c2faed40b8",
+      "timestamp": "2026-09-01T14:05:44.860042+00:00",
+      "tool": "type",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "input#username"
+        },
+        "text": "benchmark-agent"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "selector": {
+          "type": "css",
+          "value": "input#username"
+        },
+        "text": "benchmark-agent"
+      },
+      "planner_visible_result": "{\"selector\": {\"type\": \"css\", \"value\": \"input#username\"}, \"text\": \"benchmark-agent\"}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 1,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 3,
+        "observed_url_count": 4,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 10.692004919052124,
+      "tool_duration_seconds": 0.8283357620239258
+    },
+    {
+      "step_number": 2,
+      "run_id": "597cb6eb-de92-4d26-b767-59c2faed40b8",
+      "timestamp": "2026-09-01T14:05:51.126060+00:00",
+      "tool": "type",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "input#password"
+        },
+        "text": "[redacted]"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "selector": {
+          "type": "css",
+          "value": "input#password"
+        },
+        "text": "orbit42"
+      },
+      "planner_visible_result": "{\"selector\": {\"type\": \"css\", \"value\": \"input#password\"}, \"text\": \"orbit42\"}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 2,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 1,
+        "observed_url_count": 5,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "medium",
+          "external_effect": "sensitive_input",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 6.264212131500244,
+      "tool_duration_seconds": 0.3811008930206299
+    },
+    {
+      "step_number": 3,
+      "run_id": "597cb6eb-de92-4d26-b767-59c2faed40b8",
+      "timestamp": "2026-09-01T14:05:56.344569+00:00",
+      "tool": "click",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "button#sign-in"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "selector": {
+          "type": "css",
+          "value": "button#sign-in"
+        }
+      },
+      "planner_visible_result": "{\"selector\": {\"type\": \"css\", \"value\": \"button#sign-in\"}}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 3,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 2,
+        "observed_url_count": 7,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "high-risk actions explicitly allowed",
+          "risk_level": "high",
+          "external_effect": "external_state_change",
+          "approval_required": true,
+          "approval_received": true
+        }
+      },
+      "duration_seconds": 5.216455936431885,
+      "tool_duration_seconds": 0.5531520843505859
+    },
+    {
+      "step_number": 4,
+      "run_id": "597cb6eb-de92-4d26-b767-59c2faed40b8",
+      "timestamp": "2026-09-01T14:06:01.848096+00:00",
+      "tool": "done",
+      "parameters": {
+        "summary": "Signed in successfully and finished on the protected account page. Steps performed: on http://127.0.0.1:60361/login entered username \"benchmark-agent\" in input#username and password in input#password, then clicked button#sign-in. The click navigated to http://127.0.0.1:60361/account (title \"Protected account\"), which now confirms completion by displaying the greeting \"Welcome, benchmark-agent\" along with \"Plan: sandbox\".",
+        "success_probability": 1
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "summary": "Signed in successfully and finished on the protected account page. Steps performed: on http://127.0.0.1:60361/login entered username \"benchmark-agent\" in input#username and password in input#password, then clicked button#sign-in. The click navigated to http://127.0.0.1:60361/account (title \"Protected account\"), which now confirms completion by displaying the greeting \"Welcome, benchmark-agent\" along with \"Plan: sandbox\".",
+        "attachments": [],
+        "success_probability": 1.0
+      },
+      "planner_visible_result": "{\"summary\": \"Signed in successfully and finished on the protected account page. Steps performed: on http://127.0.0.1:60361/login entered username \\\"benchmark-agent\\\" in input#username and password in input#password, then clicked button#sign-in. The click navigated to http://127.0.0.1:60361/account (title \\\"Protected account\\\"), which now confirms completion by displaying the greeting \\\"Welcome, benchmark-agent\\\" along with \\\"Plan: sandbox\\\".\", \"attachments\": [], \"success_probability\": 1.0}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "completion is grounded in a visited evidence page",
+        "policy_step": 4,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 1,
+        "observed_url_count": 8,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 5.500701904296875,
+      "tool_duration_seconds": 0.00022292137145996094
+    }
+  ],
+  "resume_count": 0,
+  "checkpoint_schema_version": null,
+  "resumed_from_checkpoint": false
+}

@@ -1,0 +1,11 @@
+In FastAPI's "First Steps" tutorial, the application object created is **`app`**, an instance of the `FastAPI` class:
+
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
+```
+
+That is, the file imports the `FastAPI` class and calls it to create the application instance named `app` — this object is the FastAPI application that handles requests and is used to declare path operations (e.g. `@app.get("/")` returning `{"message": "Hello World"}`).
+
+Exact source URL (verified as the current page): https://fastapi.tiangolo.com/tutorial/first-steps/  (page title: "First Steps - FastAPI")

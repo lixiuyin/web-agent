@@ -1,0 +1,9 @@
+NumPy's official beginner guide is "NumPy: the absolute basics for beginners" (the absolute beginner's guide in the NumPy user manual, v2.5).
+
+Central array object: the **ndarray** (NumPy's n-dimensional array object, `numpy.ndarray`) — the homogeneous, N-dimensional multidimensional array data structure that the guide is built around (its sections cover "Creating basic data," ndarray attributes such as shape/size/ndim/dtype, indexing/slicing, reshaping, and operations on ndarrays).
+
+Exact URL cited: https://numpy.org/doc/stable/user/absolute_beginners.html
+
+Supporting evidence from the visited page: "Welcome to the absolute beginner's guide to NumPy! NumPy (Numerical Python) is an open source Python library that's widely used in science and engineering. The NumPy library contains multidimensional array data structures, such as the homogeneous, N-dimensional **ndarray**, and a large library of functions that operate efficiently on these data structures."
+
+How it was found: a Bing browser search for "NumPy official beginner's guide ndarray" surfaced the official numpy.org results; from the search results I opened the NumPy documentation site and landed on this user-guide page (page title observed: "NumPy: the absolute basics for beginners — NumPy v2.5 Manual"), which is hosted on NumPy's official site (numpy.org). Note: two later searches with quoted title constraints were rejected by the engines as irrelevant, so the answer rests on the successfully loaded official page itself.

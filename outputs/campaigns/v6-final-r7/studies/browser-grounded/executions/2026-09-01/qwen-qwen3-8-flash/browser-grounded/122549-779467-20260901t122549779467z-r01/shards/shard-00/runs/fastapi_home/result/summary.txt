@@ -1,0 +1,18 @@
+**FastAPI — official home page**
+
+**Exact URL cited:** https://fastapi.tiangolo.com/ (page title: "FastAPI - FastAPI")
+
+**How it was found:** Starting from a blank page, I ran browser searches (Bing) for FastAPI's official website/home page. The top result in both searches was "FastAPI - FastAPI" at https://fastapi.tiangolo.com/, which I then opened and read directly (also visiting its Features tab at https://fastapi.tiangolo.com/features/ before returning to the home page).
+
+**Purpose (as stated on the official home page):** The site's own tagline is "FastAPI framework, high performance, easy to learn, fast to code, ready for production," and the About section states: "FastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints." The home page is the project's official documentation landing page: it introduces the framework, lists its core selling points, and links to the docs (Documentation: https://fastapi.tiangolo.com) plus navigation to Features, Learn, Reference, Resources, About, and Release Notes. The site is multilingual (English, Deutsch, español, français, हिन्दी, 日本語, and others) and advertises the FastAPI Conf '26 event (October 28, 2026, Amsterdam, NL).
+
+**Key features highlighted on the home page:**
+- **Fast:** Very high performance, on par with NodeJS and Go (thanks to Starlette and Pydantic) — one of the fastest Python frameworks available.
+- **Fast to code:** Increases development speed for features by about 200%–300%.
+- **Fewer bugs:** Reduces about 40% of human (developer)-induced errors.
+- **Intuitive:** Great editor support, code completion everywhere, less time debugging.
+- **Easy:** Designed to be easy to use and learn, with less time reading docs.
+- **Short:** Minimizes code duplication; multiple features from type declarations.
+- **Robust / production-ready:** Ships with automatic interactive API documentation (Swagger UI and ReDoc) and an OpenAPI/JSON Schema-based design, based on standard Python type hints.
+
+**In short:** FastAPI's official home page presents FastAPI as an open-source, modern, high-performance Python web framework for building APIs (especially JSON-based web services) using standard Python type hints, with the page serving as the entry point to its full documentation, tutorials, reference, and features.

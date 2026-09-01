@@ -1,0 +1,363 @@
+{
+  "schema_version": 8,
+  "$schema": "https://raw.githubusercontent.com/lixiuyin/web-agent/main/src/webagent/schemas/run-trace-v8.schema.json",
+  "producer": {
+    "name": "lixiuyin-webagent",
+    "version": "0.2.0",
+    "source_sha256": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c"
+  },
+  "created_at": "2026-09-01T13:47:45.240457+00:00",
+  "run_id": "1cfe7513-7a9c-4398-a34e-ae53fc39df81",
+  "run_kind": "agent_e2e",
+  "task": "Sign in to the sandbox account with username benchmark-agent and password orbit42, then finish on the protected account page.",
+  "status": "completed",
+  "success": true,
+  "steps_taken": 4,
+  "total_duration": 23.31476092338562,
+  "final_result": {
+    "summary": "Task complete. Signed in to the sandbox account at http://127.0.0.1:55790/login by entering username 'benchmark-agent' into input#username and password 'orbit42' into input#password, then clicking button#sign-in. The browser navigated to http://127.0.0.1:55790/account, and the protected account page confirms successful sign-in: title 'Protected account', heading 'Welcome, benchmark-agent', and 'Plan: sandbox'. The session finished on the protected account page as requested.",
+    "attachments": [],
+    "success_probability": 1.0
+  },
+  "evaluation": {
+    "agent_source_sha256": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "mode": "hybrid_api_augmented",
+    "discovery_mode": "hybrid",
+    "direct_source_tools_enabled": true,
+    "high_risk_action_policy": "deny",
+    "stealth_mode": false,
+    "anti_shortcut_contract": null,
+    "certificate_required": false,
+    "strict_eval_mode": false,
+    "search_engine_only": false,
+    "browser_profile_mode": "temporary",
+    "browser_channel": "bundled",
+    "persistent_pdf_cache": false
+  },
+  "planner_attempts": [
+    {
+      "step_number": 1,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:47:29.618790+00:00",
+      "duration_seconds": 7.096781015396118,
+      "success": false,
+      "error": "planner returned no executable tool call",
+      "transport_retries": 0,
+      "response_length": 1403,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 6021,
+      "completion_tokens": 381,
+      "total_tokens": 6402,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 1,
+      "attempt_number": 2,
+      "timestamp": "2026-09-01T13:47:31.509919+00:00",
+      "duration_seconds": 1.8910508155822754,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 6062,
+      "completion_tokens": 31,
+      "total_tokens": 6093,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 2,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:47:35.089145+00:00",
+      "duration_seconds": 1.5689270496368408,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 160,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 6133,
+      "completion_tokens": 76,
+      "total_tokens": 6209,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 3,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:47:38.896290+00:00",
+      "duration_seconds": 2.2430357933044434,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 473,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 6242,
+      "completion_tokens": 145,
+      "total_tokens": 6387,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 4,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:47:45.230351+00:00",
+      "duration_seconds": 4.561033010482788,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 736,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 6247,
+      "completion_tokens": 319,
+      "total_tokens": 6566,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    }
+  ],
+  "events": [],
+  "steps": [
+    {
+      "step_number": 1,
+      "run_id": "1cfe7513-7a9c-4398-a34e-ae53fc39df81",
+      "timestamp": "2026-09-01T13:47:32.950041+00:00",
+      "tool": "type",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "input#username"
+        },
+        "text": "benchmark-agent"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "selector": {
+          "type": "css",
+          "value": "input#username"
+        },
+        "text": "benchmark-agent"
+      },
+      "planner_visible_result": "{\"selector\": {\"type\": \"css\", \"value\": \"input#username\"}, \"text\": \"benchmark-agent\"}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 1,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 3,
+        "observed_url_count": 4,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 11.026762008666992,
+      "tool_duration_seconds": 0.8125791549682617
+    },
+    {
+      "step_number": 2,
+      "run_id": "1cfe7513-7a9c-4398-a34e-ae53fc39df81",
+      "timestamp": "2026-09-01T13:47:36.061376+00:00",
+      "tool": "type",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "input#password"
+        },
+        "text": "[redacted]"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "selector": {
+          "type": "css",
+          "value": "input#password"
+        },
+        "text": "orbit42"
+      },
+      "planner_visible_result": "{\"selector\": {\"type\": \"css\", \"value\": \"input#password\"}, \"text\": \"orbit42\"}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 2,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 1,
+        "observed_url_count": 5,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "medium",
+          "external_effect": "sensitive_input",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 3.109174966812134,
+      "tool_duration_seconds": 0.37716078758239746
+    },
+    {
+      "step_number": 3,
+      "run_id": "1cfe7513-7a9c-4398-a34e-ae53fc39df81",
+      "timestamp": "2026-09-01T13:47:40.068738+00:00",
+      "tool": "click",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "button#sign-in"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "selector": {
+          "type": "css",
+          "value": "button#sign-in"
+        }
+      },
+      "planner_visible_result": "{\"selector\": {\"type\": \"css\", \"value\": \"button#sign-in\"}}",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page or local workspace",
+        "policy_step": 3,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 2,
+        "observed_url_count": 7,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "high-risk actions explicitly allowed",
+          "risk_level": "high",
+          "external_effect": "external_state_change",
+          "approval_required": true,
+          "approval_received": true
+        }
+      },
+      "duration_seconds": 4.004974126815796,
+      "tool_duration_seconds": 0.5828728675842285
+    },
+    {
+      "step_number": 4,
+      "run_id": "1cfe7513-7a9c-4398-a34e-ae53fc39df81",
+      "timestamp": "2026-09-01T13:47:45.234712+00:00",
+      "tool": "done",
+      "parameters": {
+        "summary": "Task complete. Signed in to the sandbox account at http://127.0.0.1:55790/login by entering username 'benchmark-agent' into input#username and password 'orbit42' into input#password, then clicking button#sign-in. The browser navigated to http://127.0.0.1:55790/account, and the protected account page confirms successful sign-in: title 'Protected account', heading 'Welcome, benchmark-agent', and 'Plan: sandbox'. The session finished on the protected account page as requested.",
+        "success_probability": 1
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "summary": "Task complete. Signed in to the sandbox account at http://127.0.0.1:55790/login by entering username 'benchmark-agent' into input#username and password 'orbit42' into input#password, then clicking button#sign-in. The browser navigated to http://127.0.0.1:55790/account, and the protected account page confirms successful sign-in: title 'Protected account', heading 'Welcome, benchmark-agent', and 'Plan: sandbox'. The session finished on the protected account page as requested.",
+        "attachments": [],
+        "success_probability": 1.0
+      },
+      "planner_visible_result": "{\"summary\": \"Task complete. Signed in to the sandbox account at http://127.0.0.1:55790/login by entering username 'benchmark-agent' into input#username and password 'orbit42' into input#password, then clicking button#sign-in. The browser navigated to http://127.0.0.1:55790/account, and the protected account page confirms successful sign-in: title 'Protected account', heading 'Welcome, benchmark-agent', and 'Plan: sandbox'. The session finished on the protected account page as requested.\", \"attac...",
+      "policy": {
+        "policy": "browser_grounded",
+        "decision": "allow",
+        "reason": "completion is grounded in a visited evidence page",
+        "policy_step": 4,
+        "target": null,
+        "provenance": {},
+        "search_completed": false,
+        "successful_searches": 0,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 7,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 5.163114070892334,
+      "tool_duration_seconds": 0.00015091896057128906
+    }
+  ],
+  "resume_count": 0,
+  "checkpoint_schema_version": null,
+  "resumed_from_checkpoint": false
+}

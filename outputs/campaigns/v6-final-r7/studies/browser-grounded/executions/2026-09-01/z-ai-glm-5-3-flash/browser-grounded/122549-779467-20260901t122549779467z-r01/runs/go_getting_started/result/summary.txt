@@ -1,0 +1,1 @@
+The module initialization command in Go's getting-started tutorial is `go mod init` (run as `go mod init example.com/greetings` in the tutorial's example). Source: https://go.dev/doc/tutorial/getting-started (Tutorial: Get started with Go - The Go Programming Language).

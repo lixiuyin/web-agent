@@ -1,0 +1,21 @@
+Task complete.
+
+**1. Official page found via browser search:** "General Python FAQ" — the official Python 3 documentation FAQ page (title shown in search results and on the visited page as "General Python FAQ — Python 3.14.7 documentation").
+
+**2. Exact URL (primary source, as visited):** https://docs.python.org/3/faq/general.html
+
+**3. Python's creator: Guido van Rossum**
+
+Evidence from that official page:
+- Section "Why was Python created in the first place?" opens with: "Here's a very brief summary of what started it all, **written by Guido van Rossum**," in which he describes his work implementing an interpreted language in the ABC group at CWI and how that led to Python (e.g., indentation for statement grouping, very-high-level data types).
+- The related section "What is Python?" describes Python as an interpreted, interactive, object-oriented programming language combining remarkable power with very clear syntax, and points readers to "The Python Tutorial" and the Beginner's Guide for more.
+
+Search path used (browser search only, no guessed URLs):
+- Step 1 — Bing search "General Python FAQ" returned the official docs.python.org result first (https://docs.python.org/3/faq/general.html, dated "2 days ago" by the engine), alongside https://docs.python.org/3/faq/index.html and https://docs.python.org/3/faq/programming.html.
+- Step 2/3 — Opened the top result in a new tab and confirmed the page title and URL: https://docs.python.org/3/faq/general.html.
+- Steps 4–5 — Extracted the "Why was Python created in the first place?" and "What is Python?" sections directly from that page, confirming Guido van Rossum as the language's creator/author of its origin account.
+- Steps 6–9 — Corroborating searches ("who created Python Guido van Rossum General Python FAQ docs.python.org" on Bing; a quoted-title query "\"General Python FAQ\" Python created by Guido van Rossum docs.python.org" on Yahoo Japan) again surfaced https://docs.python.org/3/faq/general.html as the top official result, and the page was revisited to verify the section text.
+
+Note on engine behavior: the Bing attempt for the quoted-title query returned only dictionary/thesaurus definitions of "created" and was recorded as a quality failure; the Yahoo Japan attempt succeeded and re-confirmed the docs.python.org page.
+
+**Answer:** Python was created by **Guido van Rossum**, per the official "General Python FAQ" page at **https://docs.python.org/3/faq/general.html**.

@@ -1,0 +1,449 @@
+{
+  "schema_version": 4,
+  "suite": "long-horizon-controlled-v1",
+  "created_at": "2026-09-01T14:15:14.584338+00:00",
+  "metadata": {
+    "run_id": "64cd5136-d574-4438-8369-1c8fce004ed7",
+    "mode": "agent",
+    "model": "qwen/qwen3.8-flash",
+    "provider": "openrouter",
+    "resume_at_step": 35,
+    "restart_boundary": "new-temporary-browser-session",
+    "max_steps": 100,
+    "planner_max_tokens": 1024,
+    "planner_reasoning_effort": "low",
+    "agent_source_sha256": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "benchmark_source_sha256": "36cb18374b261da649313be261e2dfb2ab5798ff91a05c35aa2563f66b0f49de"
+  },
+  "summary": {
+    "task_count": 1,
+    "passed_tasks": 1,
+    "success_rate": 1.0,
+    "mean_score": 1.0,
+    "agent_completion_rate": 1.0,
+    "false_completion_rate": 0.0,
+    "action_validity_rate": 1.0,
+    "mean_steps": 70.0,
+    "mean_duration_seconds": 411.6369249820709,
+    "total_planner_tokens": 537713,
+    "mean_planner_tokens": 537713.0,
+    "answer_grounding_rate": 1.0,
+    "timeout_rate": 0.0,
+    "captcha_rate": 0.0,
+    "blocked_rate": 0.0,
+    "max_steps_rate": 0.0,
+    "p95_duration_seconds": 411.6369249820709,
+    "p95_steps": 70.0,
+    "p95_planner_tokens": 537713.0,
+    "termination_reason_counts": {
+      "completed": 1
+    },
+    "category_success_rate": {
+      "long_horizon_workflow": 1.0
+    }
+  },
+  "tasks": [
+    {
+      "task_id": "mission_60_stage_resume",
+      "category": "long_horizon_workflow",
+      "goal": "Complete all 60 mission stages, recover from transient feedback, retain each durable cue until it is requested, and finally report the four cues in order.",
+      "passed": true,
+      "score": 1.0,
+      "agent_reported_success": true,
+      "agent_status": "completed",
+      "error": null,
+      "duration_seconds": 411.6369249820709,
+      "steps": 70,
+      "action_count": 69,
+      "failed_action_count": 0,
+      "planner_attempt_count": 72,
+      "planner_failure_count": 2,
+      "planner_tokens": 537713,
+      "answer_assertion_count": 1,
+      "answer_assertion_passed": 1,
+      "termination_reason": "completed",
+      "timed_out": false,
+      "captcha_encountered": false,
+      "blocked": false,
+      "max_steps_reached": false,
+      "split": "held_out_setting",
+      "task_family": "long_horizon_state_machine",
+      "setting_id": "controlled-mission-v1",
+      "leakage_group": "mission-template-v1",
+      "target_failure_modes": [
+        "context_loss",
+        "memory_drift",
+        "tool_loop",
+        "checkpoint_resume",
+        "transient_feedback"
+      ],
+      "feedback": {
+        "kind": "delayed",
+        "delay_steps": 40,
+        "noise_rate": null
+      },
+      "expected_horizon": "long",
+      "scenario": "recovery",
+      "environment": "sandbox",
+      "entry_mode": "direct",
+      "risk_scope": "sandbox_mutation",
+      "source_origins": [],
+      "trajectory": {
+        "schema_version": 2,
+        "action_count": 69,
+        "distinct_tool_count": 3,
+        "tool_entropy_bits": 0.6335247815414145,
+        "repeated_action_rate": 0.014705882352941176,
+        "longest_identical_action_streak": 2,
+        "longest_failure_streak": 1,
+        "recovery_count": 1,
+        "minimum_window_entropy_bits": -0.0,
+        "collapse_onset_step": null,
+        "longest_same_state_streak": 2,
+        "stagnation_onset_step": null,
+        "replan_count": 0,
+        "strategy_switch_count": 0,
+        "replan_rate": 0.0,
+        "resume_count": 1,
+        "resumed_from_checkpoint": true
+      },
+      "success_probability": 0.97,
+      "confidence_source": "self_reported",
+      "confidence_elicited_at_step": 70,
+      "assertions": [
+        {
+          "assertion": {
+            "kind": "element_visible",
+            "expected": true,
+            "selector": "#mission-complete",
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": true,
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "json_equals",
+            "expected": true,
+            "selector": null,
+            "attribute": null,
+            "endpoint": "/api/state",
+            "json_path": "completed",
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": true,
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "json_equals",
+            "expected": 60,
+            "selector": null,
+            "attribute": null,
+            "endpoint": "/api/state",
+            "json_path": "stage",
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": 60,
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "json_equals",
+            "expected": 0,
+            "selector": null,
+            "attribute": null,
+            "endpoint": "/api/state",
+            "json_path": "memory_errors",
+            "required": true,
+            "weight": 2.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": 0,
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "answer_in_order",
+            "expected": [
+              "CEDAR",
+              "ORBIT",
+              "LANTERN",
+              "DELTA"
+            ],
+            "selector": null,
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 2.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": "All 60 mission stages were completed (transient feedback recovered, e.g. the re-submitted recall steps), and the four durable cues retained from memory, reported in order of introduction:\n\n1. Stage 4 cue: CEDAR\n2. Stage 14 cue: ORBIT\n3. Stage 24 cue: LANTERN\n4. Stage 34 cue: DELTA\n\nCue sequence: CEDAR → ORBIT → LANTERN → DELTA\n\nThe final page (http://127.0.0.1:61329/mission) displays \"Mission complete\" with the note that the retained cue sequence must be reported from memory, confirming completion. The two recall checkpoints encountered along the way were answered from memory with LANTERN (stage 24 cue) and DELTA (stage 34 cue), and the run advanced through button#continue-60 to the completion page.",
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        }
+      ]
+    }
+  ],
+  "research": {
+    "failures": {
+      "schema_version": 2,
+      "failure_taxonomy_version": "1",
+      "task_count": 1,
+      "affected_task_count": 1,
+      "finding_count": 1,
+      "observed_count": 1,
+      "candidate_count": 0,
+      "adjudicated_count": 0,
+      "observed_by_layer": {
+        "planning": 1
+      },
+      "candidate_by_layer": {},
+      "adjudicated_by_layer": {},
+      "recurrence_by_signature": {
+        "planning:planner_attempt_failure": 1
+      },
+      "findings": [
+        {
+          "taxonomy_version": "1",
+          "task_id": "mission_60_stage_resume",
+          "status": "observed",
+          "layer": "planning",
+          "subtype": "planner_attempt_failure",
+          "detector": "aggregate-rule-v1",
+          "terminal": false,
+          "onset_step": null,
+          "recovery_step": null,
+          "evidence": [
+            {
+              "source": "task_metric",
+              "key": "planner_failure_count",
+              "observed": 2,
+              "reference": null
+            }
+          ],
+          "note": "One or more planner attempts failed; the underlying cause is not inferred."
+        }
+      ],
+      "causal_boundary": "Automatic findings identify observable symptoms only; reasoning and memory causes are never assigned automatically. Adjudicated causal labels require a referenced controlled intervention or both referenced trace evidence and human adjudication."
+    },
+    "calibration": {
+      "schema_version": 2,
+      "status": "available",
+      "reason": null,
+      "task_count": 1,
+      "confidence_count": 1,
+      "confidence_coverage": 1.0,
+      "brier_score": 0.0009000000000000016,
+      "log_loss": 0.030459207484708574,
+      "expected_calibration_error": 0.030000000000000027,
+      "bins": [
+        {
+          "lower": 0.0,
+          "upper": 0.1,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.1,
+          "upper": 0.2,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.2,
+          "upper": 0.3,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.3,
+          "upper": 0.4,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.4,
+          "upper": 0.5,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.5,
+          "upper": 0.6,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.6,
+          "upper": 0.7,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.7,
+          "upper": 0.8,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.8,
+          "upper": 0.9,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.9,
+          "upper": 1.0,
+          "count": 1,
+          "mean_confidence": 0.97,
+          "empirical_success_rate": 1.0
+        }
+      ],
+      "risk_coverage_curve": [
+        {
+          "coverage": 1.0,
+          "selective_risk": 0.0,
+          "minimum_confidence": 0.97
+        }
+      ],
+      "area_under_risk_coverage_curve": 0.0,
+      "interpretation_notice": "Metrics cover only tasks with a self-reported success_probability recorded before external judging; missing values are reported, not imputed."
+    },
+    "transfer": {
+      "schema_version": 1,
+      "status": "unavailable",
+      "reason": "development split is empty",
+      "splits": {
+        "development": {
+          "status": "unavailable",
+          "reason": "development split is empty",
+          "task_count": 0,
+          "success_rate": null,
+          "mean_score": null
+        },
+        "validation": {
+          "status": "unavailable",
+          "reason": "validation split is empty",
+          "task_count": 0,
+          "success_rate": null,
+          "mean_score": null
+        },
+        "held_out_task": {
+          "status": "unavailable",
+          "reason": "held_out_task split is empty",
+          "task_count": 0,
+          "success_rate": null,
+          "mean_score": null
+        },
+        "held_out_setting": {
+          "status": "available",
+          "reason": null,
+          "task_count": 1,
+          "success_rate": 1.0,
+          "mean_score": 1.0
+        }
+      },
+      "held_out_task_success_delta": null,
+      "held_out_setting_success_delta": null,
+      "pooled_held_out_success_delta": null,
+      "leakage_groups": [],
+      "interpretation_notice": "Deltas are descriptive held-out minus development success rates for one condition. They do not establish that an intervention transfers without a paired baseline."
+    },
+    "generality": {
+      "schema_version": 1,
+      "status": "insufficient",
+      "task_count": 1,
+      "category_count": 1,
+      "source_origin_count": 0,
+      "discovery_task_count": 0,
+      "scenario_counts": {
+        "recovery": 1
+      },
+      "environment_counts": {
+        "sandbox": 1
+      },
+      "split_counts": {
+        "held_out_setting": 1
+      },
+      "source_origins": [],
+      "missing_requirements": [
+        "requires at least 30 evaluated tasks",
+        "requires at least 8 task categories",
+        "requires at least 8 distinct public source origins",
+        "missing scenario coverage: authenticated_session, cross_origin_form, file_workflow, sandbox_transaction, search_discovery, spa_interaction",
+        "missing research splits: development, held_out_task",
+        "requires both public_web and sandbox evidence",
+        "requires at least 5 genuine search-discovery tasks"
+      ],
+      "interpretation_notice": "Readiness means the retained task set crosses a preregistered coverage floor. It does not by itself prove performance, robustness, or transfer across the covered settings."
+    },
+    "long_horizon": {
+      "schema_version": 2,
+      "status": "available",
+      "reason": null,
+      "task_count": 1,
+      "long_task_count": 1,
+      "resumed_task_count": 1,
+      "buckets": {
+        "short": {
+          "task_count": 0,
+          "success_rate": null,
+          "mean_score": null
+        },
+        "medium": {
+          "task_count": 0,
+          "success_rate": null,
+          "mean_score": null
+        },
+        "long": {
+          "task_count": 1,
+          "success_rate": 1.0,
+          "mean_score": 1.0
+        }
+      },
+      "long_success_rate": 1.0,
+      "long_mean_score": 1.0,
+      "reliability_degradation": null,
+      "collapse_incidence": 0.0,
+      "stagnation_incidence": 0.0,
+      "mean_recovery_count": 1.0,
+      "mean_replan_count": 0.0,
+      "mean_strategy_switch_count": 0.0,
+      "interpretation_notice": "Reliability degradation is short success rate minus long success rate. Collapse onset tracks repeated actions; stagnation onset tracks extended unchanged page state even when tools vary. Neither signal is a causal diagnosis of reasoning or memory."
+    }
+  }
+}

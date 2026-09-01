@@ -1,0 +1,4 @@
+long-horizon-controlled-v1: passed=True, actions=69, resumed=True
+Results: /Users/lixiuyin/Materials/Selected/web-agent/outputs/campaigns/v6-final-r7/studies/long-horizon/executions/2026-09-01/qwen-qwen3-8-flash/agent/122544-047928-20260901t122544047928z/results.json
+API 400: {"error":{"message":"Provider returned error","code":400,"metadata":{"raw":"{\"error\":{\"message\":\"<400> InternalError.Algo.InvalidParameter: The tool_choice parameter does not support being set to required or object in thinking mode\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"invalid_parameter_error\"},\"id\":\"chatcmpl-9a4dd75c-9d49-9492-9548-d08c04784128\",\"request_id\":\"9a4dd75c-9d49-9492-9548-d08c04784128\"}","provider_name":"Alibaba","is_byok":true,"provider_error_c
+Planner provider does not support native-tools:required; falling back to native-tools:auto (400)

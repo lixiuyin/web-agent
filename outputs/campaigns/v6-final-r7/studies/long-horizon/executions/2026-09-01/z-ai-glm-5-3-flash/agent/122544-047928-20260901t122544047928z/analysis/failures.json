@@ -1,0 +1,41 @@
+{
+  "schema_version": 2,
+  "failure_taxonomy_version": "1",
+  "task_count": 1,
+  "affected_task_count": 1,
+  "finding_count": 1,
+  "observed_count": 1,
+  "candidate_count": 0,
+  "adjudicated_count": 0,
+  "observed_by_layer": {
+    "planning": 1
+  },
+  "candidate_by_layer": {},
+  "adjudicated_by_layer": {},
+  "recurrence_by_signature": {
+    "planning:planner_attempt_failure": 1
+  },
+  "findings": [
+    {
+      "taxonomy_version": "1",
+      "task_id": "mission_60_stage_resume",
+      "status": "observed",
+      "layer": "planning",
+      "subtype": "planner_attempt_failure",
+      "detector": "aggregate-rule-v1",
+      "terminal": false,
+      "onset_step": null,
+      "recovery_step": null,
+      "evidence": [
+        {
+          "source": "task_metric",
+          "key": "planner_failure_count",
+          "observed": 2,
+          "reference": null
+        }
+      ],
+      "note": "One or more planner attempts failed; the underlying cause is not inferred."
+    }
+  ],
+  "causal_boundary": "Automatic findings identify observable symptoms only; reasoning and memory causes are never assigned automatically. Adjudicated causal labels require a referenced controlled intervention or both referenced trace evidence and human adjudication."
+}

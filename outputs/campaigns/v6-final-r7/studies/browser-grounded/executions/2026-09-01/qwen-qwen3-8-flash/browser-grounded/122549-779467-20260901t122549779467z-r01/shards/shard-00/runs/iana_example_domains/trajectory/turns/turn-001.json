@@ -1,0 +1,1101 @@
+{
+  "schema_version": 8,
+  "$schema": "https://raw.githubusercontent.com/lixiuyin/web-agent/main/src/webagent/schemas/run-trace-v8.schema.json",
+  "producer": {
+    "name": "lixiuyin-webagent",
+    "version": "0.2.0",
+    "source_sha256": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c"
+  },
+  "created_at": "2026-09-01T13:03:42.755268+00:00",
+  "run_id": "c5afd33e-90bb-45a9-9909-b114302d0150",
+  "run_kind": "agent_e2e",
+  "task": "Starting from a blank page, use browser search to find IANA's official example-domains page, explain its purpose, and cite the exact URL.",
+  "status": "completed",
+  "success": true,
+  "steps_taken": 12,
+  "total_duration": 124.56892204284668,
+  "final_result": {
+    "summary": "**IANA's official \"Example Domains\" page found via browser search.**\n\n**Exact URL (primary source, visited and read):** https://www.iana.org/help/example-domains — page title: \"Example Domains\" (hosted in IANA's Help / Instructions and Guides section on www.iana.org, the official Internet Assigned Numbers Authority site).\n\n**How it was found:** Browser searches for IANA's example/reserved documentation domains (Bing, Yahoo Japan, Seznam) surfaced the official IANA results https://www.iana.org/domains/reserved (\"IANA-managed Reserved Domains\", which contains an \"Example domains\" section) and https://www.iana.org/help/example-domains (\"Example Domains\"). I opened both IANA pages; the dedicated help page is the official example-domains page.\n\n**Purpose of the page (from the page's own text):**\nIt is IANA's explanatory/reference page about the special \"example\" domain names used for illustration. Verbatim from the page:\n- \"As described in RFC 2606 and RFC 6761, a number of domains such as example.com and example.org are maintained for documentation purposes. These domains may be used as illustrative examples in documents without prior coordination with us. They are not available for registration or transfer.\"\n- \"We provide a web service on the example domain hosts to provide basic information on the purpose of the domain. These web services are provided as best effort, but are not designed to supp…\" (text continues/truncated in the extraction).\n\nSo its purposes are:\n1. **Document IANA's reservation of illustrative domain names** (e.g. example.com, example.org — the .example/.test-style documentation TLDs and second-level \"example\" names reserved by RFC 2606 and RFC 6761) so that authors of specifications, tutorials, configuration samples and test cases can use realistic-looking domain names without pointing at real, registered infrastructure.\n2. **Tell users the usage rules:** no prior permission/coordination with IANA is needed to use them as examples, and conversely they are **not available for registration or transfer**, so nobody can claim or buy them.\n3. **Explain the accompanying web service:** IANA operates HTTP/HTTPS hosts for these example domains that serve a page explaining why the domain exists (so a browser that accidentally lands on example.com gets an explanation rather than a parked/ad page), noting this service is best-effort and not designed for heavy/production traffic.\n\nIt therefore serves as the authoritative, first-party statement of what \"example\" domains are for and how they may be used, complementing the broader reservation list on https://www.iana.org/domains/reserved (IANA-managed Reserved Domains).",
+    "attachments": [],
+    "success_probability": 0.95
+  },
+  "evaluation": {
+    "agent_source_sha256": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "mode": "search_engine_only",
+    "discovery_mode": "browser-grounded",
+    "direct_source_tools_enabled": false,
+    "high_risk_action_policy": "deny",
+    "stealth_mode": false,
+    "anti_shortcut_contract": "search_engine_only_v8",
+    "certificate_required": true,
+    "strict_eval_mode": true,
+    "search_engine_only": true,
+    "browser_profile_mode": "temporary",
+    "browser_channel": "bundled",
+    "persistent_pdf_cache": false
+  },
+  "planner_attempts": [
+    {
+      "step_number": 1,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:01:44.997777+00:00",
+      "duration_seconds": 6.203197956085205,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 10111,
+      "completion_tokens": 68,
+      "total_tokens": 10179,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": [
+        "{'from': 'native-tools:required', 'to': 'native-tools:auto', 'status_code': 400, 'reason': '{\"error\":{\"message\":\"Provider returned error\",\"code\":400,\"metadata\":{\"raw\":\"data: {\\\\\"error\\\\\":{\\\\\"code\\\\\":\\\\\"invalid_parameter_error\\\\\",\\\\\"param\\\\\":null,\\\\\"message\\\\\":\\\\\"The tool_choice parameter does not support being set to required or object in thinking mode\\\\\",\\\\\"type\\\\\":\\\\\"invalid_request_error\\\\\"},\\\\\"id\\\\\":\\\\\"c'}"
+      ]
+    },
+    {
+      "step_number": 2,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:01:59.390417+00:00",
+      "duration_seconds": 4.384487152099609,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 13316,
+      "completion_tokens": 111,
+      "total_tokens": 13427,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 3,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:02:15.205749+00:00",
+      "duration_seconds": 4.173585891723633,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 13391,
+      "completion_tokens": 131,
+      "total_tokens": 13522,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 4,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:02:22.540928+00:00",
+      "duration_seconds": 5.350994825363159,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 14096,
+      "completion_tokens": 217,
+      "total_tokens": 14313,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 5,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:02:30.739518+00:00",
+      "duration_seconds": 3.9976460933685303,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 14210,
+      "completion_tokens": 168,
+      "total_tokens": 14378,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 6,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:02:39.302730+00:00",
+      "duration_seconds": 6.69343376159668,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 14080,
+      "completion_tokens": 437,
+      "total_tokens": 14517,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 7,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:02:52.206624+00:00",
+      "duration_seconds": 11.02224588394165,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 14396,
+      "completion_tokens": 722,
+      "total_tokens": 15118,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 8,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:03:05.018995+00:00",
+      "duration_seconds": 10.8788001537323,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 14628,
+      "completion_tokens": 747,
+      "total_tokens": 15375,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 9,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:03:17.690359+00:00",
+      "duration_seconds": 4.447246074676514,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 15867,
+      "completion_tokens": 96,
+      "total_tokens": 15963,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 10,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:03:23.664736+00:00",
+      "duration_seconds": 3.877401113510132,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 15340,
+      "completion_tokens": 161,
+      "total_tokens": 15501,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 11,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:03:30.167806+00:00",
+      "duration_seconds": 4.501656770706177,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 15443,
+      "completion_tokens": 180,
+      "total_tokens": 15623,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    },
+    {
+      "step_number": 12,
+      "attempt_number": 1,
+      "timestamp": "2026-09-01T13:03:42.746782+00:00",
+      "duration_seconds": 10.771738290786743,
+      "success": true,
+      "error": null,
+      "transport_retries": 0,
+      "response_length": 0,
+      "finish_reason": "tool_calls",
+      "prompt_tokens": 15606,
+      "completion_tokens": 925,
+      "total_tokens": 16531,
+      "requested_output_mode": "auto",
+      "effective_output_mode": "native-tools",
+      "structured_fallbacks": []
+    }
+  ],
+  "events": [
+    {
+      "type": "strategy_switch",
+      "timestamp": "2026-09-01T13:03:13.243043+00:00",
+      "step_number": 9,
+      "previous": "default",
+      "current": "alternate-navigation",
+      "reason": "loop detector reported action_variety_no_progress"
+    },
+    {
+      "type": "replan",
+      "timestamp": "2026-09-01T13:03:13.243102+00:00",
+      "step_number": 9,
+      "reason": "loop detector reported action_variety_no_progress",
+      "strategy": "alternate-navigation",
+      "exhausted": false
+    }
+  ],
+  "steps": [
+    {
+      "step_number": 1,
+      "run_id": "c5afd33e-90bb-45a9-9909-b114302d0150",
+      "timestamp": "2026-09-01T13:01:54.291868+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "IANA example domains page reserved example.com example.net example.org",
+        "engine": "bing"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "IANA example domains page reserved example.com example.net example.org",
+        "engine": "bing",
+        "url": "https://www.bing.com/search?q=IANA+example+domains+page+reserved+example.com+example.net+example.org&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=F69114BBD8BF4FA6A191D2800532F083",
+        "title": "IANA example domains page reserved example.com example.net example.org - Search",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "success"
+          }
+        ],
+        "search_market": "en-US",
+        "results": [
+          {
+            "title": "Internet Assigned Numbers Authority",
+            "url": "https://www.iana.org/",
+            "date": ""
+          },
+          {
+            "title": "Welcome To IANA | Intermodal",
+            "url": "https://www.intermodal.org/",
+            "date": ""
+          },
+          {
+            "title": "IANA Intermodal EXPO",
+            "url": "https://www.intermodal.org/intermodalexpo",
+            "date": ""
+          },
+          {
+            "title": "Internet Assigned Numbers Authority - Wikipedia",
+            "url": "https://en.wikipedia.org/wiki/Internet_Assigned_Numbers_Authority",
+            "date": ""
+          },
+          {
+            "title": "IANA WHOIS Service",
+            "url": "https://www.iana.org/whois",
+            "date": ""
+          },
+          {
+            "title": "IANA Time Zones Database - datetime.app",
+            "url": "https://datetime.app/iana-timezones",
+            "date": "13 hours ago"
+          },
+          {
+            "title": "IANA functions - National Telecommunications and Information …",
+            "url": "https://www.ntia.gov/category/iana-functions",
+            "date": "Dec 15, 2016"
+          },
+          {
+            "title": "IETF | Internet Assigned Numbers Authority (IANA) functions",
+            "url": "https://www.ietf.org/process/iana/",
+            "date": ""
+          },
+          {
+            "title": "IANA - ICANNWiki",
+            "url": "https://icannwiki.org/IANA",
+            "date": "Oct 17, 2025"
+          },
+          {
+            "title": "Sign In - lists.iana.org",
+            "url": "https://lists.iana.org/accounts/login/",
+            "date": "Jan 3, 2012"
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"IANA example domains page reserved example.com example.net example.org\", \"engine\": \"bing\", \"url\": \"https://www.bing.com/search?q=IANA+example+domains+page+reserved+example.com+example.net+example.org&mkt=en-US&cc=us&setlang=en-US&rdr=1&rdrig=F69114BBD8BF4FA6A191D2800532F083\", \"title\": \"IANA example domains page reserved example.com example.net example.org - Search\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"success\"}], \"search_market\": \"en-US\", \"results\": [{\"title\": \"Internet Assigned Numbers Authority\", \"url\": \"https://www.iana.org/\", \"date\": \"\"}, {\"title\": \"Welcome To IANA | Intermodal\", \"url\": \"https://www.intermodal.org/\", \"date\": \"\"}, {\"title\": \"IANA Intermodal EXPO\", \"url\": \"https://www.intermodal.org/intermodalexpo\", \"date\": \"\"}, {\"title\": \"Internet Assigned Numbers Authority - Wikipedia\", \"url\": \"https://en.wikipedia.org/wiki/Internet_Assigned_Numbers_Authority\", \"date\": \"\"}, {\"title\": \"IANA WHOIS Service\", \"url\": \"https://www.iana.org/whois\", \"date\": \"\"}, {\"title\": \"IANA Time Zones Database - datetime.app\", \"url\": \"https://datetime.app/iana-timezones\", \"date\": \"13 hours ago\"}, {\"title\": \"IANA functions - National Telecommunications and Information …\", \"url\": \"https://www.ntia.gov/category/iana-functions\", \"date\": \"Dec 15, 2016\"}, {\"title\": \"IETF | Internet Assigned Numbers Authority (IANA) functions\", \"url\": \"https://www.ietf.org/process/iana/\", \"date\": \"\"}, {\"title\": \"IANA - ICANNWiki\", \"url\": \"https://icannwiki.org/IANA\", \"date\": \"Oct 17, 2025\"}, {\"title\": \"Sign In - lists.iana.org\", \"url\": \"https://lists.iana.org/accounts/login/\", \"date\": \"Jan 3, 2012\"}]}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser search is the required discovery action",
+        "policy_step": 1,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 1,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 30,
+        "observed_url_count": 30,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 16.107980966567993,
+      "tool_duration_seconds": 7.5298638343811035
+    },
+    {
+      "step_number": 2,
+      "run_id": "c5afd33e-90bb-45a9-9909-b114302d0150",
+      "timestamp": "2026-09-01T13:02:09.457768+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "iana.org domains reserved \"Example Domains\" RFC 6761 second-level domains",
+        "engine": "duckduckgo"
+      },
+      "reasoning": "",
+      "success": false,
+      "error": "All attempted search engines (bing, yahoo_japan) returned results that did not satisfy the explicit query constraint. Use only a URL already observed in prior evidence, or report the failure. Last failure: yahoo_japan returned irrelevant results: results ignored the quoted title constraint",
+      "result": {
+        "query": "iana.org domains reserved \"Example Domains\" RFC 6761 second-level domains",
+        "attempted_engines": [
+          "bing",
+          "yahoo_japan"
+        ],
+        "failure_category": "quality_failure",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "failed",
+            "failure_category": "quality_failure",
+            "error": "bing returned irrelevant results: results ignored the quoted title constraint"
+          },
+          {
+            "engine": "yahoo_japan",
+            "outcome": "failed",
+            "failure_category": "quality_failure",
+            "error": "yahoo_japan returned irrelevant results: results ignored the quoted title constraint"
+          }
+        ],
+        "results": []
+      },
+      "planner_visible_result": "{\"query\": \"iana.org domains reserved \\\"Example Domains\\\" RFC 6761 second-level domains\", \"attempted_engines\": [\"bing\", \"yahoo_japan\"], \"failure_category\": \"quality_failure\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"failed\", \"failure_category\": \"quality_failure\", \"error\": \"bing returned irrelevant results: results ignored the quoted title constraint\"}, {\"engine\": \"yahoo_japan\", \"outcome\": \"failed\", \"failure_category\": \"quality_failure\", \"error\": \"yahoo_japan returned irrelevant results: results ignored the quoted title constraint\"}], \"results\": []}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser search is the required discovery action",
+        "policy_step": 2,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 1,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 7,
+        "observed_url_count": 37,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 15.16575813293457,
+      "tool_duration_seconds": 8.856457948684692
+    },
+    {
+      "step_number": 3,
+      "run_id": "c5afd33e-90bb-45a9-9909-b114302d0150",
+      "timestamp": "2026-09-01T13:02:16.447862+00:00",
+      "tool": "get_search_results",
+      "parameters": {
+        "max_results": 10
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "engine": "yahoo_japan",
+        "query": "iana.org domains reserved \"Example Domains\" RFC 6761 second-level domains",
+        "count": 5,
+        "total_available": 10,
+        "more_results": "... and 5 more result(s)",
+        "results": [
+          {
+            "title": "IANA-managed Reserved Domainswww.iana.orghttps://www.iana.org>reserved",
+            "url": "https://www.iana.org/domains/reserved",
+            "link": "https://www.iana.org/domains/reserved",
+            "snippet": ""
+          },
+          {
+            "title": "RFC 6761 - Special-Use Domain Names (RFC6761) - faqs.orgwww.faqs.orghttp://www.faqs.org>rfcs>rfc6761",
+            "url": "http://www.faqs.org/rfcs/rfc6761.html",
+            "link": "http://www.faqs.org/rfcs/rfc6761.html",
+            "snippet": ""
+          },
+          {
+            "title": "Reserved Domains for Testing and Examples | PDF - Scribdwww.scribd.comhttps://www.scribd.com>RFC2606",
+            "url": "https://www.scribd.com/document/842940804/RFC2606",
+            "link": "https://www.scribd.com/document/842940804/RFC2606",
+            "snippet": ""
+          },
+          {
+            "title": "Domain Name Rules: Characters, Length Limits & TLD ...domaindetails.comhttps://domaindetails.com>domain-n...",
+            "url": "https://domaindetails.com/kb/getting-started/domain-name-rules-restrictions",
+            "link": "https://domaindetails.com/kb/getting-started/domain-name-rules-restrictions",
+            "snippet": ""
+          },
+          {
+            "title": "例示のためのドメインやIPアドレス、ユーザ名のルール - Qiitaqiita.comhttps://qiita.com>ドメイン",
+            "url": "https://qiita.com/nanbuwks/items/cd5a0189fe91d27b794c",
+            "link": "https://qiita.com/nanbuwks/items/cd5a0189fe91d27b794c",
+            "snippet": ""
+          }
+        ]
+      },
+      "planner_visible_result": "{\"engine\": \"yahoo_japan\", \"query\": \"iana.org domains reserved \\\"Example Domains\\\" RFC 6761 second-level domains\", \"count\": 5, \"total_available\": 10, \"more_results\": \"... and 5 more result(s)\", \"results\": [{\"title\": \"IANA-managed Reserved Domainswww.iana.orghttps://www.iana.org>reserved\", \"url\": \"https://www.iana.org/domains/reserved\", \"link\": \"https://www.iana.org/domains/reserved\", \"snippet\": \"\"}, {\"title\": \"RFC 6761 - Special-Use Domain Names (RFC6761) - faqs.orgwww.faqs.orghttp://www.faqs.org>rfcs>rfc6761\", \"url\": \"http://www.faqs.org/rfcs/rfc6761.html\", \"link\": \"http://www.faqs.org/rfcs/rfc6761.html\", \"snippet\": \"\"}, {\"title\": \"Reserved Domains for Testing and Examples | PDF - Scribdwww.scribd.comhttps://www.scribd.com>RFC2606\", \"url\": \"https://www.scribd.com/document/842940804/RFC2606\", \"link\": \"https://www.scribd.com/document/842940804/RFC2606\", \"snippet\": \"\"}, {\"title\": \"Domain Name Rules: Characters, Length Limits & TLD ...domaindetails.comhttps://domaindetails.com>domain-n...\", \"url\": \"https://domaindetails.com/kb/getting-started/domain-name-rules-restrictions\", \"link\": \"https://domaindetails.com/kb/getting-started/domain-name-rules-restrictions\", \"snippet\": \"\"}, {\"title\": \"例示のためのドメインやIPアドレス、ユーザ名のルール - Qiitaqiita.comhttps://qiita.com>ドメイン\", \"url\": \"https://qiita.com/nanbuwks/items/cd5a0189fe91d27b794c\", \"link\": \"https://qiita.com/nanbuwks/items/cd5a0189fe91d27b794c\", \"snippet\": \"\"}]}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page",
+        "policy_step": 3,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 2,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 11,
+        "observed_url_count": 49,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 6.990011215209961,
+      "tool_duration_seconds": 0.0444028377532959
+    },
+    {
+      "step_number": 4,
+      "run_id": "c5afd33e-90bb-45a9-9909-b114302d0150",
+      "timestamp": "2026-09-01T13:02:26.070788+00:00",
+      "tool": "goto",
+      "parameters": {
+        "url": "https://www.iana.org/domains/reserved",
+        "wait_until": "load"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "url": "https://www.iana.org/domains/reserved",
+        "title": "IANA-managed Reserved Domains"
+      },
+      "planner_visible_result": "{\"url\": \"https://www.iana.org/domains/reserved\", \"title\": \"IANA-managed Reserved Domains\"}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "target URL is grounded in prior browser evidence",
+        "policy_step": 4,
+        "target": "https://www.iana.org/domains/reserved",
+        "provenance": {
+          "source": "get_search_results_planner_visible",
+          "policy_step": 3,
+          "page_url": "https://search.yahoo.co.jp/search?p=iana.org+domains+reserved+%22Example+Domains%22+RFC+6761+second-level+domains"
+        },
+        "search_completed": true,
+        "successful_searches": 2,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 1,
+        "observed_url_count": 50,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 9.622840881347656,
+      "tool_duration_seconds": 2.351923942565918
+    },
+    {
+      "step_number": 5,
+      "run_id": "c5afd33e-90bb-45a9-9909-b114302d0150",
+      "timestamp": "2026-09-01T13:02:31.927340+00:00",
+      "tool": "extract_text",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "div#body"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "text": "\n\n\n\n\n    \n    \n\n\tIANA-managed Reserved Domains\n\n\tCertain domains are set aside, and nominally registered to “IANA”, for specific\n\t\tpolicy or technical purposes.\n\n\tExample domains\n\t\n\tAs described in RFC 2606 and RFC 6761,\n\ta number of domains such as example.com and example.org\n\tare maintained for documentation purposes. These domains may be used as illustrative\n\texamples in documents without prior coordination with us. They are \n\tnot available for registration or transfer.\n\n\tTest IDN top-level domains\n\n\t        These domains were temporarily delegated by IANA for the IDN Evaluation being conducted by ICANN.\n\n\t\t\n\t\t\n\t\t\t\n\t\t\tDomainDomain (A-label)LanguageScript\n\t\t\t\n\t\t\t\n\t\t\tإختبارxn--kgbechtv\n\tArabicArabic\n\tآزمایشیxn--hgbk6aj7f53bba\n\tPersianArabic\n\t测试xn--0zwm56d\n\tChineseHan (Simplified variant)\n\t測試xn--g6w251d\n\tChineseHan (Traditional variant)\n\tиспытаниеxn--80akhbyknj4f\n\tRussianCyrillic\n\tपरीक्षाxn--11b5bs3a9aj6g\n\tHindiDevanagari (Nagari)\n\tδοκιμήxn--jxalpdlp\n\tGreek, Modern (1453-)Greek\n\t테스트xn--9t4b11yi5a\n\tKoreanHangul (Hangŭl, Hangeul)\n\tטעסטxn--deba0ad\n\tYiddishHebrew\n\tテストxn--zckzah\n\tJapaneseKatakana\n\tபரிட்சைxn--hlcj6aya9esc7a\n\tTamilTamil\n\t\t\n\t        \n\n\tPolicy-reserved domains\n\t\n\tWe act as both the registrant and registrar for a select number of domains\n\t\twhich have been reserved under policy grounds. These exclusions are\n\t\ttypically indicated in either technical standards (RFC documents),\n\t\tor contractual limitations.\n\t\t\n\t\tDomains which are described as registered to IANA or ICANN on policy\n\t\tgrounds are not available for registration or transfer, with the exception\n\t\tof country-name.info domains. These domains are available for release\n\t\tby the ICANN Governmental Advisory Committee Secretariat.\n\n    Other Special-Use Domains\n\n    There is additionally a Special-Use Domain Names registry documenting special-use domains designated by technical standards. For further information, see Special-Use Domain Names (RFC 6761).\n\t\n\n    \n\n    \n    \n\n\n    Domain Names\n    \n        Overview\n        Root Zone Management\n        \n            Overview\n            Top-Level Domains\n            Files and Downloads\n            Manage Delegations\n            Instructions & Guides\n        \n        .INT Registry\n        \n            Overview\n            Register/modify an .INT domain\n            Eligibility\n        \n        .ARPA Registry\n        IDN Practices Repository\n        \n            Overview\n            \n            Submit a table\n        \n        Root Key Signing Key (DNSSEC)\n        \n            Overview\n            Trust Anchors and Rollovers\n            Key Signing Ceremonies\n            Policies & Procedures\n            Community Representatives\n\n        \n        Reserved Domains\n    \n\n\n\n    \n\n\n\n\n"
+      },
+      "planner_visible_result": "{\"text\": \"\\n\\n\\n\\n\\n    \\n    \\n\\n\\tIANA-managed Reserved Domains\\n\\n\\tCertain domains are set aside, and nominally registered to “IANA”, for specific\\n\\t\\tpolicy or technical purposes.\\n\\n\\tExample domains\\n\\t\\n\\tAs described in RFC 2606 and RFC 6761,\\n\\ta number of domains such as example.com and example.org\\n\\tare maintained for documentation purposes. These domains may be used as illustrative\\n\\texamples in documents without prior coordination with us. They are \\n\\tnot available for registra...",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page",
+        "policy_step": 5,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 2,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 50,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 5.856415271759033,
+      "tool_duration_seconds": 0.01069784164428711
+    },
+    {
+      "step_number": 6,
+      "run_id": "c5afd33e-90bb-45a9-9909-b114302d0150",
+      "timestamp": "2026-09-01T13:02:40.493594+00:00",
+      "tool": "extract_text",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "div#body > article.hemmed.sidenav > main"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "text": "\n    \n\n\tIANA-managed Reserved Domains\n\n\tCertain domains are set aside, and nominally registered to “IANA”, for specific\n\t\tpolicy or technical purposes.\n\n\tExample domains\n\t\n\tAs described in RFC 2606 and RFC 6761,\n\ta number of domains such as example.com and example.org\n\tare maintained for documentation purposes. These domains may be used as illustrative\n\texamples in documents without prior coordination with us. They are \n\tnot available for registration or transfer.\n\n\tTest IDN top-level domains\n\n\t        These domains were temporarily delegated by IANA for the IDN Evaluation being conducted by ICANN.\n\n\t\t\n\t\t\n\t\t\t\n\t\t\tDomainDomain (A-label)LanguageScript\n\t\t\t\n\t\t\t\n\t\t\tإختبارxn--kgbechtv\n\tArabicArabic\n\tآزمایشیxn--hgbk6aj7f53bba\n\tPersianArabic\n\t测试xn--0zwm56d\n\tChineseHan (Simplified variant)\n\t測試xn--g6w251d\n\tChineseHan (Traditional variant)\n\tиспытаниеxn--80akhbyknj4f\n\tRussianCyrillic\n\tपरीक्षाxn--11b5bs3a9aj6g\n\tHindiDevanagari (Nagari)\n\tδοκιμήxn--jxalpdlp\n\tGreek, Modern (1453-)Greek\n\t테스트xn--9t4b11yi5a\n\tKoreanHangul (Hangŭl, Hangeul)\n\tטעסטxn--deba0ad\n\tYiddishHebrew\n\tテストxn--zckzah\n\tJapaneseKatakana\n\tபரிட்சைxn--hlcj6aya9esc7a\n\tTamilTamil\n\t\t\n\t        \n\n\tPolicy-reserved domains\n\t\n\tWe act as both the registrant and registrar for a select number of domains\n\t\twhich have been reserved under policy grounds. These exclusions are\n\t\ttypically indicated in either technical standards (RFC documents),\n\t\tor contractual limitations.\n\t\t\n\t\tDomains which are described as registered to IANA or ICANN on policy\n\t\tgrounds are not available for registration or transfer, with the exception\n\t\tof country-name.info domains. These domains are available for release\n\t\tby the ICANN Governmental Advisory Committee Secretariat.\n\n    Other Special-Use Domains\n\n    There is additionally a Special-Use Domain Names registry documenting special-use domains designated by technical standards. For further information, see Special-Use Domain Names (RFC 6761).\n\t\n\n    "
+      },
+      "planner_visible_result": "{\"text\": \"\\n    \\n\\n\\tIANA-managed Reserved Domains\\n\\n\\tCertain domains are set aside, and nominally registered to “IANA”, for specific\\n\\t\\tpolicy or technical purposes.\\n\\n\\tExample domains\\n\\t\\n\\tAs described in RFC 2606 and RFC 6761,\\n\\ta number of domains such as example.com and example.org\\n\\tare maintained for documentation purposes. These domains may be used as illustrative\\n\\texamples in documents without prior coordination with us. They are \\n\\tnot available for registration or transf...",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page",
+        "policy_step": 6,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 2,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 50,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 8.566108226776123,
+      "tool_duration_seconds": 0.006770133972167969
+    },
+    {
+      "step_number": 7,
+      "run_id": "c5afd33e-90bb-45a9-9909-b114302d0150",
+      "timestamp": "2026-09-01T13:02:53.454842+00:00",
+      "tool": "screenshot",
+      "parameters": {
+        "full_page": true,
+        "label": "iana-reserved-page-full"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "path": "artifacts/figures/screenshots/iana-reserved-page-full.jpg",
+        "width": 1280,
+        "height": 1553,
+        "deduplicated": false
+      },
+      "planner_visible_result": "{\"path\": \"artifacts/figures/screenshots/iana-reserved-page-full.jpg\", \"width\": 1280, \"height\": 1553, \"deduplicated\": false}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page",
+        "policy_step": 7,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 2,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 1,
+        "observed_url_count": 51,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 12.961153030395508,
+      "tool_duration_seconds": 0.07149481773376465
+    },
+    {
+      "step_number": 8,
+      "run_id": "c5afd33e-90bb-45a9-9909-b114302d0150",
+      "timestamp": "2026-09-01T13:03:12.563262+00:00",
+      "tool": "search",
+      "parameters": {
+        "query": "site:iana.org \"Example Domains\" reserved documentation purposes",
+        "engine": "bing"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "query": "site:iana.org \"Example Domains\" reserved documentation purposes",
+        "engine": "seznam",
+        "url": "https://search.seznam.cz/?q=site%3Aiana.org+%22Example+Domains%22+reserved+documentation+purposes",
+        "title": "site:iana.org \"Example Domains\" reserved documentation purposes – Seznam.cz",
+        "search_attempts": [
+          {
+            "engine": "bing",
+            "outcome": "failed",
+            "failure_category": "quality_failure",
+            "error": "bing returned irrelevant results: results ignored the requested domain constraint"
+          },
+          {
+            "engine": "seznam",
+            "outcome": "success"
+          }
+        ],
+        "results": [
+          {
+            "title": "IANA-managed Reserved Domains",
+            "url": "https://www.iana.org/domains/reserved",
+            "date": ""
+          },
+          {
+            "title": "IANA-managed Reserved Domains",
+            "url": "http://www.iana.org/domains/reserved",
+            "date": ""
+          },
+          {
+            "title": "Example Domains",
+            "url": "https://www.iana.org/help/example-domains",
+            "date": ""
+          },
+          {
+            "title": "Example Domains",
+            "url": "http://www.iana.org/help/example-domains",
+            "date": ""
+          },
+          {
+            "title": "Changes to HTTP service for example domains",
+            "url": "https://www.iana.org/news/2024/example-domain-http-methods",
+            "date": ""
+          },
+          {
+            "title": "Changes to HTTP service for example domains",
+            "url": "http://www.iana.org/news/2024/example-domain-http-methods",
+            "date": ""
+          },
+          {
+            "title": "News",
+            "url": "https://www.iana.org/news",
+            "date": ""
+          },
+          {
+            "title": "News",
+            "url": "http://www.iana.org/news",
+            "date": ""
+          }
+        ]
+      },
+      "planner_visible_result": "{\"query\": \"site:iana.org \\\"Example Domains\\\" reserved documentation purposes\", \"engine\": \"seznam\", \"url\": \"https://search.seznam.cz/?q=site%3Aiana.org+%22Example+Domains%22+reserved+documentation+purposes\", \"title\": \"site:iana.org \\\"Example Domains\\\" reserved documentation purposes – Seznam.cz\", \"search_attempts\": [{\"engine\": \"bing\", \"outcome\": \"failed\", \"failure_category\": \"quality_failure\", \"error\": \"bing returned irrelevant results: results ignored the requested domain constraint\"}, {\"engine\": \"seznam\", \"outcome\": \"success\"}], \"results\": [{\"title\": \"IANA-managed Reserved Domains\", \"url\": \"https://www.iana.org/domains/reserved\", \"date\": \"\"}, {\"title\": \"IANA-managed Reserved Domains\", \"url\": \"http://www.iana.org/domains/reserved\", \"date\": \"\"}, {\"title\": \"Example Domains\", \"url\": \"https://www.iana.org/help/example-domains\", \"date\": \"\"}, {\"title\": \"Example Domains\", \"url\": \"http://www.iana.org/help/example-domains\", \"date\": \"\"}, {\"title\": \"Changes to HTTP service for example domains\", \"url\": \"https://www.iana.org/news/2024/example-domain-http-methods\", \"date\": \"\"}, {\"title\": \"Changes to HTTP service for example domains\", \"url\": \"http://www.iana.org/news/2024/example-domain-http-methods\", \"date\": \"\"}, {\"title\": \"News\", \"url\": \"https://www.iana.org/news\", \"date\": \"\"}, {\"title\": \"News\", \"url\": \"http://www.iana.org/news\", \"date\": \"\"}]}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser search is the required discovery action",
+        "policy_step": 8,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 3,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 18,
+        "observed_url_count": 69,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 19.10833191871643,
+      "tool_duration_seconds": 6.2398247718811035
+    },
+    {
+      "step_number": 9,
+      "run_id": "c5afd33e-90bb-45a9-9909-b114302d0150",
+      "timestamp": "2026-09-01T13:03:19.131444+00:00",
+      "tool": "goto",
+      "parameters": {
+        "url": "https://www.iana.org/help/example-domains",
+        "wait_until": "load"
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "url": "https://www.iana.org/help/example-domains",
+        "title": "Example Domains"
+      },
+      "planner_visible_result": "{\"url\": \"https://www.iana.org/help/example-domains\", \"title\": \"Example Domains\"}",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "target URL is grounded in prior browser evidence",
+        "policy_step": 9,
+        "target": "https://www.iana.org/help/example-domains",
+        "provenance": {
+          "source": "search_planner_visible",
+          "policy_step": 8,
+          "page_url": "https://search.seznam.cz/?q=site%3Aiana.org+%22Example+Domains%22+reserved+documentation+purposes"
+        },
+        "search_completed": true,
+        "successful_searches": 3,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 1,
+        "observed_url_count": 70,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 6.56807804107666,
+      "tool_duration_seconds": 0.2841031551361084
+    },
+    {
+      "step_number": 10,
+      "run_id": "c5afd33e-90bb-45a9-9909-b114302d0150",
+      "timestamp": "2026-09-01T13:03:24.827628+00:00",
+      "tool": "extract_text",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "div#body > article.hemmed.sidenav > main > div.help-article-flow"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "text": "\n\n\nAs described in RFC 2606 and RFC 6761, a\nnumber of domains such as example.com and example.org are maintained\nfor documentation purposes. These domains may be used as illustrative\nexamples in documents without prior coordination with us. They are not\navailable for registration or transfer.\nWe provide a web service on the example domain hosts to provide basic\ninformation on the purpose of the domain. These web services are\nprovided as best effort, but are not designed to support production\napplications. While incidental traffic for incorrectly configured\napplications is expected, please do not design applications that require\nthe example domains to have operating HTTP service.\nFurther Reading\n\nIANA-managed Reserved Domains\n\n\nLast revised 9 years ago.\n\n\n\n"
+      },
+      "planner_visible_result": "{\"text\": \"\\n\\n\\nAs described in RFC 2606 and RFC 6761, a\\nnumber of domains such as example.com and example.org are maintained\\nfor documentation purposes. These domains may be used as illustrative\\nexamples in documents without prior coordination with us. They are not\\navailable for registration or transfer.\\nWe provide a web service on the example domain hosts to provide basic\\ninformation on the purpose of the domain. These web services are\\nprovided as best effort, but are not designed to su...",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page",
+        "policy_step": 10,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 3,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 70,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 5.69609808921814,
+      "tool_duration_seconds": 0.009312629699707031
+    },
+    {
+      "step_number": 11,
+      "run_id": "c5afd33e-90bb-45a9-9909-b114302d0150",
+      "timestamp": "2026-09-01T13:03:31.318033+00:00",
+      "tool": "extract_text",
+      "parameters": {
+        "selector": {
+          "type": "css",
+          "value": "div#body > article.hemmed.sidenav > main > div.help-article-flow > div.help-article"
+        }
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "text": "\n\nAs described in RFC 2606 and RFC 6761, a\nnumber of domains such as example.com and example.org are maintained\nfor documentation purposes. These domains may be used as illustrative\nexamples in documents without prior coordination with us. They are not\navailable for registration or transfer.\nWe provide a web service on the example domain hosts to provide basic\ninformation on the purpose of the domain. These web services are\nprovided as best effort, but are not designed to support production\napplications. While incidental traffic for incorrectly configured\napplications is expected, please do not design applications that require\nthe example domains to have operating HTTP service.\nFurther Reading\n\nIANA-managed Reserved Domains\n\n\nLast revised 9 years ago.\n\n"
+      },
+      "planner_visible_result": "{\"text\": \"\\n\\nAs described in RFC 2606 and RFC 6761, a\\nnumber of domains such as example.com and example.org are maintained\\nfor documentation purposes. These domains may be used as illustrative\\nexamples in documents without prior coordination with us. They are not\\navailable for registration or transfer.\\nWe provide a web service on the example domain hosts to provide basic\\ninformation on the purpose of the domain. These web services are\\nprovided as best effort, but are not designed to supp...",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "browser interaction is grounded in the current page",
+        "policy_step": 11,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 3,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 70,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 6.490278959274292,
+      "tool_duration_seconds": 0.010213136672973633
+    },
+    {
+      "step_number": 12,
+      "run_id": "c5afd33e-90bb-45a9-9909-b114302d0150",
+      "timestamp": "2026-09-01T13:03:42.750554+00:00",
+      "tool": "done",
+      "parameters": {
+        "summary": "**IANA's official \"Example Domains\" page found via browser search.**\n\n**Exact URL (primary source, visited and read):** https://www.iana.org/help/example-domains — page title: \"Example Domains\" (hosted in IANA's Help / Instructions and Guides section on www.iana.org, the official Internet Assigned Numbers Authority site).\n\n**How it was found:** Browser searches for IANA's example/reserved documentation domains (Bing, Yahoo Japan, Seznam) surfaced the official IANA results https://www.iana.org/domains/reserved (\"IANA-managed Reserved Domains\", which contains an \"Example domains\" section) and https://www.iana.org/help/example-domains (\"Example Domains\"). I opened both IANA pages; the dedicated help page is the official example-domains page.\n\n**Purpose of the page (from the page's own text):**\nIt is IANA's explanatory/reference page about the special \"example\" domain names used for illustration. Verbatim from the page:\n- \"As described in RFC 2606 and RFC 6761, a number of domains such as example.com and example.org are maintained for documentation purposes. These domains may be used as illustrative examples in documents without prior coordination with us. They are not available for registration or transfer.\"\n- \"We provide a web service on the example domain hosts to provide basic information on the purpose of the domain. These web services are provided as best effort, but are not designed to supp…\" (text continues/truncated in the extraction).\n\nSo its purposes are:\n1. **Document IANA's reservation of illustrative domain names** (e.g. example.com, example.org — the .example/.test-style documentation TLDs and second-level \"example\" names reserved by RFC 2606 and RFC 6761) so that authors of specifications, tutorials, configuration samples and test cases can use realistic-looking domain names without pointing at real, registered infrastructure.\n2. **Tell users the usage rules:** no prior permission/coordination with IANA is needed to use them as examples, and conversely they are **not available for registration or transfer**, so nobody can claim or buy them.\n3. **Explain the accompanying web service:** IANA operates HTTP/HTTPS hosts for these example domains that serve a page explaining why the domain exists (so a browser that accidentally lands on example.com gets an explanation rather than a parked/ad page), noting this service is best-effort and not designed for heavy/production traffic.\n\nIt therefore serves as the authoritative, first-party statement of what \"example\" domains are for and how they may be used, complementing the broader reservation list on https://www.iana.org/domains/reserved (IANA-managed Reserved Domains).",
+        "success_probability": 0.95
+      },
+      "reasoning": "",
+      "success": true,
+      "error": null,
+      "result": {
+        "summary": "**IANA's official \"Example Domains\" page found via browser search.**\n\n**Exact URL (primary source, visited and read):** https://www.iana.org/help/example-domains — page title: \"Example Domains\" (hosted in IANA's Help / Instructions and Guides section on www.iana.org, the official Internet Assigned Numbers Authority site).\n\n**How it was found:** Browser searches for IANA's example/reserved documentation domains (Bing, Yahoo Japan, Seznam) surfaced the official IANA results https://www.iana.org/domains/reserved (\"IANA-managed Reserved Domains\", which contains an \"Example domains\" section) and https://www.iana.org/help/example-domains (\"Example Domains\"). I opened both IANA pages; the dedicated help page is the official example-domains page.\n\n**Purpose of the page (from the page's own text):**\nIt is IANA's explanatory/reference page about the special \"example\" domain names used for illustration. Verbatim from the page:\n- \"As described in RFC 2606 and RFC 6761, a number of domains such as example.com and example.org are maintained for documentation purposes. These domains may be used as illustrative examples in documents without prior coordination with us. They are not available for registration or transfer.\"\n- \"We provide a web service on the example domain hosts to provide basic information on the purpose of the domain. These web services are provided as best effort, but are not designed to supp…\" (text continues/truncated in the extraction).\n\nSo its purposes are:\n1. **Document IANA's reservation of illustrative domain names** (e.g. example.com, example.org — the .example/.test-style documentation TLDs and second-level \"example\" names reserved by RFC 2606 and RFC 6761) so that authors of specifications, tutorials, configuration samples and test cases can use realistic-looking domain names without pointing at real, registered infrastructure.\n2. **Tell users the usage rules:** no prior permission/coordination with IANA is needed to use them as examples, and conversely they are **not available for registration or transfer**, so nobody can claim or buy them.\n3. **Explain the accompanying web service:** IANA operates HTTP/HTTPS hosts for these example domains that serve a page explaining why the domain exists (so a browser that accidentally lands on example.com gets an explanation rather than a parked/ad page), noting this service is best-effort and not designed for heavy/production traffic.\n\nIt therefore serves as the authoritative, first-party statement of what \"example\" domains are for and how they may be used, complementing the broader reservation list on https://www.iana.org/domains/reserved (IANA-managed Reserved Domains).",
+        "attachments": [],
+        "success_probability": 0.95
+      },
+      "planner_visible_result": "{\"summary\": \"**IANA's official \\\"Example Domains\\\" page found via browser search.**\\n\\n**Exact URL (primary source, visited and read):** https://www.iana.org/help/example-domains — page title: \\\"Example Domains\\\" (hosted in IANA's Help / Instructions and Guides section on www.iana.org, the official Internet Assigned Numbers Authority site).\\n\\n**How it was found:** Browser searches for IANA's example/reserved documentation domains (Bing, Yahoo Japan, Seznam) surfaced the official IANA results ht...",
+      "policy": {
+        "policy": "search_engine_only",
+        "decision": "allow",
+        "reason": "completion is grounded in a visited evidence page",
+        "policy_step": 12,
+        "target": null,
+        "provenance": {},
+        "search_completed": true,
+        "successful_searches": 3,
+        "broad_current_year_search_completed": false,
+        "release_landscape_search_completed": false,
+        "release_landscape_evidence_count": 0,
+        "official_identity_search_completed": false,
+        "official_scope_search_completed": false,
+        "official_scope_result_count": 0,
+        "selected_candidate_url": null,
+        "selected_candidate_identity_endorsed": null,
+        "version_frontier": null,
+        "newer_version_leads_resolved": true,
+        "latest_evidence_complete": false,
+        "latest_missing_prerequisites": [],
+        "new_urls_observed": 0,
+        "observed_url_count": 70,
+        "downloaded_artifact_count": 0,
+        "figure_analysis_completed": false,
+        "risk": {
+          "decision": "allow",
+          "reason": "action does not require approval",
+          "risk_level": "low",
+          "external_effect": "none_or_reversible",
+          "approval_required": false,
+          "approval_received": false
+        }
+      },
+      "duration_seconds": 11.432377099990845,
+      "tool_duration_seconds": 0.0002722740173339844
+    }
+  ],
+  "resume_count": 0,
+  "checkpoint_schema_version": null,
+  "resumed_from_checkpoint": false
+}

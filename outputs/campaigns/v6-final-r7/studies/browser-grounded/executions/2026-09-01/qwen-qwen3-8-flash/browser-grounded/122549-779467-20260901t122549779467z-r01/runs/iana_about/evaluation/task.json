@@ -1,0 +1,124 @@
+{
+  "task_id": "iana_about",
+  "category": "organization",
+  "goal": "Summarize IANA's role from its about page and cite the exact URL.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 126.51955509185791,
+  "steps": 8,
+  "action_count": 7,
+  "failed_action_count": 3,
+  "planner_attempt_count": 8,
+  "planner_failure_count": 0,
+  "planner_tokens": 64463,
+  "answer_assertion_count": 3,
+  "answer_assertion_passed": 3,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "development",
+  "task_family": "official_standards_reference",
+  "setting_id": "stable_official_reference",
+  "leakage_group": "host_www_iana_org",
+  "target_failure_modes": [
+    "information_extraction",
+    "tool_use",
+    "answer_grounding"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "short",
+  "scenario": "document_read",
+  "environment": "public_web",
+  "entry_mode": "direct",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://www.iana.org"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 7,
+    "distinct_tool_count": 3,
+    "tool_entropy_bits": 1.1488348542809166,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 1,
+    "recovery_count": 3,
+    "minimum_window_entropy_bits": -0.0,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 7,
+    "stagnation_onset_step": null,
+    "replan_count": 5,
+    "strategy_switch_count": 5,
+    "replan_rate": 0.7142857142857143,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 0.82,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 8,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "Internet",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "IANA's role, as stated on its \"About us\" page (https://www.iana.org/about):\n\nThe page opens with an \"About IANA\" section explaining that for the Internet to work as a single seamless network, technical identifiers must mean the same thing everywhere — network identifiers such as domain names and IP addresses must be assigned to a single party and carry the same meaning globally, and communication protocols must use codes that every software implementation interprets identically. Against that need, the Internet Assigned Numbers Authority (IANA) is described as the party that maintains the authoritative public registries of these unique technical identifiers (the extracted text was truncated at \"maintains the authoritative public...\").\n\nThe rest of the page organizes that role into the operational areas IANA is responsible for, shown as the page's own navigation/tiles:\n- Core service lines: Domains (incl. the Root Zone Registry, .INT Registry and .ARPA Registry), Number Resources (Number Registries, RIR Allocation Data), and Protocols (Protocol Registries, Time Zone Database) — i.e., coordinating the identifier registries rather than selling or allocating end-user resources directly.\n- Organizational/accountability functions: \"The Organization\" (how the IANA functions are governed and overseen), Governance, Oversight, Strategy & Planning, Continuous Improvement, Performance, Reports, Audits, News (announcements, publications and consultations) and Archive (historical documents from prior projects/services), plus a Contact us section for questions, requests and feedback.\n\nIn short: the about page presents IANA as the operator of the Internet's authoritative, globally coordinated technical-identifier registries — domain names, IP number resources, and protocol parameter code points — supported by published governance, oversight and performance/accountability information.\n\nExact URL cited: https://www.iana.org/about (page title: \"About us\").",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "https://www.iana.org/about",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "IANA's role, as stated on its \"About us\" page (https://www.iana.org/about):\n\nThe page opens with an \"About IANA\" section explaining that for the Internet to work as a single seamless network, technical identifiers must mean the same thing everywhere — network identifiers such as domain names and IP addresses must be assigned to a single party and carry the same meaning globally, and communication protocols must use codes that every software implementation interprets identically. Against that need, the Internet Assigned Numbers Authority (IANA) is described as the party that maintains the authoritative public registries of these unique technical identifiers (the extracted text was truncated at \"maintains the authoritative public...\").\n\nThe rest of the page organizes that role into the operational areas IANA is responsible for, shown as the page's own navigation/tiles:\n- Core service lines: Domains (incl. the Root Zone Registry, .INT Registry and .ARPA Registry), Number Resources (Number Registries, RIR Allocation Data), and Protocols (Protocol Registries, Time Zone Database) — i.e., coordinating the identifier registries rather than selling or allocating end-user resources directly.\n- Organizational/accountability functions: \"The Organization\" (how the IANA functions are governed and overseen), Governance, Oversight, Strategy & Planning, Continuous Improvement, Performance, Reports, Audits, News (announcements, publications and consultations) and Archive (historical documents from prior projects/services), plus a Contact us section for questions, requests and feedback.\n\nIn short: the about page presents IANA as the operator of the Internet's authoritative, globally coordinated technical-identifier registries — domain names, IP number resources, and protocol parameter code points — supported by published governance, oversight and performance/accountability information.\n\nExact URL cited: https://www.iana.org/about (page title: \"About us\").",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_url_observed",
+        "expected": "https://www.iana.org/about",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+Official GitHub Docs explanation found: the "What is GitHub?" page (https://docs.github.com/en/get-started/start-your-journey/what-is-github) contains a dedicated section titled "GitHub and Git".
+
+Distinction (per GitHub Docs):
+- Git is the open-source distributed version control system — a tool you run locally to track changes to files and manage project history.
+- GitHub is a platform for building software that is based on the open-source software Git. The page states: "GitHub is based on the open-source software, Git." GitHub hosts your Git repositories in the cloud and adds collaboration and workflow features on top — including repositories, pull requests, issues, code review, Actions (CI/CD), and tools supporting every stage of the software development life cycle (SDLC), from first idea to running code in production.
+
+In short: Git is the version-control technology; GitHub is the cloud-hosted platform built around Git that adds collaboration, hosting, and DevOps capabilities.
+
+Exact URL cited: https://docs.github.com/en/get-started/start-your-journey/what-is-github ("What is GitHub?" — GitHub Docs, Get started > Start your journey).

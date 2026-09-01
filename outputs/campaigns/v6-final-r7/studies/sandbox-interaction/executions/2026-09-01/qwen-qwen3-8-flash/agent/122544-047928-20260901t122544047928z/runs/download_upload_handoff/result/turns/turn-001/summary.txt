@@ -1,0 +1,7 @@
+Task completed successfully.
+
+1. Downloaded the case file from the source files page (http://127.0.0.1:60361/files) via the "a#download-payload" link. Saved local file: sandbox-payload.txt (sha256 e19000ed80b3e60944fe5c91e37ce48edd72f1f813a441c47bd70322240e8a4e).
+2. Continued to the partner upload portal by clicking the "a#upload-destination" link, arriving at http://127.0.0.1:60362/upload.
+3. Uploaded that exact downloaded file (sandbox-payload.txt) through the portal's file input "input#upload-file".
+4. Waited for the upload to become ready, then clicked the "button#submit-upload" Submit control.
+5. The portal navigated to http://127.0.0.1:60362/upload/complete, whose page title and body both read "Upload complete", confirming the submission finished.

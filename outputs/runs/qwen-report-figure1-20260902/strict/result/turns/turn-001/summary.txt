@@ -1,0 +1,13 @@
+Most recent Qwen technical report (PDF): the Qwen3.8-Flash-Next technical report, published in the official QwenLM repository at https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf (repo/file dated Aug 26, 2026; announced ~6 days before the search via the official blog https://qwen.ai/blog?id=qwen3.8-flash-next). This is newer than the Qwen3 Technical Report (arXiv 2505.09388, May 2025) and matches the current Qwen release landscape (Qwen3.8 series, Qwen3.8-Flash-Next being the newest entry). Downloaded and validated from https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf.
+
+Figure 1 (page 2) — "Qwen3.8-Flash-Next architecture":
+
+Purpose: The figure is an architecture diagram that explains how Qwen3.8-Flash-Next is assembled: it illustrates the hybrid token-mixing layout, the Gated Residual (GR) data path used by every sublayer, and how auxiliary components (n-gram embeddings, MoE, and Multi-Token Prediction) integrate into the model to achieve low-cost, high-throughput inference.
+
+Key findings / design choices shown:
+1. Hybrid token mixing: the layer stack alternates three GDN (Gated DeltaNet, linear-attention) layers with one QSA (Qwen Sparse Attention) layer per block of four (3:1 ratio). The left side shows the repeated stack (Vocabulary Embedding at the bottom → GDN, GDN, GDN, QSA blocks → ... → Prediction Head at top), and the right side expands each layer type (GDN "3×", QSA "1×").
+2. GR (Gated Residual) everywhere: every sublayer reads from and writes to an expanded (widened) residual stream; the read is elementwise-gated. Data flow in each sublayer: Hidden States → GR Read → elementwise gate (⊙) → token mixer (Qwen Sparse Attn or Gated DeltaNet) → elementwise gate (⊙) → GR Write → back to the expanded residual, with an MoE feed-forward branch attached.
+3. Off-accelerator capacity scaling: an n-gram Embedding Layer at Layer 2 scales model capacity off the accelerator via host-memory prefetching, reducing accelerator memory pressure.
+4. Speculative decoding integration: the MTP (Multi-Token Prediction) modules at the top reuse QSA indices across speculative decoding steps, making multi-token speculation cheap.
+
+Overall takeaway: the figure communicates that Qwen3.8-Flash-Next's efficiency comes from combining cheap linear attention (GDN) with occasional sparse attention (QSA), a uniformly gated widened residual stream, off-chip n-gram embedding capacity, and MTP-based speculative decoding that exploits the sparse-attention structure.

@@ -1,0 +1,536 @@
+{
+  "format": "webagent-checkpoint",
+  "schema_version": 2,
+  "checkpoint_sha256": "d6498640862d7f0444595be204e2cf4e881a1fdeefbba9b67fdeb1187b132b27",
+  "checkpoint": {
+    "artifacts": [],
+    "browser_state": {
+      "active_tab_index": 0,
+      "current_url": "http://127.0.0.1:60361/spa/items/orbit",
+      "tab_urls": [
+        "http://127.0.0.1:60361/spa/items/orbit"
+      ]
+    },
+    "checkpoint_id": "e6f13e72-a673-4f2d-ab68-cd74cb1535d8",
+    "config_fingerprint": "de26fadb9c5c5148bfc52da56ec625c367906c7380b76b81c4e985b28e85b45d",
+    "consecutive_failures": 0,
+    "created_at": "2026-09-01T14:05:33.969952Z",
+    "elapsed_seconds": 30.140739917755127,
+    "events": [],
+    "final_result": {},
+    "history": [
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T14:05:04.397164+00:00",
+          "title": "normal",
+          "url": "http://127.0.0.1:60361/spa"
+        },
+        "duration_seconds": 12.134657144546509,
+        "step_number": 1,
+        "timestamp": "2026-09-01T14:05:15.963683+00:00",
+        "tool_call": {
+          "parameters": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "click"
+        },
+        "tool_duration_seconds": 0.7097289562225342,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 2,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 3,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 1,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "click"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T14:05:16.543134+00:00",
+          "title": "normal",
+          "url": "http://127.0.0.1:60361/spa"
+        },
+        "duration_seconds": 5.855870008468628,
+        "step_number": 2,
+        "timestamp": "2026-09-01T14:05:21.821579+00:00",
+        "tool_call": {
+          "parameters": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "click"
+        },
+        "tool_duration_seconds": 0.5515351295471191,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 3,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 6,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 2,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "click"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T14:05:22.395349+00:00",
+          "title": "normal",
+          "url": "http://127.0.0.1:60361/spa/items/orbit"
+        },
+        "duration_seconds": 5.297142028808594,
+        "step_number": 3,
+        "timestamp": "2026-09-01T14:05:27.121597+00:00",
+        "tool_call": {
+          "parameters": {},
+          "reasoning": "",
+          "tool_name": "get_url"
+        },
+        "tool_duration_seconds": 0.00047206878662109375,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 6,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 3,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "url": "http://127.0.0.1:60361/spa/items/orbit"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "get_url"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T14:05:27.724358+00:00",
+          "title": "normal",
+          "url": "http://127.0.0.1:60361/spa/items/orbit"
+        },
+        "duration_seconds": 6.844175100326538,
+        "step_number": 4,
+        "timestamp": "2026-09-01T14:05:33.968825+00:00",
+        "tool_call": {
+          "parameters": {
+            "success_probability": 1,
+            "summary": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "done"
+        },
+        "tool_duration_seconds": 0.0004138946533203125,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 6,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 4,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "attachments": [],
+            "success_probability": 1.0,
+            "summary": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "done"
+        }
+      }
+    ],
+    "last_figure_path": null,
+    "loop_state": {
+      "in_loop": false,
+      "loop_type": "",
+      "page_hash_history": [
+        "65ed09b0d9ac2983e3355769d87d6930",
+        "a5bdbf95f74aedecd28d4d4a4007f4ad",
+        "8a56bed7496cb0e70ca5092afa360f92",
+        "8a56bed7496cb0e70ca5092afa360f92"
+      ],
+      "recent_actions": [
+        "c5e0c75ee6257f455e33d3f7c790e6d78a1037d1d63e0ccd1a7739ea573d8890",
+        "c5e0c75ee6257f455e33d3f7c790e6d78a1037d1d63e0ccd1a7739ea573d8890",
+        "26907555b0324b8a5de84cc72a6d845e2dcd6db0db62fd56d165c8164ac98628",
+        "a318d4ad6744830740c0c35e0814d72fd6ef73183f5fda0a3225566381cf1dee"
+      ],
+      "recent_pages": [
+        "cbb5dca24360df400e4596bfd32578a5902320c5217bae7ad5ce906e6a9a9f82",
+        "017d61f28e33f4d40b1c53764e4b23266ee7df429de221047db2bc89522b25ec",
+        "a5defbace74f9225c391620a455afc60b64472bb732c7cdb61df06c805056810",
+        "a5defbace74f9225c391620a455afc60b64472bb732c7cdb61df06c805056810"
+      ],
+      "schema_version": 1,
+      "threshold": 5,
+      "url_history": [
+        "http://127.0.0.1:60361/spa",
+        "http://127.0.0.1:60361/spa",
+        "http://127.0.0.1:60361/spa/items/orbit",
+        "http://127.0.0.1:60361/spa/items/orbit"
+      ],
+      "window_size": 9
+    },
+    "next_step": 5,
+    "pending_action": null,
+    "planner_attempts": [
+      {
+        "attempt_number": 1,
+        "completion_tokens": 81,
+        "duration_seconds": 10.254956007003784,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 5391,
+        "requested_output_mode": "auto",
+        "response_length": 173,
+        "step_number": 1,
+        "structured_fallbacks": [
+          "{'from': 'native-tools:required', 'to': 'native-tools:auto', 'status_code': 400, 'reason': '{\"error\":{\"message\":\"Provider returned error\",\"code\":400,\"metadata\":{\"raw\":\"data: {\\\\\"error\\\\\":{\\\\\"code\\\\\":\\\\\"invalid_parameter_error\\\\\",\\\\\"param\\\\\":null,\\\\\"message\\\\\":\\\\\"The tool_choice parameter does not support being set to required or object in thinking mode\\\\\",\\\\\"type\\\\\":\\\\\"invalid_request_error\\\\\"},\\\\\"id\\\\\":\\\\\"c'}"
+        ],
+        "success": true,
+        "timestamp": "2026-09-01T14:05:14.652171+00:00",
+        "total_tokens": 5472,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 193,
+        "duration_seconds": 3.9454100131988525,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6342,
+        "requested_output_mode": "auto",
+        "response_length": 681,
+        "step_number": 2,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T14:05:20.488676+00:00",
+        "total_tokens": 6535,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 72,
+        "duration_seconds": 4.119586229324341,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6386,
+        "requested_output_mode": "auto",
+        "response_length": 189,
+        "step_number": 3,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T14:05:26.515043+00:00",
+        "total_tokens": 6458,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 379,
+        "duration_seconds": 6.234434127807617,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6490,
+        "requested_output_mode": "auto",
+        "response_length": 440,
+        "step_number": 4,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T14:05:33.958872+00:00",
+        "total_tokens": 6869,
+        "transport_retries": 0
+      }
+    ],
+    "planning_state": {
+      "active_milestone_id": "m1",
+      "evidence": [
+        {
+          "id": "e1",
+          "kind": "checkpoint",
+          "source": "http://127.0.0.1:60361/spa",
+          "step_number": 1,
+          "summary": "evidence retained from step 1"
+        },
+        {
+          "id": "e2",
+          "kind": "checkpoint",
+          "source": "http://127.0.0.1:60361/spa/items/orbit",
+          "step_number": 2,
+          "summary": "evidence retained from step 2"
+        },
+        {
+          "id": "e3",
+          "kind": "checkpoint",
+          "source": "http://127.0.0.1:60361/spa/items/orbit",
+          "step_number": 3,
+          "summary": "evidence retained from step 3"
+        },
+        {
+          "id": "e4",
+          "kind": "checkpoint",
+          "source": "http://127.0.0.1:60361/spa/items/orbit",
+          "step_number": 4,
+          "summary": "evidence retained from step 4"
+        }
+      ],
+      "milestones": [
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 1",
+          "id": "m1",
+          "status": "active"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 2",
+          "id": "m2",
+          "status": "pending"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 3",
+          "id": "m3",
+          "status": "pending"
+        }
+      ],
+      "objective": "task bound by checkpoint task_sha256",
+      "revisions": []
+    },
+    "policy_state": {
+      "broad_current_year_search_completed": false,
+      "current_year": 2026,
+      "downloaded_paths": {},
+      "figure_analysis_completed": false,
+      "hybrid": {
+        "candidate_date": null,
+        "candidate_owner": null,
+        "candidate_url": null,
+        "candidate_version_key": [],
+        "cross_check_exhausted": false,
+        "direct_evidence_verified": false,
+        "missing_repeat_count": 0,
+        "missing_signature": [],
+        "official_report_attempts": {},
+        "required_next_action": null,
+        "subject": "[omitted]",
+        "successful_topics": []
+      },
+      "observed_urls": {
+        "field_0cb8929cea6d": {
+          "page_url": "http://127.0.0.1:60361/spa/items/orbit",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_37a91e8dc0bc": {
+          "page_url": "http://127.0.0.1:60361/spa",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_3a787d9c9545": {
+          "page_url": "http://127.0.0.1:60361/spa/items/orbit",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_445e2bdbb0ab": {
+          "page_url": "http://127.0.0.1:60361/spa",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_99c40e5728f4": {
+          "page_url": "http://127.0.0.1:60361/spa/items/orbit",
+          "policy_step": 3,
+          "source": "[omitted]"
+        },
+        "field_b065b14ddcc8": {
+          "page_url": "http://127.0.0.1:60361/spa",
+          "policy_step": 1,
+          "source": "[omitted]"
+        }
+      },
+      "official_identity_search_completed": false,
+      "official_identity_urls": [],
+      "official_scope_result_urls": [],
+      "official_scope_search_completed": false,
+      "pending_url_evidence_target": null,
+      "pending_url_search_attempts": 0,
+      "policy": "browser_grounded",
+      "release_landscape_evidence_urls": [],
+      "release_landscape_search_completed": false,
+      "schema_version": 3,
+      "search_completed": false,
+      "selected_candidate_url": null,
+      "step": 4,
+      "successful_queries": [],
+      "successful_searches": 0,
+      "task_sha256": "af7a5da176f09e566b7a708d9c5586bdcd40f78ac00dc1c17164ede3d36fee5a",
+      "version_frontier": null,
+      "version_frontier_key": [],
+      "version_frontier_resolved": true,
+      "visited_urls": [
+        "http://127.0.0.1:60361/spa",
+        "http://127.0.0.1:60361/spa/items/orbit"
+      ]
+    },
+    "previous_checkpoint_sha256": "beefe16bad9ee2f3e38a8cec495600563436140cfe40d736f83fc8c507f62b0d",
+    "resume_count": 0,
+    "run_id": "d71615c7-93d8-4397-90f2-7ed42988617c",
+    "schema_version": 2,
+    "source_fingerprint": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "status": "running",
+    "strategy_state": {
+      "attempted": [
+        "default"
+      ],
+      "consecutive_failures": 0,
+      "consecutive_no_progress": 0,
+      "current": "default",
+      "exhausted": false,
+      "switch_count": 0,
+      "switches": []
+    },
+    "task_sha256": "af7a5da176f09e566b7a708d9c5586bdcd40f78ac00dc1c17164ede3d36fee5a",
+    "updated_at": "2026-09-01T14:05:33.969976Z"
+  }
+}

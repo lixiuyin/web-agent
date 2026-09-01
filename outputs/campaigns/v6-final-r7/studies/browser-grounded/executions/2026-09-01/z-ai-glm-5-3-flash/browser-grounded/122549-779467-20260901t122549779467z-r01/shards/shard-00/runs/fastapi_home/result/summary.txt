@@ -1,0 +1,5 @@
+FastAPI's official home page is https://fastapi.tiangolo.com/ (title: "FastAPI - FastAPI"), found via a Bing search for "FastAPI official website" which returned it as the top result, corroborated by the linked official GitHub repo (github.com/fastapi/fastapi).
+
+Purpose summary (from the page itself): FastAPI is a modern, fast (high-performance) web framework for building APIs with Python, based on standard Python type hints. Its tagline: "FastAPI framework, high performance, easy to learn, fast to code, ready for production." The site serves as the official documentation hub, covering features, tutorials/user guides, API reference, and resources, and advertises the upcoming FastAPI Conf '26 (October 28, 2026, Amsterdam). The site also shows the current framework version (0.141.1) and community stats (~102k stars, ~9.8k forks).
+
+Exact URL: https://fastapi.tiangolo.com/

@@ -1,0 +1,28 @@
+**What asyncio is used for (per its official Python documentation page)**
+
+Source URL (exact): https://docs.python.org/3/library/asyncio.html — page title: "asyncio — Asynchronous I/O — Python 3.14.7 documentation" (docs.python.org, the official Python documentation site).
+
+Purpose, as stated on the page:
+1. **Concurrent code via async/await** — "asyncio is a library to write concurrent code using the async/await syntax."
+2. **Foundation for other async frameworks** — "asyncio is used as a foundation for multiple Python asynchronous frameworks that provide high-performance network and web-servers, database connection libraries, distributed task queues, etc."
+3. **Best-fit workload** — "asyncio is often a perfect fit for IO-bound and high-level structured network code."
+
+High-level APIs it provides (verbatim bullets from the page), to:
+- run Python coroutines concurrently and have full control over their execution;
+- perform network IO and IPC;
+- control subprocesses;
+- distribute tasks via queues;
+- synchronize concurrent code.
+
+For introspection, it provides APIs for:
+- inspecting the async call graph of tasks and futures;
+- inspecting tasks in another running Python process with command-line tools.
+
+Low-level capability:
+- "create and manage event loops, which provide asynchronous APIs for networking, running subprocesses, handling [OS/POSIX] signals…" (the event-loop bullet continues in the same sentence on the page).
+
+Typical usage pattern shown on the page (the "Hello World!" example): define a coroutine and drive it with the runner, e.g. `async def main(): ... await asyncio.sleep(1) ...` then `asyncio.run(main())`.
+
+Page structure (documented sub-areas of the library): High-level APIs (Runners, Coroutines and tasks, Streams, Synchronization Primitives, Subprocesses, Queues, Exceptions); Introspection APIs (Call graph introspection, Command-line introspection tools); Low-level APIs (Event loop, Futures, Transports and Protocols, Policies, Platform Support, Extending); plus Guides and Tutorials (High-level API Index, Low-level API Index, Developing with asyncio, asyncio and free-threaded Python). It sits under "Networking and Interprocess Communication" in the Python Standard Library docs.
+
+In short: asyncio is Python's official library for writing asynchronous, concurrent code with `async`/`await`, mainly for IO-bound and structured network programs — powering network/IPC handling, subprocess control, task queues, synchronization primitives, and event-loop management, and serving as the base layer for many third-party async frameworks and servers.

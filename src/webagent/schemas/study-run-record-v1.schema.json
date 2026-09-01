@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/lixiuyin/web-agent/main/src/webagent/schemas/study-run-record-v1.schema.json",
+  "title": "web-agent study run record v1",
+  "description": "Hash-bound ledger record for one completed task run in a declared web-agent study.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "kind",
+    "study_id",
+    "task_id",
+    "split",
+    "setting_id",
+    "provider",
+    "model",
+    "condition_id",
+    "failure_taxonomy_version",
+    "collection_date",
+    "repetition",
+    "run_path",
+    "report_path",
+    "report_sha256",
+    "success",
+    "success_probability"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/lixiuyin/web-agent/main/src/webagent/schemas/study-run-record-v1.schema.json"
+    },
+    "schema_version": {"const": 1},
+    "kind": {"const": "webagent-study-run"},
+    "study_id": {"$ref": "#/$defs/id"},
+    "task_id": {"$ref": "#/$defs/id"},
+    "split": {
+      "enum": ["development", "validation", "held_out_task", "held_out_setting"]
+    },
+    "setting_id": {"type": "string", "minLength": 1},
+    "provider": {"type": "string", "minLength": 1},
+    "model": {"type": "string", "minLength": 1},
+    "condition_id": {"$ref": "#/$defs/id"},
+    "failure_taxonomy_version": {"type": "string", "minLength": 1},
+    "collection_date": {"type": "string", "format": "date"},
+    "repetition": {"type": "integer", "minimum": 1},
+    "run_path": {"type": "string", "minLength": 1},
+    "report_path": {"type": "string", "minLength": 1},
+    "report_sha256": {"$ref": "#/$defs/sha256"},
+    "success": {"type": "boolean"},
+    "success_probability": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 1
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]*$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

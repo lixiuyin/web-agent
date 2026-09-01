@@ -1,0 +1,29 @@
+**Summary of the `pandas.DataFrame` object** (from the pandas 3.0.5 documentation)
+
+**Signature / constructor**
+```python
+class pandas.DataFrame(data=None, index=None, columns=None, dtype=None, copy=None)
+```
+
+**What it is**
+- A **two-dimensional, size-mutable, potentially heterogeneous tabular data** structure — the primary pandas data structure.
+- It contains **labeled axes (rows and columns)**; arithmetic operations align on **both** row and column labels.
+- It can be thought of as a **dict-like container for `Series` objects**.
+
+**Parameters**
+- `data` — ndarray (structured or homogeneous), Iterable, dict, or DataFrame.
+  - A dict can contain Series, arrays, constants, dataclass or list-like objects. If `data` is a dict, **column order follows insertion order**. If a dict contains Series with an index defined, it is **aligned by its index** (the same alignment applies when `data` is a Series or DataFrame itself). If `data` is a list of dicts, column order follows insertion order.
+- `index` — Index or array-like: row labels to use for the resulting frame; if `data` is a DataFrame and no `columns` are given, the index is **rebranded**.
+- `columns` — Index or array-like: column labels to use for the resulting frame.
+- `dtype` — dtype, default `None`: dtype to force on the resulting frame; if absent, **dtypes are inferred**.
+- `copy` — bool or None, default `None`: whether to copy the incoming data (default behavior is to copy only when needed / as documented for the version).
+
+**Key attributes (from the Attributes summary on the page)**
+`T` (transpose), `at` (single value by row/column label pair), `attrs` (global attributes dict), `axes` (list of axes), `columns`, `dtypes`, `empty`, `iat`, `index`, `iloc`, `loc`, `ndim` (number of axes = 2), `shape`, `size`, `values` (underlying NumPy array), plus `memory_usage`.
+
+**Main method groups listed in the API navigation**
+- Constructor/inspection & dtype handling: `astype`, `convert_dtypes`, `infer_objects`, `copy`, `to_numpy`, `head`, `info`, `select_dtypes`, `memory_usage`.
+- Indexing/iteration, arithmetic, combination, grouping/reshaping, time-series, plotting, serialization, and I/O methods such as `to_feather` (and the other `to_*` writers) are documented on the same page's Methods summary.
+
+**Exact API URL (cited from the loaded page)**
+https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html

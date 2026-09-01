@@ -1,0 +1,29 @@
+**GitHub's authentication guidance — summary**
+
+Source (exact Docs URL): https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github — page title: "About authentication to GitHub" (GitHub Docs › Authentication › Keeping your account and data secure).
+
+**Core principle**
+- To keep your account secure, you must authenticate before you can access certain resources on GitHub. Authentication means supplying or confirming credentials that are unique to you, proving you are exactly who you declare to be.
+- You can reach your GitHub resources in several ways — in the browser, via GitHub Desktop or another desktop application, through the API, or via the command line — and the credential you use depends on the access path.
+
+**Accepted credential types (the options GitHub lists)**
+1. Username and password (or social login) **with two‑factor authentication**, **or a passkey** — noted as available for GitHub Free and GitHub Enterprise Cloud.
+2. **Personal access token** (PAT).
+3. **SSH key**.
+
+**Passwords / first factor**
+- You create a password when you create your GitHub account; GitHub recommends using a **password manager to generate a random, unique password** (see the "Creating a strong password" guidance).
+- If 2FA is **not** enabled, GitHub may require **additional verification** the first time you sign in from a new or unrecognized device (e.g., a new browser profile, or a browser whose cookies have been deleted).
+
+**Social login**
+- Supported social login providers at account creation are **Google and Apple**.
+- Even with social login, GitHub recommends you **also configure 2FA and add a passkey or a password** as an additional account-recovery mechanism.
+- If you have an existing password-based account, you can **add your social login email** to that account so the social identity can be used as a first factor (passkey/identity-based sign-in) alongside your existing credentials.
+
+**Related paths the article points to (as seen in the page's links)**
+- Accessing GitHub using two-factor authentication; configuring two-factor authentication using GitHub Mobile.
+- Authenticating with GitHub Desktop; authenticating with the command line (Git Credential Manager).
+- Using `GITHUB_TOKEN` for authentication in GitHub Actions workflows.
+- About authentication with a GitHub App (app-level authentication).
+
+**Practical takeaway:** GitHub's guidance is to authenticate with the strongest mechanism available for your workflow — prefer a passkey or password + 2FA for interactive sign-in, SSH keys or fine-grained personal access tokens for Git/API/CLI access (never a password for API access), `GITHUB_TOKEN` inside Actions workflows, and GitHub App authentication for integrations — and to use a unique password from a password manager plus a recovery factor even when signing in via Google or Apple.

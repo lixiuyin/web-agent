@@ -1,0 +1,15 @@
+**Module initialization command (Go "Getting started" tutorial):**
+
+```
+$ go mod init example/hello
+go: creating new go.mod: module example/hello
+```
+
+- Command to run: `go mod init example/hello`
+- Expected output shown in the tutorial: `go: creating new go.mod: module example/hello`
+
+**Context from the page (observed):** This appears in the "Write some code → Create a module" step, after you create the directory with `mkdir hello` and enter it with `cd hello`. The `go mod init` command creates a `go.mod` file that defines the module (`example/hello`) and records dependency requirements. (Later in the tutorial, after importing the external package `rsc.io/quote`, the related command used is `go mod tidy`.)
+
+**Exact source URL cited:** https://go.dev/doc/tutorial/getting-started  (page title: "Tutorial: Get started with Go - The Go Programming Language")
+
+Evidence was read directly from the loaded page's main content and its code blocks (run steps e2–e3), not from memory.

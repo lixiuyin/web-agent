@@ -1,0 +1,4952 @@
+{
+  "format": "webagent-checkpoint",
+  "schema_version": 2,
+  "checkpoint_sha256": "7dea34614494583af9b9b7f1d1c745daa481604117bd71643bed7ffd6201189e",
+  "checkpoint": {
+    "artifacts": [
+      {
+        "path": "artifacts/figures/screenshots/tech_report_commits_history.jpg",
+        "sha256": "7c44870d28ea5af15494ce1407922adad1ca638a148941eb7e9f218d545c557e",
+        "size": 56546
+      }
+    ],
+    "browser_state": {
+      "active_tab_index": 0,
+      "current_url": "about:blank",
+      "tab_urls": [
+        "about:blank"
+      ]
+    },
+    "checkpoint_id": "290a50cd-49f5-402a-8889-26ad702ff90e",
+    "config_fingerprint": "ff09eaf171674227c824ec54285c7d82d6e1b46f1b741d274b62b530c7ba39d5",
+    "consecutive_failures": 1,
+    "created_at": "2026-09-01T16:31:40.263754Z",
+    "elapsed_seconds": 717.1470968723297,
+    "events": [
+      {
+        "current": "recovery",
+        "previous": "default",
+        "reason": "[omitted]",
+        "step_number": 5,
+        "timestamp": "2026-09-01T16:21:20.643713+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 5,
+        "strategy": "recovery",
+        "timestamp": "2026-09-01T16:21:20.643740+00:00",
+        "type": "replan"
+      },
+      {
+        "current": "alternate-navigation",
+        "previous": "recovery",
+        "reason": "[omitted]",
+        "step_number": 7,
+        "timestamp": "2026-09-01T16:21:55.485121+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 7,
+        "strategy": "alternate-navigation",
+        "timestamp": "2026-09-01T16:21:55.485143+00:00",
+        "type": "replan"
+      },
+      {
+        "current": "semantic-dom",
+        "previous": "alternate-navigation",
+        "reason": "[omitted]",
+        "step_number": 14,
+        "timestamp": "2026-09-01T16:24:43.328063+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 14,
+        "strategy": "semantic-dom",
+        "timestamp": "2026-09-01T16:24:43.328081+00:00",
+        "type": "replan"
+      },
+      {
+        "current": "search-discovery",
+        "previous": "semantic-dom",
+        "reason": "[omitted]",
+        "step_number": 18,
+        "timestamp": "2026-09-01T16:28:09.342254+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 18,
+        "strategy": "search-discovery",
+        "timestamp": "2026-09-01T16:28:09.342307+00:00",
+        "type": "replan"
+      },
+      {
+        "current": "visual-grounding",
+        "previous": "search-discovery",
+        "reason": "[omitted]",
+        "step_number": 21,
+        "timestamp": "2026-09-01T16:28:54.739298+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 21,
+        "strategy": "visual-grounding",
+        "timestamp": "2026-09-01T16:28:54.739315+00:00",
+        "type": "replan"
+      },
+      {
+        "current": "document-local",
+        "previous": "visual-grounding",
+        "reason": "[omitted]",
+        "step_number": 24,
+        "timestamp": "2026-09-01T16:31:40.241677+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 24,
+        "strategy": "document-local",
+        "timestamp": "2026-09-01T16:31:40.241723+00:00",
+        "type": "replan"
+      }
+    ],
+    "final_result": {},
+    "history": [
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:19:43.699442+00:00",
+          "title": "normal",
+          "url": "about:blank"
+        },
+        "duration_seconds": 12.877631902694702,
+        "step_number": 1,
+        "timestamp": "2026-09-01T16:19:55.983611+00:00",
+        "tool_call": {
+          "parameters": {
+            "query": "[omitted]",
+            "recency": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "search"
+        },
+        "tool_duration_seconds": 8.183441162109375,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [
+              "[omitted]",
+              "[omitted]",
+              "[omitted]",
+              "[omitted]",
+              "[omitted]"
+            ],
+            "new_urls_observed": 21,
+            "newer_version_leads_resolved": false,
+            "observed_url_count": 21,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 1,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 1,
+            "target": null,
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "engine": "bing",
+            "query": "[omitted]",
+            "results": [
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://qwen.ai/home"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://chat.qwen.ai/auth"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://qwen.ai/blog"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://en.wikipedia.org/wiki/Qwen"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://huggingface.co/Qwen"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://play.google.com/store/apps/details"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://openlm.ai/qwen3.8/"
+              }
+            ],
+            "search_attempts": [
+              {
+                "engine": "bing",
+                "outcome": "success"
+              }
+            ],
+            "search_market": "[omitted]",
+            "title": "[omitted]",
+            "url": "https://www.bing.com/search"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "search"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:19:56.657082+00:00",
+          "title": "normal",
+          "url": "https://www.bing.com/search"
+        },
+        "duration_seconds": 12.828559160232544,
+        "step_number": 2,
+        "timestamp": "2026-09-01T16:20:08.814305+00:00",
+        "tool_call": {
+          "parameters": {
+            "query": "[omitted]",
+            "recency": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "search"
+        },
+        "tool_duration_seconds": 4.321545839309692,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [
+              "[omitted]",
+              "[omitted]",
+              "[omitted]"
+            ],
+            "new_urls_observed": 23,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 44,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 2,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 2,
+            "target": null,
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "engine": "bing",
+            "query": "[omitted]",
+            "results": [
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://openlm.ai/qwen3.8/"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://github.com/QwenLM/Qwen3.8"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://huggingface.co/Qwen/Qwen3.8-27B"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://qwen.ai/blog"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://unsloth.ai/docs/models/qwen3.8"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://recipes.vllm.ai/Qwen/Qwen3.8-27B"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://ollama.com/library/qwen3.8"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://linas.substack.com/p/qwen3-8-27b-local-guide"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://www.alibabagroup.com/document-2021044032125272064"
+              }
+            ],
+            "search_attempts": [
+              {
+                "engine": "bing",
+                "outcome": "success"
+              }
+            ],
+            "search_market": "[omitted]",
+            "title": "[omitted]",
+            "url": "https://www.bing.com/search"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "search"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:20:09.497416+00:00",
+          "title": "normal",
+          "url": "https://www.bing.com/search"
+        },
+        "duration_seconds": 11.571067094802856,
+        "step_number": 3,
+        "timestamp": "2026-09-01T16:20:20.388000+00:00",
+        "tool_call": {
+          "parameters": {
+            "query": "[omitted]",
+            "recency": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "search"
+        },
+        "tool_duration_seconds": 1.9268217086791992,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [
+              "[omitted]",
+              "[omitted]",
+              "[omitted]"
+            ],
+            "new_urls_observed": 3,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 47,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 3,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 3,
+            "target": null,
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "engine": "bing",
+            "query": "[omitted]",
+            "results": [
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://qwen.ai/home"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://chat.qwen.ai/auth"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://qwen.ai/blog"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://en.wikipedia.org/wiki/Qwen"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://huggingface.co/Qwen"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://play.google.com/store/apps/details"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://openlm.ai/qwen3.8/"
+              }
+            ],
+            "search_attempts": [
+              {
+                "engine": "bing",
+                "outcome": "success"
+              }
+            ],
+            "search_market": "[omitted]",
+            "title": "[omitted]",
+            "url": "https://www.bing.com/search"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "search"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:20:21.244697+00:00",
+          "title": "normal",
+          "url": "https://www.bing.com/search"
+        },
+        "duration_seconds": 14.06638216972351,
+        "step_number": 4,
+        "timestamp": "2026-09-01T16:20:34.457707+00:00",
+        "tool_call": {
+          "parameters": {
+            "query": "[omitted]",
+            "recency": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "search"
+        },
+        "tool_duration_seconds": 3.9372611045837402,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [
+              "[omitted]",
+              "[omitted]",
+              "[omitted]"
+            ],
+            "new_urls_observed": 20,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 67,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 4,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 4,
+            "target": null,
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "engine": "bing",
+            "query": "[omitted]",
+            "results": [
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://qwen.ai/blog"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://github.com/QwenLM/Qwen3"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://huggingface.co/collections/Qwen/qwen3"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://arxiv.org/abs/2505.09388"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://huggingface.co/Qwen/Qwen3-8B"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://www.qianwenai.com/models/qwen3.8-max"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://qwen3.app/"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://arxiv.org/abs/2511.21631"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://qwen.ai/blog"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://github.com/QwenLM/Qwen3.8"
+              }
+            ],
+            "search_attempts": [
+              {
+                "engine": "bing",
+                "outcome": "success"
+              }
+            ],
+            "search_market": "[omitted]",
+            "title": "[omitted]",
+            "url": "https://www.bing.com/search"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "search"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:21:21.337293+00:00",
+          "title": "normal",
+          "url": "https://www.bing.com/search"
+        },
+        "duration_seconds": 34.08687210083008,
+        "step_number": 6,
+        "timestamp": "2026-09-01T16:21:54.747731+00:00",
+        "tool_call": {
+          "parameters": {
+            "query": "[omitted]",
+            "recency": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "search"
+        },
+        "tool_duration_seconds": 5.95635986328125,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [
+              "[omitted]",
+              "[omitted]"
+            ],
+            "new_urls_observed": 22,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 89,
+            "official_identity_search_completed": true,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 5,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 5,
+            "target": null,
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "engine": "bing",
+            "query": "[omitted]",
+            "results": [
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://www.alibaba.com/"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://www.alibaba.com/catalogs/"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://www.alibabagroup.com/en-US/"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://www.alibabagroup.com/en-US/about-alibaba-businesses-1747711844698554368"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://en.wikipedia.org/wiki/Alibaba_Group"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://spanish.alibaba.com/"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://www.1688.com/"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://www.aliexpress.com/"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://i.alibaba.com/"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://sale.alibaba.com/category/products/index.html"
+              }
+            ],
+            "search_attempts": [
+              {
+                "engine": "bing",
+                "outcome": "success"
+              }
+            ],
+            "search_market": "[omitted]",
+            "title": "[omitted]",
+            "url": "https://www.bing.com/search"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "search"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:21:55.456316+00:00",
+          "title": "normal",
+          "url": "https://www.bing.com/search"
+        },
+        "duration_seconds": 27.39973211288452,
+        "step_number": 7,
+        "timestamp": "2026-09-01T16:22:22.152025+00:00",
+        "tool_call": {
+          "parameters": {
+            "url": "https://github.com/QwenLM/Qwen3.8",
+            "wait_until": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "goto"
+        },
+        "tool_duration_seconds": 7.382270336151123,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [
+              "[omitted]",
+              "[omitted]"
+            ],
+            "new_urls_observed": 1,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 90,
+            "official_identity_search_completed": true,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 6,
+            "provenance": {
+              "page_url": "https://www.bing.com/search",
+              "policy_step": 2,
+              "source": "[omitted]"
+            },
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 5,
+            "target": "https://github.com/QwenLM/Qwen3.8",
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "title": "[omitted]",
+            "url": "https://github.com/QwenLM/Qwen3.8"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "goto"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:22:23.085241+00:00",
+          "title": "normal",
+          "url": "https://github.com/QwenLM/Qwen3.8"
+        },
+        "duration_seconds": 12.056769132614136,
+        "step_number": 8,
+        "timestamp": "2026-09-01T16:22:34.213461+00:00",
+        "tool_call": {
+          "parameters": {
+            "max_results": 100
+          },
+          "reasoning": "",
+          "tool_name": "get_all_links"
+        },
+        "tool_duration_seconds": 0.6916091442108154,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [
+              "[omitted]",
+              "[omitted]"
+            ],
+            "new_urls_observed": 39,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 129,
+            "official_identity_search_completed": true,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 7,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 5,
+            "target": null,
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "links": [
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/mcp",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/security/advanced-security",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/security/advanced-security/code-security",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/security/advanced-security/secret-protection",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/why-github",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://docs.github.com",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.blog",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.blog/changelog",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/features",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/team",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/solutions",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://skills.github.com",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://support.github.com",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/orgs/community/discussions",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/trust-center",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/partners",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/resources",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/open-source/sponsors",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://securitylab.github.com",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://maintainers.github.com",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://stars.github.com",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://archiveprogram.github.com",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/topics",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/trending",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/collections",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/pricing",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/QwenLM/Qwen3.8/pull/209",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/QwenLM/Qwen3.8/pull/1",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://chat.qwen.ai/",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://huggingface.co/Qwen",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://modelscope.cn/organization/qwen",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/QwenLM/Qwen/blob/main/assets/wechat.png",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://discord.gg/CV4E9rpNSD",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/QwenLM/Qwen3.8/issues",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/QwenLM/Qwen3.8/discussions",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://huggingface.co/collections/Qwen/qwen38",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://www.modelscope.cn/collections/Qwen/Qwen38",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://huggingface.co/collections/Qwen/qwen36",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://www.modelscope.cn/collections/Qwen/Qwen36",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://qwen.ai/blog",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://qwen.ai/blog",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://huggingface.co/collections/Qwen/qwen35",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://www.modelscope.cn/collections/Qwen/Qwen35",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://qwen.ai/blog",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://qwen.ai/blog",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://www.modelscope.cn/organization/Qwen",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://huggingface.co/Qwen/Qwen3.8-27B",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://chat.qwen.ai",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://qoder.com/",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://docs.qoder.com/quick-start",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://qwenwork.cn",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://qwenwork.cn/docs/getting-started/basic-workflow",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://www.qwencloud.com",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://qwen.ai/qwencode",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://qwenlm.github.io/qwen-code-docs/",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://huggingface.co/docs/transformers",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://huggingface.co/docs/transformers/serve-cli/serving",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/ggml-org/llama.cpp",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/ml-explore/mlx-lm",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/Blaizzy/mlx-vlm",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://unsloth.ai",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://unsloth.ai/docs/models/qwen3.8",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/sgl-project/sglang",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://docs.sglang.io/cookbook/autoregressive/Qwen/Qwen3.8",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/vllm-project/vllm",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://recipes.vllm.ai/Qwen",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/lightseekorg/tokenspeed",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://lightseek.org/tokenspeed/recipes/models",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/unslothai/unsloth",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/modelscope/swift",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://github.com/hiyouga/LLaMA-Factory",
+                "text": "[omitted]"
+              },
+              {
+                "href": "https://qwen.ai",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              },
+              {
+                "href": "[omitted]",
+                "text": "[omitted]"
+              }
+            ],
+            "returned": 100,
+            "total_count": 180
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "get_all_links"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:22:35.127330+00:00",
+          "title": "normal",
+          "url": "https://github.com/QwenLM/Qwen3.8"
+        },
+        "duration_seconds": 19.480794191360474,
+        "step_number": 9,
+        "timestamp": "2026-09-01T16:22:53.700711+00:00",
+        "tool_call": {
+          "parameters": {
+            "query": "[omitted]",
+            "recency": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "search"
+        },
+        "tool_duration_seconds": 1.5729851722717285,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [
+              "[omitted]"
+            ],
+            "new_urls_observed": 3,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 132,
+            "official_identity_search_completed": true,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 8,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 2,
+            "release_landscape_search_completed": true,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 6,
+            "target": null,
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "engine": "bing",
+            "query": "[omitted]",
+            "results": [
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://qwen.ai/home"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://chat.qwen.ai/auth"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://qwen.ai/blog"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://en.wikipedia.org/wiki/Qwen"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://huggingface.co/Qwen"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://play.google.com/store/apps/details"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://openlm.ai/qwen3.8/"
+              }
+            ],
+            "search_attempts": [
+              {
+                "engine": "bing",
+                "outcome": "success"
+              }
+            ],
+            "search_market": "[omitted]",
+            "title": "[omitted]",
+            "url": "https://www.bing.com/search"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "search"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:22:54.356395+00:00",
+          "title": "normal",
+          "url": "https://www.bing.com/search"
+        },
+        "duration_seconds": 14.519930839538574,
+        "step_number": 10,
+        "timestamp": "2026-09-01T16:23:08.228250+00:00",
+        "tool_call": {
+          "parameters": {
+            "query": "[omitted]",
+            "recency": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "search"
+        },
+        "tool_duration_seconds": 5.2718517780303955,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [
+              "[omitted]"
+            ],
+            "new_urls_observed": 29,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 161,
+            "official_identity_search_completed": true,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 9,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 2,
+            "release_landscape_search_completed": true,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 7,
+            "target": null,
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "engine": "bing",
+            "query": "[omitted]",
+            "results": [
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/Alibaba_Qwen/status/1877426465349972113"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/AGTPinsights/status/2086789169976689053"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/omarsar0/status/2092634019473015218"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/Alibaba_Qwen/status/2046939764428009914"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/ollama/status/2047066252523507916"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/Alibaba_Qwen/status/2086664887560970531"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/kaddisdeployed/status/2093341368332484744"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/koffuxu/status/2092083388039803345"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/Alibaba_Qwen/status/2042551216769765449"
+              }
+            ],
+            "search_attempts": [
+              {
+                "engine": "bing",
+                "outcome": "success"
+              }
+            ],
+            "search_market": "[omitted]",
+            "title": "[omitted]",
+            "url": "https://www.bing.com/search"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "search"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:23:08.915299+00:00",
+          "title": "normal",
+          "url": "https://www.bing.com/search"
+        },
+        "duration_seconds": 18.04208207130432,
+        "step_number": 11,
+        "timestamp": "2026-09-01T16:23:26.279007+00:00",
+        "tool_call": {
+          "parameters": {
+            "query": "[omitted]",
+            "recency": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "search"
+        },
+        "tool_duration_seconds": 4.902588844299316,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [
+              "[omitted]"
+            ],
+            "new_urls_observed": 3,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 164,
+            "official_identity_search_completed": true,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 10,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 2,
+            "release_landscape_search_completed": true,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 8,
+            "target": null,
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "engine": "bing",
+            "query": "[omitted]",
+            "results": [
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/Alibaba_Qwen/status/1877426465349972113"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/AGTPinsights/status/2086789169976689053"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/omarsar0/status/2092634019473015218"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/Alibaba_Qwen/status/2046939764428009914"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/ollama/status/2047066252523507916"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/Alibaba_Qwen/status/2086664887560970531"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/kaddisdeployed/status/2093341368332484744"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/koffuxu/status/2092083388039803345"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/Alibaba_Qwen/status/2042551216769765449"
+              }
+            ],
+            "search_attempts": [
+              {
+                "engine": "bing",
+                "outcome": "success"
+              }
+            ],
+            "search_market": "[omitted]",
+            "title": "[omitted]",
+            "url": "https://www.bing.com/search"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "search"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:23:26.959147+00:00",
+          "title": "normal",
+          "url": "https://www.bing.com/search"
+        },
+        "duration_seconds": 56.380709171295166,
+        "step_number": 12,
+        "timestamp": "2026-09-01T16:24:22.668210+00:00",
+        "tool_call": {
+          "parameters": {
+            "engine": "duckduckgo",
+            "query": "[omitted]",
+            "recency": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "search"
+        },
+        "tool_duration_seconds": 34.18592596054077,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [
+              "[omitted]"
+            ],
+            "new_urls_observed": 7,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 171,
+            "official_identity_search_completed": true,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 11,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 2,
+            "release_landscape_search_completed": true,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 9,
+            "target": null,
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "engine": "bing",
+            "fallback_from": "[omitted]",
+            "fallback_reason": "[omitted]",
+            "query": "[omitted]",
+            "results": [
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/Alibaba_Qwen/status/1877426465349972113"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/AGTPinsights/status/2086789169976689053"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/omarsar0/status/2092634019473015218"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/Alibaba_Qwen/status/2046939764428009914"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/ollama/status/2047066252523507916"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/Alibaba_Qwen/status/2086664887560970531"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/kaddisdeployed/status/2093341368332484744"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/koffuxu/status/2092083388039803345"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/Alibaba_Qwen/status/2042551216769765449"
+              }
+            ],
+            "search_attempts": [
+              {
+                "engine": "duckduckgo",
+                "error": "[omitted]",
+                "failure_category": "[omitted]",
+                "outcome": "failed"
+              },
+              {
+                "engine": "bing",
+                "outcome": "success"
+              }
+            ],
+            "search_market": "[omitted]",
+            "title": "[omitted]",
+            "url": "https://www.bing.com/search"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "search"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:24:23.337647+00:00",
+          "title": "normal",
+          "url": "https://www.bing.com/search"
+        },
+        "duration_seconds": 19.961094856262207,
+        "step_number": 13,
+        "timestamp": "2026-09-01T16:24:42.638765+00:00",
+        "tool_call": {
+          "parameters": {
+            "engine": "bing",
+            "query": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "search"
+        },
+        "tool_duration_seconds": 0.7307977676391602,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [
+              "[omitted]"
+            ],
+            "new_urls_observed": 23,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 194,
+            "official_identity_search_completed": true,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 12,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 2,
+            "release_landscape_search_completed": true,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 10,
+            "target": null,
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "engine": "bing",
+            "query": "[omitted]",
+            "results": [
+              {
+                "date": "[omitted]",
+                "snippet": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://github.com/"
+              },
+              {
+                "date": "[omitted]",
+                "snippet": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://github.com/login"
+              },
+              {
+                "date": "[omitted]",
+                "snippet": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://www.linkedin.com/company/github"
+              },
+              {
+                "date": "[omitted]",
+                "snippet": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://desktop.github.com/download/"
+              },
+              {
+                "date": "[omitted]",
+                "snippet": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://www.coursera.org/articles/what-is-github"
+              },
+              {
+                "date": "[omitted]",
+                "snippet": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://en.wikipedia.org/wiki/GitHub"
+              },
+              {
+                "date": "[omitted]",
+                "snippet": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://github.blog/"
+              }
+            ],
+            "search_attempts": [
+              {
+                "engine": "bing",
+                "outcome": "success"
+              }
+            ],
+            "search_market": "[omitted]",
+            "title": "[omitted]",
+            "url": "https://www.bing.com/search"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "search"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:24:43.296089+00:00",
+          "title": "normal",
+          "url": "https://www.bing.com/search"
+        },
+        "duration_seconds": 39.790419816970825,
+        "step_number": 14,
+        "timestamp": "2026-09-01T16:25:22.439328+00:00",
+        "tool_call": {
+          "parameters": {
+            "url": "https://github.com/QwenLM/Qwen3.8",
+            "wait_until": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "goto"
+        },
+        "tool_duration_seconds": 2.1827750205993652,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [
+              "[omitted]"
+            ],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 195,
+            "official_identity_search_completed": true,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 13,
+            "provenance": {
+              "page_url": "https://www.bing.com/search",
+              "policy_step": 2,
+              "source": "[omitted]"
+            },
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 2,
+            "release_landscape_search_completed": true,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 10,
+            "target": "https://github.com/QwenLM/Qwen3.8",
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "title": "[omitted]",
+            "url": "https://github.com/QwenLM/Qwen3.8"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "goto"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:25:23.421586+00:00",
+          "title": "normal",
+          "url": "https://github.com/QwenLM/Qwen3.8"
+        },
+        "duration_seconds": 47.827462911605835,
+        "step_number": 15,
+        "timestamp": "2026-09-01T16:26:10.276796+00:00",
+        "tool_call": {
+          "parameters": {
+            "engine": "bing",
+            "query": "[omitted]",
+            "recency": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "search"
+        },
+        "tool_duration_seconds": 4.038196086883545,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [
+              "[omitted]"
+            ],
+            "new_urls_observed": 3,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 198,
+            "official_identity_search_completed": true,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 14,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 2,
+            "release_landscape_search_completed": true,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 11,
+            "target": null,
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "engine": "bing",
+            "query": "[omitted]",
+            "results": [
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/Alibaba_Qwen/status/1877426465349972113"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/AGTPinsights/status/2086789169976689053"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/omarsar0/status/2092634019473015218"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/Alibaba_Qwen/status/2046939764428009914"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/ollama/status/2047066252523507916"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/Alibaba_Qwen/status/2086664887560970531"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/kaddisdeployed/status/2093341368332484744"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/koffuxu/status/2092083388039803345"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/Alibaba_Qwen/status/2042551216769765449"
+              }
+            ],
+            "search_attempts": [
+              {
+                "engine": "bing",
+                "outcome": "success"
+              }
+            ],
+            "search_market": "[omitted]",
+            "title": "[omitted]",
+            "url": "https://www.bing.com/search"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "search"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:26:11.009808+00:00",
+          "title": "normal",
+          "url": "https://www.bing.com/search"
+        },
+        "duration_seconds": 33.865787744522095,
+        "step_number": 16,
+        "timestamp": "2026-09-01T16:26:44.152799+00:00",
+        "tool_call": {
+          "parameters": {
+            "engine": "bing",
+            "query": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "search"
+        },
+        "tool_duration_seconds": 0.9097862243652344,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [
+              "[omitted]"
+            ],
+            "new_urls_observed": 3,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 201,
+            "official_identity_search_completed": true,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 15,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 2,
+            "release_landscape_search_completed": true,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 12,
+            "target": null,
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "engine": "bing",
+            "query": "[omitted]",
+            "results": [
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/Alibaba_Qwen/status/1877426465349972113"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/AGTPinsights/status/2086789169976689053"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/omarsar0/status/2092634019473015218"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/Alibaba_Qwen/status/2046939764428009914"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/ollama/status/2047066252523507916"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/Alibaba_Qwen/status/2086664887560970531"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/kaddisdeployed/status/2093341368332484744"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/koffuxu/status/2092083388039803345"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://x.com/Alibaba_Qwen/status/2042551216769765449"
+              }
+            ],
+            "search_attempts": [
+              {
+                "engine": "bing",
+                "outcome": "success"
+              }
+            ],
+            "search_market": "[omitted]",
+            "title": "[omitted]",
+            "url": "https://www.bing.com/search"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "search"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:26:44.826799+00:00",
+          "title": "normal",
+          "url": "https://www.bing.com/search"
+        },
+        "duration_seconds": 26.259426832199097,
+        "step_number": 17,
+        "timestamp": "2026-09-01T16:27:10.423371+00:00",
+        "tool_call": {
+          "parameters": {
+            "engine": "bing",
+            "query": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "search"
+        },
+        "tool_duration_seconds": 5.011324167251587,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [
+              "[omitted]"
+            ],
+            "new_urls_observed": 28,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 229,
+            "official_identity_search_completed": true,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 16,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 2,
+            "release_landscape_search_completed": true,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 13,
+            "target": null,
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "engine": "yahoo_japan",
+            "fallback_from": "[omitted]",
+            "fallback_reason": "[omitted]",
+            "query": "[omitted]",
+            "results": [
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://github.com/QwenLM/Qwen3.8"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://github.com/QwenLM"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://www.facebook.com/groups/DeepNetGroup/posts/2914233628969500/"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://www.reddit.com/r/LocalLLaMA/comments/1vyq2v4/megathread_qwen38flashnext_release_day/"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://llm-stats.com/models/qwen3.8-flash-next"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://www.linkedin.com/posts/mitkox_qwen-qwen-qwen-qwen-qwen38-flash-next-just-activity-7498362391508992000-XiiA"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://github.com/QwenLM/Qwen3.8/issues/150"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://hyper.ai/cn/notebooks/qwen3-8-flash-next-fp8-demo"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next-FP8/commit/bcd9f01ddc9cff2316eb84281bebcd5b058bddce"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://github.com/QwenLM/Qwen3.8/blob/main/LICENSE"
+              }
+            ],
+            "search_attempts": [
+              {
+                "engine": "bing",
+                "error": "[omitted]",
+                "failure_category": "[omitted]",
+                "outcome": "failed"
+              },
+              {
+                "engine": "yahoo_japan",
+                "outcome": "success"
+              }
+            ],
+            "title": "[omitted]",
+            "url": "https://search.yahoo.co.jp/search"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "search"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:28:10.090875+00:00",
+          "title": "normal",
+          "url": "https://search.yahoo.co.jp/search"
+        },
+        "duration_seconds": 26.252918004989624,
+        "step_number": 19,
+        "timestamp": "2026-09-01T16:28:35.623872+00:00",
+        "tool_call": {
+          "parameters": {
+            "engine": "yahoo_japan",
+            "query": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "search"
+        },
+        "tool_duration_seconds": 2.005902051925659,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [
+              "[omitted]"
+            ],
+            "new_urls_observed": 17,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 246,
+            "official_identity_search_completed": true,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 17,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 2,
+            "release_landscape_search_completed": true,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 14,
+            "target": null,
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "engine": "yahoo_japan",
+            "query": "[omitted]",
+            "results": [
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://github.com/QwenLM/Qwen3.8"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://github.com/qwenLM/qwen3"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://news.ycombinator.com/item"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://www.reddit.com/r/LocalLLaMA/comments/1klkmah/qwen3_technical_report/"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://github.com/qwenlm/qwen3-vl"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://qwen.ai/blog"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://qwenlm.github.io/blog/qwen3/"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://arxiv.org/abs/2505.09388"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://trendshift.io/repositories/186403"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://huggingface.co/papers/2505.09388"
+              }
+            ],
+            "search_attempts": [
+              {
+                "engine": "yahoo_japan",
+                "outcome": "success"
+              }
+            ],
+            "title": "[omitted]",
+            "url": "https://search.yahoo.co.jp/search"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "search"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:28:36.314911+00:00",
+          "title": "normal",
+          "url": "https://search.yahoo.co.jp/search"
+        },
+        "duration_seconds": 18.37830400466919,
+        "step_number": 20,
+        "timestamp": "2026-09-01T16:28:54.015262+00:00",
+        "tool_call": {
+          "parameters": {
+            "engine": "yahoo_japan",
+            "query": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "search"
+        },
+        "tool_duration_seconds": 1.523728847503662,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [
+              "[omitted]"
+            ],
+            "new_urls_observed": 12,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 258,
+            "official_identity_search_completed": true,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 18,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 2,
+            "release_landscape_search_completed": true,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 15,
+            "target": null,
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "engine": "yahoo_japan",
+            "query": "[omitted]",
+            "results": [
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://github.com/QwenLM/Qwen3.8"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://www.reddit.com/r/LocalLLaMA/comments/1vyq2v4/megathread_qwen38flashnext_release_day/"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://news.ycombinator.com/item"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://local-ai-zone.github.io/blog/qwen3-8-flash-next-deep-dive.html"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://qwen.ai/blog"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://trendshift.io/repositories/186403"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://www.linkedin.com/posts/marc-antonio-lopez_qwen38-flash-nexttechreportpdf-at-main-activity-7498694270502084608-K9H7"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://kaitchup.substack.com/p/qwen38-flash-next-review-benchmarks"
+              }
+            ],
+            "search_attempts": [
+              {
+                "engine": "yahoo_japan",
+                "outcome": "success"
+              }
+            ],
+            "title": "[omitted]",
+            "url": "https://search.yahoo.co.jp/search"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "search"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:28:54.713071+00:00",
+          "title": "normal",
+          "url": "https://search.yahoo.co.jp/search"
+        },
+        "duration_seconds": 17.383568286895752,
+        "step_number": 21,
+        "timestamp": "2026-09-01T16:29:11.413078+00:00",
+        "tool_call": {
+          "parameters": {
+            "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf",
+            "wait_until": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "goto"
+        },
+        "tool_duration_seconds": 3.6139512062072754,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [
+              "[omitted]",
+              "[omitted]"
+            ],
+            "new_urls_observed": 1,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 259,
+            "official_identity_search_completed": true,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 19,
+            "provenance": {
+              "page_url": "https://search.yahoo.co.jp/search",
+              "policy_step": 18,
+              "source": "[omitted]"
+            },
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 2,
+            "release_landscape_search_completed": true,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": false,
+            "selected_candidate_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf",
+            "successful_searches": 15,
+            "target": "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf",
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "title": "[omitted]",
+            "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "goto"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:29:12.137326+00:00",
+          "title": "normal",
+          "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf"
+        },
+        "duration_seconds": 36.92688202857971,
+        "step_number": 22,
+        "timestamp": "2026-09-01T16:29:48.353623+00:00",
+        "tool_call": {
+          "parameters": {
+            "full_page": true,
+            "label": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "screenshot"
+        },
+        "tool_duration_seconds": 0.1178290843963623,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [
+              "[omitted]",
+              "[omitted]"
+            ],
+            "new_urls_observed": 1,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 260,
+            "official_identity_search_completed": true,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 20,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 2,
+            "release_landscape_search_completed": true,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": false,
+            "selected_candidate_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf",
+            "successful_searches": 15,
+            "target": null,
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "deduplicated": false,
+            "height": 952,
+            "path": "artifacts/figures/screenshots/tech_report_commits_history.jpg",
+            "width": 1280
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "screenshot"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:29:49.079963+00:00",
+          "title": "normal",
+          "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf"
+        },
+        "duration_seconds": 40.41941022872925,
+        "step_number": 23,
+        "timestamp": "2026-09-01T16:30:28.789094+00:00",
+        "tool_call": {
+          "parameters": {
+            "path": "artifacts/figures/screenshots/tech_report_commits_history.jpg",
+            "question": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "analyze_image"
+        },
+        "tool_duration_seconds": 24.291123867034912,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [
+              "[omitted]",
+              "[omitted]"
+            ],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 260,
+            "official_identity_search_completed": true,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 21,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 2,
+            "release_landscape_search_completed": true,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": false,
+            "selected_candidate_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf",
+            "successful_searches": 15,
+            "target": null,
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "analysis": "[omitted]",
+            "browser_url": "[omitted]",
+            "path": "artifacts/figures/screenshots/tech_report_commits_history.jpg",
+            "question": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "analyze_image"
+        }
+      }
+    ],
+    "last_figure_path": "artifacts/figures/screenshots/tech_report_commits_history.jpg",
+    "loop_state": {
+      "in_loop": false,
+      "loop_type": "search_churn",
+      "page_hash_history": [
+        "6cdf7f862e74a3107b3dad64504865b4",
+        "f6ab2378334ec36ef6d2ffbeb8f7658d",
+        "b5263f3f053e1561204b2123ab4c8e73",
+        "e0a0ad443148ff82fb6ac9aa6fe284c3",
+        "a552f774af44b97eabf31d0823de207f",
+        "893c99554b3134a58d1b0f4835b0fbd5",
+        "e2b0ac70bf022a7192ed952afdea1bd0",
+        "7a8fd4149f9d969644b23d8407c8bf2d",
+        "74976f0ab05f63fbfc884c5e167a1fd2",
+        "74976f0ab05f63fbfc884c5e167a1fd2"
+      ],
+      "recent_actions": [
+        "3be69994d0c07d7e8b0956d7b786406d2a5800b734a2b9c2fd63e3d17b567ddb",
+        "82911552c9cfc627ff38a0241fe5d781d53f8ea7f6c8ade0f598c8f5059e999f",
+        "6fc011b9ba25113692ea8b91f16a4262c3f4dfb2c26de58f6c2043b6f938ddf6",
+        "abb626fa7154db8bbb7c65f93869daf991d5520d1a71188898ae1595d912b365",
+        "34a89caba8bb3fce3037c87625d19bce9d6d7cd9ec53c70ffc8d440ae217e294",
+        "6ac0e9484ef19ec661522042b52bce45177ae768f6a5b15f6e0c5ecccdc305da",
+        "f1ebb9b4852f52903fe73d2e213eb85951c2f16902466b990faefec6f99d29c5",
+        "fd943be7ed619f0b1bc409c06ef8026d689c2766d6bed6678e13eec816f1b6dd",
+        "2a5e3eb3353cb975dadd917d1683a9381d167e3f110f5c5ed9be54cc705daa76",
+        "a57ded21e0a3bc4c2960c8e9d04da8aec91da61d755a44111613e0d4097ef29e"
+      ],
+      "recent_pages": [
+        "23bdcd8ebe4914b2d918cd49a39fe6d22dbdadd80d6e205afeecbf1ce79d831d",
+        "faf36ed6bc2bc280970793a6cfb780823d706d8c4bbbd96309af20c821356fd3",
+        "3126a9b187d36a3424149f17c6256e3d8f843d42b477882a6c6d757336e7272a",
+        "d2449325e65e1497e0775bcd58805a58d709d2c4b74153229331818a6ffb05d7",
+        "ff9ec087772ffd4d52083a4b16827646c8c350cc4c7633bfec7ad5a1d7d7196e",
+        "ce9286b48ed55627bde774264c093e5e4fd3fe5c3a0f1c27efa4ae8e5ecca6f8",
+        "4047bd99543f845942121d0a2b88ffa2e83bb9190d1223335e654ec3f695c948",
+        "e520c2290023e3bd8e3a52fb7eb024ea62d4047e361dc1ba1052ddfca58e8c30",
+        "3c04adce6885837dc4cd89abaddefcead6c239590ce3d315fba1f3dde2802f51",
+        "3c04adce6885837dc4cd89abaddefcead6c239590ce3d315fba1f3dde2802f51"
+      ],
+      "schema_version": 1,
+      "threshold": 5,
+      "url_history": [
+        "https://www.bing.com/search",
+        "https://www.bing.com/search",
+        "https://github.com/QwenLM/Qwen3.8",
+        "https://www.bing.com/search",
+        "https://www.bing.com/search",
+        "https://search.yahoo.co.jp/search",
+        "https://search.yahoo.co.jp/search",
+        "https://search.yahoo.co.jp/search",
+        "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf",
+        "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf"
+      ],
+      "window_size": 10
+    },
+    "next_step": 25,
+    "pending_action": null,
+    "planner_attempts": [
+      {
+        "attempt_number": 1,
+        "completion_tokens": 173,
+        "duration_seconds": 2.4225380420684814,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 9574,
+        "requested_output_mode": "auto",
+        "response_length": 653,
+        "step_number": 1,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:19:46.163086+00:00",
+        "total_tokens": 9747,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 765,
+        "duration_seconds": 6.62069034576416,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 12214,
+        "requested_output_mode": "auto",
+        "response_length": 3035,
+        "step_number": 2,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:20:03.304706+00:00",
+        "total_tokens": 12979,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 66,
+        "duration_seconds": 6.422098875045776,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 13950,
+        "requested_output_mode": "auto",
+        "response_length": 152,
+        "step_number": 3,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:20:15.946960+00:00",
+        "total_tokens": 14016,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 27,
+        "duration_seconds": 8.056028842926025,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 14278,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 4,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:20:29.331851+00:00",
+        "total_tokens": 14305,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 2770,
+        "duration_seconds": 17.643882989883423,
+        "effective_output_mode": "native-tools",
+        "error": "planner attempt failed; details omitted",
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 15499,
+        "requested_output_mode": "auto",
+        "response_length": 10045,
+        "step_number": 5,
+        "structured_fallbacks": [],
+        "success": false,
+        "timestamp": "2026-09-01T16:20:52.823723+00:00",
+        "total_tokens": 18269,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 2,
+        "completion_tokens": 4096,
+        "duration_seconds": 27.8196759223938,
+        "effective_output_mode": "native-tools",
+        "error": "planner attempt failed; details omitted",
+        "finish_reason": "length",
+        "prompt_tokens": 15540,
+        "requested_output_mode": "auto",
+        "response_length": 15995,
+        "step_number": 5,
+        "structured_fallbacks": [],
+        "success": false,
+        "timestamp": "2026-09-01T16:21:20.643517+00:00",
+        "total_tokens": 19636,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 3334,
+        "duration_seconds": 26.214162826538086,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 15537,
+        "requested_output_mode": "auto",
+        "response_length": 13200,
+        "step_number": 6,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:21:47.578181+00:00",
+        "total_tokens": 18871,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 2836,
+        "duration_seconds": 17.77249312400818,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 16442,
+        "requested_output_mode": "auto",
+        "response_length": 12020,
+        "step_number": 7,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:22:13.257673+00:00",
+        "total_tokens": 19278,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 1220,
+        "duration_seconds": 8.907827854156494,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 15876,
+        "requested_output_mode": "auto",
+        "response_length": 5388,
+        "step_number": 8,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:22:32.037836+00:00",
+        "total_tokens": 17096,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 2117,
+        "duration_seconds": 13.539009094238281,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 16572,
+        "requested_output_mode": "auto",
+        "response_length": 8585,
+        "step_number": 9,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:22:48.700246+00:00",
+        "total_tokens": 18689,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 973,
+        "duration_seconds": 7.35132908821106,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 17270,
+        "requested_output_mode": "auto",
+        "response_length": 3553,
+        "step_number": 10,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:23:01.741972+00:00",
+        "total_tokens": 18243,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 1567,
+        "duration_seconds": 11.245015859603882,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 18774,
+        "requested_output_mode": "auto",
+        "response_length": 5998,
+        "step_number": 11,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:23:20.192218+00:00",
+        "total_tokens": 20341,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 3452,
+        "duration_seconds": 20.27534508705139,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 20106,
+        "requested_output_mode": "auto",
+        "response_length": 12996,
+        "step_number": 12,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:23:47.266176+00:00",
+        "total_tokens": 23558,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 2539,
+        "duration_seconds": 15.887618064880371,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 20847,
+        "requested_output_mode": "auto",
+        "response_length": 9477,
+        "step_number": 13,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:24:39.253913+00:00",
+        "total_tokens": 23386,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 4096,
+        "duration_seconds": 26.500983953475952,
+        "effective_output_mode": "native-tools",
+        "error": "planner attempt failed; details omitted",
+        "finish_reason": "length",
+        "prompt_tokens": 20917,
+        "requested_output_mode": "auto",
+        "response_length": 17278,
+        "step_number": 14,
+        "structured_fallbacks": [],
+        "success": false,
+        "timestamp": "2026-09-01T16:25:09.829064+00:00",
+        "total_tokens": 25013,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 2,
+        "completion_tokens": 1254,
+        "duration_seconds": 8.443852186203003,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 20958,
+        "requested_output_mode": "auto",
+        "response_length": 5122,
+        "step_number": 14,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:25:18.273012+00:00",
+        "total_tokens": 22212,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 4096,
+        "duration_seconds": 40.83458590507507,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 20168,
+        "requested_output_mode": "auto",
+        "response_length": 16734,
+        "step_number": 15,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:26:04.294571+00:00",
+        "total_tokens": 24264,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 1615,
+        "duration_seconds": 28.54324507713318,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 20933,
+        "requested_output_mode": "auto",
+        "response_length": 5893,
+        "step_number": 16,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:26:39.582324+00:00",
+        "total_tokens": 22548,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 2848,
+        "duration_seconds": 19.348714113235474,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 21496,
+        "requested_output_mode": "auto",
+        "response_length": 10486,
+        "step_number": 17,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:27:04.208629+00:00",
+        "total_tokens": 24344,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 4096,
+        "duration_seconds": 29.016634941101074,
+        "effective_output_mode": "native-tools",
+        "error": "planner attempt failed; details omitted",
+        "finish_reason": "length",
+        "prompt_tokens": 21569,
+        "requested_output_mode": "auto",
+        "response_length": 15818,
+        "step_number": 18,
+        "structured_fallbacks": [],
+        "success": false,
+        "timestamp": "2026-09-01T16:27:40.169810+00:00",
+        "total_tokens": 25665,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 2,
+        "completion_tokens": 4096,
+        "duration_seconds": 29.17199182510376,
+        "effective_output_mode": "native-tools",
+        "error": "planner attempt failed; details omitted",
+        "finish_reason": "length",
+        "prompt_tokens": 21610,
+        "requested_output_mode": "auto",
+        "response_length": 17320,
+        "step_number": 18,
+        "structured_fallbacks": [],
+        "success": false,
+        "timestamp": "2026-09-01T16:28:09.341799+00:00",
+        "total_tokens": 25706,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 3172,
+        "duration_seconds": 22.185359954833984,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 21559,
+        "requested_output_mode": "auto",
+        "response_length": 13144,
+        "step_number": 19,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:28:32.310078+00:00",
+        "total_tokens": 24731,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 2199,
+        "duration_seconds": 14.923565149307251,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 21332,
+        "requested_output_mode": "auto",
+        "response_length": 8482,
+        "step_number": 20,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:28:51.265931+00:00",
+        "total_tokens": 23531,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 1714,
+        "duration_seconds": 11.814792156219482,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 21479,
+        "requested_output_mode": "auto",
+        "response_length": 6366,
+        "step_number": 21,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:29:06.554099+00:00",
+        "total_tokens": 23193,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 2529,
+        "duration_seconds": 34.73602318763733,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 20766,
+        "requested_output_mode": "auto",
+        "response_length": 10862,
+        "step_number": 22,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:29:46.910690+00:00",
+        "total_tokens": 23295,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 1827,
+        "duration_seconds": 14.259618997573853,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 19798,
+        "requested_output_mode": "auto",
+        "response_length": 7481,
+        "step_number": 23,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:30:03.370977+00:00",
+        "total_tokens": 21625,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 4096,
+        "duration_seconds": 34.78457975387573,
+        "effective_output_mode": "native-tools",
+        "error": "planner attempt failed; details omitted",
+        "finish_reason": "length",
+        "prompt_tokens": 18103,
+        "requested_output_mode": "auto",
+        "response_length": 18235,
+        "step_number": 24,
+        "structured_fallbacks": [],
+        "success": false,
+        "timestamp": "2026-09-01T16:31:04.255209+00:00",
+        "total_tokens": 22199,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 2,
+        "completion_tokens": 4096,
+        "duration_seconds": 35.98613405227661,
+        "effective_output_mode": "native-tools",
+        "error": "planner attempt failed; details omitted",
+        "finish_reason": "length",
+        "prompt_tokens": 18144,
+        "requested_output_mode": "auto",
+        "response_length": 18429,
+        "step_number": 24,
+        "structured_fallbacks": [],
+        "success": false,
+        "timestamp": "2026-09-01T16:31:40.241396+00:00",
+        "total_tokens": 22240,
+        "transport_retries": 0
+      }
+    ],
+    "planning_state": {
+      "active_milestone_id": "m9",
+      "evidence": [
+        {
+          "id": "e1",
+          "kind": "checkpoint",
+          "source": "https://www.bing.com/search",
+          "step_number": 1,
+          "summary": "evidence retained from step 1"
+        },
+        {
+          "id": "e2",
+          "kind": "checkpoint",
+          "source": "https://www.bing.com/search",
+          "step_number": 2,
+          "summary": "evidence retained from step 2"
+        },
+        {
+          "id": "e3",
+          "kind": "checkpoint",
+          "source": "https://www.bing.com/search",
+          "step_number": 3,
+          "summary": "evidence retained from step 3"
+        },
+        {
+          "id": "e4",
+          "kind": "checkpoint",
+          "source": "https://www.bing.com/search",
+          "step_number": 4,
+          "summary": "evidence retained from step 4"
+        },
+        {
+          "id": "e5",
+          "kind": "checkpoint",
+          "source": "https://www.bing.com/search",
+          "step_number": 6,
+          "summary": "evidence retained from step 6"
+        },
+        {
+          "id": "e6",
+          "kind": "checkpoint",
+          "source": "https://github.com/QwenLM/Qwen3.8",
+          "step_number": 7,
+          "summary": "evidence retained from step 7"
+        },
+        {
+          "id": "e7",
+          "kind": "checkpoint",
+          "source": "https://github.com/QwenLM/Qwen3.8",
+          "step_number": 8,
+          "summary": "evidence retained from step 8"
+        },
+        {
+          "id": "e8",
+          "kind": "checkpoint",
+          "source": "https://www.bing.com/search",
+          "step_number": 9,
+          "summary": "evidence retained from step 9"
+        },
+        {
+          "id": "e9",
+          "kind": "checkpoint",
+          "source": "https://www.bing.com/search",
+          "step_number": 10,
+          "summary": "evidence retained from step 10"
+        },
+        {
+          "id": "e10",
+          "kind": "checkpoint",
+          "source": "https://www.bing.com/search",
+          "step_number": 11,
+          "summary": "evidence retained from step 11"
+        },
+        {
+          "id": "e11",
+          "kind": "checkpoint",
+          "source": "https://www.bing.com/search",
+          "step_number": 12,
+          "summary": "evidence retained from step 12"
+        },
+        {
+          "id": "e12",
+          "kind": "checkpoint",
+          "source": "https://www.bing.com/search",
+          "step_number": 13,
+          "summary": "evidence retained from step 13"
+        },
+        {
+          "id": "e13",
+          "kind": "checkpoint",
+          "source": "https://www.bing.com/search",
+          "step_number": 15,
+          "summary": "evidence retained from step 15"
+        },
+        {
+          "id": "e14",
+          "kind": "checkpoint",
+          "source": "https://www.bing.com/search",
+          "step_number": 16,
+          "summary": "evidence retained from step 16"
+        },
+        {
+          "id": "e15",
+          "kind": "checkpoint",
+          "source": "https://search.yahoo.co.jp/search",
+          "step_number": 17,
+          "summary": "evidence retained from step 17"
+        },
+        {
+          "id": "e16",
+          "kind": "checkpoint",
+          "source": "https://search.yahoo.co.jp/search",
+          "step_number": 19,
+          "summary": "evidence retained from step 19"
+        },
+        {
+          "id": "e17",
+          "kind": "checkpoint",
+          "source": "https://search.yahoo.co.jp/search",
+          "step_number": 20,
+          "summary": "evidence retained from step 20"
+        },
+        {
+          "id": "e18",
+          "kind": "checkpoint",
+          "source": "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf",
+          "step_number": 21,
+          "summary": "evidence retained from step 21"
+        },
+        {
+          "id": "e19",
+          "kind": "checkpoint",
+          "source": "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf",
+          "step_number": 22,
+          "summary": "evidence retained from step 22"
+        },
+        {
+          "id": "e20",
+          "kind": "checkpoint",
+          "source": "[redacted]",
+          "step_number": 23,
+          "summary": "evidence retained from step 23"
+        }
+      ],
+      "milestones": [
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 1",
+          "id": "m1",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 2",
+          "id": "m2",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 3",
+          "id": "m3",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 4",
+          "id": "m4",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 5",
+          "id": "m5",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 6",
+          "id": "m6",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 7",
+          "id": "m7",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 8",
+          "id": "m8",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 9",
+          "id": "m9",
+          "status": "active"
+        }
+      ],
+      "objective": "task bound by checkpoint task_sha256",
+      "revisions": [
+        {
+          "added_milestone_ids": [
+            "m4"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 1,
+          "step_number": 5,
+          "strategy": "recovery"
+        },
+        {
+          "added_milestone_ids": [
+            "m5"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 2,
+          "step_number": 7,
+          "strategy": "alternate-navigation"
+        },
+        {
+          "added_milestone_ids": [
+            "m6"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 3,
+          "step_number": 14,
+          "strategy": "semantic-dom"
+        },
+        {
+          "added_milestone_ids": [
+            "m7"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 4,
+          "step_number": 18,
+          "strategy": "search-discovery"
+        },
+        {
+          "added_milestone_ids": [
+            "m8"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 5,
+          "step_number": 21,
+          "strategy": "visual-grounding"
+        },
+        {
+          "added_milestone_ids": [
+            "m9"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 6,
+          "step_number": 24,
+          "strategy": "document-local"
+        }
+      ]
+    },
+    "policy_state": {
+      "broad_current_year_search_completed": true,
+      "current_year": 2026,
+      "downloaded_paths": {},
+      "figure_analysis_completed": false,
+      "hybrid": {
+        "candidate_date": null,
+        "candidate_owner": null,
+        "candidate_url": null,
+        "candidate_version_key": [],
+        "cross_check_exhausted": false,
+        "direct_evidence_verified": false,
+        "missing_repeat_count": 0,
+        "missing_signature": [],
+        "official_report_attempts": {},
+        "required_next_action": null,
+        "subject": "[omitted]",
+        "successful_topics": []
+      },
+      "observed_urls": {
+        "field_0028427d56e6": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 15,
+          "source": "[omitted]"
+        },
+        "field_00b3ffd07690": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_024d9d97dceb": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_026a78860fc7": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_02fbc78fb21f": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_041385cbabeb": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_04d6efa33f70": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_055cd5dfe6fc": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_056a631df356": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 18,
+          "source": "[omitted]"
+        },
+        "field_066673db5b08": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_0877891d5b15": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_09a8b930c8b7": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 12,
+          "source": "[omitted]"
+        },
+        "field_0a0de81753e5": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_0d21e8907ef5": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_0d768f8de84f": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_0f3574ea559a": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_0fb5747ab61d": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 10,
+          "source": "[omitted]"
+        },
+        "field_0fd6bb789467": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 12,
+          "source": "[omitted]"
+        },
+        "field_12b8e72b3ded": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 6,
+          "source": "[omitted]"
+        },
+        "field_13ff78e93989": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_147b7512f0cb": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_1621fe80e7fc": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 17,
+          "source": "[omitted]"
+        },
+        "field_16e5951e0a47": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_1a8bb7790d7f": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_1b7504af5302": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 11,
+          "source": "[omitted]"
+        },
+        "field_1cc1c29adc11": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_1d781b4418c2": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_1e7dc2766ceb": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 18,
+          "source": "[omitted]"
+        },
+        "field_1e8f1649277a": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 18,
+          "source": "[omitted]"
+        },
+        "field_1fe9a769aabf": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_2044f2b57497": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_209634334696": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_221d42611ab9": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_22e8692e5f28": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_22fa378fa312": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 14,
+          "source": "[omitted]"
+        },
+        "field_231d66c32223": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_23779f4b1525": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 12,
+          "source": "[omitted]"
+        },
+        "field_23c0e710ba2d": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_251388c592e5": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_258e95c0538b": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 18,
+          "source": "[omitted]"
+        },
+        "field_25abd093386e": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 12,
+          "source": "[omitted]"
+        },
+        "field_266671e621f5": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 17,
+          "source": "[omitted]"
+        },
+        "field_276fefe4af7b": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_27962e801002": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_27af5f80eebd": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_28b22aa6ebfd": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 4,
+          "source": "[omitted]"
+        },
+        "field_29d6f40d979b": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 12,
+          "source": "[omitted]"
+        },
+        "field_2a2e14100663": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_2a6220b8b18d": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_2b35613a893a": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_2c21762f2b71": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 17,
+          "source": "[omitted]"
+        },
+        "field_2e7a4725fb51": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_2f516f843653": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_307edf922253": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_30f6151a2ec0": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_3113c9eea497": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_3138f94dd596": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 12,
+          "source": "[omitted]"
+        },
+        "field_326a64505027": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_3527d355ea6a": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 4,
+          "source": "[omitted]"
+        },
+        "field_363c946d3de4": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 12,
+          "source": "[omitted]"
+        },
+        "field_378180389750": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_394bbed69c9b": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_39e255cf14ba": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_3a7f5fc5b342": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 12,
+          "source": "[omitted]"
+        },
+        "field_3b1025ed460f": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_3b2d02ce5c85": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_3bdb5ab7e02a": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 4,
+          "source": "[omitted]"
+        },
+        "field_3d06a921d22a": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_3d0a75cffbf1": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_3e4a3f3b3d83": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 17,
+          "source": "[omitted]"
+        },
+        "field_3ee7b1ee025f": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 17,
+          "source": "[omitted]"
+        },
+        "field_41bffa96bfd8": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 4,
+          "source": "[omitted]"
+        },
+        "field_43a4cd8dd7da": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_43eb84bf0fc5": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_4454c0f2533b": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_457f62eee963": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_46cd5d3fff7f": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 18,
+          "source": "[omitted]"
+        },
+        "field_47acd07d1b54": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_47e99332b7ba": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_4818c6f58ec3": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 17,
+          "source": "[omitted]"
+        },
+        "field_48aeceb7aaa8": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_48afbdc59f1a": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_495a0e64a709": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_4cabde7ae710": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_4cb758e1d883": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 18,
+          "source": "[omitted]"
+        },
+        "field_4cd1cbbde7e4": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 18,
+          "source": "[omitted]"
+        },
+        "field_4ecf0eed4b1d": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 15,
+          "source": "[omitted]"
+        },
+        "field_4ff7a5a9e674": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 4,
+          "source": "[omitted]"
+        },
+        "field_50968e548686": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_529b6207126b": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_53ea5c1ce1f6": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 17,
+          "source": "[omitted]"
+        },
+        "field_54dbbb904fdc": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_54eee935660a": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_55d219583c65": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_56e07ca77437": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_571146107562": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_57473c0bef23": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_5855993aad72": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_5a06cc201eb4": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 4,
+          "source": "[omitted]"
+        },
+        "field_5e292ca03849": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_5fcd604b5abb": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_6035bc3a9f4a": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 18,
+          "source": "[omitted]"
+        },
+        "field_61f4f20c35cf": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_638ebe7c8142": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 11,
+          "source": "[omitted]"
+        },
+        "field_64a440a6b546": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_672ca41b068f": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_69dd92e3e7f1": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_6a4c5ff3415a": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_6ac75bc8467f": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_6d985e4d1912": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_6def82c00b96": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_6e94f5251901": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_736d07f9b103": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_73d540b66ec7": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 12,
+          "source": "[omitted]"
+        },
+        "field_74f19216c66d": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf",
+          "policy_step": 20,
+          "source": "[omitted]"
+        },
+        "field_7716b945c715": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 17,
+          "source": "[omitted]"
+        },
+        "field_7782eec872d3": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 4,
+          "source": "[omitted]"
+        },
+        "field_790e916d0c63": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 4,
+          "source": "[omitted]"
+        },
+        "field_7adb6fcf1f05": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_7b222fa279a7": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_7c0b9dba1bd7": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 12,
+          "source": "[omitted]"
+        },
+        "field_7d13f5d7fd0a": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_7d54e814dc4f": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_7d6c5e786080": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 4,
+          "source": "[omitted]"
+        },
+        "field_7eb397cf02b4": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 17,
+          "source": "[omitted]"
+        },
+        "field_827defc5c791": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 17,
+          "source": "[omitted]"
+        },
+        "field_827e13247e9d": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_8282d534ed22": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_8312097cff31": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_837b8070201b": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 11,
+          "source": "[omitted]"
+        },
+        "field_83e9326bb7f7": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_848578f06ce7": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 17,
+          "source": "[omitted]"
+        },
+        "field_84e0e9f8c27a": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_858b1faded75": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_884d2760cb17": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_8a0accf49f07": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 12,
+          "source": "[omitted]"
+        },
+        "field_8b981141b769": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_8c80560518d5": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_8dac226725ee": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_90d7547d153f": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_9160c133ff51": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_9198ef954caf": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 17,
+          "source": "[omitted]"
+        },
+        "field_93b8aacf09a0": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 11,
+          "source": "[omitted]"
+        },
+        "field_9571c0dc7236": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_95ce5b092bd1": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 4,
+          "source": "[omitted]"
+        },
+        "field_963130d792e8": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_96c945dcfe7d": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 17,
+          "source": "[omitted]"
+        },
+        "field_97071a28590c": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 4,
+          "source": "[omitted]"
+        },
+        "field_97b408a4415c": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_99fa6d8e5e76": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 4,
+          "source": "[omitted]"
+        },
+        "field_9bad18753be4": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_9bd216a1ce73": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_9ce19ca94c5c": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_9e44be515a18": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 4,
+          "source": "[omitted]"
+        },
+        "field_a096bfd9c0a6": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 12,
+          "source": "[omitted]"
+        },
+        "field_a121491687db": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_a159c2ca5647": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_a434f17e8107": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_a5e87fdc2aae": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_a6af58c0658f": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_a74e995e3b5c": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_a77272b1d8dc": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_a7e589a44d55": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_a7ff808b618c": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_aa562fed8195": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_aaba0d441c71": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_ab837a4f87ca": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 4,
+          "source": "[omitted]"
+        },
+        "field_abc97a34796d": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_aca87993f523": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 8,
+          "source": "[omitted]"
+        },
+        "field_ad3b28d077b1": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 17,
+          "source": "[omitted]"
+        },
+        "field_ad49c30fc782": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 12,
+          "source": "[omitted]"
+        },
+        "field_ad5e947c272c": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_ae956247466d": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 12,
+          "source": "[omitted]"
+        },
+        "field_ae983c146197": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_af7b3ba9630f": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 12,
+          "source": "[omitted]"
+        },
+        "field_b071e30f25b5": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_b12c51e9be7a": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_b4289d596e8a": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_b4ee909fcb0b": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 14,
+          "source": "[omitted]"
+        },
+        "field_b50668be8602": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_b54f02918b4c": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 18,
+          "source": "[omitted]"
+        },
+        "field_b98ccd5957fc": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 12,
+          "source": "[omitted]"
+        },
+        "field_b9e823ab86ab": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 18,
+          "source": "[omitted]"
+        },
+        "field_ba6d6b7d7b32": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 12,
+          "source": "[omitted]"
+        },
+        "field_bdb254573473": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 4,
+          "source": "[omitted]"
+        },
+        "field_bdf91b594f85": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 18,
+          "source": "[omitted]"
+        },
+        "field_c02c255dae9a": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 12,
+          "source": "[omitted]"
+        },
+        "field_c45f6a07f52a": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_c4a266ac2e37": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_c624c0a69f75": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_c6a3521d1156": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_c6f028d13505": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_c7872ebf0b57": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 3,
+          "source": "[omitted]"
+        },
+        "field_c84f72623fb8": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 17,
+          "source": "[omitted]"
+        },
+        "field_ca26bca182f6": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_ca7c12ae56df": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 4,
+          "source": "[omitted]"
+        },
+        "field_cc77127d9097": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_cd5011b2c128": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_cdc70defb1e8": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_cdcb9daf1091": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 4,
+          "source": "[omitted]"
+        },
+        "field_ce4444ffa254": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 11,
+          "source": "[omitted]"
+        },
+        "field_d0903e647bda": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 3,
+          "source": "[omitted]"
+        },
+        "field_d4373617e420": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_d6e9e9c6cb5d": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_d771de0454bd": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_d7ccc917ea73": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 10,
+          "source": "[omitted]"
+        },
+        "field_d861fdd57162": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_d94aad9a3b40": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_d98d946b4d95": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_db82e2fec838": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_dbe4c4053f65": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 18,
+          "source": "[omitted]"
+        },
+        "field_dc7eccb427a5": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_de572d3f4ab4": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_e0b1210b9f34": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_e172aee1d147": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_e270badddeaa": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 17,
+          "source": "[omitted]"
+        },
+        "field_e28c20b8ce74": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_e2a83306882d": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf",
+          "policy_step": 19,
+          "source": "[omitted]"
+        },
+        "field_e43c6a193726": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 11,
+          "source": "[omitted]"
+        },
+        "field_e45c51385aed": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_e795609c004a": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 12,
+          "source": "[omitted]"
+        },
+        "field_e833912b8e49": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 12,
+          "source": "[omitted]"
+        },
+        "field_ea5970e37c94": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_eb79656c925c": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_eb8495144b0d": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_ed53866a9151": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_edfb0ba3dbfe": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_ee69d95e3928": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 15,
+          "source": "[omitted]"
+        },
+        "field_f0493258ec54": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_f18fbee4c247": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 4,
+          "source": "[omitted]"
+        },
+        "field_f1cf2af8c015": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_f2ed37a861aa": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 12,
+          "source": "[omitted]"
+        },
+        "field_f6cf006fbdea": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 12,
+          "source": "[omitted]"
+        },
+        "field_f7f05ddaa12f": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_f913aee50a76": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_f928e11aa96b": {
+          "page_url": "https://search.yahoo.co.jp/search",
+          "policy_step": 16,
+          "source": "[omitted]"
+        },
+        "field_fb1aaf4c0832": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_fcdf71eb37e6": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 9,
+          "source": "[omitted]"
+        },
+        "field_fd9f50c9975a": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8",
+          "policy_step": 7,
+          "source": "[omitted]"
+        },
+        "field_fe70aafec90d": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 8,
+          "source": "[omitted]"
+        },
+        "field_ff2ab52294ce": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_ffb78ce4d816": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        }
+      },
+      "official_identity_search_completed": true,
+      "official_identity_urls": [
+        "https://www.alibabagroup.com/en-US/"
+      ],
+      "official_scope_result_urls": [],
+      "official_scope_search_completed": false,
+      "pending_url_evidence_target": null,
+      "pending_url_search_attempts": 0,
+      "policy": "browser_grounded",
+      "release_landscape_evidence_urls": [
+        "https://openlm.ai/qwen3.8/",
+        "https://qwen.ai/blog"
+      ],
+      "release_landscape_search_completed": true,
+      "schema_version": 3,
+      "search_completed": true,
+      "selected_candidate_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf",
+      "step": 21,
+      "successful_queries": [
+        "0fcdb99e58ce0788d7e1bbc04c4d92384acd2c99a779428751c7a7b78a3fd31b",
+        "2ca0210066de51a0f09b8c4b9b9afbf950cbc03afcb523a89c982d1fb0659842",
+        "3978363957f37212ddbe2298fbd742bdd307dcf24f1d37ac9c004ae9e1c5d269",
+        "3b4b72eead418dc8ed5b698b6b110600e0c8378c335c294484bba8bd9fc8ab28",
+        "5e6c63f93316c314a740c1ce123a7fe4137ec4aa97024b142593b4e1a72a56fb",
+        "5f97219bde31814b04546d83cea638b75ab51d5b62e75a0567e16687cc66d6b4",
+        "60cb79c5d2c541230c734b7d4c82787e47a14423491adea6809edef8bec8ad26",
+        "908fa48fa039b964c68ed47fd662849bafec94d3dfce0ee7889628eedf7a2ade",
+        "a1b2c36e0e754f7cbe8159f196923bdc22a0ec3d4e2978bc485ced5b5713bc83",
+        "a37b1e4d331ae9261a31b4ecc3e9f7c8ac26c94bc549a5870d414ba923b09963",
+        "ac35c11e727ab983bd8b903e875c560db4a4b82bce3c14803eb6f2cff34c74ce",
+        "b6d5cda4c3cbe47576ac89f03885bcb136e1fe4ff0aa36cc5fb5c41dbb1e9cec",
+        "bfb0f1fbac245cbf0fbb64998c451caa84e7e798fe9c9088d99bbb0a7dbd23a2",
+        "c32d847f79e522b7996f1e660267622e1a75836ed72971c4af0aae93580d03aa",
+        "c4c72832bedc9c91415b9035c41c00deb7238d00cdc55d62780ed9a5a4e0b895"
+      ],
+      "successful_searches": 15,
+      "task_sha256": "0eedd8bf2c6886905c677d5c296300cc3bc44dfd9fc4cbdb08c0b76ceb6ece56",
+      "version_frontier": "qwen3.8",
+      "version_frontier_key": [
+        3,
+        8
+      ],
+      "version_frontier_resolved": true,
+      "visited_urls": [
+        "https://github.com/QwenLM/Qwen3.8",
+        "https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf",
+        "https://search.yahoo.co.jp/search",
+        "https://search.yahoo.co.jp/search",
+        "https://search.yahoo.co.jp/search",
+        "https://www.bing.com/search",
+        "https://www.bing.com/search",
+        "https://www.bing.com/search",
+        "https://www.bing.com/search",
+        "https://www.bing.com/search",
+        "https://www.bing.com/search",
+        "https://www.bing.com/search",
+        "https://www.bing.com/search",
+        "https://www.bing.com/search",
+        "https://www.bing.com/search",
+        "https://www.bing.com/search",
+        "https://www.bing.com/search"
+      ]
+    },
+    "previous_checkpoint_sha256": "e35d8e520c25440d07d21436adcdb42b4731f963da1e37a90721d2d4a0bb1c30",
+    "resume_count": 0,
+    "run_id": "85f02705-dc40-46ba-ab68-a765deebf5ae",
+    "schema_version": 2,
+    "source_fingerprint": "44a2ddfd1b04b204f5fbae16e55589ee5b4dd2f8d6d247d9230501a7bfc5bf05",
+    "status": "running",
+    "strategy_state": {
+      "attempted": [
+        "default",
+        "recovery",
+        "alternate-navigation",
+        "semantic-dom",
+        "search-discovery",
+        "visual-grounding",
+        "document-local"
+      ],
+      "consecutive_failures": 0,
+      "consecutive_no_progress": 0,
+      "current": "document-local",
+      "exhausted": false,
+      "switch_count": 6,
+      "switches": [
+        {
+          "current": "recovery",
+          "previous": "default",
+          "reason": "runtime strategy switch",
+          "step_number": 5
+        },
+        {
+          "current": "alternate-navigation",
+          "previous": "recovery",
+          "reason": "runtime strategy switch",
+          "step_number": 7
+        },
+        {
+          "current": "semantic-dom",
+          "previous": "alternate-navigation",
+          "reason": "runtime strategy switch",
+          "step_number": 14
+        },
+        {
+          "current": "search-discovery",
+          "previous": "semantic-dom",
+          "reason": "runtime strategy switch",
+          "step_number": 18
+        },
+        {
+          "current": "visual-grounding",
+          "previous": "search-discovery",
+          "reason": "runtime strategy switch",
+          "step_number": 21
+        },
+        {
+          "current": "document-local",
+          "previous": "visual-grounding",
+          "reason": "runtime strategy switch",
+          "step_number": 24
+        }
+      ]
+    },
+    "task_sha256": "0eedd8bf2c6886905c677d5c296300cc3bc44dfd9fc4cbdb08c0b76ceb6ece56",
+    "updated_at": "2026-09-01T16:31:40.263845Z"
+  }
+}

@@ -1,0 +1,1541 @@
+{
+  "format": "webagent-checkpoint",
+  "schema_version": 2,
+  "checkpoint_sha256": "bd33f91cfbdbd36cf2ad3e17bce3680a4da901b1962ecefe84d027dc235fd55f",
+  "checkpoint": {
+    "artifacts": [
+      {
+        "path": "artifacts/downloads/tech_report.pdf",
+        "sha256": "04f263446d74a35cb7cea368574e0c561f3b05c133be2c777ac884404063655d",
+        "size": 2366146
+      },
+      {
+        "path": "artifacts/documents/tech-report-04f263446d74/figures/local/local_figure_1_p2.png",
+        "sha256": "ceb08ac09183d5bedb32dea7eb793eb5cfe8911506c05f332cabf04c64d24b28",
+        "size": 74801
+      }
+    ],
+    "browser_state": {
+      "active_tab_index": 0,
+      "current_url": "about:blank",
+      "tab_urls": [
+        "about:blank"
+      ]
+    },
+    "checkpoint_id": "b3879214-c1b5-41b0-850b-12d7fb4c2bc4",
+    "config_fingerprint": "9e938c42978d6ea753532b6e73e94a450133678596691a440a0229226189b340",
+    "consecutive_failures": 0,
+    "created_at": "2026-09-01T16:04:21.880375Z",
+    "elapsed_seconds": 172.4005150794983,
+    "events": [],
+    "final_result": {},
+    "history": [
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:01:30.117834+00:00",
+          "title": "normal",
+          "url": "about:blank"
+        },
+        "duration_seconds": 15.546099185943604,
+        "step_number": 1,
+        "timestamp": "2026-09-01T16:01:45.021609+00:00",
+        "tool_call": {
+          "parameters": {
+            "official_owner": "[omitted]",
+            "subject": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "official_report_search"
+        },
+        "tool_duration_seconds": 9.453290939331055,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "hybrid_candidate_date": "[omitted]",
+            "hybrid_candidate_owner": "[omitted]",
+            "hybrid_cross_check_exhausted": false,
+            "hybrid_direct_evidence_verified": true,
+            "hybrid_missing_repeat_count": 1,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [
+              "[omitted]"
+            ],
+            "new_urls_observed": 44,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 46,
+            "official_identity_search_completed": true,
+            "official_scope_result_count": 2,
+            "official_scope_search_completed": true,
+            "policy": "browser_grounded",
+            "policy_step": 1,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "required_next_action": {
+              "parameters": {
+                "query": "[omitted]",
+                "recency": "[omitted]"
+              },
+              "tool": "search"
+            },
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": true,
+            "selected_candidate_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "all_candidates": [
+              {
+                "date": "2026-08-26T12:29:38Z",
+                "first_party": true,
+                "html_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+                "pdf_url": "https://raw.githubusercontent.com/QwenLM/Qwen3.8-Flash-Next/main/tech_report.pdf",
+                "provenance": "[omitted]",
+                "source": "[omitted]",
+                "title": "[omitted]"
+              },
+              {
+                "authors": [
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]"
+                ],
+                "date": "2026-07-30",
+                "first_party": false,
+                "html_url": "http://arxiv.org/abs/2607.28227v1",
+                "pdf_url": "https://arxiv.org/pdf/2607.28227v1",
+                "provenance": "[omitted]",
+                "source": "[omitted]",
+                "title": "[omitted]"
+              },
+              {
+                "authors": [
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]"
+                ],
+                "date": "2026-07-29",
+                "first_party": false,
+                "html_url": "http://arxiv.org/abs/2607.27011v2",
+                "pdf_url": "https://arxiv.org/pdf/2607.27011v2",
+                "provenance": "[omitted]",
+                "source": "[omitted]",
+                "title": "[omitted]"
+              },
+              {
+                "authors": [
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]"
+                ],
+                "date": "2026-07-13",
+                "first_party": false,
+                "html_url": "http://arxiv.org/abs/2607.11738v1",
+                "pdf_url": "https://arxiv.org/pdf/2607.11738v1",
+                "provenance": "[omitted]",
+                "source": "[omitted]",
+                "title": "[omitted]"
+              },
+              {
+                "authors": [
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]"
+                ],
+                "date": "2026-07-13",
+                "first_party": false,
+                "html_url": "http://arxiv.org/abs/2607.11699v2",
+                "pdf_url": "https://arxiv.org/pdf/2607.11699v2",
+                "provenance": "[omitted]",
+                "source": "[omitted]",
+                "title": "[omitted]"
+              },
+              {
+                "authors": [
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]"
+                ],
+                "date": "2026-06-25",
+                "first_party": false,
+                "html_url": "http://arxiv.org/abs/2606.27608v1",
+                "pdf_url": "https://arxiv.org/pdf/2606.27608v1",
+                "provenance": "[omitted]",
+                "source": "[omitted]",
+                "title": "[omitted]"
+              },
+              {
+                "authors": [
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]"
+                ],
+                "date": "2026-06-16",
+                "first_party": false,
+                "html_url": "http://arxiv.org/abs/2606.18112v3",
+                "pdf_url": "https://arxiv.org/pdf/2606.18112v3",
+                "provenance": "[omitted]",
+                "source": "[omitted]",
+                "title": "[omitted]"
+              },
+              {
+                "authors": [
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]"
+                ],
+                "date": "2026-06-16",
+                "first_party": false,
+                "html_url": "http://arxiv.org/abs/2606.17846v2",
+                "pdf_url": "https://arxiv.org/pdf/2606.17846v2",
+                "provenance": "[omitted]",
+                "source": "[omitted]",
+                "title": "[omitted]"
+              },
+              {
+                "authors": [
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]"
+                ],
+                "date": "2026-06-15",
+                "first_party": false,
+                "html_url": "http://arxiv.org/abs/2606.17030v3",
+                "pdf_url": "https://arxiv.org/pdf/2606.17030v3",
+                "provenance": "[omitted]",
+                "source": "[omitted]",
+                "title": "[omitted]"
+              },
+              {
+                "authors": [
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]"
+                ],
+                "date": "2026-05-13",
+                "first_party": false,
+                "html_url": "http://arxiv.org/abs/2605.13565v1",
+                "pdf_url": "https://arxiv.org/pdf/2605.13565v1",
+                "provenance": "[omitted]",
+                "source": "[omitted]",
+                "title": "[omitted]"
+              },
+              {
+                "authors": [
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]",
+                  "[omitted]"
+                ],
+                "date": "2026-05-11",
+                "first_party": false,
+                "html_url": "http://arxiv.org/abs/2605.10730v1",
+                "pdf_url": "https://arxiv.org/pdf/2605.10730v1",
+                "provenance": "[omitted]",
+                "source": "[omitted]",
+                "title": "[omitted]"
+              }
+            ],
+            "browser_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+            "official_owner": "[omitted]",
+            "provenance_notice": "[omitted]",
+            "requested_subject": "[omitted]",
+            "source_status": {
+              "arxiv": "[omitted]",
+              "github": "[omitted]"
+            },
+            "subject": "[omitted]",
+            "verified_first_party_candidates": [
+              {
+                "date": "2026-08-26T12:29:38Z",
+                "first_party": true,
+                "html_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+                "pdf_url": "https://raw.githubusercontent.com/QwenLM/Qwen3.8-Flash-Next/main/tech_report.pdf",
+                "provenance": "[omitted]",
+                "source": "[omitted]",
+                "title": "[omitted]"
+              }
+            ]
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "official_report_search"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:01:45.706407+00:00",
+          "title": "normal",
+          "url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf"
+        },
+        "duration_seconds": 16.216500997543335,
+        "step_number": 2,
+        "timestamp": "2026-09-01T16:02:01.241608+00:00",
+        "tool_call": {
+          "parameters": {
+            "query": "[omitted]",
+            "recency": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "search"
+        },
+        "tool_duration_seconds": 9.75448989868164,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "hybrid_candidate_date": "[omitted]",
+            "hybrid_candidate_owner": "[omitted]",
+            "hybrid_cross_check_exhausted": false,
+            "hybrid_direct_evidence_verified": true,
+            "hybrid_missing_repeat_count": 0,
+            "latest_evidence_complete": true,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 21,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 67,
+            "official_identity_search_completed": true,
+            "official_scope_result_count": 2,
+            "official_scope_search_completed": true,
+            "policy": "browser_grounded",
+            "policy_step": 2,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 2,
+            "release_landscape_search_completed": true,
+            "required_next_action": {
+              "parameters": {
+                "url": "https://raw.githubusercontent.com/QwenLM/Qwen3.8-Flash-Next/main/tech_report.pdf"
+              },
+              "tool": "download_pdf"
+            },
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": true,
+            "selected_candidate_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+            "successful_searches": 1,
+            "target": null,
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "engine": "bing",
+            "query": "[omitted]",
+            "results": [
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://qwen.ai/home"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://chat.qwen.ai/auth"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://qwen.ai/blog"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://en.wikipedia.org/wiki/Qwen"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://huggingface.co/Qwen"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://play.google.com/store/apps/details"
+              },
+              {
+                "date": "[omitted]",
+                "title": "[omitted]",
+                "url": "https://openlm.ai/qwen3.8/"
+              }
+            ],
+            "search_attempts": [
+              {
+                "engine": "bing",
+                "outcome": "success"
+              }
+            ],
+            "search_market": "[omitted]",
+            "title": "[omitted]",
+            "url": "https://www.bing.com/search"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "search"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:02:01.935271+00:00",
+          "title": "normal",
+          "url": "https://www.bing.com/search"
+        },
+        "duration_seconds": 30.008032083511353,
+        "step_number": 3,
+        "timestamp": "2026-09-01T16:02:31.253870+00:00",
+        "tool_call": {
+          "parameters": {
+            "url": "https://raw.githubusercontent.com/QwenLM/Qwen3.8-Flash-Next/main/tech_report.pdf"
+          },
+          "reasoning": "",
+          "tool_name": "download_pdf"
+        },
+        "tool_duration_seconds": 1.575249195098877,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 1,
+            "figure_analysis_completed": false,
+            "hybrid_candidate_date": "[omitted]",
+            "hybrid_candidate_owner": "[omitted]",
+            "hybrid_cross_check_exhausted": false,
+            "hybrid_direct_evidence_verified": true,
+            "hybrid_missing_repeat_count": 0,
+            "latest_evidence_complete": true,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 1,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 68,
+            "official_identity_search_completed": true,
+            "official_scope_result_count": 2,
+            "official_scope_search_completed": true,
+            "policy": "browser_grounded",
+            "policy_step": 3,
+            "provenance": {
+              "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+              "policy_step": 1,
+              "source": "[omitted]"
+            },
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 2,
+            "release_landscape_search_completed": true,
+            "required_next_action": null,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": true,
+            "selected_candidate_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+            "successful_searches": 1,
+            "target": "https://raw.githubusercontent.com/QwenLM/Qwen3.8-Flash-Next/main/tech_report.pdf",
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "browser_url": null,
+            "deduplicated": false,
+            "filename": "[omitted]",
+            "path": "artifacts/downloads/tech_report.pdf",
+            "source_url": "https://raw.githubusercontent.com/QwenLM/Qwen3.8-Flash-Next/main/tech_report.pdf"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "download_pdf"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:02:31.926131+00:00",
+          "title": "normal",
+          "url": "https://www.bing.com/search"
+        },
+        "duration_seconds": 58.76751494407654,
+        "step_number": 4,
+        "timestamp": "2026-09-01T16:03:30.028146+00:00",
+        "tool_call": {
+          "parameters": {
+            "figure_number_or_caption": "[omitted]",
+            "path": "artifacts/downloads/tech_report.pdf",
+            "question": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "pdf_analyze_figure"
+        },
+        "tool_duration_seconds": 36.1063597202301,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 1,
+            "figure_analysis_completed": true,
+            "hybrid_candidate_date": "[omitted]",
+            "hybrid_candidate_owner": "[omitted]",
+            "hybrid_cross_check_exhausted": false,
+            "hybrid_direct_evidence_verified": true,
+            "hybrid_missing_repeat_count": 0,
+            "latest_evidence_complete": true,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 68,
+            "official_identity_search_completed": true,
+            "official_scope_result_count": 2,
+            "official_scope_search_completed": true,
+            "policy": "browser_grounded",
+            "policy_step": 4,
+            "provenance": {
+              "policy_step": 3,
+              "source_tool": "download_pdf",
+              "source_url": "https://raw.githubusercontent.com/QwenLM/Qwen3.8-Flash-Next/main/tech_report.pdf"
+            },
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 2,
+            "release_landscape_search_completed": true,
+            "required_next_action": null,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": true,
+            "selected_candidate_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+            "successful_searches": 1,
+            "target": "[omitted]",
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "browser_url": "[omitted]",
+            "caption": "[omitted]",
+            "figure_number": "1",
+            "found": true,
+            "image_path": "artifacts/documents/tech-report-04f263446d74/figures/local/local_figure_1_p2.png",
+            "local_figure_fast_path": {
+              "bbox": [
+                110.22000122070312,
+                50.468170166015625,
+                485.0596923828125,
+                430.65692138671875
+              ],
+              "caption_position": "[omitted]",
+              "confidence": 0.9946,
+              "duration_seconds": 0.18434337500366382,
+              "render_height": 762,
+              "render_width": 751,
+              "used": true,
+              "visual_kind": "[omitted]"
+            },
+            "page": 2,
+            "related_tables": [],
+            "vision_analysis": "[omitted]",
+            "vision_duration_seconds": 35.86901045800187,
+            "vision_metadata": {
+              "field_56a3e6ca0800": 2150,
+              "field_aeae89fb4468": 989,
+              "field_f1bb5c05c2fc": 1161,
+              "finish_reason": "stop",
+              "response_length": 2177,
+              "transport_retries": 0
+            }
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "pdf_analyze_figure"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T16:03:30.636606+00:00",
+          "title": "normal",
+          "url": "about:blank"
+        },
+        "duration_seconds": 51.83697581291199,
+        "step_number": 5,
+        "timestamp": "2026-09-01T16:04:21.874450+00:00",
+        "tool_call": {
+          "parameters": {
+            "success_probability": 0.97,
+            "summary": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "done"
+        },
+        "tool_duration_seconds": 0.0004439353942871094,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": true,
+            "decision": "allow",
+            "downloaded_artifact_count": 1,
+            "figure_analysis_completed": true,
+            "hybrid_candidate_date": "[omitted]",
+            "hybrid_candidate_owner": "[omitted]",
+            "hybrid_cross_check_exhausted": false,
+            "hybrid_direct_evidence_verified": true,
+            "hybrid_missing_repeat_count": 0,
+            "latest_evidence_complete": true,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 68,
+            "official_identity_search_completed": true,
+            "official_scope_result_count": 2,
+            "official_scope_search_completed": true,
+            "policy": "browser_grounded",
+            "policy_step": 5,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 2,
+            "release_landscape_search_completed": true,
+            "required_next_action": null,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": true,
+            "selected_candidate_identity_endorsed": true,
+            "selected_candidate_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+            "successful_searches": 1,
+            "target": null,
+            "version_frontier": "qwen3.8"
+          },
+          "data": {
+            "attachments": [],
+            "success_probability": 0.97,
+            "summary": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "done"
+        }
+      }
+    ],
+    "last_figure_path": "artifacts/documents/tech-report-04f263446d74/figures/local/local_figure_1_p2.png",
+    "loop_state": {
+      "in_loop": false,
+      "loop_type": "",
+      "page_hash_history": [
+        "636ab5de8779acc133baedddc6709b62",
+        "92f0ab88c777ccd44300225a071dcfe6",
+        "60806ae0904615643b7e523ca9cf6496",
+        "60806ae0904615643b7e523ca9cf6496",
+        "fb4aca8fa222a8005a77d5d8c3af1d73"
+      ],
+      "recent_actions": [
+        "ae3415bec8634a44f19050e973571cc6b4f20e402778fe4bd1f094b77d5391c0",
+        "e2c154f66aa14610970a8e4572375f8046a98a2fe02322dcdeceef55e8f15b44",
+        "f13b1cbcc258ed6e9cc802b4054677b7cd33ffe639cdf1073ae942bebd4f57aa",
+        "9dbfc22da9fa7c5a610d68d2bcd1d090cf3d41b08024cdcf9cfb8a4f00bdd057",
+        "f62af80ac36c5501338f91f1ef828fd139297dcd9ca50e6c7c3a58de8c9442ab"
+      ],
+      "recent_pages": [
+        "84e7760289fc4d7039be75dea4e0c3ad6f1e343c35e468cd78339f9d81f1a853",
+        "aad00a3186830059255fa414eacc4e0ed5aba6c9383b45df7f6e742d4af7386b",
+        "beb24d1791013f87b416be702acc446e44d7f87c72eb0b9faabec259a95c4ee2",
+        "beb24d1791013f87b416be702acc446e44d7f87c72eb0b9faabec259a95c4ee2",
+        "bc905d3b3f97a128eb524b11b6cb0121e929b24003b05e7367a2350c7aeb5ee3"
+      ],
+      "schema_version": 1,
+      "threshold": 5,
+      "url_history": [
+        "about:blank",
+        "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+        "https://www.bing.com/search",
+        "https://www.bing.com/search",
+        "about:blank"
+      ],
+      "window_size": 10
+    },
+    "next_step": 6,
+    "pending_action": null,
+    "planner_attempts": [
+      {
+        "attempt_number": 1,
+        "completion_tokens": 23,
+        "duration_seconds": 3.283282995223999,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 10213,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 1,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:01:33.451972+00:00",
+        "total_tokens": 10236,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 26,
+        "duration_seconds": 4.388206958770752,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 13958,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 2,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:01:50.128859+00:00",
+        "total_tokens": 13984,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 255,
+        "duration_seconds": 26.501041173934937,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 14766,
+        "requested_output_mode": "auto",
+        "response_length": 807,
+        "step_number": 3,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:02:28.464370+00:00",
+        "total_tokens": 15021,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 438,
+        "duration_seconds": 20.807695150375366,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 13791,
+        "requested_output_mode": "auto",
+        "response_length": 1293,
+        "step_number": 4,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:02:52.770008+00:00",
+        "total_tokens": 14229,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 1410,
+        "duration_seconds": 51.18241095542908,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 13477,
+        "requested_output_mode": "auto",
+        "response_length": 1,
+        "step_number": 5,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T16:04:21.855254+00:00",
+        "total_tokens": 14887,
+        "transport_retries": 0
+      }
+    ],
+    "planning_state": {
+      "active_milestone_id": "m1",
+      "evidence": [
+        {
+          "id": "e1",
+          "kind": "checkpoint",
+          "source": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "step_number": 1,
+          "summary": "evidence retained from step 1"
+        },
+        {
+          "id": "e2",
+          "kind": "checkpoint",
+          "source": "https://www.bing.com/search",
+          "step_number": 2,
+          "summary": "evidence retained from step 2"
+        },
+        {
+          "id": "e3",
+          "kind": "checkpoint",
+          "source": "https://raw.githubusercontent.com/QwenLM/Qwen3.8-Flash-Next/main/tech_report.pdf",
+          "step_number": 3,
+          "summary": "evidence retained from step 3"
+        },
+        {
+          "id": "e4",
+          "kind": "checkpoint",
+          "source": "[redacted]",
+          "step_number": 4,
+          "summary": "evidence retained from step 4"
+        },
+        {
+          "id": "e5",
+          "kind": "checkpoint",
+          "source": "[redacted]",
+          "step_number": 5,
+          "summary": "evidence retained from step 5"
+        }
+      ],
+      "milestones": [
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 1",
+          "id": "m1",
+          "status": "active"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 2",
+          "id": "m2",
+          "status": "pending"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 3",
+          "id": "m3",
+          "status": "pending"
+        }
+      ],
+      "objective": "task bound by checkpoint task_sha256",
+      "revisions": []
+    },
+    "policy_state": {
+      "broad_current_year_search_completed": true,
+      "current_year": 2026,
+      "downloaded_paths": {
+        "field_aa8c370fa12a": {
+          "policy_step": 3,
+          "source_url": "https://raw.githubusercontent.com/QwenLM/Qwen3.8-Flash-Next/main/tech_report.pdf"
+        }
+      },
+      "figure_analysis_completed": true,
+      "hybrid": {
+        "candidate_date": "[omitted]",
+        "candidate_owner": "[omitted]",
+        "candidate_url": "https://raw.githubusercontent.com/QwenLM/Qwen3.8-Flash-Next/main/tech_report.pdf",
+        "candidate_version_key": [
+          3,
+          8
+        ],
+        "cross_check_exhausted": false,
+        "direct_evidence_verified": true,
+        "missing_repeat_count": 0,
+        "missing_signature": [],
+        "official_report_attempts": {
+          "qwenlm:qwen": 1
+        },
+        "required_next_action": null,
+        "subject": "[omitted]",
+        "successful_topics": [
+          "[omitted]"
+        ]
+      },
+      "observed_urls": {
+        "field_0028427d56e6": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_02bceb9a826e": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_0408b20e8a59": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_04d6efa33f70": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_0bd72b14f868": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_0c656d268a4b": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_0ca27585b9d1": {
+          "page_url": "https://raw.githubusercontent.com/QwenLM/Qwen3.8-Flash-Next/main/tech_report.pdf",
+          "policy_step": 3,
+          "source": "[omitted]"
+        },
+        "field_0f2e5b25bb74": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_1433157398c9": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_15335d09f6b5": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_1e8f1649277a": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_1fdc3bd4a7cc": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_209634334696": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_239758d88cc8": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_251388c592e5": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_27eb9fbd0d79": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_378180389750": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_45839e37bba2": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_54dbbb904fdc": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_56e07ca77437": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_57473c0bef23": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_5df23f92344b": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_5fcd604b5abb": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_62dd64a38b23": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_67b7ed9c6bda": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_6a8f2601a54a": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_6ac75bc8467f": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_6b6c64e22628": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_76710da88fee": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_76780a6c3dd8": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_795ff528ce6a": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_827e13247e9d": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_838a8cc35e29": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_84ec40832868": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_88165b7f375e": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_8ae11d9d7be7": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_90d7547d153f": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_97b408a4415c": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_a439842ff60a": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_ac6d179112bf": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_b46b47f4a679": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_b779fdafeaf4": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_bd4102601c32": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_c24067de0530": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_c4478cb5c84f": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_c46c6229b008": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_c6b87ef11f0f": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_cc4849bf2cbd": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_cc77127d9097": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_cda48685ccd2": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_cdc70defb1e8": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_cdde0367ab84": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_ce285803393a": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_d665b971d8b2": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_d6e9e9c6cb5d": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_da71d9bf1580": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_dc7eccb427a5": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_dfeac46d4045": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_e2b2f7421745": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_e47da79a90b7": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_eb8495144b0d": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_ecc55b9a0d18": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_f0bbd3c8ec83": {
+          "page_url": "https://www.bing.com/search",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_f246c1d26f3f": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_f35230164daf": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_f40d241b8844": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_f759f1e45871": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_fd57608093bd": {
+          "page_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+          "policy_step": 1,
+          "source": "[omitted]"
+        }
+      },
+      "official_identity_search_completed": true,
+      "official_identity_urls": [
+        "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+        "https://raw.githubusercontent.com/QwenLM/Qwen3.8-Flash-Next/main/tech_report.pdf"
+      ],
+      "official_scope_result_urls": [
+        "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+        "https://raw.githubusercontent.com/QwenLM/Qwen3.8-Flash-Next/main/tech_report.pdf"
+      ],
+      "official_scope_search_completed": true,
+      "pending_url_evidence_target": null,
+      "pending_url_search_attempts": 0,
+      "policy": "browser_grounded",
+      "release_landscape_evidence_urls": [
+        "https://openlm.ai/qwen3.8/",
+        "https://qwen.ai/blog"
+      ],
+      "release_landscape_search_completed": true,
+      "schema_version": 3,
+      "search_completed": true,
+      "selected_candidate_url": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+      "step": 5,
+      "successful_queries": [
+        "01360f306d15a71ac8ecd79a46eceddee6d7dbbd87a3c680e93b9b56c743354d"
+      ],
+      "successful_searches": 1,
+      "task_sha256": "0eedd8bf2c6886905c677d5c296300cc3bc44dfd9fc4cbdb08c0b76ceb6ece56",
+      "version_frontier": "qwen3.8",
+      "version_frontier_key": [
+        3,
+        8
+      ],
+      "version_frontier_resolved": true,
+      "visited_urls": [
+        "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+        "https://www.bing.com/search"
+      ]
+    },
+    "previous_checkpoint_sha256": "92168882950b796dfb4a20cf59537c10b4b5dd374a78c351c17ccfaa8727a39a",
+    "resume_count": 0,
+    "run_id": "d15bb684-55dc-44cb-9c44-5c7758433529",
+    "schema_version": 2,
+    "source_fingerprint": "44a2ddfd1b04b204f5fbae16e55589ee5b4dd2f8d6d247d9230501a7bfc5bf05",
+    "status": "running",
+    "strategy_state": {
+      "attempted": [
+        "default"
+      ],
+      "consecutive_failures": 0,
+      "consecutive_no_progress": 0,
+      "current": "default",
+      "exhausted": false,
+      "switch_count": 0,
+      "switches": []
+    },
+    "task_sha256": "0eedd8bf2c6886905c677d5c296300cc3bc44dfd9fc4cbdb08c0b76ceb6ece56",
+    "updated_at": "2026-09-01T16:04:21.880404Z"
+  }
+}

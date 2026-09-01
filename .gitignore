@@ -1,0 +1,53 @@
+# ── Python ───────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+build/
+build-*/
+dist/
+dist-*/
+
+# ── Secrets / local config (NEVER commit a populated .env) ───────────
+.env
+.env.local
+.env.*.local
+
+# ── Virtual environments ─────────────────────────────────────────────
+.venv/
+.venv-browsergym/
+venv/
+env/
+
+# ── Tooling caches ───────────────────────────────────────────────────
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.benchmarks/
+.coverage
+coverage.json
+coverage.xml
+htmlcov/
+.ralph/
+
+# ── Runtime / generated artifacts ────────────────────────────────────
+# Agent run output: screenshots, downloaded PDFs, extracted content, figures.
+browser_profile/
+uploads/
+outputs/
+*.log
+
+# ── Model weights / local symlinks ───────────────────────────────────
+weights/
+*.pdf
+
+# ── IDE / editor ─────────────────────────────────────────────────────
+.obsidian/
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ── OS ───────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db

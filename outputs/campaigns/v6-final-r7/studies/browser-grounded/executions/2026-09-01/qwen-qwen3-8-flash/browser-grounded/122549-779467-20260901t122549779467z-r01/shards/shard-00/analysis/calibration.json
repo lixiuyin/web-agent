@@ -1,0 +1,232 @@
+{
+  "schema_version": 2,
+  "status": "partial",
+  "reason": "missing confidence for 1 task(s)",
+  "task_count": 30,
+  "confidence_count": 29,
+  "confidence_coverage": 0.9666666666666667,
+  "brier_score": 0.03411724137931035,
+  "log_loss": 0.1452652897565197,
+  "expected_calibration_error": 0.007586206896551742,
+  "bins": [
+    {
+      "lower": 0.0,
+      "upper": 0.1,
+      "count": 0,
+      "mean_confidence": null,
+      "empirical_success_rate": null
+    },
+    {
+      "lower": 0.1,
+      "upper": 0.2,
+      "count": 0,
+      "mean_confidence": null,
+      "empirical_success_rate": null
+    },
+    {
+      "lower": 0.2,
+      "upper": 0.3,
+      "count": 0,
+      "mean_confidence": null,
+      "empirical_success_rate": null
+    },
+    {
+      "lower": 0.3,
+      "upper": 0.4,
+      "count": 0,
+      "mean_confidence": null,
+      "empirical_success_rate": null
+    },
+    {
+      "lower": 0.4,
+      "upper": 0.5,
+      "count": 0,
+      "mean_confidence": null,
+      "empirical_success_rate": null
+    },
+    {
+      "lower": 0.5,
+      "upper": 0.6,
+      "count": 0,
+      "mean_confidence": null,
+      "empirical_success_rate": null
+    },
+    {
+      "lower": 0.6,
+      "upper": 0.7,
+      "count": 0,
+      "mean_confidence": null,
+      "empirical_success_rate": null
+    },
+    {
+      "lower": 0.7,
+      "upper": 0.8,
+      "count": 0,
+      "mean_confidence": null,
+      "empirical_success_rate": null
+    },
+    {
+      "lower": 0.8,
+      "upper": 0.9,
+      "count": 1,
+      "mean_confidence": 0.82,
+      "empirical_success_rate": 1.0
+    },
+    {
+      "lower": 0.9,
+      "upper": 1.0,
+      "count": 28,
+      "mean_confidence": 0.9628571428571429,
+      "empirical_success_rate": 0.9642857142857143
+    }
+  ],
+  "risk_coverage_curve": [
+    {
+      "coverage": 0.034482758620689655,
+      "selective_risk": 0.0,
+      "minimum_confidence": 1.0
+    },
+    {
+      "coverage": 0.06896551724137931,
+      "selective_risk": 0.0,
+      "minimum_confidence": 1.0
+    },
+    {
+      "coverage": 0.10344827586206896,
+      "selective_risk": 0.0,
+      "minimum_confidence": 1.0
+    },
+    {
+      "coverage": 0.13793103448275862,
+      "selective_risk": 0.0,
+      "minimum_confidence": 1.0
+    },
+    {
+      "coverage": 0.1724137931034483,
+      "selective_risk": 0.0,
+      "minimum_confidence": 1.0
+    },
+    {
+      "coverage": 0.20689655172413793,
+      "selective_risk": 0.0,
+      "minimum_confidence": 1.0
+    },
+    {
+      "coverage": 0.2413793103448276,
+      "selective_risk": 0.0,
+      "minimum_confidence": 0.98
+    },
+    {
+      "coverage": 0.27586206896551724,
+      "selective_risk": 0.0,
+      "minimum_confidence": 0.97
+    },
+    {
+      "coverage": 0.3103448275862069,
+      "selective_risk": 0.0,
+      "minimum_confidence": 0.97
+    },
+    {
+      "coverage": 0.3448275862068966,
+      "selective_risk": 0.0,
+      "minimum_confidence": 0.97
+    },
+    {
+      "coverage": 0.3793103448275862,
+      "selective_risk": 0.0,
+      "minimum_confidence": 0.97
+    },
+    {
+      "coverage": 0.41379310344827586,
+      "selective_risk": 0.0,
+      "minimum_confidence": 0.96
+    },
+    {
+      "coverage": 0.4482758620689655,
+      "selective_risk": 0.0,
+      "minimum_confidence": 0.96
+    },
+    {
+      "coverage": 0.4827586206896552,
+      "selective_risk": 0.0,
+      "minimum_confidence": 0.96
+    },
+    {
+      "coverage": 0.5172413793103449,
+      "selective_risk": 0.0,
+      "minimum_confidence": 0.96
+    },
+    {
+      "coverage": 0.5517241379310345,
+      "selective_risk": 0.0,
+      "minimum_confidence": 0.96
+    },
+    {
+      "coverage": 0.5862068965517241,
+      "selective_risk": 0.0,
+      "minimum_confidence": 0.95
+    },
+    {
+      "coverage": 0.6206896551724138,
+      "selective_risk": 0.05555555555555555,
+      "minimum_confidence": 0.95
+    },
+    {
+      "coverage": 0.6551724137931034,
+      "selective_risk": 0.05263157894736842,
+      "minimum_confidence": 0.95
+    },
+    {
+      "coverage": 0.6896551724137931,
+      "selective_risk": 0.05,
+      "minimum_confidence": 0.95
+    },
+    {
+      "coverage": 0.7241379310344828,
+      "selective_risk": 0.047619047619047616,
+      "minimum_confidence": 0.95
+    },
+    {
+      "coverage": 0.7586206896551724,
+      "selective_risk": 0.045454545454545456,
+      "minimum_confidence": 0.95
+    },
+    {
+      "coverage": 0.7931034482758621,
+      "selective_risk": 0.043478260869565216,
+      "minimum_confidence": 0.95
+    },
+    {
+      "coverage": 0.8275862068965517,
+      "selective_risk": 0.041666666666666664,
+      "minimum_confidence": 0.95
+    },
+    {
+      "coverage": 0.8620689655172413,
+      "selective_risk": 0.04,
+      "minimum_confidence": 0.95
+    },
+    {
+      "coverage": 0.896551724137931,
+      "selective_risk": 0.038461538461538464,
+      "minimum_confidence": 0.95
+    },
+    {
+      "coverage": 0.9310344827586207,
+      "selective_risk": 0.037037037037037035,
+      "minimum_confidence": 0.9
+    },
+    {
+      "coverage": 0.9655172413793104,
+      "selective_risk": 0.03571428571428571,
+      "minimum_confidence": 0.9
+    },
+    {
+      "coverage": 1.0,
+      "selective_risk": 0.034482758620689655,
+      "minimum_confidence": 0.82
+    }
+  ],
+  "area_under_risk_coverage_curve": 0.018003492239527578,
+  "interpretation_notice": "Metrics cover only tasks with a self-reported success_probability recorded before external judging; missing values are reported, not imputed."
+}

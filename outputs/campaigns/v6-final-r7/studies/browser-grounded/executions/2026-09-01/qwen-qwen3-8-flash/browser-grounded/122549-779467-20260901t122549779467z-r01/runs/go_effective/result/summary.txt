@@ -1,0 +1,15 @@
+**Purpose of "Effective Go"**
+
+"Effective Go" is the Go project's official style-and-idioms guide: a document that explains how to write programs that are not merely valid Go, but *good*, idiomatic Go.
+
+What it is for, based on the page itself:
+
+1. **It teaches Go's conventions and best practices, not the language reference.** The introduction states that Go "is an open-source programming language that focuses on simplicity, reliability, and efficiency, specifically designed to make it easy to build software at scale," and warns that "although it borrows ideas from existing languages, it has unusual properties that make effective Go programs different in character from programs written in its relatives." In particular, "a straightforward translation of a C++ or Java program into Go is unlikely to produce a satisfactory result—Java programs are written in Java, not Go." Effective Go exists to steer programmers away from that trap and toward code that is clear, readable, and idiomatic in Go.
+
+2. **It is complementary to the other Go documentation.** It is not a language specification or a tutorial; it sits alongside the Tour of Go, the language specification, and the package documentation, adding the layer of "how to do it properly" — formatting, naming, idioms, and conventions.
+
+3. **It gives concrete, section-by-section guidance.** The table of contents on the page shows the scope of that advice: Introduction; Examples; Formatting (gofmt); Commentary; Names (package names, getters, interface names, MixedCaps); Semicolons; Control structures (if, redeclaration and reassignment, for, switch, type switch); Functions (multiple return values, named result parameters, defer); Data (new, constructors and composite literals, make, arrays, slices, two-dimensional slices, maps, printing, appending); Methods (pointers vs. values, interfaces and other types, interface conversions and type assertions, interfaces and methods, the blank identifier, the blank identifier in multiple assignment, unused imports and variables); Generics; Programming with Go; and Errors.
+
+In short: **Effective Go is the canonical guide for writing clean, well-formatted, properly named, and idiomatic Go code — the set of conventions and practices the Go team recommends so that Go programs look and behave like Go programs rather than translations from other languages.**
+
+**Exact URL (cited from the loaded page):** https://go.dev/doc/effective_go

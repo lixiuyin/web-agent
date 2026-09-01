@@ -1,0 +1,1 @@
+One standards-based FastAPI feature is that FastAPI is "Based on open standards" — it uses the OpenAPI standard (previously Swagger) for declaring API metadata, paths, and operations, which enables automatic generation of interactive API documentation. Exact features URL: https://fastapi.tiangolo.com/features/#based-on-open-standards

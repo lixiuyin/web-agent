@@ -1,0 +1,124 @@
+{
+  "task_id": "iana_about",
+  "category": "organization",
+  "goal": "Summarize IANA's role from its about page and cite the exact URL.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 34.48798370361328,
+  "steps": 5,
+  "action_count": 4,
+  "failed_action_count": 1,
+  "planner_attempt_count": 5,
+  "planner_failure_count": 0,
+  "planner_tokens": 34528,
+  "answer_assertion_count": 3,
+  "answer_assertion_passed": 3,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "development",
+  "task_family": "official_standards_reference",
+  "setting_id": "stable_official_reference",
+  "leakage_group": "host_www_iana_org",
+  "target_failure_modes": [
+    "information_extraction",
+    "tool_use",
+    "answer_grounding"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "short",
+  "scenario": "document_read",
+  "environment": "public_web",
+  "entry_mode": "direct",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://www.iana.org"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 4,
+    "distinct_tool_count": 2,
+    "tool_entropy_bits": 0.8112781244591328,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 1,
+    "recovery_count": 1,
+    "minimum_window_entropy_bits": null,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 4,
+    "stagnation_onset_step": null,
+    "replan_count": 2,
+    "strategy_switch_count": 2,
+    "replan_rate": 0.5,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 0.95,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 5,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "Internet",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "IANA (Internet Assigned Numbers Authority) maintains the authoritative public registries that make the Internet work as a single seamless network. Because technical identifiers must mean the same thing everywhere, IANA ensures network identifiers such as domain names and IP addresses are assigned to a single party and have globally consistent meaning, and that communication protocols use codes interpreted identically by every software implementation. Source: https://www.iana.org/about",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "https://www.iana.org/about",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "IANA (Internet Assigned Numbers Authority) maintains the authoritative public registries that make the Internet work as a single seamless network. Because technical identifiers must mean the same thing everywhere, IANA ensures network identifiers such as domain names and IP addresses are assigned to a single party and have globally consistent meaning, and that communication protocols use codes interpreted identically by every software implementation. Source: https://www.iana.org/about",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_url_observed",
+        "expected": "https://www.iana.org/about",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

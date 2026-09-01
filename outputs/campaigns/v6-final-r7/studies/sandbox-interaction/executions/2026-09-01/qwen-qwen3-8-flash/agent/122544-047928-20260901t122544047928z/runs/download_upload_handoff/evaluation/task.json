@@ -1,0 +1,180 @@
+{
+  "task_id": "download_upload_handoff",
+  "category": "file_workflow",
+  "goal": "Download the case file, continue to the partner upload portal, upload that exact downloaded file, wait until it is ready, and submit it.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 30.8794367313385,
+  "steps": 5,
+  "action_count": 4,
+  "failed_action_count": 0,
+  "planner_attempt_count": 5,
+  "planner_failure_count": 0,
+  "planner_tokens": 34415,
+  "answer_assertion_count": 2,
+  "answer_assertion_passed": 2,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "development",
+  "task_family": "file_workflow",
+  "setting_id": "sandbox",
+  "leakage_group": "download_upload_handoff",
+  "target_failure_modes": [],
+  "feedback": {
+    "kind": "unspecified",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "unspecified",
+  "scenario": "file_workflow",
+  "environment": "sandbox",
+  "entry_mode": "direct",
+  "risk_scope": "sandbox_mutation",
+  "source_origins": [],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 4,
+    "distinct_tool_count": 3,
+    "tool_entropy_bits": 1.5,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 1,
+    "recovery_count": 0,
+    "minimum_window_entropy_bits": null,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 2,
+    "stagnation_onset_step": null,
+    "replan_count": 0,
+    "strategy_switch_count": 0,
+    "replan_rate": 0.0,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 1.0,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 5,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "url_contains",
+        "expected": "/upload/complete",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "http://127.0.0.1:60362/upload/complete",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "json_equals",
+        "expected": "sandbox-payload.txt",
+        "selector": null,
+        "attribute": null,
+        "endpoint": "/api/state",
+        "json_path": "upload.name",
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "sandbox-payload.txt",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "json_equals",
+        "expected": "e19000ed80b3e60944fe5c91e37ce48edd72f1f813a441c47bd70322240e8a4e",
+        "selector": null,
+        "attribute": null,
+        "endpoint": "/api/state",
+        "json_path": "upload.sha256",
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "e19000ed80b3e60944fe5c91e37ce48edd72f1f813a441c47bd70322240e8a4e",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "artifact_sha256",
+        "expected": {
+          "path": "downloads/sandbox-payload.txt",
+          "sha256": "e19000ed80b3e60944fe5c91e37ce48edd72f1f813a441c47bd70322240e8a4e"
+        },
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": {
+        "exists": true,
+        "path": "/Users/lixiuyin/Materials/Selected/web-agent/outputs/campaigns/v6-final-r7/studies/sandbox-interaction/executions/2026-09-01/qwen-qwen3-8-flash/agent/122544-047928-20260901t122544047928z/runs/download_upload_handoff/artifacts/downloads/sandbox-payload.txt",
+        "sha256": "e19000ed80b3e60944fe5c91e37ce48edd72f1f813a441c47bd70322240e8a4e",
+        "expected_sha256": "e19000ed80b3e60944fe5c91e37ce48edd72f1f813a441c47bd70322240e8a4e"
+      },
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_origin_observed",
+        "expected": "http://127.0.0.1:60361",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_origin_observed",
+        "expected": "http://127.0.0.1:60362",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

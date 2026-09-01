@@ -1,0 +1,124 @@
+{
+  "task_id": "fastapi_features",
+  "category": "web_framework",
+  "goal": "Name one standards-based FastAPI feature and cite the exact features URL.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 21.174936056137085,
+  "steps": 3,
+  "action_count": 2,
+  "failed_action_count": 1,
+  "planner_attempt_count": 3,
+  "planner_failure_count": 0,
+  "planner_tokens": 20185,
+  "answer_assertion_count": 3,
+  "answer_assertion_passed": 3,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "development",
+  "task_family": "web_framework_documentation",
+  "setting_id": "versioned_official_documentation",
+  "leakage_group": "host_fastapi_tiangolo_com",
+  "target_failure_modes": [
+    "information_extraction",
+    "tool_use",
+    "answer_grounding"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "short",
+  "scenario": "document_read",
+  "environment": "public_web",
+  "entry_mode": "direct",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://fastapi.tiangolo.com"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 2,
+    "distinct_tool_count": 2,
+    "tool_entropy_bits": 1.0,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 1,
+    "recovery_count": 1,
+    "minimum_window_entropy_bits": null,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 2,
+    "stagnation_onset_step": null,
+    "replan_count": 1,
+    "strategy_switch_count": 1,
+    "replan_rate": 0.5,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 0.95,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 3,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "OpenAPI",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "One standards-based FastAPI feature is that FastAPI is \"Based on open standards\" — it uses the OpenAPI standard (previously Swagger) for declaring API metadata, paths, and operations, which enables automatic generation of interactive API documentation. Exact features URL: https://fastapi.tiangolo.com/features/#based-on-open-standards",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "https://fastapi.tiangolo.com/features/",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "One standards-based FastAPI feature is that FastAPI is \"Based on open standards\" — it uses the OpenAPI standard (previously Swagger) for declaring API metadata, paths, and operations, which enables automatic generation of interactive API documentation. Exact features URL: https://fastapi.tiangolo.com/features/#based-on-open-standards",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_url_observed",
+        "expected": "https://fastapi.tiangolo.com/features/",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

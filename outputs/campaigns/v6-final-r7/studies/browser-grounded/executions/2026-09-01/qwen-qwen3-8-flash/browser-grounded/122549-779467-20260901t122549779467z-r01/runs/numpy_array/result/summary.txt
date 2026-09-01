@@ -1,0 +1,19 @@
+**What `numpy.array` creates**
+
+`numpy.array` is NumPy's fundamental **array-creation routine** (listed under *Routines and objects by topic → Array creation routines*). As the reference page states directly: **"Create an array."** — i.e. it builds a new NumPy **`ndarray`** from the input object.
+
+**Signature (as documented):**
+`numpy.array(object, dtype=None, *, copy=True, order='K', subok=False, ndmin=0, ndmax=0, like=None)`
+
+**What it accepts / what it produces:**
+- `object` (array_like): "An array, any object exposing the array interface, an object whose `__array__` method returns an array, or any (nested) sequence. If object is a scalar, a 0-dimensional array containing object is returned." So the input can be a list/tuple (including nested lists), another array, an object implementing the array interface or `__array__`, or even a plain scalar (which yields a 0‑dimensional array).
+- `dtype` (data-type, optional): the desired data type for the array; if omitted, it is inferred from the elements of `object`.
+- `copy` (bool, optional, default `True`): whether a copy is made; if `False`, a new array is created only when the data type, `ndmin`, or other requirements force it (otherwise the result may share memory with the input).
+- `order` (`{'K', 'A', 'C', 'F'}`, default `'K'`): memory layout of the result — `'C'` row-major, `'F'` Fortran/column-major, `'A'` whatever matches the input, `'K'` keep the input's layout as close as possible.
+- `subok` (bool, default `False`): if `False`, a base-class `ndarray` is returned; if `True`, a subclass instance is allowed through.
+- `ndmin` / `ndmax` (ints, default `0`): minimum / maximum number of dimensions the resulting array must have (dimensions are prepended/appended as needed).
+- `like` (array_like, optional): specifies the desired data type of the returned array to be inferred from this "like" array, enabling creation of non-NumPy arrays that follow the `__array_namespace__`/`__array_function__` protocols.
+
+**Result:** the function returns an **`ndarray`** — a new array object (`out : ndarray`) holding the (optionally converted/copied/reshaped) data of the input, with the requested dtype, dimensionality, and memory order.
+
+**Exact reference URL (primary source consulted):** https://numpy.org/doc/stable/reference/generated/numpy.array.html (page title: "numpy.array — NumPy v2.5 Manual").

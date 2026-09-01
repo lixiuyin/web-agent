@@ -1,0 +1,67 @@
+{
+  "$schema": "https://raw.githubusercontent.com/lixiuyin/web-agent/main/src/webagent/schemas/study-manifest-v1.schema.json",
+  "budgets": {
+    "max_steps": 12,
+    "planner_max_tokens": 6000,
+    "task_timeout_seconds": 2400,
+    "tool_timeout_seconds": 600
+  },
+  "collection_dates": [],
+  "conditions": [
+    {
+      "config_overrides": {
+        "task_step_budgets": {
+          "default": 8,
+          "discovery_required": 12
+        }
+      },
+      "description": "Browser-grounded open-web agent with retained execution evidence",
+      "id": "browser-grounded",
+      "kind": "baseline"
+    }
+  ],
+  "confidence_target": "task_success",
+  "created_at": "2026-09-01T12:25:49.779467Z",
+  "failure_taxonomy_version": "1",
+  "hypotheses": [],
+  "kind": "webagent-study",
+  "models": [
+    {
+      "api_protocol": "openai-compatible",
+      "model": "z-ai/glm-5.3-flash",
+      "provider": "openrouter",
+      "vision_expected": null
+    },
+    {
+      "api_protocol": "openai-compatible",
+      "model": "qwen/qwen3.8-flash",
+      "provider": "openrouter",
+      "vision_expected": null
+    }
+  ],
+  "preregistration_sha256": null,
+  "primary_metrics": [
+    "success_rate",
+    "held_out_transfer"
+  ],
+  "repetitions": 1,
+  "research_questions": [
+    "How do model-level success, failures, and calibration transfer to held-out tasks and settings?"
+  ],
+  "schema_version": 1,
+  "secondary_metrics": [
+    "false_completion_rate",
+    "calibration",
+    "failure_modes"
+  ],
+  "source_sha256": "786cd1238bc9cc60b2fed8b220e6906a6298b8a5ce89a1c2487170852ec9138f",
+  "study_id": "browser-grounded",
+  "suite": "open-web-general-v2",
+  "task_manifest_sha256": "611ee2574de9cc725755a35e9a0c26ff368bd8843f9949b201f9a1239c21d6f8",
+  "task_split_counts": {
+    "development": 18,
+    "held_out_setting": 6,
+    "held_out_task": 6
+  },
+  "title": "Open-web model comparison and held-out transfer"
+}

@@ -1,0 +1,7 @@
+Playwright Python's official introduction page is https://playwright.dev/python/docs/intro (title: "Playwright Python"), reached via the "Python" link on the official Playwright docs (playwright.dev) and confirmed as the top official result in Bing searches for "Playwright Python official documentation introduction" and "playwright python pip install playwright pytest official".
+
+Package installation command reported on that page:
+
+pip install playwright pytest
+
+After installing, the page instructs running `playwright install` to download the required browsers. Source URL: https://playwright.dev/python/docs/intro

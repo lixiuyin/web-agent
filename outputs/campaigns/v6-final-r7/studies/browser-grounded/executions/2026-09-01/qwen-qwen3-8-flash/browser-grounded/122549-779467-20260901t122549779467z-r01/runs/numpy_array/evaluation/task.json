@@ -1,0 +1,124 @@
+{
+  "task_id": "numpy_array",
+  "category": "data_science",
+  "goal": "Explain what numpy.array creates and cite the exact reference URL.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 114.85149073600769,
+  "steps": 5,
+  "action_count": 4,
+  "failed_action_count": 2,
+  "planner_attempt_count": 5,
+  "planner_failure_count": 0,
+  "planner_tokens": 39119,
+  "answer_assertion_count": 3,
+  "answer_assertion_passed": 3,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "development",
+  "task_family": "data_library_documentation",
+  "setting_id": "versioned_official_documentation",
+  "leakage_group": "host_numpy_org",
+  "target_failure_modes": [
+    "information_extraction",
+    "tool_use",
+    "answer_grounding"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "short",
+  "scenario": "document_read",
+  "environment": "public_web",
+  "entry_mode": "direct",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://numpy.org"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 4,
+    "distinct_tool_count": 1,
+    "tool_entropy_bits": -0.0,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 2,
+    "recovery_count": 1,
+    "minimum_window_entropy_bits": null,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 4,
+    "stagnation_onset_step": null,
+    "replan_count": 2,
+    "strategy_switch_count": 2,
+    "replan_rate": 0.5,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 0.95,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 5,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "array",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "**What `numpy.array` creates**\n\n`numpy.array` is NumPy's fundamental **array-creation routine** (listed under *Routines and objects by topic → Array creation routines*). As the reference page states directly: **\"Create an array.\"** — i.e. it builds a new NumPy **`ndarray`** from the input object.\n\n**Signature (as documented):**\n`numpy.array(object, dtype=None, *, copy=True, order='K', subok=False, ndmin=0, ndmax=0, like=None)`\n\n**What it accepts / what it produces:**\n- `object` (array_like): \"An array, any object exposing the array interface, an object whose `__array__` method returns an array, or any (nested) sequence. If object is a scalar, a 0-dimensional array containing object is returned.\" So the input can be a list/tuple (including nested lists), another array, an object implementing the array interface or `__array__`, or even a plain scalar (which yields a 0‑dimensional array).\n- `dtype` (data-type, optional): the desired data type for the array; if omitted, it is inferred from the elements of `object`.\n- `copy` (bool, optional, default `True`): whether a copy is made; if `False`, a new array is created only when the data type, `ndmin`, or other requirements force it (otherwise the result may share memory with the input).\n- `order` (`{'K', 'A', 'C', 'F'}`, default `'K'`): memory layout of the result — `'C'` row-major, `'F'` Fortran/column-major, `'A'` whatever matches the input, `'K'` keep the input's layout as close as possible.\n- `subok` (bool, default `False`): if `False`, a base-class `ndarray` is returned; if `True`, a subclass instance is allowed through.\n- `ndmin` / `ndmax` (ints, default `0`): minimum / maximum number of dimensions the resulting array must have (dimensions are prepended/appended as needed).\n- `like` (array_like, optional): specifies the desired data type of the returned array to be inferred from this \"like\" array, enabling creation of non-NumPy arrays that follow the `__array_namespace__`/`__array_function__` protocols.\n\n**Result:** the function returns an **`ndarray`** — a new array object (`out : ndarray`) holding the (optionally converted/copied/reshaped) data of the input, with the requested dtype, dimensionality, and memory order.\n\n**Exact reference URL (primary source consulted):** https://numpy.org/doc/stable/reference/generated/numpy.array.html (page title: \"numpy.array — NumPy v2.5 Manual\").",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "https://numpy.org/doc/stable/reference/generated/numpy.array.html",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "**What `numpy.array` creates**\n\n`numpy.array` is NumPy's fundamental **array-creation routine** (listed under *Routines and objects by topic → Array creation routines*). As the reference page states directly: **\"Create an array.\"** — i.e. it builds a new NumPy **`ndarray`** from the input object.\n\n**Signature (as documented):**\n`numpy.array(object, dtype=None, *, copy=True, order='K', subok=False, ndmin=0, ndmax=0, like=None)`\n\n**What it accepts / what it produces:**\n- `object` (array_like): \"An array, any object exposing the array interface, an object whose `__array__` method returns an array, or any (nested) sequence. If object is a scalar, a 0-dimensional array containing object is returned.\" So the input can be a list/tuple (including nested lists), another array, an object implementing the array interface or `__array__`, or even a plain scalar (which yields a 0‑dimensional array).\n- `dtype` (data-type, optional): the desired data type for the array; if omitted, it is inferred from the elements of `object`.\n- `copy` (bool, optional, default `True`): whether a copy is made; if `False`, a new array is created only when the data type, `ndmin`, or other requirements force it (otherwise the result may share memory with the input).\n- `order` (`{'K', 'A', 'C', 'F'}`, default `'K'`): memory layout of the result — `'C'` row-major, `'F'` Fortran/column-major, `'A'` whatever matches the input, `'K'` keep the input's layout as close as possible.\n- `subok` (bool, default `False`): if `False`, a base-class `ndarray` is returned; if `True`, a subclass instance is allowed through.\n- `ndmin` / `ndmax` (ints, default `0`): minimum / maximum number of dimensions the resulting array must have (dimensions are prepended/appended as needed).\n- `like` (array_like, optional): specifies the desired data type of the returned array to be inferred from this \"like\" array, enabling creation of non-NumPy arrays that follow the `__array_namespace__`/`__array_function__` protocols.\n\n**Result:** the function returns an **`ndarray`** — a new array object (`out : ndarray`) holding the (optionally converted/copied/reshaped) data of the input, with the requested dtype, dimensionality, and memory order.\n\n**Exact reference URL (primary source consulted):** https://numpy.org/doc/stable/reference/generated/numpy.array.html (page title: \"numpy.array — NumPy v2.5 Manual\").",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_url_observed",
+        "expected": "https://numpy.org/doc/stable/reference/generated/numpy.array.html",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

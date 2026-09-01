@@ -1,0 +1,142 @@
+{
+  "task_id": "github_git_difference",
+  "category": "collaboration",
+  "goal": "Starting from a blank page, use browser search to find the official GitHub Docs explanation of Git versus GitHub, explain the distinction, and cite the exact URL.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 123.6370701789856,
+  "steps": 12,
+  "action_count": 11,
+  "failed_action_count": 0,
+  "planner_attempt_count": 12,
+  "planner_failure_count": 0,
+  "planner_tokens": 185076,
+  "answer_assertion_count": 3,
+  "answer_assertion_passed": 3,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "held_out_task",
+  "task_family": "collaboration_platform_documentation",
+  "setting_id": "versioned_official_documentation",
+  "leakage_group": "host_docs_github_com",
+  "target_failure_modes": [
+    "search_discovery",
+    "tool_use",
+    "answer_grounding"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "medium",
+  "scenario": "search_discovery",
+  "environment": "public_web",
+  "entry_mode": "search",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://docs.github.com"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 11,
+    "distinct_tool_count": 5,
+    "tool_entropy_bits": 2.0048861640918427,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 1,
+    "recovery_count": 0,
+    "minimum_window_entropy_bits": 0.7219280948873623,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 4,
+    "stagnation_onset_step": null,
+    "replan_count": 0,
+    "strategy_switch_count": 0,
+    "replan_rate": 0.0,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 0.9,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 12,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "version control",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "**Found via browser search → official GitHub Docs page: \"What is GitHub?\" (Get started → Start your journey)**\n\n**Exact URL (primary source):** https://docs.github.com/en/get-started/start-your-journey/what-is-github\n\n**How it was reached:** Starting from a blank page, I ran several web searches (Bing and Yahoo Japan) for the GitHub Docs explanation of Git vs. GitHub, e.g. `GitHub Docs \"GitHub\" and \"Git\" difference overview` and `site:docs.github.com \"Git and GitHub\" overview what is Git`. Those results surfaced official docs pages (including https://docs.github.com/en/get-started/git-basics/set-up-git); the links on that visited page pointed to the \"What is GitHub?\" article, which I opened and read directly (breadcrumb: GitHub Docs › Get started › Start your journey › What is GitHub?, version \"Free, Pro, & Team\", \"Get started – Article 1 of 8\").\n\n**What the official docs say (observed text):**\n- Article intro: \"GitHub is a platform that supports your entire software development process, from planning work to deploying and operating software.\"\n- Body: \"GitHub is a platform for building software. Whether you are starting a new project or contributing to an existing one, GitHub brings together the tools and workflows you need across every stage of the software development life cycle (SDLC).\"\n- The page has a dedicated section titled **\"GitHub and Git\"**, whose first line is: **\"GitHub is based on the open-source software, Git.\"**\n- Related sections on the page: \"GitHub and the software development life cycle\" (\"The software development life cycle describes the stages a software project moves through, from the first idea to running code in production. GitHub is designed to support every stage of that process.\"), \"Is GitHub right for me?\", \"Where do I start?\", plus linked tasks such as \"Creating a repository for your project on GitHub.\"\n\n**The distinction, explained:**\n- **Git** is the underlying **open-source version-control software** — the tool that runs on your own machine and tracks changes to files/history (commits, branches, diffs). It is a standalone program, not owned by or dependent on GitHub; GitHub's own docs treat it as separate software that you install and configure (see the sibling \"Git basics\"/\"Set up Git\" content, which links out to git-scm.com for downloading Git).\n- **GitHub** is a **hosted platform/service for building software** that is *based on* Git. It adds the networked collaboration layer on top of Git: repositories hosted in the cloud, plus planning and delivery workflows across the whole software development life cycle (repositories, pull requests/review, and other SDLC tooling described on this page).\n- So the relationship is **tool vs. platform**: Git = the version-control engine; GitHub = the platform built on Git that stores/shares that work and supports the surrounding collaboration and delivery workflow. You can use Git without GitHub, but GitHub cannot exist without Git.\n\n**Citation:** GitHub Docs, \"What is GitHub?\", https://docs.github.com/en/get-started/start-your-journey/what-is-github (accessed during this session; no publication date is displayed on the page).",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "https://docs.github.com/en/get-started/start-your-journey/what-is-github",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "**Found via browser search → official GitHub Docs page: \"What is GitHub?\" (Get started → Start your journey)**\n\n**Exact URL (primary source):** https://docs.github.com/en/get-started/start-your-journey/what-is-github\n\n**How it was reached:** Starting from a blank page, I ran several web searches (Bing and Yahoo Japan) for the GitHub Docs explanation of Git vs. GitHub, e.g. `GitHub Docs \"GitHub\" and \"Git\" difference overview` and `site:docs.github.com \"Git and GitHub\" overview what is Git`. Those results surfaced official docs pages (including https://docs.github.com/en/get-started/git-basics/set-up-git); the links on that visited page pointed to the \"What is GitHub?\" article, which I opened and read directly (breadcrumb: GitHub Docs › Get started › Start your journey › What is GitHub?, version \"Free, Pro, & Team\", \"Get started – Article 1 of 8\").\n\n**What the official docs say (observed text):**\n- Article intro: \"GitHub is a platform that supports your entire software development process, from planning work to deploying and operating software.\"\n- Body: \"GitHub is a platform for building software. Whether you are starting a new project or contributing to an existing one, GitHub brings together the tools and workflows you need across every stage of the software development life cycle (SDLC).\"\n- The page has a dedicated section titled **\"GitHub and Git\"**, whose first line is: **\"GitHub is based on the open-source software, Git.\"**\n- Related sections on the page: \"GitHub and the software development life cycle\" (\"The software development life cycle describes the stages a software project moves through, from the first idea to running code in production. GitHub is designed to support every stage of that process.\"), \"Is GitHub right for me?\", \"Where do I start?\", plus linked tasks such as \"Creating a repository for your project on GitHub.\"\n\n**The distinction, explained:**\n- **Git** is the underlying **open-source version-control software** — the tool that runs on your own machine and tracks changes to files/history (commits, branches, diffs). It is a standalone program, not owned by or dependent on GitHub; GitHub's own docs treat it as separate software that you install and configure (see the sibling \"Git basics\"/\"Set up Git\" content, which links out to git-scm.com for downloading Git).\n- **GitHub** is a **hosted platform/service for building software** that is *based on* Git. It adds the networked collaboration layer on top of Git: repositories hosted in the cloud, plus planning and delivery workflows across the whole software development life cycle (repositories, pull requests/review, and other SDLC tooling described on this page).\n- So the relationship is **tool vs. platform**: Git = the version-control engine; GitHub = the platform built on Git that stores/shares that work and supports the surrounding collaboration and delivery workflow. You can use Git without GitHub, but GitHub cannot exist without Git.\n\n**Citation:** GitHub Docs, \"What is GitHub?\", https://docs.github.com/en/get-started/start-your-journey/what-is-github (accessed during this session; no publication date is displayed on the page).",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_url_observed",
+        "expected": "https://docs.github.com/en/get-started/start-your-journey/what-is-github",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "certificate_valid",
+        "expected": true,
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

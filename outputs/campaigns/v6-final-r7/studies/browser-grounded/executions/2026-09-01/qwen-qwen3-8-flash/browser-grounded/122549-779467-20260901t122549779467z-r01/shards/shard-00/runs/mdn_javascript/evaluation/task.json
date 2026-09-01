@@ -1,0 +1,124 @@
+{
+  "task_id": "mdn_javascript",
+  "category": "web_platform",
+  "goal": "Describe JavaScript using MDN and cite the exact URL.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 118.06480979919434,
+  "steps": 7,
+  "action_count": 6,
+  "failed_action_count": 2,
+  "planner_attempt_count": 8,
+  "planner_failure_count": 1,
+  "planner_tokens": 55042,
+  "answer_assertion_count": 3,
+  "answer_assertion_passed": 3,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "held_out_setting",
+  "task_family": "web_platform_documentation",
+  "setting_id": "localized_web_platform_reference",
+  "leakage_group": "host_developer_mozilla_org",
+  "target_failure_modes": [
+    "information_extraction",
+    "tool_use",
+    "answer_grounding"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "short",
+  "scenario": "document_read",
+  "environment": "public_web",
+  "entry_mode": "direct",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://developer.mozilla.org"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 6,
+    "distinct_tool_count": 3,
+    "tool_entropy_bits": 1.2516291673878228,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 1,
+    "recovery_count": 2,
+    "minimum_window_entropy_bits": 0.7219280948873623,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 6,
+    "stagnation_onset_step": null,
+    "replan_count": 4,
+    "strategy_switch_count": 4,
+    "replan_rate": 0.6666666666666666,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 0.95,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 7,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "JavaScript",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "JavaScript — description as published by MDN (developer.mozilla.org)\n\nMDN's definition (verbatim from the page's opening paragraphs):\n\"JavaScript (JS) is a lightweight interpreted (or just-in-time compiled) programming language with first-class functions. While it is most well-known as the scripting language for Web pages, many non-browser environments also use it, such as Node.js, Apache CouchDB and Adobe Acrobat. JavaScript is a prototype-based, garbage-collected, dynamic language, supporting multiple paradigms such as imperative, functional, and object-oriented.\"\n\nKey points MDN makes about the language:\n- Lightweight, interpreted / just-in-time (JIT) compiled language.\n- Has first-class functions (functions are ordinary values that can be passed, returned and stored).\n- Best known as the scripting language of Web pages, but also runs outside browsers — e.g. Node.js, Apache CouchDB, Adobe Acrobat.\n- Prototype-based (inheritance via the prototype chain rather than classical classes), garbage-collected, and dynamically typed.\n- Multi-paradigm: supports imperative, functional and object-oriented styles.\n\nHow MDN organizes its JavaScript documentation (the page's \"In this article\" sections):\n1. Beginner's tutorials — introductory material for new learners.\n2. JavaScript guides — in-depth narrative coverage; the sidebar lists guides such as the JavaScript Guide, Grammar and types, Control flow and error handling, Loops and iteration, Functions, Inheritance and the prototype chain, Equality comparisons and sameness, JavaScript data structures, and JavaScript frameworks and libraries.\n3. Reference — the technical language reference, including the extensive error-type listings visible in the sidebar (e.g. runtime errors such as \"SyntaxError: cannot use ?? unparenthesized within || and &&\", \"SyntaxError: getter and setter for private name #x should either both be present or both be absent\", \"SyntaxError: unparenthesized unary expression can't appear on the left-hand side of '**'\", and \"SyntaxError: Using //@ to indicate sourceURL pragmas is deprecated\").\n4. Help improve MDN — how to contribute feedback and edits to the documentation.\n\nSource (exact URL, page visited and read): https://developer.mozilla.org/en-US/docs/Web/JavaScript — page title \"JavaScript | MDN\".",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "JavaScript — description as published by MDN (developer.mozilla.org)\n\nMDN's definition (verbatim from the page's opening paragraphs):\n\"JavaScript (JS) is a lightweight interpreted (or just-in-time compiled) programming language with first-class functions. While it is most well-known as the scripting language for Web pages, many non-browser environments also use it, such as Node.js, Apache CouchDB and Adobe Acrobat. JavaScript is a prototype-based, garbage-collected, dynamic language, supporting multiple paradigms such as imperative, functional, and object-oriented.\"\n\nKey points MDN makes about the language:\n- Lightweight, interpreted / just-in-time (JIT) compiled language.\n- Has first-class functions (functions are ordinary values that can be passed, returned and stored).\n- Best known as the scripting language of Web pages, but also runs outside browsers — e.g. Node.js, Apache CouchDB, Adobe Acrobat.\n- Prototype-based (inheritance via the prototype chain rather than classical classes), garbage-collected, and dynamically typed.\n- Multi-paradigm: supports imperative, functional and object-oriented styles.\n\nHow MDN organizes its JavaScript documentation (the page's \"In this article\" sections):\n1. Beginner's tutorials — introductory material for new learners.\n2. JavaScript guides — in-depth narrative coverage; the sidebar lists guides such as the JavaScript Guide, Grammar and types, Control flow and error handling, Loops and iteration, Functions, Inheritance and the prototype chain, Equality comparisons and sameness, JavaScript data structures, and JavaScript frameworks and libraries.\n3. Reference — the technical language reference, including the extensive error-type listings visible in the sidebar (e.g. runtime errors such as \"SyntaxError: cannot use ?? unparenthesized within || and &&\", \"SyntaxError: getter and setter for private name #x should either both be present or both be absent\", \"SyntaxError: unparenthesized unary expression can't appear on the left-hand side of '**'\", and \"SyntaxError: Using //@ to indicate sourceURL pragmas is deprecated\").\n4. Help improve MDN — how to contribute feedback and edits to the documentation.\n\nSource (exact URL, page visited and read): https://developer.mozilla.org/en-US/docs/Web/JavaScript — page title \"JavaScript | MDN\".",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_url_observed",
+        "expected": "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

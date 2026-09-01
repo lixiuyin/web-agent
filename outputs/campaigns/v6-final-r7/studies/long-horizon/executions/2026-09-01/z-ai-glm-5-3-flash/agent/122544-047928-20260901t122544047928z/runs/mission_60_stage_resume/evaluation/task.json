@@ -1,0 +1,165 @@
+{
+  "task_id": "mission_60_stage_resume",
+  "category": "long_horizon_workflow",
+  "goal": "Complete all 60 mission stages, recover from transient feedback, retain each durable cue until it is requested, and finally report the four cues in order.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 580.0882062911987,
+  "steps": 70,
+  "action_count": 69,
+  "failed_action_count": 0,
+  "planner_attempt_count": 72,
+  "planner_failure_count": 2,
+  "planner_tokens": 509892,
+  "answer_assertion_count": 1,
+  "answer_assertion_passed": 1,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "held_out_setting",
+  "task_family": "long_horizon_state_machine",
+  "setting_id": "controlled-mission-v1",
+  "leakage_group": "mission-template-v1",
+  "target_failure_modes": [
+    "context_loss",
+    "memory_drift",
+    "tool_loop",
+    "checkpoint_resume",
+    "transient_feedback"
+  ],
+  "feedback": {
+    "kind": "delayed",
+    "delay_steps": 40,
+    "noise_rate": null
+  },
+  "expected_horizon": "long",
+  "scenario": "recovery",
+  "environment": "sandbox",
+  "entry_mode": "direct",
+  "risk_scope": "sandbox_mutation",
+  "source_origins": [],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 69,
+    "distinct_tool_count": 3,
+    "tool_entropy_bits": 0.6335247815414145,
+    "repeated_action_rate": 0.014705882352941176,
+    "longest_identical_action_streak": 2,
+    "longest_failure_streak": 1,
+    "recovery_count": 1,
+    "minimum_window_entropy_bits": -0.0,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 2,
+    "stagnation_onset_step": null,
+    "replan_count": 0,
+    "strategy_switch_count": 0,
+    "replan_rate": 0.0,
+    "resume_count": 1,
+    "resumed_from_checkpoint": true
+  },
+  "success_probability": 0.95,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 70,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "element_visible",
+        "expected": true,
+        "selector": "#mission-complete",
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "json_equals",
+        "expected": true,
+        "selector": null,
+        "attribute": null,
+        "endpoint": "/api/state",
+        "json_path": "completed",
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "json_equals",
+        "expected": 60,
+        "selector": null,
+        "attribute": null,
+        "endpoint": "/api/state",
+        "json_path": "stage",
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": 60,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "json_equals",
+        "expected": 0,
+        "selector": null,
+        "attribute": null,
+        "endpoint": "/api/state",
+        "json_path": "memory_errors",
+        "required": true,
+        "weight": 2.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": 0,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_in_order",
+        "expected": [
+          "CEDAR",
+          "ORBIT",
+          "LANTERN",
+          "DELTA"
+        ],
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 2.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "All 60 mission stages completed and the mission page confirms 'Mission complete'. The four durable cues, retained in order, are: 1) CEDAR (stage 4), 2) ORBIT (stage 14), 3) LANTERN (stage 24), 4) DELTA (stage 34).",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "task_id": "mdn_css",
+  "category": "web_platform",
+  "goal": "Describe CSS's role using MDN and cite the exact URL.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 99.37887716293335,
+  "steps": 5,
+  "action_count": 4,
+  "failed_action_count": 0,
+  "planner_attempt_count": 6,
+  "planner_failure_count": 1,
+  "planner_tokens": 39978,
+  "answer_assertion_count": 3,
+  "answer_assertion_passed": 3,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "held_out_setting",
+  "task_family": "web_platform_documentation",
+  "setting_id": "localized_web_platform_reference",
+  "leakage_group": "host_developer_mozilla_org",
+  "target_failure_modes": [
+    "information_extraction",
+    "tool_use",
+    "answer_grounding"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "short",
+  "scenario": "document_read",
+  "environment": "public_web",
+  "entry_mode": "direct",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://developer.mozilla.org"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 4,
+    "distinct_tool_count": 1,
+    "tool_entropy_bits": -0.0,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 1,
+    "recovery_count": 0,
+    "minimum_window_entropy_bits": null,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 4,
+    "stagnation_onset_step": null,
+    "replan_count": 1,
+    "strategy_switch_count": 1,
+    "replan_rate": 0.25,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 0.97,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 5,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "style",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "CSS's role, as described by MDN (page title: \"CSS: Cascading Style Sheets\"):\n\n1. Presentation/styling layer: \"Cascading Style Sheets (CSS) is a stylesheet language used to describe the presentation of a document written in HTML or XML (including XML dialects such as SVG, MathML or XHTML). CSS describes how elements should be rendered on screen, on paper, in speech, or on other media.\" In other words, CSS's role is to separate content (HTML/XML structure) from presentation — colors, fonts, layout, backgrounds, borders, animation, responsive/adaptive rendering — across media types (screen, print, speech).\n\n2. Core web technology: \"CSS is among the core languages of the open web and is standardized across web browsers according to W3C specifications.\" So its role is also as one of the foundational, browser-supported languages of the open web, governed by W3C standards rather than by any single vendor.\n\n3. Standards/versioning context MDN gives for that role: \"Previously, the development of various parts of CSS specification was done synchronously, which allowed the versioning of the latest recommendations. You might have heard about CSS1, CSS2.1, or even CSS3. There will never be a CSS3 or a CSS4; rather, everything is now just 'CSS' with individual CSS modules having version numbers/levels.\" MDN adds: \"After CSS 2.1, the scope of the specification increased significantly and the progress on different CSS modules started to differ so much, that it became more effective to develop and release recommendations separately per module. Instead of versioning the CSS specification, W3C now periodically takes a snapshot of the latest stable state of the CSS specification and individual modules progress.\" Practically, this means developers use \"CSS\" as a whole, while features (e.g. Grid, Flexbox, container queries, custom functions) advance at their own module level.\n\n4. MDN frames the reference around that role: the CSS landing page organizes the language into guides (layout/containing block, flexbox, grid, backgrounds and borders, handling overflow, anchor positioning, animations, CSS custom functions, container size and style queries, etc.) plus reference material for selectors, at-rules, functions, types, and properties — i.e. it documents CSS as the declarative styling/layout language of the web platform.\n\nExact source URL cited: https://developer.mozilla.org/en-US/docs/Web/CSS",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "https://developer.mozilla.org/en-US/docs/Web/CSS",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "CSS's role, as described by MDN (page title: \"CSS: Cascading Style Sheets\"):\n\n1. Presentation/styling layer: \"Cascading Style Sheets (CSS) is a stylesheet language used to describe the presentation of a document written in HTML or XML (including XML dialects such as SVG, MathML or XHTML). CSS describes how elements should be rendered on screen, on paper, in speech, or on other media.\" In other words, CSS's role is to separate content (HTML/XML structure) from presentation — colors, fonts, layout, backgrounds, borders, animation, responsive/adaptive rendering — across media types (screen, print, speech).\n\n2. Core web technology: \"CSS is among the core languages of the open web and is standardized across web browsers according to W3C specifications.\" So its role is also as one of the foundational, browser-supported languages of the open web, governed by W3C standards rather than by any single vendor.\n\n3. Standards/versioning context MDN gives for that role: \"Previously, the development of various parts of CSS specification was done synchronously, which allowed the versioning of the latest recommendations. You might have heard about CSS1, CSS2.1, or even CSS3. There will never be a CSS3 or a CSS4; rather, everything is now just 'CSS' with individual CSS modules having version numbers/levels.\" MDN adds: \"After CSS 2.1, the scope of the specification increased significantly and the progress on different CSS modules started to differ so much, that it became more effective to develop and release recommendations separately per module. Instead of versioning the CSS specification, W3C now periodically takes a snapshot of the latest stable state of the CSS specification and individual modules progress.\" Practically, this means developers use \"CSS\" as a whole, while features (e.g. Grid, Flexbox, container queries, custom functions) advance at their own module level.\n\n4. MDN frames the reference around that role: the CSS landing page organizes the language into guides (layout/containing block, flexbox, grid, backgrounds and borders, handling overflow, anchor positioning, animations, CSS custom functions, container size and style queries, etc.) plus reference material for selectors, at-rules, functions, types, and properties — i.e. it documents CSS as the declarative styling/layout language of the web platform.\n\nExact source URL cited: https://developer.mozilla.org/en-US/docs/Web/CSS",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_url_observed",
+        "expected": "https://developer.mozilla.org/en-US/docs/Web/CSS",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

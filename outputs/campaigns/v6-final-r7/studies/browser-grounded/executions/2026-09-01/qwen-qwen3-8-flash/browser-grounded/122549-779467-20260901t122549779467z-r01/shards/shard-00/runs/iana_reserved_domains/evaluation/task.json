@@ -1,0 +1,124 @@
+{
+  "task_id": "iana_reserved_domains",
+  "category": "standards",
+  "goal": "Report what IANA says about reserved domains and cite the exact URL.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 37.95340299606323,
+  "steps": 5,
+  "action_count": 4,
+  "failed_action_count": 0,
+  "planner_attempt_count": 5,
+  "planner_failure_count": 0,
+  "planner_tokens": 40123,
+  "answer_assertion_count": 3,
+  "answer_assertion_passed": 3,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "development",
+  "task_family": "official_standards_reference",
+  "setting_id": "stable_official_reference",
+  "leakage_group": "host_www_iana_org",
+  "target_failure_modes": [
+    "information_extraction",
+    "tool_use",
+    "answer_grounding"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "short",
+  "scenario": "document_read",
+  "environment": "public_web",
+  "entry_mode": "direct",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://www.iana.org"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 4,
+    "distinct_tool_count": 1,
+    "tool_entropy_bits": -0.0,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 1,
+    "recovery_count": 0,
+    "minimum_window_entropy_bits": null,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 4,
+    "stagnation_onset_step": null,
+    "replan_count": 1,
+    "strategy_switch_count": 1,
+    "replan_rate": 0.25,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 0.96,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 5,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "reserved",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "WHAT IANA SAYS ABOUT RESERVED DOMAINS\n\nExact source URL (as requested): https://www.iana.org/domains/reserved\nPage title: \"IANA-managed Reserved Domains\"\n\nKey statements published by IANA on that page:\n\n1. General framing / overview:\n   \"Certain domains are set aside, and nominally registered to 'IANA', for specific policy or technical purposes.\"\n\n2. Example (documentation) domains:\n   \"As described in RFC 2606 and RFC 6761, a number of domains such as example.com and example.org are maintained for documentation purposes. These domains may be used as illustrative examples in documents without prior coordination with us. They are not available for registration or transfer.\"\n   - Supporting RFC links given on the page: RFC 2606 (\"Reserved Top Level DNS Names\") and RFC 6761 (\"Alternative Usage of the IETF Stream and Its Subtypes\"), i.e. the RFCs that define reserved/special-use domain names.\n   - IANA also links its IDN Evaluation / ICANN-related material in the adjacent paragraph on that page.\n\n3. Policy-reserved domains and IANA's role:\n   \"We act as both the registrant and registrar for a select number of domains which have been reserved under policy grounds. These exclusions are typically indicated in either technical standards (RFC documents), or contractual limitations.\"\n   - The phrase \"contractual limitations\" is a hyperlink on the page (pointing to IANA's contractual/agreement material), and the RFC references link to the IETF RFC documents.\n\nIn short, IANA states that reserved domains are names deliberately set aside (nominally registered to IANA) for policy or technical reasons; the \"example\" TLDs such as example.com/example.org (per RFC 2606 and RFC 6761) are reserved purely for documentation use, may be used illustratively in documents without coordinating with IANA, and are NOT available for registration or transfer; and for a select set of policy-reserved domains IANA serves as both registrant and registrar, with those exclusions defined either by technical standards (RFCs) or by contractual limitations.\n\nNavigation context observed on the page: this content sits under IANA's \"Domain Names\" section (site nav item \"Reserved Domains\"), alongside related IANA functions pages such as Root Zone Management, .INT Registry, .ARPA Registry, IDN Practices Repository, and Root Key Signing Key (DNSSEC).",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "https://www.iana.org/domains/reserved",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "WHAT IANA SAYS ABOUT RESERVED DOMAINS\n\nExact source URL (as requested): https://www.iana.org/domains/reserved\nPage title: \"IANA-managed Reserved Domains\"\n\nKey statements published by IANA on that page:\n\n1. General framing / overview:\n   \"Certain domains are set aside, and nominally registered to 'IANA', for specific policy or technical purposes.\"\n\n2. Example (documentation) domains:\n   \"As described in RFC 2606 and RFC 6761, a number of domains such as example.com and example.org are maintained for documentation purposes. These domains may be used as illustrative examples in documents without prior coordination with us. They are not available for registration or transfer.\"\n   - Supporting RFC links given on the page: RFC 2606 (\"Reserved Top Level DNS Names\") and RFC 6761 (\"Alternative Usage of the IETF Stream and Its Subtypes\"), i.e. the RFCs that define reserved/special-use domain names.\n   - IANA also links its IDN Evaluation / ICANN-related material in the adjacent paragraph on that page.\n\n3. Policy-reserved domains and IANA's role:\n   \"We act as both the registrant and registrar for a select number of domains which have been reserved under policy grounds. These exclusions are typically indicated in either technical standards (RFC documents), or contractual limitations.\"\n   - The phrase \"contractual limitations\" is a hyperlink on the page (pointing to IANA's contractual/agreement material), and the RFC references link to the IETF RFC documents.\n\nIn short, IANA states that reserved domains are names deliberately set aside (nominally registered to IANA) for policy or technical reasons; the \"example\" TLDs such as example.com/example.org (per RFC 2606 and RFC 6761) are reserved purely for documentation use, may be used illustratively in documents without coordinating with IANA, and are NOT available for registration or transfer; and for a select set of policy-reserved domains IANA serves as both registrant and registrar, with those exclusions defined either by technical standards (RFCs) or by contractual limitations.\n\nNavigation context observed on the page: this content sits under IANA's \"Domain Names\" section (site nav item \"Reserved Domains\"), alongside related IANA functions pages such as Root Zone Management, .INT Registry, .ARPA Registry, IDN Practices Repository, and Root Key Signing Key (DNSSEC).",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_url_observed",
+        "expected": "https://www.iana.org/domains/reserved",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

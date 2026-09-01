@@ -1,0 +1,124 @@
+{
+  "task_id": "iana_reserved_domains",
+  "category": "standards",
+  "goal": "Report what IANA says about reserved domains and cite the exact URL.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 61.73121976852417,
+  "steps": 6,
+  "action_count": 5,
+  "failed_action_count": 2,
+  "planner_attempt_count": 6,
+  "planner_failure_count": 0,
+  "planner_tokens": 42282,
+  "answer_assertion_count": 3,
+  "answer_assertion_passed": 3,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "development",
+  "task_family": "official_standards_reference",
+  "setting_id": "stable_official_reference",
+  "leakage_group": "host_www_iana_org",
+  "target_failure_modes": [
+    "information_extraction",
+    "tool_use",
+    "answer_grounding"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "short",
+  "scenario": "document_read",
+  "environment": "public_web",
+  "entry_mode": "direct",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://www.iana.org"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 5,
+    "distinct_tool_count": 2,
+    "tool_entropy_bits": 0.7219280948873623,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 1,
+    "recovery_count": 1,
+    "minimum_window_entropy_bits": 0.7219280948873623,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 5,
+    "stagnation_onset_step": null,
+    "replan_count": 3,
+    "strategy_switch_count": 3,
+    "replan_rate": 0.6,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 0.75,
+  "confidence_source": "terminal_self_report",
+  "confidence_elicited_at_step": 6,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "reserved",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "IANA's page at https://www.iana.org/domains/reserved (\"IANA-managed Reserved Domains\") states: \"Certain domains are set aside, and nominally registered to 'IANA', for specific policy or technical purposes.\" Under \"Example domains,\" it explains that as described in RFC 2606 and RFC 6761, a number of domains such as example.com and example.org are maintained for documentation purposes; these domains may be used as illustrative examples in documents without prior coordination with IANA, and they are not available for registration. The page also references contractual limitations and ICANN-related IDN practices. Exact URL cited: https://www.iana.org/domains/reserved",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "https://www.iana.org/domains/reserved",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "IANA's page at https://www.iana.org/domains/reserved (\"IANA-managed Reserved Domains\") states: \"Certain domains are set aside, and nominally registered to 'IANA', for specific policy or technical purposes.\" Under \"Example domains,\" it explains that as described in RFC 2606 and RFC 6761, a number of domains such as example.com and example.org are maintained for documentation purposes; these domains may be used as illustrative examples in documents without prior coordination with IANA, and they are not available for registration. The page also references contractual limitations and ICANN-related IDN practices. Exact URL cited: https://www.iana.org/domains/reserved",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_url_observed",
+        "expected": "https://www.iana.org/domains/reserved",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

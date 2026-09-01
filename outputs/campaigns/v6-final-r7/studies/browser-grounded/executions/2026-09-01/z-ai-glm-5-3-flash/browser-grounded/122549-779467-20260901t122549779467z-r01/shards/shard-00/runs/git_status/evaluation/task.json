@@ -1,0 +1,124 @@
+{
+  "task_id": "git_status",
+  "category": "developer_tools",
+  "goal": "Explain what git status shows and cite the exact official manual URL.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 43.725492000579834,
+  "steps": 3,
+  "action_count": 2,
+  "failed_action_count": 1,
+  "planner_attempt_count": 3,
+  "planner_failure_count": 0,
+  "planner_tokens": 20805,
+  "answer_assertion_count": 3,
+  "answer_assertion_passed": 3,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "development",
+  "task_family": "developer_tool_documentation",
+  "setting_id": "versioned_official_documentation",
+  "leakage_group": "host_git_scm_com",
+  "target_failure_modes": [
+    "information_extraction",
+    "tool_use",
+    "answer_grounding"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "short",
+  "scenario": "document_read",
+  "environment": "public_web",
+  "entry_mode": "direct",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://git-scm.com"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 2,
+    "distinct_tool_count": 2,
+    "tool_entropy_bits": 1.0,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 1,
+    "recovery_count": 1,
+    "minimum_window_entropy_bits": null,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 2,
+    "stagnation_onset_step": null,
+    "replan_count": 1,
+    "strategy_switch_count": 1,
+    "replan_rate": 0.5,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 0.95,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 3,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "working tree",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "Git's official manual (https://git-scm.com/docs/git-status) explains that `git status` shows the working tree status. Specifically, it displays paths that have differences between the index file and the current HEAD commit (staged changes — what you would commit by running `git commit`), paths that have differences between the working tree and the index file (unstaged modifications), and paths in the working tree that are not tracked by Git and are not ignored by gitignore (untracked files). Synopsis: `git status [<options>] [--] [<pathspec>…​]`. Exact official manual URL: https://git-scm.com/docs/git-status",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "https://git-scm.com/docs/git-status",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "Git's official manual (https://git-scm.com/docs/git-status) explains that `git status` shows the working tree status. Specifically, it displays paths that have differences between the index file and the current HEAD commit (staged changes — what you would commit by running `git commit`), paths that have differences between the working tree and the index file (unstaged modifications), and paths in the working tree that are not tracked by Git and are not ignored by gitignore (untracked files). Synopsis: `git status [<options>] [--] [<pathspec>…​]`. Exact official manual URL: https://git-scm.com/docs/git-status",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_url_observed",
+        "expected": "https://git-scm.com/docs/git-status",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

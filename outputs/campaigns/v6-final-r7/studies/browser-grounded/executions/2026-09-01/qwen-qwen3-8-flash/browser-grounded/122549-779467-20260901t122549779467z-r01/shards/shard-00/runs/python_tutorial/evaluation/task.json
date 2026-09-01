@@ -1,0 +1,124 @@
+{
+  "task_id": "python_tutorial",
+  "category": "documentation",
+  "goal": "State the intended audience of the official Python tutorial and cite the exact URL.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 22.6707661151886,
+  "steps": 4,
+  "action_count": 3,
+  "failed_action_count": 1,
+  "planner_attempt_count": 4,
+  "planner_failure_count": 0,
+  "planner_tokens": 29840,
+  "answer_assertion_count": 3,
+  "answer_assertion_passed": 3,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "development",
+  "task_family": "programming_language_documentation",
+  "setting_id": "versioned_official_documentation",
+  "leakage_group": "host_docs_python_org",
+  "target_failure_modes": [
+    "information_extraction",
+    "tool_use",
+    "answer_grounding"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "short",
+  "scenario": "document_read",
+  "environment": "public_web",
+  "entry_mode": "direct",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://docs.python.org"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 3,
+    "distinct_tool_count": 3,
+    "tool_entropy_bits": 1.584962500721156,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 1,
+    "recovery_count": 1,
+    "minimum_window_entropy_bits": null,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 3,
+    "stagnation_onset_step": null,
+    "replan_count": 1,
+    "strategy_switch_count": 1,
+    "replan_rate": 0.3333333333333333,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 1.0,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 4,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "programming",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "Intended audience of the official Python Tutorial (Python 3.14.7 documentation):\n\nThe tutorial's own \"Tip\" states: \"This tutorial is designed for programmers that are new to the Python language, not beginners who are new to programming.\"\n\nIn other words, the intended audience is experienced programmers coming from other languages who want to learn Python — it is not aimed at people who are entirely new to programming. The page adds that familiarity with \"at least one programming language\" is assumed, and it walks the reader through Python's features, data types, control flow, functions, modules, errors/exceptions, classes, I/O, and an overview of the standard library, with links onward to the Python Standard Library, the Python Language Reference, and \"Extending and Embedding the Python Interpreter.\"\n\nExact URL cited (currently loaded page, confirmed by the browser frame URL and page title \"The Python Tutorial — Python 3.14.7 documentation\"): https://docs.python.org/3/tutorial/index.html",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "https://docs.python.org/3/tutorial/index.html",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "Intended audience of the official Python Tutorial (Python 3.14.7 documentation):\n\nThe tutorial's own \"Tip\" states: \"This tutorial is designed for programmers that are new to the Python language, not beginners who are new to programming.\"\n\nIn other words, the intended audience is experienced programmers coming from other languages who want to learn Python — it is not aimed at people who are entirely new to programming. The page adds that familiarity with \"at least one programming language\" is assumed, and it walks the reader through Python's features, data types, control flow, functions, modules, errors/exceptions, classes, I/O, and an overview of the standard library, with links onward to the Python Standard Library, the Python Language Reference, and \"Extending and Embedding the Python Interpreter.\"\n\nExact URL cited (currently loaded page, confirmed by the browser frame URL and page title \"The Python Tutorial — Python 3.14.7 documentation\"): https://docs.python.org/3/tutorial/index.html",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_url_observed",
+        "expected": "https://docs.python.org/3/tutorial/index.html",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

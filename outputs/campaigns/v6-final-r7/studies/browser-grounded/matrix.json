@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "semantics": "compatibility pointer to the latest immutable matrix snapshot",
+  "snapshot_path": "analysis/matrices/20260901T122549779467Z.json",
+  "snapshot_sha256": "5b9634ff7c91b71fe51326f8056b0a47bc6ee99e6b5dfdb4762135458f933037"
+}

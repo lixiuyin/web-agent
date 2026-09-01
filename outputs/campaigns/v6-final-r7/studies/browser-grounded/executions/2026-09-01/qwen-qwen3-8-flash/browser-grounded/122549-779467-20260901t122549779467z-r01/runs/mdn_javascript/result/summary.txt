@@ -1,0 +1,19 @@
+JavaScript — description as published by MDN (developer.mozilla.org)
+
+MDN's definition (verbatim from the page's opening paragraphs):
+"JavaScript (JS) is a lightweight interpreted (or just-in-time compiled) programming language with first-class functions. While it is most well-known as the scripting language for Web pages, many non-browser environments also use it, such as Node.js, Apache CouchDB and Adobe Acrobat. JavaScript is a prototype-based, garbage-collected, dynamic language, supporting multiple paradigms such as imperative, functional, and object-oriented."
+
+Key points MDN makes about the language:
+- Lightweight, interpreted / just-in-time (JIT) compiled language.
+- Has first-class functions (functions are ordinary values that can be passed, returned and stored).
+- Best known as the scripting language of Web pages, but also runs outside browsers — e.g. Node.js, Apache CouchDB, Adobe Acrobat.
+- Prototype-based (inheritance via the prototype chain rather than classical classes), garbage-collected, and dynamically typed.
+- Multi-paradigm: supports imperative, functional and object-oriented styles.
+
+How MDN organizes its JavaScript documentation (the page's "In this article" sections):
+1. Beginner's tutorials — introductory material for new learners.
+2. JavaScript guides — in-depth narrative coverage; the sidebar lists guides such as the JavaScript Guide, Grammar and types, Control flow and error handling, Loops and iteration, Functions, Inheritance and the prototype chain, Equality comparisons and sameness, JavaScript data structures, and JavaScript frameworks and libraries.
+3. Reference — the technical language reference, including the extensive error-type listings visible in the sidebar (e.g. runtime errors such as "SyntaxError: cannot use ?? unparenthesized within || and &&", "SyntaxError: getter and setter for private name #x should either both be present or both be absent", "SyntaxError: unparenthesized unary expression can't appear on the left-hand side of '**'", and "SyntaxError: Using //@ to indicate sourceURL pragmas is deprecated").
+4. Help improve MDN — how to contribute feedback and edits to the documentation.
+
+Source (exact URL, page visited and read): https://developer.mozilla.org/en-US/docs/Web/JavaScript — page title "JavaScript | MDN".

@@ -1,0 +1,21 @@
+{
+  "open-web-general-v2": {
+    "suite": "open-web-general-v2",
+    "ready": false,
+    "models": [
+      "openrouter::qwen/qwen3.8-flash",
+      "openrouter::z-ai/glm-5.3-flash"
+    ],
+    "model_count": 2,
+    "common_complete_dates": [
+      "2026-09-01"
+    ],
+    "incomplete_cells": [],
+    "duplicate_run_ids": [],
+    "reasons": [
+      "endpoint openrouter::qwen/qwen3.8-flash has 1 complete dates; requires 3",
+      "endpoint openrouter::z-ai/glm-5.3-flash has 1 complete dates; requires 3",
+      "model matrix has 1 common complete dates; requires 3"
+    ]
+  }
+}

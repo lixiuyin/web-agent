@@ -1,0 +1,124 @@
+{
+  "task_id": "playwright_page",
+  "category": "browser_automation",
+  "goal": "Summarize what the Playwright Page class represents and cite the exact URL.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 172.6001000404358,
+  "steps": 8,
+  "action_count": 7,
+  "failed_action_count": 3,
+  "planner_attempt_count": 8,
+  "planner_failure_count": 0,
+  "planner_tokens": 53753,
+  "answer_assertion_count": 3,
+  "answer_assertion_passed": 3,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "development",
+  "task_family": "browser_automation_documentation",
+  "setting_id": "versioned_official_documentation",
+  "leakage_group": "host_playwright_dev",
+  "target_failure_modes": [
+    "information_extraction",
+    "tool_use",
+    "answer_grounding"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "short",
+  "scenario": "document_read",
+  "environment": "public_web",
+  "entry_mode": "direct",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://playwright.dev"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 7,
+    "distinct_tool_count": 5,
+    "tool_entropy_bits": 2.2359263506290326,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 1,
+    "recovery_count": 3,
+    "minimum_window_entropy_bits": 1.9219280948873623,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 7,
+    "stagnation_onset_step": null,
+    "replan_count": 5,
+    "strategy_switch_count": 5,
+    "replan_rate": 0.7142857142857143,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 0.95,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 8,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "Page",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "The Playwright Page class (Python API) provides methods to interact with a single tab in a Browser, or an extension background page in Chromium. One Browser instance might have multiple Page instances. The docs include an example that creates a page, navigates it to a URL, and saves a screenshot (available in both sync and async API styles). Source: https://playwright.dev/python/docs/api/class-page (page title: \"Page | Playwright Python\").",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "https://playwright.dev/python/docs/api/class-page",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "The Playwright Page class (Python API) provides methods to interact with a single tab in a Browser, or an extension background page in Chromium. One Browser instance might have multiple Page instances. The docs include an example that creates a page, navigates it to a URL, and saves a screenshot (available in both sync and async API styles). Source: https://playwright.dev/python/docs/api/class-page (page title: \"Page | Playwright Python\").",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_url_observed",
+        "expected": "https://playwright.dev/python/docs/api/class-page",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

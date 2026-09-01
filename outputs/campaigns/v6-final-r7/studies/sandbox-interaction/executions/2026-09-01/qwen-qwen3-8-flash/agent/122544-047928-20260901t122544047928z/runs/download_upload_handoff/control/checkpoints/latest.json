@@ -1,0 +1,678 @@
+{
+  "format": "webagent-checkpoint",
+  "schema_version": 2,
+  "checkpoint_sha256": "58a7acb493a3100b8856624f345be4b364e19e05879dda7bd79b763139f7f297",
+  "checkpoint": {
+    "artifacts": [
+      {
+        "path": "artifacts/downloads/sandbox-payload.txt",
+        "sha256": "e19000ed80b3e60944fe5c91e37ce48edd72f1f813a441c47bd70322240e8a4e",
+        "size": 31
+      }
+    ],
+    "browser_state": {
+      "active_tab_index": 0,
+      "current_url": "http://127.0.0.1:60362/upload/complete",
+      "tab_urls": [
+        "http://127.0.0.1:60362/upload/complete"
+      ]
+    },
+    "checkpoint_id": "362a24f8-61a4-4e33-befc-b35e7c736cda",
+    "config_fingerprint": "3426431d56996c625157ee026d2c4a684cbb12c3aa6f8c808880bc3776ba7e80",
+    "consecutive_failures": 0,
+    "created_at": "2026-09-01T14:07:13.853765Z",
+    "elapsed_seconds": 30.879557847976685,
+    "events": [],
+    "final_result": {},
+    "history": [
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T14:06:43.541170+00:00",
+          "title": "normal",
+          "url": "http://127.0.0.1:60361/files"
+        },
+        "duration_seconds": 6.798353910446167,
+        "step_number": 1,
+        "timestamp": "2026-09-01T14:06:49.770992+00:00",
+        "tool_call": {
+          "parameters": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "download_file"
+        },
+        "tool_duration_seconds": 0.08324193954467773,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 3,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 4,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 1,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "deduplicated": false,
+            "filename": "[omitted]",
+            "path": "artifacts/downloads/sandbox-payload.txt",
+            "renamed": false,
+            "sha256": "e19000ed80b3e60944fe5c91e37ce48edd72f1f813a441c47bd70322240e8a4e",
+            "suggested_filename": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "download_file"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T14:06:50.409315+00:00",
+          "title": "normal",
+          "url": "http://127.0.0.1:60361/files"
+        },
+        "duration_seconds": 4.714406967163086,
+        "step_number": 2,
+        "timestamp": "2026-09-01T14:06:54.487710+00:00",
+        "tool_call": {
+          "parameters": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "click"
+        },
+        "tool_duration_seconds": 0.559434175491333,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 3,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 7,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 2,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "click"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T14:06:55.100647+00:00",
+          "title": "normal",
+          "url": "http://127.0.0.1:60362/upload"
+        },
+        "duration_seconds": 6.125689744949341,
+        "step_number": 3,
+        "timestamp": "2026-09-01T14:07:00.616166+00:00",
+        "tool_call": {
+          "parameters": {
+            "path": "artifacts/downloads/sandbox-payload.txt",
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "upload_file"
+        },
+        "tool_duration_seconds": 0.024921178817749023,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 2,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 9,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 3,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": true,
+              "approval_required": true,
+              "decision": "allow",
+              "external_effect": "[omitted]",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "filename": "[omitted]",
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "upload_file"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T14:07:01.203556+00:00",
+          "title": "normal",
+          "url": "http://127.0.0.1:60362/upload"
+        },
+        "duration_seconds": 5.152005910873413,
+        "step_number": 4,
+        "timestamp": "2026-09-01T14:07:05.771307+00:00",
+        "tool_call": {
+          "parameters": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "reasoning": "",
+          "tool_name": "click"
+        },
+        "tool_duration_seconds": 0.5701680183410645,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 3,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 12,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 4,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": true,
+              "approval_required": true,
+              "decision": "allow",
+              "external_effect": "[omitted]",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "selector": {
+              "type": "css",
+              "value": "[omitted]"
+            }
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "click"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T14:07:06.372121+00:00",
+          "title": "normal",
+          "url": "http://127.0.0.1:60362/upload/complete"
+        },
+        "duration_seconds": 8.070300102233887,
+        "step_number": 5,
+        "timestamp": "2026-09-01T14:07:13.846064+00:00",
+        "tool_call": {
+          "parameters": {
+            "success_probability": 1,
+            "summary": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "done"
+        },
+        "tool_duration_seconds": 0.00036406517028808594,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 12,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 5,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "attachments": [],
+            "success_probability": 1.0,
+            "summary": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "done"
+        }
+      }
+    ],
+    "last_figure_path": null,
+    "loop_state": {
+      "in_loop": false,
+      "loop_type": "",
+      "page_hash_history": [
+        "fd9ed58a135bbd0a980e26d6a6d2f1ab",
+        "fd9ed58a135bbd0a980e26d6a6d2f1ab",
+        "2d1e8dd8b6e16cdbb478f78f0d3377d0",
+        "2cbde6696ce25bfd780f100920aeb84e",
+        "b7ad5cd84a0c598f61ee7db02f23e7cb"
+      ],
+      "recent_actions": [
+        "02df4ac00bf2f68ef32e92da3bc376e26639cbf544c482c5cef60cf3d1e5408d",
+        "c5e0c75ee6257f455e33d3f7c790e6d78a1037d1d63e0ccd1a7739ea573d8890",
+        "450f763231469ad22149c056249356e6a10309a3b1955a24d7b1c040ce5a5aec",
+        "c5e0c75ee6257f455e33d3f7c790e6d78a1037d1d63e0ccd1a7739ea573d8890",
+        "e0e4617dd1ac64571f5e08645d7f9d7f1a3309598313513251e3f6e9e5e380e5"
+      ],
+      "recent_pages": [
+        "5cee148c5079bff197d5e21099d8688494b055e3449364f6d2b517373d8a5ec1",
+        "5cee148c5079bff197d5e21099d8688494b055e3449364f6d2b517373d8a5ec1",
+        "1bdd04c1384464dd777aedd220966b066e0220caf85618bdb676edf10e74aeae",
+        "788a6fe756ccc74b2795296765325c18ec4207504de157194551087feb326080",
+        "0a10b548eaa90e71cff4f0d97c09688ea4afe93d1037e676306491cfa1e286df"
+      ],
+      "schema_version": 1,
+      "threshold": 5,
+      "url_history": [
+        "http://127.0.0.1:60361/files",
+        "http://127.0.0.1:60361/files",
+        "http://127.0.0.1:60362/upload",
+        "http://127.0.0.1:60362/upload",
+        "http://127.0.0.1:60362/upload/complete"
+      ],
+      "window_size": 9
+    },
+    "next_step": 6,
+    "pending_action": null,
+    "planner_attempts": [
+      {
+        "attempt_number": 1,
+        "completion_tokens": 115,
+        "duration_seconds": 5.4928929805755615,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6205,
+        "requested_output_mode": "auto",
+        "response_length": 82,
+        "step_number": 1,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T14:06:49.034115+00:00",
+        "total_tokens": 6320,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 58,
+        "duration_seconds": 2.9093282222747803,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6682,
+        "requested_output_mode": "auto",
+        "response_length": 73,
+        "step_number": 2,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T14:06:53.318731+00:00",
+        "total_tokens": 6740,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 194,
+        "duration_seconds": 4.8956098556518555,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6781,
+        "requested_output_mode": "auto",
+        "response_length": 68,
+        "step_number": 3,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T14:06:59.996351+00:00",
+        "total_tokens": 6975,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 59,
+        "duration_seconds": 3.4081358909606934,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6939,
+        "requested_output_mode": "auto",
+        "response_length": 76,
+        "step_number": 4,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T14:07:04.611820+00:00",
+        "total_tokens": 6998,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 417,
+        "duration_seconds": 7.463044166564941,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6965,
+        "requested_output_mode": "auto",
+        "response_length": 519,
+        "step_number": 5,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T14:07:13.835291+00:00",
+        "total_tokens": 7382,
+        "transport_retries": 0
+      }
+    ],
+    "planning_state": {
+      "active_milestone_id": "m1",
+      "evidence": [
+        {
+          "id": "e1",
+          "kind": "checkpoint",
+          "source": "http://127.0.0.1:60361/files",
+          "step_number": 1,
+          "summary": "evidence retained from step 1"
+        },
+        {
+          "id": "e2",
+          "kind": "checkpoint",
+          "source": "http://127.0.0.1:60362/upload",
+          "step_number": 2,
+          "summary": "evidence retained from step 2"
+        },
+        {
+          "id": "e3",
+          "kind": "checkpoint",
+          "source": "http://127.0.0.1:60362/upload",
+          "step_number": 3,
+          "summary": "evidence retained from step 3"
+        },
+        {
+          "id": "e4",
+          "kind": "checkpoint",
+          "source": "http://127.0.0.1:60362/upload/complete",
+          "step_number": 4,
+          "summary": "evidence retained from step 4"
+        },
+        {
+          "id": "e5",
+          "kind": "checkpoint",
+          "source": "http://127.0.0.1:60362/upload/complete",
+          "step_number": 5,
+          "summary": "evidence retained from step 5"
+        }
+      ],
+      "milestones": [
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 1",
+          "id": "m1",
+          "status": "active"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 2",
+          "id": "m2",
+          "status": "pending"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 3",
+          "id": "m3",
+          "status": "pending"
+        }
+      ],
+      "objective": "task bound by checkpoint task_sha256",
+      "revisions": []
+    },
+    "policy_state": {
+      "broad_current_year_search_completed": false,
+      "current_year": 2026,
+      "downloaded_paths": {},
+      "figure_analysis_completed": false,
+      "hybrid": {
+        "candidate_date": null,
+        "candidate_owner": null,
+        "candidate_url": null,
+        "candidate_version_key": [],
+        "cross_check_exhausted": false,
+        "direct_evidence_verified": false,
+        "missing_repeat_count": 0,
+        "missing_signature": [],
+        "official_report_attempts": {},
+        "required_next_action": null,
+        "subject": "[omitted]",
+        "successful_topics": []
+      },
+      "observed_urls": {
+        "field_015140245dcf": {
+          "page_url": "http://127.0.0.1:60362/upload",
+          "policy_step": 3,
+          "source": "[omitted]"
+        },
+        "field_0b57875e9b50": {
+          "page_url": "http://127.0.0.1:60361/files",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_1396cbcab01c": {
+          "page_url": "http://127.0.0.1:60361/files",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_4224a2240ff2": {
+          "page_url": "http://127.0.0.1:60361/files",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_56f259dde417": {
+          "page_url": "http://127.0.0.1:60362/upload",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_73f7ef4a802e": {
+          "page_url": "http://127.0.0.1:60362/upload/complete",
+          "policy_step": 5,
+          "source": "[omitted]"
+        },
+        "field_ae4bab73dada": {
+          "page_url": "http://127.0.0.1:60361/files",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_affcf92ce366": {
+          "page_url": "http://127.0.0.1:60362/upload",
+          "policy_step": 3,
+          "source": "[omitted]"
+        },
+        "field_bb346de9b434": {
+          "page_url": "http://127.0.0.1:60362/upload",
+          "policy_step": 3,
+          "source": "[omitted]"
+        },
+        "field_c38f2bfc4cfa": {
+          "page_url": "http://127.0.0.1:60362/upload/complete",
+          "policy_step": 4,
+          "source": "[omitted]"
+        },
+        "field_cc390abb263c": {
+          "page_url": "http://127.0.0.1:60362/upload",
+          "policy_step": 2,
+          "source": "[omitted]"
+        },
+        "field_e050568570dc": {
+          "page_url": "http://127.0.0.1:60362/upload/complete",
+          "policy_step": 4,
+          "source": "[omitted]"
+        }
+      },
+      "official_identity_search_completed": false,
+      "official_identity_urls": [],
+      "official_scope_result_urls": [],
+      "official_scope_search_completed": false,
+      "pending_url_evidence_target": null,
+      "pending_url_search_attempts": 0,
+      "policy": "browser_grounded",
+      "release_landscape_evidence_urls": [],
+      "release_landscape_search_completed": false,
+      "schema_version": 3,
+      "search_completed": false,
+      "selected_candidate_url": null,
+      "step": 5,
+      "successful_queries": [],
+      "successful_searches": 0,
+      "task_sha256": "3c38908e788fa3455d9b721db9210dfde519af835d05688917a7850bb535276e",
+      "version_frontier": null,
+      "version_frontier_key": [],
+      "version_frontier_resolved": true,
+      "visited_urls": [
+        "http://127.0.0.1:60361/files",
+        "http://127.0.0.1:60362/upload",
+        "http://127.0.0.1:60362/upload/complete"
+      ]
+    },
+    "previous_checkpoint_sha256": "d9f81ae1040a08bf7eef1b20b523d1b25f5ebb22febd38136b5ba44aeacefe03",
+    "resume_count": 0,
+    "run_id": "b5e5fb54-c458-4751-99dc-643eaacda2a5",
+    "schema_version": 2,
+    "source_fingerprint": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "status": "completed",
+    "strategy_state": {
+      "attempted": [
+        "default"
+      ],
+      "consecutive_failures": 0,
+      "consecutive_no_progress": 0,
+      "current": "default",
+      "exhausted": false,
+      "switch_count": 0,
+      "switches": []
+    },
+    "task_sha256": "3c38908e788fa3455d9b721db9210dfde519af835d05688917a7850bb535276e",
+    "updated_at": "2026-09-01T14:07:13.853800Z"
+  }
+}

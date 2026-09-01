@@ -1,0 +1,1 @@
+numpy.mean computes the arithmetic mean along the specified axis: it returns the average of the array elements, averaged over the flattened array by default (or over the given axis), using float64 intermediate and return values for integer inputs. Reference URL: https://numpy.org/doc/stable/reference/generated/numpy.mean.html (numpy.mean — NumPy v2.5 Manual).

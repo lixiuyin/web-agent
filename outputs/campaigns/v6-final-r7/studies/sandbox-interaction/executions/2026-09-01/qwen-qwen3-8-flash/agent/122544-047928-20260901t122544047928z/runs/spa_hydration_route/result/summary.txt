@@ -1,0 +1,8 @@
+Completed the queue SPA flow on http://127.0.0.1:60361/spa:
+
+1. Hydration: the page rendered the "Queue console" heading plus the interactive control "Show active queues" (button#show-active), confirming the SPA had hydrated.
+2. Active filter: clicked button#show-active, which filtered the console to active queues and exposed the "Open Orbit Queue" control (button#open-orbit).
+3. Opened Orbit Queue: clicked button#open-orbit; the app performed a client-side route change (no full reload) to http://127.0.0.1:60361/spa/items/orbit.
+4. Final state confirmed on the detail route: title "Queue SPA", heading "Queue console", the "Show active queues" button, and the detail record "Orbit Queue" with "Status: active".
+
+Final URL: http://127.0.0.1:60361/spa/items/orbit (Orbit Queue client-side detail route).

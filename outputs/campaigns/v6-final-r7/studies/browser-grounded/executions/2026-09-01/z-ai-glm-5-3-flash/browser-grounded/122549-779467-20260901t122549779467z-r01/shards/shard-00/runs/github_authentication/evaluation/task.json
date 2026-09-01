@@ -1,0 +1,124 @@
+{
+  "task_id": "github_authentication",
+  "category": "security",
+  "goal": "Summarize GitHub's authentication guidance and cite the exact Docs URL.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 32.74938225746155,
+  "steps": 4,
+  "action_count": 3,
+  "failed_action_count": 1,
+  "planner_attempt_count": 4,
+  "planner_failure_count": 0,
+  "planner_tokens": 27232,
+  "answer_assertion_count": 3,
+  "answer_assertion_passed": 3,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "held_out_task",
+  "task_family": "collaboration_platform_documentation",
+  "setting_id": "versioned_official_documentation",
+  "leakage_group": "host_docs_github_com",
+  "target_failure_modes": [
+    "information_extraction",
+    "tool_use",
+    "answer_grounding"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "short",
+  "scenario": "document_read",
+  "environment": "public_web",
+  "entry_mode": "direct",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://docs.github.com"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 3,
+    "distinct_tool_count": 3,
+    "tool_entropy_bits": 1.584962500721156,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 1,
+    "recovery_count": 1,
+    "minimum_window_entropy_bits": null,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 3,
+    "stagnation_onset_step": null,
+    "replan_count": 1,
+    "strategy_switch_count": 1,
+    "replan_rate": 0.3333333333333333,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 0.9,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 4,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "authentication",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "GitHub Docs page \"About authentication to GitHub\" (exact URL: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github) summarizes GitHub's authentication guidance as follows:\n\n- GitHub authentication verifies your identity so your account and data stay secure. You authenticate in several ways depending on context:\n  - **Browser (github.com):** sign in with your username/password; if two-factor authentication (2FA) is enabled, you also provide a second factor (e.g., a code from an authenticator app, SMS, security key, or GitHub Mobile passcode).\n  - **Command line (Git operations):** use HTTPS with a personal access token (classic or fine-grained) instead of your password, or authenticate over SSH using an SSH key; GitHub CLI and credential managers can help manage these credentials.\n  - **GitHub Desktop:** authenticate to GitHub through the desktop client, which handles credentials for you.\n  - **API / GitHub Actions workflows:** use GITHUB_TOKEN (the automatically provided Actions token) to authenticate to the API within workflows, rather than personal credentials.\n  - **GitHub Apps:** authenticate as an app (with installation tokens) to act on behalf of the app rather than a user.\n- The Docs strongly recommend enabling 2FA and keeping account-and-data-secure practices (strong credentials, secure keys/tokens) as core to protecting your account.\n\nSource cited: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github (title: \"About authentication to GitHub - GitHub Docs\").",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "GitHub Docs page \"About authentication to GitHub\" (exact URL: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github) summarizes GitHub's authentication guidance as follows:\n\n- GitHub authentication verifies your identity so your account and data stay secure. You authenticate in several ways depending on context:\n  - **Browser (github.com):** sign in with your username/password; if two-factor authentication (2FA) is enabled, you also provide a second factor (e.g., a code from an authenticator app, SMS, security key, or GitHub Mobile passcode).\n  - **Command line (Git operations):** use HTTPS with a personal access token (classic or fine-grained) instead of your password, or authenticate over SSH using an SSH key; GitHub CLI and credential managers can help manage these credentials.\n  - **GitHub Desktop:** authenticate to GitHub through the desktop client, which handles credentials for you.\n  - **API / GitHub Actions workflows:** use GITHUB_TOKEN (the automatically provided Actions token) to authenticate to the API within workflows, rather than personal credentials.\n  - **GitHub Apps:** authenticate as an app (with installation tokens) to act on behalf of the app rather than a user.\n- The Docs strongly recommend enabling 2FA and keeping account-and-data-secure practices (strong credentials, secure keys/tokens) as core to protecting your account.\n\nSource cited: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github (title: \"About authentication to GitHub - GitHub Docs\").",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_url_observed",
+        "expected": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

@@ -1,0 +1,531 @@
+{
+  "format": "webagent-checkpoint",
+  "schema_version": 2,
+  "checkpoint_sha256": "08d0c043e1ff41917cfb3883ca082b3588639306ab21b69e46c28f826d874bdd",
+  "checkpoint": {
+    "artifacts": [],
+    "browser_state": {
+      "active_tab_index": 0,
+      "current_url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+      "tab_urls": [
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+      ]
+    },
+    "checkpoint_id": "d2ed983d-094f-472c-99e3-8ae6d2c36cf4",
+    "config_fingerprint": "8cec5c2d9a8383b4a581dc3e28b7de4baf7cbe53b378af61437660b1eef435c3",
+    "consecutive_failures": 0,
+    "created_at": "2026-09-01T12:46:34.600810Z",
+    "elapsed_seconds": 42.51706790924072,
+    "events": [
+      {
+        "current": "search-discovery",
+        "previous": "default",
+        "reason": "[omitted]",
+        "step_number": 1,
+        "timestamp": "2026-09-01T12:46:08.441106+00:00",
+        "type": "strategy_switch"
+      },
+      {
+        "exhausted": false,
+        "reason": "[omitted]",
+        "step_number": 1,
+        "strategy": "search-discovery",
+        "timestamp": "2026-09-01T12:46:08.441116+00:00",
+        "type": "replan"
+      }
+    ],
+    "final_result": {},
+    "history": [
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:45:52.968014+00:00",
+          "title": "normal",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+        },
+        "duration_seconds": 16.358057975769043,
+        "step_number": 1,
+        "timestamp": "2026-09-01T12:46:08.441056+00:00",
+        "tool_call": {
+          "parameters": {
+            "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+          },
+          "reasoning": "",
+          "tool_name": "goto"
+        },
+        "tool_duration_seconds": 0.00014400482177734375,
+        "tool_result": {
+          "audit": {
+            "decision": "deny",
+            "policy": "browser_grounded",
+            "policy_step": 1,
+            "provenance": {},
+            "reason": "[omitted]",
+            "target": "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+          },
+          "data": {},
+          "error": "tool action failed; details omitted",
+          "success": false,
+          "tool_name": "goto"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:46:09.369585+00:00",
+          "title": "normal",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+        },
+        "duration_seconds": 9.225772142410278,
+        "step_number": 2,
+        "timestamp": "2026-09-01T12:46:17.668498+00:00",
+        "tool_call": {
+          "parameters": {
+            "amount_px": 500,
+            "direction": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "scroll"
+        },
+        "tool_duration_seconds": 0.10551190376281738,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 1,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 2,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 2,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "amount": 500,
+            "direction": "[omitted]",
+            "success": true
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "scroll"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:46:18.514850+00:00",
+          "title": "normal",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+        },
+        "duration_seconds": 4.772766828536987,
+        "step_number": 3,
+        "timestamp": "2026-09-01T12:46:22.443225+00:00",
+        "tool_call": {
+          "parameters": {
+            "amount_px": 5000
+          },
+          "reasoning": "",
+          "tool_name": "scroll"
+        },
+        "tool_duration_seconds": 0.1064751148223877,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 2,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 3,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "amount": 5000,
+            "direction": "[omitted]",
+            "success": true
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "scroll"
+        }
+      },
+      {
+        "browser_state": {
+          "dom_summary": "(omitted from checkpoint; re-observe current page)",
+          "timestamp": "2026-09-01T12:46:23.319993+00:00",
+          "title": "normal",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+        },
+        "duration_seconds": 12.15372109413147,
+        "step_number": 4,
+        "timestamp": "2026-09-01T12:46:34.599163+00:00",
+        "tool_call": {
+          "parameters": {
+            "success_probability": 0.95,
+            "summary": "[omitted]"
+          },
+          "reasoning": "",
+          "tool_name": "done"
+        },
+        "tool_duration_seconds": 0.0003790855407714844,
+        "tool_result": {
+          "audit": {
+            "broad_current_year_search_completed": false,
+            "decision": "allow",
+            "downloaded_artifact_count": 0,
+            "figure_analysis_completed": false,
+            "latest_evidence_complete": false,
+            "latest_missing_prerequisites": [],
+            "new_urls_observed": 0,
+            "newer_version_leads_resolved": true,
+            "observed_url_count": 2,
+            "official_identity_search_completed": false,
+            "official_scope_result_count": 0,
+            "official_scope_search_completed": false,
+            "policy": "browser_grounded",
+            "policy_step": 4,
+            "provenance": {},
+            "reason": "[omitted]",
+            "release_landscape_evidence_count": 0,
+            "release_landscape_search_completed": false,
+            "risk": {
+              "approval_received": false,
+              "approval_required": false,
+              "decision": "allow",
+              "external_effect": "none_or_reversible",
+              "reason": "[omitted]",
+              "risk_level": "[omitted]"
+            },
+            "search_completed": false,
+            "selected_candidate_identity_endorsed": null,
+            "selected_candidate_url": null,
+            "successful_searches": 0,
+            "target": null,
+            "version_frontier": null
+          },
+          "data": {
+            "attachments": [],
+            "success_probability": 0.95,
+            "summary": "[omitted]"
+          },
+          "error": null,
+          "success": true,
+          "tool_name": "done"
+        }
+      }
+    ],
+    "last_figure_path": null,
+    "loop_state": {
+      "in_loop": false,
+      "loop_type": "",
+      "page_hash_history": [
+        "8142101d889c904afd0626f620ebda8c",
+        "8142101d889c904afd0626f620ebda8c",
+        "29133d75f9c5eb5c0a586d8e7f7e9886",
+        "a3b7cb2ec25c01c184d0f73b0e8b1153"
+      ],
+      "recent_actions": [
+        "755b61aaca0277fdecafb1118b42b217f088b911b93ce4fbe3a797f2026c5056",
+        "f60aa8d4973e41f9ec5409912c178981d0293025efd133a0c544135ecaeeb853",
+        "ab9834dcd1c646363d031956701527a74e9c0b89dbca8f8b3939ae1c1e07df75",
+        "93d32045545f11e9ec8d57f4d23c497ce0ef53e4aa29455762f1ea63ef8f62dd"
+      ],
+      "recent_pages": [
+        "29ca7e058021b4c175c56a40cf4f1b136599e05298b69166406fdd1154301ff7",
+        "29ca7e058021b4c175c56a40cf4f1b136599e05298b69166406fdd1154301ff7",
+        "e0af2801f630d93665c96f59ff2054480314a05601eb0ecc65e6a7fe27ef5324",
+        "66740e9eb20557b5f81b9cf402de2aee7c16a026294d8aaf4987a8d2695d00ac"
+      ],
+      "schema_version": 1,
+      "threshold": 4,
+      "url_history": [
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+      ],
+      "window_size": 4
+    },
+    "next_step": 5,
+    "pending_action": null,
+    "planner_attempts": [
+      {
+        "attempt_number": 1,
+        "completion_tokens": 22,
+        "duration_seconds": 6.57904314994812,
+        "effective_output_mode": "native-tools",
+        "error": "planner attempt failed; details omitted",
+        "finish_reason": "error",
+        "prompt_tokens": 6203,
+        "requested_output_mode": "auto",
+        "response_length": 86,
+        "step_number": 1,
+        "structured_fallbacks": [],
+        "success": false,
+        "timestamp": "2026-09-01T12:45:59.592461+00:00",
+        "total_tokens": 6225,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 2,
+        "completion_tokens": 22,
+        "duration_seconds": 7.447174072265625,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6603,
+        "requested_output_mode": "auto",
+        "response_length": 4,
+        "step_number": 1,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:46:07.039684+00:00",
+        "total_tokens": 6625,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 18,
+        "duration_seconds": 6.754410982131958,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6637,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 2,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:46:16.158025+00:00",
+        "total_tokens": 6655,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 23,
+        "duration_seconds": 2.2647409439086914,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6575,
+        "requested_output_mode": "auto",
+        "response_length": 0,
+        "step_number": 3,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:46:20.812561+00:00",
+        "total_tokens": 6598,
+        "transport_retries": 0
+      },
+      {
+        "attempt_number": 1,
+        "completion_tokens": 186,
+        "duration_seconds": 11.230074882507324,
+        "effective_output_mode": "native-tools",
+        "error": null,
+        "finish_reason": "tool_calls",
+        "prompt_tokens": 6813,
+        "requested_output_mode": "auto",
+        "response_length": 9,
+        "step_number": 4,
+        "structured_fallbacks": [],
+        "success": true,
+        "timestamp": "2026-09-01T12:46:34.586319+00:00",
+        "total_tokens": 6999,
+        "transport_retries": 0
+      }
+    ],
+    "planning_state": {
+      "active_milestone_id": "m4",
+      "evidence": [
+        {
+          "id": "e1",
+          "kind": "checkpoint",
+          "source": "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+          "step_number": 2,
+          "summary": "evidence retained from step 2"
+        },
+        {
+          "id": "e2",
+          "kind": "checkpoint",
+          "source": "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+          "step_number": 3,
+          "summary": "evidence retained from step 3"
+        },
+        {
+          "id": "e3",
+          "kind": "checkpoint",
+          "source": "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+          "step_number": 4,
+          "summary": "evidence retained from step 4"
+        }
+      ],
+      "milestones": [
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 1",
+          "id": "m1",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 2",
+          "id": "m2",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 3",
+          "id": "m3",
+          "status": "abandoned"
+        },
+        {
+          "completed_at_step": null,
+          "description": "checkpoint milestone 4",
+          "id": "m4",
+          "status": "active"
+        }
+      ],
+      "objective": "task bound by checkpoint task_sha256",
+      "revisions": [
+        {
+          "added_milestone_ids": [
+            "m4"
+          ],
+          "reason": "runtime strategy replan",
+          "revision": 1,
+          "step_number": 1,
+          "strategy": "search-discovery"
+        }
+      ]
+    },
+    "policy_state": {
+      "broad_current_year_search_completed": false,
+      "current_year": 2026,
+      "downloaded_paths": {},
+      "figure_analysis_completed": false,
+      "hybrid": {
+        "candidate_date": null,
+        "candidate_owner": null,
+        "candidate_url": null,
+        "candidate_version_key": [],
+        "cross_check_exhausted": false,
+        "direct_evidence_verified": false,
+        "missing_repeat_count": 0,
+        "missing_signature": [],
+        "official_report_attempts": {},
+        "required_next_action": null,
+        "subject": "[omitted]",
+        "successful_topics": []
+      },
+      "observed_urls": {
+        "field_1f297cad465f": {
+          "page_url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+          "policy_step": 1,
+          "source": "[omitted]"
+        },
+        "field_310643edd001": {
+          "page_url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+          "policy_step": 2,
+          "source": "[omitted]"
+        }
+      },
+      "official_identity_search_completed": false,
+      "official_identity_urls": [],
+      "official_scope_result_urls": [],
+      "official_scope_search_completed": false,
+      "pending_url_evidence_target": null,
+      "pending_url_search_attempts": 0,
+      "policy": "browser_grounded",
+      "release_landscape_evidence_urls": [],
+      "release_landscape_search_completed": false,
+      "schema_version": 3,
+      "search_completed": false,
+      "selected_candidate_url": null,
+      "step": 4,
+      "successful_queries": [],
+      "successful_searches": 0,
+      "task_sha256": "a64d41a3f8b453c3a3b001064e5966c719875b623bc60d097b2e8c4b3423ec18",
+      "version_frontier": null,
+      "version_frontier_key": [],
+      "version_frontier_resolved": true,
+      "visited_urls": [
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+      ]
+    },
+    "previous_checkpoint_sha256": "c46ca2ad004af11850959cd1b164d5717bfc095037813e679adc3de3ac008762",
+    "resume_count": 0,
+    "run_id": "a7f39db4-479c-44e9-a996-a41a312e111b",
+    "schema_version": 2,
+    "source_fingerprint": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "status": "running",
+    "strategy_state": {
+      "attempted": [
+        "default",
+        "search-discovery"
+      ],
+      "consecutive_failures": 0,
+      "consecutive_no_progress": 0,
+      "current": "search-discovery",
+      "exhausted": false,
+      "switch_count": 1,
+      "switches": [
+        {
+          "current": "search-discovery",
+          "previous": "default",
+          "reason": "runtime strategy switch",
+          "step_number": 1
+        }
+      ]
+    },
+    "task_sha256": "a64d41a3f8b453c3a3b001064e5966c719875b623bc60d097b2e8c4b3423ec18",
+    "updated_at": "2026-09-01T12:46:34.600841Z"
+  }
+}

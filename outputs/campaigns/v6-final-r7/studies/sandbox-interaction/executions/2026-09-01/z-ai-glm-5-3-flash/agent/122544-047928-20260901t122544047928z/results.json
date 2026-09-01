@@ -1,0 +1,1171 @@
+{
+  "schema_version": 4,
+  "suite": "sandbox-interaction-v1",
+  "created_at": "2026-09-01T13:55:12.461012+00:00",
+  "metadata": {
+    "run_id": "452dc0d7-125f-4d94-9bc4-abd3898f421d",
+    "mode": "agent",
+    "model": "z-ai/glm-5.3-flash",
+    "provider": "openrouter",
+    "browser_profile_mode": "temporary",
+    "environment": "loopback-multi-origin-sandbox",
+    "origin_count": 2,
+    "public_mutations_allowed": false,
+    "sandbox_mutations_allowed": true,
+    "declared_endpoint_access_mode": "byok",
+    "api_transient_retries": 2,
+    "api_retry_base_seconds": 10.0,
+    "api_retry_max_seconds": 60.0,
+    "max_steps_per_task": 18,
+    "task_timeout_seconds": 600,
+    "browser_timeout_ms": 5000,
+    "agent_source_sha256": "29b5cb81ec7159bf22a38e81e1d86d8e389674f1c0d9779354e4750165c9009c",
+    "benchmark_source_sha256": "36cb18374b261da649313be261e2dfb2ab5798ff91a05c35aa2563f66b0f49de"
+  },
+  "summary": {
+    "task_count": 5,
+    "passed_tasks": 5,
+    "success_rate": 1.0,
+    "mean_score": 1.0,
+    "agent_completion_rate": 1.0,
+    "false_completion_rate": 0.0,
+    "action_validity_rate": 1.0,
+    "mean_steps": 5.6,
+    "mean_duration_seconds": 99.53279685974121,
+    "total_planner_tokens": 171499,
+    "mean_planner_tokens": 34299.8,
+    "answer_grounding_rate": 1.0,
+    "timeout_rate": 0.0,
+    "captcha_rate": 0.0,
+    "blocked_rate": 0.0,
+    "max_steps_rate": 0.0,
+    "p95_duration_seconds": 343.24816393852234,
+    "p95_steps": 7.0,
+    "p95_planner_tokens": 41296.0,
+    "termination_reason_counts": {
+      "completed": 5
+    },
+    "category_success_rate": {
+      "authentication": 1.0,
+      "cross_origin_form": 1.0,
+      "file_workflow": 1.0,
+      "sandbox_transaction": 1.0,
+      "spa": 1.0
+    }
+  },
+  "tasks": [
+    {
+      "task_id": "spa_hydration_route",
+      "category": "spa",
+      "goal": "Wait for the queue SPA to hydrate, filter it to active queues, then open Orbit Queue and finish on its client-side detail route.",
+      "passed": true,
+      "score": 1.0,
+      "agent_reported_success": true,
+      "agent_status": "completed",
+      "error": null,
+      "duration_seconds": 27.580055713653564,
+      "steps": 4,
+      "action_count": 3,
+      "failed_action_count": 0,
+      "planner_attempt_count": 4,
+      "planner_failure_count": 0,
+      "planner_tokens": 24067,
+      "answer_assertion_count": 0,
+      "answer_assertion_passed": 0,
+      "termination_reason": "completed",
+      "timed_out": false,
+      "captcha_encountered": false,
+      "blocked": false,
+      "max_steps_reached": false,
+      "split": "development",
+      "task_family": "spa",
+      "setting_id": "sandbox",
+      "leakage_group": "spa_hydration_route",
+      "target_failure_modes": [],
+      "feedback": {
+        "kind": "unspecified",
+        "delay_steps": 0,
+        "noise_rate": null
+      },
+      "expected_horizon": "unspecified",
+      "scenario": "spa_interaction",
+      "environment": "sandbox",
+      "entry_mode": "direct",
+      "risk_scope": "read_only",
+      "source_origins": [],
+      "trajectory": {
+        "schema_version": 2,
+        "action_count": 3,
+        "distinct_tool_count": 2,
+        "tool_entropy_bits": 0.9182958340544896,
+        "repeated_action_rate": 0.0,
+        "longest_identical_action_streak": 1,
+        "longest_failure_streak": 1,
+        "recovery_count": 0,
+        "minimum_window_entropy_bits": null,
+        "collapse_onset_step": null,
+        "longest_same_state_streak": 3,
+        "stagnation_onset_step": null,
+        "replan_count": 0,
+        "strategy_switch_count": 0,
+        "replan_rate": 0.0,
+        "resume_count": 0,
+        "resumed_from_checkpoint": false
+      },
+      "success_probability": 0.95,
+      "confidence_source": "self_reported",
+      "confidence_elicited_at_step": 4,
+      "assertions": [
+        {
+          "assertion": {
+            "kind": "url_contains",
+            "expected": "/spa/items/orbit",
+            "selector": null,
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": "http://127.0.0.1:55790/spa/items/orbit",
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "element_text_equals",
+            "expected": "Orbit Queue",
+            "selector": "#queue-name",
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": "Orbit Queue",
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "element_text_equals",
+            "expected": "Status: active",
+            "selector": "#queue-status",
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": "Status: active",
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        }
+      ]
+    },
+    {
+      "task_id": "authenticated_account",
+      "category": "authentication",
+      "goal": "Sign in to the sandbox account with username benchmark-agent and password orbit42, then finish on the protected account page.",
+      "passed": true,
+      "score": 1.0,
+      "agent_reported_success": true,
+      "agent_status": "completed",
+      "error": null,
+      "duration_seconds": 23.31476092338562,
+      "steps": 4,
+      "action_count": 3,
+      "failed_action_count": 0,
+      "planner_attempt_count": 5,
+      "planner_failure_count": 1,
+      "planner_tokens": 31657,
+      "answer_assertion_count": 0,
+      "answer_assertion_passed": 0,
+      "termination_reason": "completed",
+      "timed_out": false,
+      "captcha_encountered": false,
+      "blocked": false,
+      "max_steps_reached": false,
+      "split": "development",
+      "task_family": "authentication",
+      "setting_id": "sandbox",
+      "leakage_group": "authenticated_account",
+      "target_failure_modes": [],
+      "feedback": {
+        "kind": "unspecified",
+        "delay_steps": 0,
+        "noise_rate": null
+      },
+      "expected_horizon": "unspecified",
+      "scenario": "authenticated_session",
+      "environment": "sandbox",
+      "entry_mode": "authenticated",
+      "risk_scope": "sandbox_mutation",
+      "source_origins": [],
+      "trajectory": {
+        "schema_version": 2,
+        "action_count": 3,
+        "distinct_tool_count": 2,
+        "tool_entropy_bits": 0.9182958340544896,
+        "repeated_action_rate": 0.0,
+        "longest_identical_action_streak": 1,
+        "longest_failure_streak": 1,
+        "recovery_count": 0,
+        "minimum_window_entropy_bits": null,
+        "collapse_onset_step": null,
+        "longest_same_state_streak": 3,
+        "stagnation_onset_step": null,
+        "replan_count": 0,
+        "strategy_switch_count": 0,
+        "replan_rate": 0.0,
+        "resume_count": 0,
+        "resumed_from_checkpoint": false
+      },
+      "success_probability": 1.0,
+      "confidence_source": "self_reported",
+      "confidence_elicited_at_step": 4,
+      "assertions": [
+        {
+          "assertion": {
+            "kind": "url_contains",
+            "expected": "/account",
+            "selector": null,
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": "http://127.0.0.1:55790/account",
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "element_text_equals",
+            "expected": "Welcome, benchmark-agent",
+            "selector": "#welcome",
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": "Welcome, benchmark-agent",
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "json_equals",
+            "expected": true,
+            "selector": null,
+            "attribute": null,
+            "endpoint": "/api/state",
+            "json_path": "logged_in",
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": true,
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "history_tool_succeeded",
+            "expected": "type",
+            "selector": null,
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": true,
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        }
+      ]
+    },
+    {
+      "task_id": "cross_origin_intake",
+      "category": "cross_origin_form",
+      "goal": "Read the case identifier on the handoff page, continue to the partner origin, assign it to Ada with urgent priority, and submit the sandbox intake.",
+      "passed": true,
+      "score": 1.0,
+      "agent_reported_success": true,
+      "agent_status": "completed",
+      "error": null,
+      "duration_seconds": 36.71528482437134,
+      "steps": 7,
+      "action_count": 6,
+      "failed_action_count": 0,
+      "planner_attempt_count": 7,
+      "planner_failure_count": 0,
+      "planner_tokens": 40342,
+      "answer_assertion_count": 2,
+      "answer_assertion_passed": 2,
+      "termination_reason": "completed",
+      "timed_out": false,
+      "captcha_encountered": false,
+      "blocked": false,
+      "max_steps_reached": false,
+      "split": "development",
+      "task_family": "cross_origin_form",
+      "setting_id": "sandbox",
+      "leakage_group": "cross_origin_intake",
+      "target_failure_modes": [],
+      "feedback": {
+        "kind": "unspecified",
+        "delay_steps": 0,
+        "noise_rate": null
+      },
+      "expected_horizon": "unspecified",
+      "scenario": "cross_origin_form",
+      "environment": "sandbox",
+      "entry_mode": "direct",
+      "risk_scope": "sandbox_mutation",
+      "source_origins": [],
+      "trajectory": {
+        "schema_version": 2,
+        "action_count": 6,
+        "distinct_tool_count": 5,
+        "tool_entropy_bits": 2.2516291673878226,
+        "repeated_action_rate": 0.0,
+        "longest_identical_action_streak": 1,
+        "longest_failure_streak": 1,
+        "recovery_count": 0,
+        "minimum_window_entropy_bits": 1.9219280948873623,
+        "collapse_onset_step": null,
+        "longest_same_state_streak": 4,
+        "stagnation_onset_step": null,
+        "replan_count": 0,
+        "strategy_switch_count": 0,
+        "replan_rate": 0.0,
+        "resume_count": 0,
+        "resumed_from_checkpoint": false
+      },
+      "success_probability": 0.99,
+      "confidence_source": "self_reported",
+      "confidence_elicited_at_step": 7,
+      "assertions": [
+        {
+          "assertion": {
+            "kind": "url_contains",
+            "expected": "/intake/complete",
+            "selector": null,
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": "http://127.0.0.1:55791/intake/complete",
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "element_visible",
+            "expected": true,
+            "selector": "#intake-complete",
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": true,
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "json_equals",
+            "expected": "ORBIT-731",
+            "selector": null,
+            "attribute": null,
+            "endpoint": "/api/state",
+            "json_path": "cross_origin.case_id",
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": "ORBIT-731",
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "json_equals",
+            "expected": "Ada",
+            "selector": null,
+            "attribute": null,
+            "endpoint": "/api/state",
+            "json_path": "cross_origin.owner",
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": "Ada",
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "json_equals",
+            "expected": "urgent",
+            "selector": null,
+            "attribute": null,
+            "endpoint": "/api/state",
+            "json_path": "cross_origin.priority",
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": "urgent",
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "history_origin_observed",
+            "expected": "http://127.0.0.1:55790",
+            "selector": null,
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": true,
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "history_origin_observed",
+            "expected": "http://127.0.0.1:55791",
+            "selector": null,
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": true,
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        }
+      ]
+    },
+    {
+      "task_id": "download_upload_handoff",
+      "category": "file_workflow",
+      "goal": "Download the case file, continue to the partner upload portal, upload that exact downloaded file, wait until it is ready, and submit it.",
+      "passed": true,
+      "score": 1.0,
+      "agent_reported_success": true,
+      "agent_status": "completed",
+      "error": null,
+      "duration_seconds": 343.24816393852234,
+      "steps": 6,
+      "action_count": 4,
+      "failed_action_count": 0,
+      "planner_attempt_count": 6,
+      "planner_failure_count": 1,
+      "planner_tokens": 34137,
+      "answer_assertion_count": 2,
+      "answer_assertion_passed": 2,
+      "termination_reason": "completed",
+      "timed_out": false,
+      "captcha_encountered": false,
+      "blocked": false,
+      "max_steps_reached": false,
+      "split": "development",
+      "task_family": "file_workflow",
+      "setting_id": "sandbox",
+      "leakage_group": "download_upload_handoff",
+      "target_failure_modes": [],
+      "feedback": {
+        "kind": "unspecified",
+        "delay_steps": 0,
+        "noise_rate": null
+      },
+      "expected_horizon": "unspecified",
+      "scenario": "file_workflow",
+      "environment": "sandbox",
+      "entry_mode": "direct",
+      "risk_scope": "sandbox_mutation",
+      "source_origins": [],
+      "trajectory": {
+        "schema_version": 2,
+        "action_count": 4,
+        "distinct_tool_count": 3,
+        "tool_entropy_bits": 1.5,
+        "repeated_action_rate": 0.0,
+        "longest_identical_action_streak": 1,
+        "longest_failure_streak": 1,
+        "recovery_count": 0,
+        "minimum_window_entropy_bits": null,
+        "collapse_onset_step": null,
+        "longest_same_state_streak": 2,
+        "stagnation_onset_step": null,
+        "replan_count": 1,
+        "strategy_switch_count": 1,
+        "replan_rate": 0.25,
+        "resume_count": 0,
+        "resumed_from_checkpoint": false
+      },
+      "success_probability": 0.98,
+      "confidence_source": "self_reported",
+      "confidence_elicited_at_step": 6,
+      "assertions": [
+        {
+          "assertion": {
+            "kind": "url_contains",
+            "expected": "/upload/complete",
+            "selector": null,
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": "http://127.0.0.1:55791/upload/complete",
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "json_equals",
+            "expected": "sandbox-payload.txt",
+            "selector": null,
+            "attribute": null,
+            "endpoint": "/api/state",
+            "json_path": "upload.name",
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": "sandbox-payload.txt",
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "json_equals",
+            "expected": "e19000ed80b3e60944fe5c91e37ce48edd72f1f813a441c47bd70322240e8a4e",
+            "selector": null,
+            "attribute": null,
+            "endpoint": "/api/state",
+            "json_path": "upload.sha256",
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": "e19000ed80b3e60944fe5c91e37ce48edd72f1f813a441c47bd70322240e8a4e",
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "artifact_sha256",
+            "expected": {
+              "path": "downloads/sandbox-payload.txt",
+              "sha256": "e19000ed80b3e60944fe5c91e37ce48edd72f1f813a441c47bd70322240e8a4e"
+            },
+            "selector": null,
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": {
+            "exists": true,
+            "path": "/Users/lixiuyin/Materials/Selected/web-agent/outputs/campaigns/v6-final-r7/studies/sandbox-interaction/executions/2026-09-01/z-ai-glm-5-3-flash/agent/122544-047928-20260901t122544047928z/runs/download_upload_handoff/artifacts/downloads/sandbox-payload.txt",
+            "sha256": "e19000ed80b3e60944fe5c91e37ce48edd72f1f813a441c47bd70322240e8a4e",
+            "expected_sha256": "e19000ed80b3e60944fe5c91e37ce48edd72f1f813a441c47bd70322240e8a4e"
+          },
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "history_origin_observed",
+            "expected": "http://127.0.0.1:55790",
+            "selector": null,
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": true,
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "history_origin_observed",
+            "expected": "http://127.0.0.1:55791",
+            "selector": null,
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": true,
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        }
+      ]
+    },
+    {
+      "task_id": "sandbox_checkout",
+      "category": "sandbox_transaction",
+      "goal": "Add exactly one Orbit Notebook in the sandbox shop, continue to sandbox checkout, enter 42 Orbit Road, accept the sandbox terms, and place the order.",
+      "passed": true,
+      "score": 1.0,
+      "agent_reported_success": true,
+      "agent_status": "completed",
+      "error": null,
+      "duration_seconds": 66.8057188987732,
+      "steps": 7,
+      "action_count": 6,
+      "failed_action_count": 0,
+      "planner_attempt_count": 7,
+      "planner_failure_count": 0,
+      "planner_tokens": 41296,
+      "answer_assertion_count": 2,
+      "answer_assertion_passed": 2,
+      "termination_reason": "completed",
+      "timed_out": false,
+      "captcha_encountered": false,
+      "blocked": false,
+      "max_steps_reached": false,
+      "split": "development",
+      "task_family": "sandbox_transaction",
+      "setting_id": "sandbox",
+      "leakage_group": "sandbox_checkout",
+      "target_failure_modes": [],
+      "feedback": {
+        "kind": "unspecified",
+        "delay_steps": 0,
+        "noise_rate": null
+      },
+      "expected_horizon": "unspecified",
+      "scenario": "sandbox_transaction",
+      "environment": "sandbox",
+      "entry_mode": "direct",
+      "risk_scope": "sandbox_mutation",
+      "source_origins": [],
+      "trajectory": {
+        "schema_version": 2,
+        "action_count": 6,
+        "distinct_tool_count": 4,
+        "tool_entropy_bits": 1.792481250360578,
+        "repeated_action_rate": 0.0,
+        "longest_identical_action_streak": 1,
+        "longest_failure_streak": 1,
+        "recovery_count": 0,
+        "minimum_window_entropy_bits": 1.9219280948873623,
+        "collapse_onset_step": null,
+        "longest_same_state_streak": 5,
+        "stagnation_onset_step": null,
+        "replan_count": 0,
+        "strategy_switch_count": 0,
+        "replan_rate": 0.0,
+        "resume_count": 0,
+        "resumed_from_checkpoint": false
+      },
+      "success_probability": 0.99,
+      "confidence_source": "self_reported",
+      "confidence_elicited_at_step": 7,
+      "assertions": [
+        {
+          "assertion": {
+            "kind": "url_contains",
+            "expected": "/order/complete",
+            "selector": null,
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": "http://127.0.0.1:55791/order/complete",
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "element_visible",
+            "expected": true,
+            "selector": "#order-complete",
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": true,
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "json_equals",
+            "expected": 1,
+            "selector": null,
+            "attribute": null,
+            "endpoint": "/api/state",
+            "json_path": "cart.orbit",
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": 1,
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "json_equals",
+            "expected": "42 Orbit Road",
+            "selector": null,
+            "attribute": null,
+            "endpoint": "/api/state",
+            "json_path": "order.address",
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": "42 Orbit Road",
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "json_equals",
+            "expected": true,
+            "selector": null,
+            "attribute": null,
+            "endpoint": "/api/state",
+            "json_path": "order.terms",
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": true,
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "json_equals",
+            "expected": true,
+            "selector": null,
+            "attribute": null,
+            "endpoint": "/api/state",
+            "json_path": "order.submitted",
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": true,
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "history_origin_observed",
+            "expected": "http://127.0.0.1:55790",
+            "selector": null,
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": true,
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "history_origin_observed",
+            "expected": "http://127.0.0.1:55791",
+            "selector": null,
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": true,
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        }
+      ]
+    }
+  ],
+  "research": {
+    "failures": {
+      "schema_version": 2,
+      "failure_taxonomy_version": "1",
+      "task_count": 5,
+      "affected_task_count": 2,
+      "finding_count": 2,
+      "observed_count": 2,
+      "candidate_count": 0,
+      "adjudicated_count": 0,
+      "observed_by_layer": {
+        "planning": 2
+      },
+      "candidate_by_layer": {},
+      "adjudicated_by_layer": {},
+      "recurrence_by_signature": {
+        "planning:planner_attempt_failure": 2
+      },
+      "findings": [
+        {
+          "taxonomy_version": "1",
+          "task_id": "authenticated_account",
+          "status": "observed",
+          "layer": "planning",
+          "subtype": "planner_attempt_failure",
+          "detector": "aggregate-rule-v1",
+          "terminal": false,
+          "onset_step": null,
+          "recovery_step": null,
+          "evidence": [
+            {
+              "source": "task_metric",
+              "key": "planner_failure_count",
+              "observed": 1,
+              "reference": null
+            }
+          ],
+          "note": "One or more planner attempts failed; the underlying cause is not inferred."
+        },
+        {
+          "taxonomy_version": "1",
+          "task_id": "download_upload_handoff",
+          "status": "observed",
+          "layer": "planning",
+          "subtype": "planner_attempt_failure",
+          "detector": "aggregate-rule-v1",
+          "terminal": false,
+          "onset_step": null,
+          "recovery_step": null,
+          "evidence": [
+            {
+              "source": "task_metric",
+              "key": "planner_failure_count",
+              "observed": 1,
+              "reference": null
+            }
+          ],
+          "note": "One or more planner attempts failed; the underlying cause is not inferred."
+        }
+      ],
+      "causal_boundary": "Automatic findings identify observable symptoms only; reasoning and memory causes are never assigned automatically. Adjudicated causal labels require a referenced controlled intervention or both referenced trace evidence and human adjudication."
+    },
+    "calibration": {
+      "schema_version": 2,
+      "status": "available",
+      "reason": null,
+      "task_count": 5,
+      "confidence_count": 5,
+      "confidence_coverage": 1.0,
+      "brier_score": 0.0006200000000000011,
+      "log_loss": 0.01831933468241479,
+      "expected_calibration_error": 0.018000000000000016,
+      "bins": [
+        {
+          "lower": 0.0,
+          "upper": 0.1,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.1,
+          "upper": 0.2,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.2,
+          "upper": 0.3,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.3,
+          "upper": 0.4,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.4,
+          "upper": 0.5,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.5,
+          "upper": 0.6,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.6,
+          "upper": 0.7,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.7,
+          "upper": 0.8,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.8,
+          "upper": 0.9,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.9,
+          "upper": 1.0,
+          "count": 5,
+          "mean_confidence": 0.982,
+          "empirical_success_rate": 1.0
+        }
+      ],
+      "risk_coverage_curve": [
+        {
+          "coverage": 0.2,
+          "selective_risk": 0.0,
+          "minimum_confidence": 1.0
+        },
+        {
+          "coverage": 0.4,
+          "selective_risk": 0.0,
+          "minimum_confidence": 0.99
+        },
+        {
+          "coverage": 0.6,
+          "selective_risk": 0.0,
+          "minimum_confidence": 0.99
+        },
+        {
+          "coverage": 0.8,
+          "selective_risk": 0.0,
+          "minimum_confidence": 0.98
+        },
+        {
+          "coverage": 1.0,
+          "selective_risk": 0.0,
+          "minimum_confidence": 0.95
+        }
+      ],
+      "area_under_risk_coverage_curve": 0.0,
+      "interpretation_notice": "Metrics cover only tasks with a self-reported success_probability recorded before external judging; missing values are reported, not imputed."
+    },
+    "transfer": {
+      "schema_version": 1,
+      "status": "unavailable",
+      "reason": "no held-out task or setting evaluations were recorded",
+      "splits": {
+        "development": {
+          "status": "available",
+          "reason": null,
+          "task_count": 5,
+          "success_rate": 1.0,
+          "mean_score": 1.0
+        },
+        "validation": {
+          "status": "unavailable",
+          "reason": "validation split is empty",
+          "task_count": 0,
+          "success_rate": null,
+          "mean_score": null
+        },
+        "held_out_task": {
+          "status": "unavailable",
+          "reason": "held_out_task split is empty",
+          "task_count": 0,
+          "success_rate": null,
+          "mean_score": null
+        },
+        "held_out_setting": {
+          "status": "unavailable",
+          "reason": "held_out_setting split is empty",
+          "task_count": 0,
+          "success_rate": null,
+          "mean_score": null
+        }
+      },
+      "held_out_task_success_delta": null,
+      "held_out_setting_success_delta": null,
+      "pooled_held_out_success_delta": null,
+      "leakage_groups": [],
+      "interpretation_notice": "Deltas are descriptive held-out minus development success rates for one condition. They do not establish that an intervention transfers without a paired baseline."
+    },
+    "generality": {
+      "schema_version": 1,
+      "status": "insufficient",
+      "task_count": 5,
+      "category_count": 5,
+      "source_origin_count": 0,
+      "discovery_task_count": 0,
+      "scenario_counts": {
+        "authenticated_session": 1,
+        "cross_origin_form": 1,
+        "file_workflow": 1,
+        "sandbox_transaction": 1,
+        "spa_interaction": 1
+      },
+      "environment_counts": {
+        "sandbox": 5
+      },
+      "split_counts": {
+        "development": 5
+      },
+      "source_origins": [],
+      "missing_requirements": [
+        "requires at least 30 evaluated tasks",
+        "requires at least 8 task categories",
+        "requires at least 8 distinct public source origins",
+        "missing scenario coverage: recovery, search_discovery",
+        "missing research splits: held_out_setting, held_out_task",
+        "requires both public_web and sandbox evidence",
+        "requires at least 5 genuine search-discovery tasks"
+      ],
+      "interpretation_notice": "Readiness means the retained task set crosses a preregistered coverage floor. It does not by itself prove performance, robustness, or transfer across the covered settings."
+    },
+    "long_horizon": {
+      "schema_version": 2,
+      "status": "unavailable",
+      "reason": "no trajectory reached 50 observable actions",
+      "task_count": 5,
+      "long_task_count": 0,
+      "resumed_task_count": 0,
+      "buckets": {
+        "short": {
+          "task_count": 5,
+          "success_rate": 1.0,
+          "mean_score": 1.0
+        },
+        "medium": {
+          "task_count": 0,
+          "success_rate": null,
+          "mean_score": null
+        },
+        "long": {
+          "task_count": 0,
+          "success_rate": null,
+          "mean_score": null
+        }
+      },
+      "long_success_rate": null,
+      "long_mean_score": null,
+      "reliability_degradation": null,
+      "collapse_incidence": null,
+      "stagnation_incidence": null,
+      "mean_recovery_count": null,
+      "mean_replan_count": null,
+      "mean_strategy_switch_count": null,
+      "interpretation_notice": "Reliability degradation is short success rate minus long success rate. Collapse onset tracks repeated actions; stagnation onset tracks extended unchanged page state even when tools vary. Neither signal is a causal diagnosis of reasoning or memory."
+    }
+  }
+}
