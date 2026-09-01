@@ -21,6 +21,9 @@ if TYPE_CHECKING:
     from webagent.core.config import AgentConfig
 
 
+_MAX_FRAME_TEXT_CHARS = 20_000
+
+
 def _frame(browser: Any, index: int) -> Any:
     frames = browser.page.frames
     if index < 0 or index >= len(frames):
@@ -46,8 +49,9 @@ class ListFramesTool(BrowserToolBase):
 
 @tool(
     "frame_interact",
-    "Interact inside an iframe. params: frame_index (int), action=click|type|extract_text, "
-    "selector={type:'text'|'css',value:string}, text?",
+    "Interact inside a listed frame. Use list_frames first; frame 0 is the main document, where "
+    "the ordinary extract_text tool is usually simpler. params: frame_index (int), "
+    "action=click|type|extract_text, selector={type:'text'|'css',value:string}, text?",
 )
 class FrameInteractTool(BrowserToolBase):
     def validate_params(self, params: dict[str, Any]) -> None:
@@ -71,14 +75,35 @@ class FrameInteractTool(BrowserToolBase):
                 await frame.locator(selector).fill(params["text"])
                 data = {"typed": True}
             else:
-                data = {"text": await frame.locator(selector).inner_text()}
+                locator = frame.locator(selector)
+                # ``Locator.inner_text`` is strict and raises whenever a useful broad
+                # selector matches more than one paragraph.  Wait on the first match,
+                # then collect every match so document extraction remains tolerant
+                # without hiding a genuinely absent selector.
+                await locator.first.inner_text()
+                texts = [text.strip() for text in await locator.all_inner_texts() if text.strip()]
+                data = {
+                    "text": "\n\n".join(texts)[:_MAX_FRAME_TEXT_CHARS],
+                    "match_count": len(texts),
+                }
             return ToolResult(
                 success=True,
                 tool_name="frame_interact",
                 data={"frame_index": params["frame_index"], "action": action, **data},
             )
         except Exception as exc:
-            return ToolResult(success=False, tool_name="frame_interact", error=str(exc))
+            hint = ""
+            if params.get("action") == "extract_text" and params.get("frame_index") == 0:
+                hint = (
+                    " Main-document extraction failed; use the ordinary extract_text tool with "
+                    "a broad selector such as main, article, or body instead of repeatedly "
+                    "narrowing frame_interact selectors."
+                )
+            return ToolResult(
+                success=False,
+                tool_name="frame_interact",
+                error=f"{exc}{hint}",
+            )
 
 
 @tool("list_tabs", "List browser tabs with indexes, titles, URLs, and active state. params: none")

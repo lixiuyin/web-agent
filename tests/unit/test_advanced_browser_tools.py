@@ -37,6 +37,13 @@ class _Locator:
     async def inner_text(self) -> str:
         return "visible text"
 
+    @property
+    def first(self) -> _Locator:
+        return self
+
+    async def all_inner_texts(self) -> list[str]:
+        return ["visible text"]
+
     async def set_input_files(self, path: str) -> None:
         self.uploaded = path
 
@@ -50,6 +57,16 @@ class _Frame:
 
     def locator(self, _selector: str) -> _Locator:
         return self._locator
+
+
+class _MultiLocator(_Locator):
+    async def all_inner_texts(self) -> list[str]:
+        return ["first paragraph", "second paragraph"]
+
+
+class _FailingLocator(_Locator):
+    async def inner_text(self) -> str:
+        raise RuntimeError("selector was not found")
 
 
 class _Download:
@@ -127,6 +144,32 @@ async def test_frame_and_shadow_actions_cover_click_type_and_extract() -> None:
     assert extracted.data["text"] == "visible text"
     assert shadow_clicked.success and shadow_typed.success
     assert shadow_text.data["text"] == "visible text"
+
+
+async def test_frame_extract_text_joins_multiple_matches_without_strict_failure() -> None:
+    browser = _Browser()
+    browser.page.frames[0] = _Frame(_MultiLocator())
+
+    result = await FrameInteractTool(browser=browser).execute(
+        {"frame_index": 0, "action": "extract_text", "selector": _css("main p")}
+    )
+
+    assert result.success is True
+    assert result.data["text"] == "first paragraph\n\nsecond paragraph"
+    assert result.data["match_count"] == 2
+
+
+async def test_main_frame_extract_failure_recommends_ordinary_extract_text() -> None:
+    browser = _Browser()
+    browser.page.frames[0] = _Frame(_FailingLocator())
+
+    result = await FrameInteractTool(browser=browser).execute(
+        {"frame_index": 0, "action": "extract_text", "selector": _css("main p")}
+    )
+
+    assert result.success is False
+    assert "ordinary extract_text tool" in str(result.error)
+    assert "main, article, or body" in str(result.error)
 
 
 async def test_tab_tools_forward_controller_results() -> None:
