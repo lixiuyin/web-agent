@@ -118,11 +118,21 @@ class TestGoto:
 
 class TestClick:
     async def test_success(self) -> None:
-        browser = FakeBrowser(click={"success": True})
+        browser = FakeBrowser(
+            click={
+                "success": True,
+                "opened_new_tab": True,
+                "tab_index": 1,
+                "url": "https://destination.test/docs",
+                "title": "Docs",
+            }
+        )
         result = await ClickTool(browser=browser).execute(
             {"selector": {"type": "css", "value": "#b"}, "force": True}
         )
         assert result.success
+        assert result.data["opened_new_tab"] is True
+        assert result.data["url"] == "https://destination.test/docs"
         assert browser.calls[0] == ("click", ("#b",), {"force": True})
 
     async def test_failure(self) -> None:
@@ -148,12 +158,16 @@ class TestClickLink:
                 "method": "fuzzy",
                 "found_text": "PDF",
                 "found_href": "http://x/a.pdf",
+                "opened_new_tab": True,
+                "url": "http://x/a.pdf",
             }
         )
         result = await ClickLinkTool(browser=browser).execute({"text": "Download PDF"})
         assert result.success
         assert result.data["found_text"] == "PDF"
         assert result.data["found_href"] == "http://x/a.pdf"
+        assert result.data["opened_new_tab"] is True
+        assert result.data["url"] == "http://x/a.pdf"
 
     async def test_failure(self) -> None:
         browser = FakeBrowser(click_link_by_text={"success": False})

@@ -346,6 +346,26 @@ def _url_matches_scope(url: str, scope: _SiteScope) -> bool:
     )
 
 
+def _query_precisely_targets_url(query: Any, target: str) -> bool:
+    """Return whether a search query asks for the exact missing URL evidence."""
+    if not isinstance(query, str) or not query.strip():
+        return False
+    normalized = query.casefold()
+    canonical = target.casefold()
+    if canonical in normalized:
+        return True
+    parsed = urlsplit(target)
+    host = (parsed.hostname or "").casefold()
+    path = parsed.path.casefold().rstrip("/")
+    scope = _site_scope(query)
+    if scope is not None:
+        return scope.host == host and scope.path_prefix == path
+    path_tokens = [token for token in path.split("/") if token]
+    return bool(
+        host and path_tokens and host in normalized and all(t in normalized for t in path_tokens)
+    )
+
+
 def _repository_owner(path: str) -> str | None:
     segments = [segment for segment in path.casefold().split("/") if segment]
     if not segments:
@@ -476,6 +496,8 @@ class SearchEngineOnlyPolicy:
         self._version_frontier: str | None = None
         self._version_frontier_key: tuple[int, ...] = ()
         self._version_frontier_resolved = True
+        self._pending_url_evidence_target: str | None = None
+        self._pending_url_search_attempts = 0
         self._latest_task = bool(
             re.search(
                 r"\b(?:latest|newest|most\s+recent)\b|最新|最近(?:的)?|最晚",
@@ -536,7 +558,52 @@ class SearchEngineOnlyPolicy:
             "version_frontier_key": list(self._version_frontier_key),
             "version_frontier_resolved": self._version_frontier_resolved,
             "figure_analysis_completed": self._figure_analysis_completed,
+            "pending_url_evidence_target": self._pending_url_evidence_target,
+            "pending_url_search_attempts": self._pending_url_search_attempts,
         }
+
+    def planner_evidence_hint(self) -> str:
+        """Give the planner a deterministic recovery action for a guessed URL."""
+        target = self._pending_url_evidence_target
+        if target is None:
+            return ""
+        if self._pending_url_search_attempts >= 2:
+            return (
+                "EXACT URL EVIDENCE UNRESOLVED: "
+                f"{target} was guessed and two precise searches did not expose it. Do not search "
+                "for or navigate to that URL again. Use links, tabs, or site navigation already "
+                "visible on an observed official page to reach the needed page, or finish without "
+                "mentioning the unverified URL."
+            )
+        return (
+            "EXACT URL EVIDENCE REQUIRED: "
+            f"{target} was guessed but has not appeared in visible browser evidence. The next "
+            "search must query the exact quoted URL (or use an exact site:host/path query); do not "
+            "issue a broad topical rewrite or retry goto. Grounded clicks, tabs, and links on an "
+            "already observed page are also allowed."
+        )
+
+    def validate_planner_call(self, tool_call: ToolCall) -> str | None:
+        """Preflight recoverable evidence mistakes before they consume an action step."""
+        name = tool_call.tool_name.casefold()
+        if name == "search" and self._pending_url_evidence_target is not None:
+            target = self._pending_url_evidence_target
+            if self._pending_url_search_attempts >= 2:
+                return (
+                    "two exact searches already failed to expose the guessed URL; use visible "
+                    "links, tabs, or site navigation instead"
+                )
+            if not _query_precisely_targets_url(tool_call.parameters.get("query"), target):
+                return f"search for the exact quoted URL {target!r}, not a broad topical rewrite"
+        if name == "done":
+            unobserved = self._completion_unobserved_urls(tool_call)
+            if unobserved:
+                return (
+                    "done summary contains URL(s) absent from browser evidence: "
+                    + ", ".join(unobserved[:3])
+                    + "; remove every such URL and cite only the final allowlist"
+                )
+        return None
 
     def terminal_evidence_hint(self) -> str:
         """Expose a bounded exact-URL allowlist for the final planner action."""
@@ -615,6 +682,12 @@ class SearchEngineOnlyPolicy:
         self._version_frontier_key = tuple(raw_key)
         self._version_frontier_resolved = _checkpoint_bool(state, "version_frontier_resolved")
         self._figure_analysis_completed = state.get("figure_analysis_completed") is True
+        pending = state.get("pending_url_evidence_target")
+        self._pending_url_evidence_target = pending if isinstance(pending, str) else None
+        attempts = state.get("pending_url_search_attempts", 0)
+        if not isinstance(attempts, int) or isinstance(attempts, bool) or attempts < 0:
+            raise ValueError("checkpoint field pending_url_search_attempts is invalid")
+        self._pending_url_search_attempts = attempts
 
     async def authorize(self, tool_call: ToolCall) -> PolicyDecision:
         self._step += 1
@@ -632,6 +705,9 @@ class SearchEngineOnlyPolicy:
         if not self._search_completed and name != "search":
             return self._deny(name, "first successful action must be browser search")
         if name == "search":
+            recovery = self._authorize_exact_url_recovery_search(tool_call)
+            if recovery is not None:
+                return recovery
             return PolicyDecision(
                 True, "browser search is the required discovery action", self._step
             )
@@ -686,6 +762,7 @@ class SearchEngineOnlyPolicy:
             recency = tool_call.parameters.get("recency") if name == "search" else None
             self._record_search_evidence(query, visible_data, recency=recency)
         self._record_visible_urls(visible_data, source=f"{name}_planner_visible")
+        self._update_exact_url_recovery(name, tool_call, result)
         if name in {"goto", "open_tab"} and result.success:
             self._record_navigated_candidate(tool_call, visible_data)
         if name == "inspect_download_links" and result.success:
@@ -925,7 +1002,15 @@ class SearchEngineOnlyPolicy:
             )
         evidence = self._observed_urls.get(canonical)
         if evidence is None:
-            return self._deny(canonical, "target URL was not observed in prior browser evidence")
+            if self._pending_url_evidence_target != canonical:
+                self._pending_url_search_attempts = 0
+            self._pending_url_evidence_target = canonical
+            return self._deny(
+                canonical,
+                "target URL was not observed in prior browser evidence; recover with a search "
+                f"for the exact quoted URL {canonical!r}, or navigate through visible official "
+                "links instead of guessing the path",
+            )
         return PolicyDecision(
             True,
             "target URL is grounded in prior browser evidence",
@@ -933,6 +1018,42 @@ class SearchEngineOnlyPolicy:
             target=canonical,
             provenance=evidence,
         )
+
+    def _authorize_exact_url_recovery_search(self, tool_call: ToolCall) -> PolicyDecision | None:
+        target = self._pending_url_evidence_target
+        if target is None:
+            return None
+        query = tool_call.parameters.get("query")
+        if self._pending_url_search_attempts >= 2:
+            return self._deny(
+                "search",
+                "two exact searches did not expose the guessed URL; stop repeating searches and "
+                "use visible links/tabs/site navigation, or omit the unverified URL",
+            )
+        if not _query_precisely_targets_url(query, target):
+            return self._deny(
+                "search",
+                f"pending URL evidence requires an exact quoted URL query for {target}; broad "
+                "topical rewrites are not a valid evidence-recovery action",
+            )
+        return None
+
+    def _update_exact_url_recovery(
+        self, name: str, tool_call: ToolCall, result: ToolResult
+    ) -> None:
+        target = self._pending_url_evidence_target
+        if target is None:
+            return
+        if target in self._observed_urls:
+            self._pending_url_evidence_target = None
+            self._pending_url_search_attempts = 0
+            return
+        if (
+            name == "search"
+            and result.success
+            and _query_precisely_targets_url(tool_call.parameters.get("query"), target)
+        ):
+            self._pending_url_search_attempts += 1
 
     def _authorize_pdf_path(self, tool_name: str, value: Any) -> PolicyDecision:
         if not isinstance(value, str):
@@ -990,26 +1111,30 @@ class SearchEngineOnlyPolicy:
         }
         if not content_visits:
             return self._deny("done", "completion requires visiting a non-search evidence page")
-        summary = tool_call.parameters.get("summary")
-        if isinstance(summary, str):
-            cited = {
-                canonical
-                for raw in re.findall(r"https?://[^\s<>\"']+", summary)
-                if (canonical := _canonical_url(raw.rstrip(".,;:!?)]}>`*。，；：！？）】》")))
-                is not None
-            }
-            unobserved = sorted(cited - set(self._observed_urls))
-            if unobserved:
-                return self._deny(
-                    "done",
-                    "completion cites URL(s) absent from browser evidence: "
-                    + ", ".join(unobserved[:3]),
-                )
+        unobserved = self._completion_unobserved_urls(tool_call)
+        if unobserved:
+            return self._deny(
+                "done",
+                "completion cites URL(s) absent from browser evidence: "
+                + ", ".join(unobserved[:3]),
+            )
         return PolicyDecision(
             True,
             "completion is grounded in a visited evidence page",
             self._step,
         )
+
+    def _completion_unobserved_urls(self, tool_call: ToolCall) -> list[str]:
+        summary = tool_call.parameters.get("summary")
+        if not isinstance(summary, str):
+            return []
+        cited = {
+            canonical
+            for raw in re.findall(r"https?://[^\s<>\"']+", summary)
+            if (canonical := _canonical_url(raw.rstrip(".,;:!?)]}>`*。，；：！？）】》")))
+            is not None
+        }
+        return sorted(cited - set(self._observed_urls))
 
     @staticmethod
     def _has_search_evidence(data: dict[str, Any]) -> bool:
@@ -1796,6 +1921,9 @@ class BrowserGroundedPolicy(SearchEngineOnlyPolicy):
             if hybrid_decision is not None:
                 return hybrid_decision
         if name == "search":
+            recovery = self._authorize_exact_url_recovery_search(tool_call)
+            if recovery is not None:
+                return recovery
             return PolicyDecision(True, "browser search provides grounded discovery", self._step)
 
         self._record_current_page_url()

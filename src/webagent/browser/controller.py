@@ -659,9 +659,11 @@ class BrowserController:
     async def click(
         self, selector: str, timeout: int | None = None, force: bool = False
     ) -> dict[str, Any]:
+        pages_before = set(self._context.pages) if self._context is not None else set()
         try:
             await self.page.click(selector, timeout=timeout or self.default_timeout, force=force)
-            return {"success": True, "selector": selector}
+            activated = await self._activate_new_page(pages_before)
+            return {"success": True, "selector": selector, **activated}
         except PlaywrightTimeout:
             return {"success": False, "selector": selector, "error": f"Not found: {selector}"}
         except Exception as e:
@@ -688,7 +690,36 @@ class BrowserController:
         Returns:
             Dict with success status and found element info
         """
-        return await click_link_by_text_strategies(self.page, text, fuzzy)
+        pages_before = set(self._context.pages) if self._context is not None else set()
+        result = await click_link_by_text_strategies(self.page, text, fuzzy)
+        if result.get("success"):
+            result.update(await self._activate_new_page(pages_before))
+        return result
+
+    async def _activate_new_page(self, pages_before: set[Page]) -> dict[str, Any]:
+        """Follow a popup/new-tab click so the next observation sees its destination."""
+        if self._context is None:
+            return {}
+        new_pages = [page for page in self._context.pages if page not in pages_before]
+        if not new_pages:
+            return {}
+        self._page = new_pages[-1]
+        try:
+            await self._page.wait_for_load_state("domcontentloaded", timeout=5000)
+        except Exception:
+            pass
+        await self._page.bring_to_front()
+        title = ""
+        try:
+            title = await self._page.title()
+        except Exception:
+            pass
+        return {
+            "opened_new_tab": True,
+            "tab_index": self._context.pages.index(self._page),
+            "url": self._page.url,
+            "title": title,
+        }
 
     async def type_text(
         self,

@@ -69,12 +69,30 @@ class ToolExecutor:
         value = provider()
         return value if isinstance(value, str) else ""
 
+    def planner_evidence_hint(self) -> str:
+        """Return an actionable policy recovery hint for the next planner call."""
+        if self._policy is None:
+            return ""
+        provider = getattr(self._policy, "planner_evidence_hint", None)
+        if not callable(provider):
+            return ""
+        value = provider()
+        return value if isinstance(value, str) else ""
+
     def validate_tool_call(self, tool_call: ToolCall) -> str | None:
         """Validate planner output before it consumes an environment action step."""
         name = (tool_call.tool_name or "").casefold()
-        # Exposure and policy denials remain real, auditable action outcomes.  This
-        # preflight only repairs malformed names/arguments that cannot execute at all.
-        return self._registry.validate_call(name, tool_call.parameters or {})
+        registry_error = self._registry.validate_call(name, tool_call.parameters or {})
+        if registry_error is not None:
+            return registry_error
+        # Authorization still fails closed during execution. This optional preflight
+        # only repairs recoverable evidence formatting/search mistakes within the
+        # planner retry budget, so a bad final ``done`` does not consume the last step.
+        validator = getattr(self._policy, "validate_planner_call", None)
+        if not callable(validator):
+            return None
+        value = validator(tool_call)
+        return value if isinstance(value, str) else None
 
     def reset_policy(self, task: str) -> None:
         """Reset per-task policy evidence before a new agent run."""

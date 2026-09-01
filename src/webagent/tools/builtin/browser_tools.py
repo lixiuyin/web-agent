@@ -101,8 +101,14 @@ class ClickTool(BrowserToolBase):
         force = bool(params.get("force", False))
         resp = await self.browser.click(selector, force=force)
         if resp.get("success"):
+            data = {"selector": params["selector"]}
+            for key in ("opened_new_tab", "tab_index", "url", "title"):
+                if key in resp:
+                    data[key] = resp[key]
             return ToolResult(
-                success=True, tool_name="click", data={"selector": params["selector"]}
+                success=True,
+                tool_name="click",
+                data=data,
             )
         return ToolResult(success=False, tool_name="click", error=resp.get("error", "Click failed"))
 
@@ -146,6 +152,9 @@ class ClickLinkTool(BrowserToolBase):
                 data["found_text"] = resp["found_text"]
             if "found_href" in resp:
                 data["found_href"] = resp["found_href"]
+            for key in ("opened_new_tab", "tab_index", "url", "title"):
+                if key in resp:
+                    data[key] = resp[key]
             return ToolResult(success=True, tool_name="click_link", data=data)
         return ToolResult(
             success=False, tool_name="click_link", error=resp.get("error", "Click link failed")

@@ -411,6 +411,41 @@ class TestInteractions:
         result = await _controller(FakePage(fail=True)).click("#submit")
         assert result["success"] is False
 
+    async def test_click_activates_new_tab(self) -> None:
+        class PopupPage(FakePage):
+            def __init__(self) -> None:
+                super().__init__()
+                self.url = "https://destination.test/docs"
+                self.front = False
+
+            async def bring_to_front(self) -> None:
+                self.front = True
+
+        source = FakePage()
+        popup = PopupPage()
+
+        class Context:
+            def __init__(self) -> None:
+                self.pages = [source]
+
+        context = Context()
+
+        async def click_and_open(selector: str, **kwargs: Any) -> None:
+            source.calls.append(("click", {"selector": selector, **kwargs}))
+            context.pages.append(popup)
+
+        source.click = click_and_open  # type: ignore[method-assign]
+        controller = _controller(source)
+        controller._context = context  # type: ignore[assignment]
+
+        result = await controller.click("#result")
+
+        assert controller.page is popup
+        assert popup.front is True
+        assert result["opened_new_tab"] is True
+        assert result["url"] == "https://destination.test/docs"
+        assert result["tab_index"] == 1
+
     async def test_type_text(self) -> None:
         page = FakePage()
         result = await _controller(page).type_text("#q", "hello")

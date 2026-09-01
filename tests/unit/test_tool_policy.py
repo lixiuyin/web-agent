@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -254,8 +255,15 @@ async def test_done_rejects_unobserved_cited_url(tmp_path: Path) -> None:
             parameters={"summary": "Source: https://example.test/invented"},
         )
     )
+    preflight = policy.validate_planner_call(
+        ToolCall(
+            tool_name="done",
+            parameters={"summary": "Source: https://example.test/invented"},
+        )
+    )
     assert denied.allowed is False
     assert "absent from browser evidence" in denied.reason
+    assert preflight is not None and "final allowlist" in preflight
 
 
 async def test_done_strips_markdown_emphasis_from_cited_url(tmp_path: Path) -> None:
@@ -325,6 +333,100 @@ async def test_terminal_evidence_hint_lists_visited_page_not_unvisited_variant(
     assert visited in hint
     assert unvisited not in hint
     assert "do not reconstruct URL variants" in hint
+
+
+async def test_unobserved_url_forces_exact_search_recovery(tmp_path: Path) -> None:
+    policy = SearchEngineOnlyPolicy(_Browser(), artifacts_dir=tmp_path / "artifacts")
+    await _complete_search(policy, "https://playwright.dev/docs/intro")
+    target = "https://playwright.dev/python/docs/intro"
+
+    denied_goto = await policy.authorize(ToolCall(tool_name="goto", parameters={"url": target}))
+    denied_broad_search = await policy.authorize(
+        ToolCall(
+            tool_name="search",
+            parameters={"query": "Playwright Python docs introduction pip install"},
+        )
+    )
+    exact_search = await policy.authorize(
+        ToolCall(tool_name="search", parameters={"query": f'"{target}"'})
+    )
+
+    assert denied_goto.allowed is False
+    assert denied_broad_search.allowed is False
+    assert "exact quoted URL query" in denied_broad_search.reason
+    assert exact_search.allowed is True
+    assert (
+        policy.validate_planner_call(
+            ToolCall(
+                tool_name="search",
+                parameters={"query": "Playwright Python docs introduction pip install"},
+            )
+        )
+        is not None
+    )
+    assert (
+        policy.validate_planner_call(
+            ToolCall(tool_name="search", parameters={"query": f'"{target}"'})
+        )
+        is None
+    )
+    assert target in policy.planner_evidence_hint()
+
+
+async def test_exact_search_result_clears_url_recovery_hint(tmp_path: Path) -> None:
+    policy = SearchEngineOnlyPolicy(_Browser(), artifacts_dir=tmp_path / "artifacts")
+    await _complete_search(policy, "https://playwright.dev/docs/intro")
+    target = "https://playwright.dev/python/docs/intro"
+    await policy.authorize(ToolCall(tool_name="goto", parameters={"url": target}))
+    search = ToolCall(tool_name="search", parameters={"query": f'"{target}"'})
+    decision = await policy.authorize(search)
+    await policy.record_result(
+        search,
+        ToolResult(
+            success=True,
+            tool_name="search",
+            data={"results": [{"title": "Python", "url": target}]},
+        ),
+        decision,
+        planner_visible_result=json.dumps(
+            {"query": f'"{target}"', "results": [{"title": "Python", "url": target}]}
+        ),
+    )
+
+    assert policy.planner_evidence_hint() == ""
+    assert (await policy.authorize(ToolCall(tool_name="goto", parameters={"url": target}))).allowed
+
+
+async def test_exact_url_recovery_stops_after_two_searches_and_resumes(tmp_path: Path) -> None:
+    target = "https://playwright.dev/python/docs/intro"
+    policy = SearchEngineOnlyPolicy(_Browser(), artifacts_dir=tmp_path / "artifacts")
+    await _complete_search(policy, "https://playwright.dev/docs/intro")
+    await policy.authorize(ToolCall(tool_name="goto", parameters={"url": target}))
+
+    for index in range(2):
+        search = ToolCall(tool_name="search", parameters={"query": f'"{target}"'})
+        decision = await policy.authorize(search)
+        assert decision.allowed is True
+        await _record_result(
+            policy,
+            search,
+            ToolResult(
+                success=True,
+                tool_name="search",
+                data={"results": [{"url": f"https://playwright.dev/other/{index}"}]},
+            ),
+            decision,
+        )
+
+    restored = SearchEngineOnlyPolicy(_Browser(), artifacts_dir=tmp_path / "artifacts")
+    restored.import_state(policy.export_state(), task="")
+    denied = await restored.authorize(
+        ToolCall(tool_name="search", parameters={"query": f'"{target}"'})
+    )
+
+    assert denied.allowed is False
+    assert "two exact searches" in denied.reason
+    assert "links, tabs, or site navigation" in restored.planner_evidence_hint()
 
 
 async def test_policy_checkpoint_restores_grounded_url_and_counters(tmp_path: Path) -> None:
@@ -796,14 +898,26 @@ async def test_executor_reset_clears_policy_evidence(tmp_path: Path) -> None:
     registry.register(_Tool("search", ToolResult(success=True, tool_name="search")))
     executor = ToolExecutor(registry, policy=policy)
     await _complete_search(policy, "https://example.test/known")
+    assert executor.planner_evidence_hint() == ""
 
     executor.reset_policy("new task")
+    initial_denied = await policy.authorize(
+        ToolCall(tool_name="goto", parameters={"url": "https://example.test/known"})
+    )
+    await _complete_search(policy, "https://example.test/other")
     denied = await policy.authorize(
         ToolCall(tool_name="goto", parameters={"url": "https://example.test/known"})
     )
 
     assert denied.allowed is False
-    assert "first successful action" in denied.reason
+    assert "https://example.test/known" in executor.planner_evidence_hint()
+    assert (
+        executor.validate_tool_call(
+            ToolCall(tool_name="search", parameters={"query": "known page"})
+        )
+        is not None
+    )
+    assert "first successful action" in initial_denied.reason
 
 
 async def test_extracted_search_results_count_as_search_evidence(tmp_path: Path) -> None:

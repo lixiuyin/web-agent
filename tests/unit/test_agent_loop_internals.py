@@ -81,6 +81,9 @@ class FakeExecutor:
     def terminal_evidence_hint(self) -> str:
         return "FINAL CITATION ALLOWLIST: https://example.test/visited"
 
+    def planner_evidence_hint(self) -> str:
+        return "EXACT URL EVIDENCE REQUIRED: https://example.test/missing"
+
 
 def _agent(tmp_path: Path, planner: FakePlanner, browser: FakeBrowser, **cfg: Any) -> WebAgent:
     cfg.setdefault("enable_loop_detection", False)
@@ -289,6 +292,7 @@ class TestThink:
         assert "final allowed action" in planner.received_history
         assert "exact source URL" in planner.received_history
         assert "https://example.test/visited" in planner.received_history
+        assert "https://example.test/missing" in planner.received_history
 
 
 class TestWarnIfCaptcha:

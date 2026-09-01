@@ -957,6 +957,10 @@ class WebAgent:
             history_text += "\n\nCONTROLLER PLAN STATE:\n" + state.planning_state.prompt_summary()
         if state is not None and state.strategy_manager is not None:
             history_text += "\n\nCONTROLLER STRATEGY HINT: " + state.strategy_manager.prompt_hint
+        evidence_hint_provider = getattr(self._tool_executor, "planner_evidence_hint", None)
+        evidence_hint = evidence_hint_provider() if callable(evidence_hint_provider) else ""
+        if evidence_hint:
+            history_text += "\n\nCONTROLLER EVIDENCE RECOVERY: " + evidence_hint
         transient_hint = _transient_page_recovery_hint(browser_state)
         if transient_hint is not None:
             history_text += "\n\nOBSERVED TRANSIENT PAGE: " + transient_hint
