@@ -1,8 +1,39 @@
 """Controller-owned planning state tests."""
 
+import pytest
 from pydantic import ValidationError
 
-from webagent.agent.state import PlanMilestone, PlanningState
+from webagent.agent.state import PlanMilestone, PlanningState, validate_durable_note
+
+
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        ('Mission cue 4: "CEDAR".', 'Mission cue 4: "CEDAR".'),
+        ("保留线索：“雪松”——稍后检查。", "保留线索：“雪松”——稍后检查。"),
+        ("  retain   cue: CEDAR  ", "retain cue: CEDAR"),
+    ],
+)
+def test_validate_durable_note_accepts_normal_unicode_plain_text(
+    raw: str,
+    expected: str,
+) -> None:
+    assert validate_durable_note(raw) == expected
+
+
+@pytest.mark.parametrize(
+    "note",
+    [
+        "password: orbit42",
+        "reference https://example.test",
+        "email agent@example.test",
+        "x" * 501,
+        "   ",
+    ],
+)
+def test_validate_durable_note_rejects_sensitive_or_unbounded_text(note: str) -> None:
+    with pytest.raises(ValueError, match="cannot contain"):
+        validate_durable_note(note)
 
 
 def test_planning_state_advances_records_evidence_and_revises() -> None:

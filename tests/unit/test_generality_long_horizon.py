@@ -407,3 +407,20 @@ async def test_durable_memory_survives_checkpoint_but_rejects_sensitive_notes(
     assert checkpoint_state.evidence[0].summary == "Mission cue 14: ORBIT"
     with pytest.raises(ValueError, match="cannot contain"):
         tool.validate_params({"note": "password: orbit42"})
+
+
+async def test_durable_memory_preserves_quoted_cue_across_checkpoint(tmp_path: Path) -> None:
+    tool = RememberTool()
+    result = await tool.execute({"note": 'Mission cue 4: "CEDAR" — retain for later.'})
+    state = PlanningState.create("complete mission", ["retain cues", "finish"])
+    state = state.record_evidence(
+        step_number=4,
+        kind="durable_note",
+        summary=str(result.data["note"]),
+    )
+
+    checkpoint_state = _checkpoint_planning_state(state, tmp_path)
+
+    assert checkpoint_state is not None
+    prompt = checkpoint_state.prompt_summary()
+    assert 'Mission cue 4: "CEDAR" — retain for later.' in prompt

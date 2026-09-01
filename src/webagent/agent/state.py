@@ -6,34 +6,39 @@ immutable transformations so a checkpoint always sees a coherent snapshot.
 
 from __future__ import annotations
 
-import re
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 type MilestoneStatus = Literal["pending", "active", "completed", "abandoned"]
 
-_DURABLE_NOTE_PATTERN = re.compile(r"[A-Za-z0-9][A-Za-z0-9 .,:;_+\-()]{0,499}\Z")
 _SENSITIVE_NOTE_TERMS = frozenset(
     {"api key", "apikey", "authorization", "bearer", "cookie", "password", "secret", "token"}
 )
 
 
 def validate_durable_note(value: object) -> str:
-    """Accept a deliberately narrow non-sensitive note suitable for checkpoints."""
+    """Accept a bounded non-sensitive plain-text note suitable for checkpoints.
+
+    Durable memory is user-facing text, so an ASCII-only punctuation whitelist is
+    too restrictive: it rejects ordinary quoted values, typographic punctuation,
+    and every non-Latin language.  Security comes from excluding credential-like
+    content and network identifiers, not from excluding harmless Unicode text.
+    """
     if not isinstance(value, str):
         raise ValueError("'note' must be a string")
     note = " ".join(value.split())
     lowered = note.casefold()
     if (
-        not _DURABLE_NOTE_PATTERN.fullmatch(note)
+        not 1 <= len(note) <= 500
+        or not all(character.isprintable() for character in note)
         or any(term in lowered for term in _SENSITIVE_NOTE_TERMS)
         or "://" in note
         or "@" in note
     ):
         raise ValueError(
-            "'note' must be 1-500 plain-text characters and cannot contain URLs, email "
-            "addresses, credentials, or secret-like fields"
+            "'note' must be 1-500 printable plain-text characters and cannot contain URLs, "
+            "email addresses, credentials, or secret-like fields"
         )
     return note
 
