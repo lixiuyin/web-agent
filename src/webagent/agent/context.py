@@ -53,6 +53,7 @@ def planner_context(tool_name: str, data: dict[str, Any]) -> dict[str, Any]:
             "attempted_engines",
             "failure_category",
             "search_attempts",
+            "search_market",
         )
         projected["results"] = [
             _pick(item, "title", "url", "date", "snippet")

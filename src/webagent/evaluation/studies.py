@@ -604,11 +604,42 @@ def validate_study_task_set(
             "executed task set differs from the complete preregistered task set "
             "(subsets and reordered tasks are not valid study runs)"
         )
-    if any(task.max_steps != manifest.budgets.max_steps for task in tasks):
+    condition = next(item for item in manifest.conditions if item.id == context.condition_id)
+    step_budgets = _condition_task_step_budgets(condition, manifest.budgets)
+    if step_budgets is None:
+        mismatched_budget = any(task.max_steps != manifest.budgets.max_steps for task in tasks)
+    else:
+        mismatched_budget = any(
+            task.max_steps
+            != step_budgets["discovery_required" if task.discovery_required else "default"]
+            for task in tasks
+        )
+    if mismatched_budget:
         raise ValueError("task max_steps differs from the preregistered study budget")
     observed_splits = dict(Counter(task.split for task in tasks))
     if manifest.task_split_counts and observed_splits != manifest.task_split_counts:
         raise ValueError("executed task split counts differ from the study manifest")
+
+
+def _condition_task_step_budgets(
+    condition: StudyCondition,
+    study_budget: StudyBudgets,
+) -> dict[str, int] | None:
+    """Return an optional per-task-class budget fixed in a study condition."""
+    raw = condition.config_overrides.get("task_step_budgets")
+    if raw is None:
+        return None
+    if not isinstance(raw, dict) or set(raw) != {"default", "discovery_required"}:
+        raise ValueError("task_step_budgets must contain exactly default and discovery_required")
+    parsed: dict[str, int] = {}
+    for key in ("default", "discovery_required"):
+        value = raw[key]
+        if not isinstance(value, int) or isinstance(value, bool) or value < 1:
+            raise ValueError(f"task_step_budgets.{key} must be a positive integer")
+        if value > study_budget.max_steps:
+            raise ValueError(f"task_step_budgets.{key} exceeds the study max_steps cap")
+        parsed[key] = value
+    return parsed
 
 
 def _retained_study_tasks(

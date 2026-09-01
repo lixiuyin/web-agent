@@ -156,15 +156,19 @@ nudge 并向 StrategyManager 报告信号；是否切换策略或最终停止由
   trajectory/turns/turn-NNN.json
 ```
 
-成功 `done` 时，Figure 附件必须位于当前 run 根目录内；选中的图片会复制到
-`result/attachments/`。无论成功、失败或中断，finally 都会确保当前 turn 至少有 result snapshot，
+成功 `done` 时，Figure 附件必须位于当前 run 根目录内；选中的图片会发布到
+`result/attachments/`，同文件系统上的不可变副本使用硬链接避免重复字节。连续步骤若截图完全
+相同，也保留独立的 step 路径但共享 inode。无论成功、失败或中断，finally 都会确保当前 turn 至少有 result snapshot，
 并尝试发布无截图的可审计 trace。顶层 result/trace 是 latest 兼容视图；逐 turn snapshot 才是
 长期分析时应引用的不可变证据。
 
 ## 已知边界
 
 - task timeout 在 step 边界和动作落盘后检查；snapshot、planner 与 tool 仍依赖各自的内部超时。
-- `post_action_wait_ms` 控制动作间隔；它不是网页完成加载的证明。
+- `post_action_wait_ms` 位于动作完成与动作后观察之间，保证截图前至少等待该时长；随后还会在
+  `observation_stability_timeout_ms` 上限内，要求 URL、`document.readyState`、DOM 节点数、文本长度与
+  页面高度连续稳定 `observation_stable_ms`。该启发式不依赖 `networkidle`，因此不会被分析请求或
+  长轮询永久阻塞；超时后仍进入带重试的一致性快照捕获。
 - `AgentStep.browser_state` 是动作前状态，动作后状态用于截图和进展判断；分析轨迹时不要混淆。
 - checkpoint 恢复只保存 tabs/URL 等有限 browser coordinates，不承诺恢复全部外部站点会话。
 - result 附件写入是 best effort；strict trace/certificate 的持久化失败会按严格模式规则暴露。

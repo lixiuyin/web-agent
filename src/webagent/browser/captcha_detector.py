@@ -100,6 +100,34 @@ class CaptchaDetector:
             keyword for keyword in self.CAPTCHA_KEYWORDS if keyword in url or keyword in title_lower
         ]
 
+        # Google's automated-query challenge uses a stable ``/sorry/`` route
+        # whose title does not necessarily mention a captcha or verification.
+        if "google." in url and "/sorry/" in url:
+            return {
+                "detected": True,
+                "type": "google_unusual_traffic",
+                "confidence": 0.95,
+                "reason": "Detected Google's unusual-traffic challenge URL",
+                "selectors": [],
+            }
+
+        # DuckDuckGo returns its bot challenge as an HTTP 202 page whose title
+        # resembles an ordinary result page and whose DOM has no standard
+        # CAPTCHA widget. Its explicit body message is the reliable signal.
+        if "duckduckgo.com" in url:
+            try:
+                body = (await page.inner_text("body")).casefold()
+            except Exception:
+                body = ""
+            if "bots use duckduckgo" in body:
+                return {
+                    "detected": True,
+                    "type": "duckduckgo_bot_challenge",
+                    "confidence": 0.95,
+                    "reason": "Detected DuckDuckGo bot-challenge message",
+                    "selectors": [],
+                }
+
         # Check DOM for known captcha patterns
         dom_matches: dict[str, list[str]] = {}
         for captcha_type, selectors in self.CAPTCHA_PATTERNS.items():

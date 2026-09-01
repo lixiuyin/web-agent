@@ -9,7 +9,11 @@ from typing import Any
 
 import pytest
 
-from webagent.browser.controller import BrowserController, _mark_profile_clean
+from webagent.browser.controller import (
+    BrowserController,
+    _mark_profile_clean,
+    _same_navigation_site,
+)
 
 
 class FakeResponse:
@@ -81,6 +85,9 @@ class FakeLocator:
             ("locator_type", {"selector": self.selector, "text": text, **kwargs})
         )
 
+    async def count(self) -> int:
+        return 1
+
 
 class FakePage:
     """Configurable Page double covering the controller's Playwright surface."""
@@ -105,6 +112,9 @@ class FakePage:
 
     async def title(self) -> str:
         return self._title
+
+    async def wait_for_load_state(self, state: str, **kwargs: Any) -> None:
+        self.calls.append(("wait_for_load_state", {"state": state, **kwargs}))
 
     async def click(self, selector: str, **kwargs: Any) -> None:
         self.calls.append(("click", {"selector": selector, **kwargs}))
@@ -198,6 +208,27 @@ class TestNavigation:
         result = await _controller(FakePage(fail=True)).goto("https://example.test")
         assert result["success"] is False
         assert "error" in result
+
+    async def test_goto_recovers_inspectable_page_after_err_aborted(self) -> None:
+        class RedirectPage(FakePage):
+            async def goto(self, url: str, **kwargs: Any) -> FakeResponse:
+                self.url = "https://regional.example.test/results"
+                raise RuntimeError("Page.goto: net::ERR_ABORTED")
+
+        result = await _controller(RedirectPage()).goto("https://example.test/search")
+
+        assert result == {
+            "success": True,
+            "url": "https://regional.example.test/results",
+            "title": "Example Page",
+            "status": None,
+            "recovered_from": "net::ERR_ABORTED",
+        }
+
+
+def test_same_navigation_site_accepts_regional_redirect_but_not_stale_page() -> None:
+    assert _same_navigation_site("https://www.bing.com/search", "https://cn.bing.com/search")
+    assert not _same_navigation_site("https://search.seznam.cz/", "https://cn.bing.com/search")
 
     async def test_refresh(self) -> None:
         result = await _controller(FakePage()).refresh()
@@ -567,6 +598,8 @@ class TestSearchResultsDispatch:
         container.query_selector = container_query  # type: ignore[method-assign]
         result = await _controller(page).get_search_results()
         assert result["success"] is True
+        assert result["engine"] == "google"
+        assert result["query"] == "test"
         assert result["results"][0]["title"] == "Result"
 
     async def test_engine_error_is_captured(self) -> None:

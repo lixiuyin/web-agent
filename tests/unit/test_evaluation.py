@@ -155,6 +155,8 @@ def test_assertion_schema_rejects_missing_kind_specific_fields() -> None:
         BenchmarkAssertion(kind="json_equals", endpoint="/state", expected=1)
     with pytest.raises(ValidationError, match="non-empty tool-name list"):
         BenchmarkAssertion(kind="history_tool_sequence", expected=[])
+    with pytest.raises(ValidationError, match="non-empty string list"):
+        BenchmarkAssertion(kind="history_url_observed_any", expected=[])
     with pytest.raises(ValidationError, match="below the task artifacts"):
         BenchmarkAssertion(kind="artifact_exists", expected="../secret")
 
@@ -244,6 +246,7 @@ async def test_evaluator_scores_final_answer_and_observed_source(monkeypatch) ->
     monkeypatch.setattr("webagent.evaluation.evaluator.httpx.AsyncClient", _Client)
     task = _task(
         BenchmarkAssertion(kind="answer_contains", expected="Mira Chen"),
+        BenchmarkAssertion(kind="answer_contains_any", expected=["missing", "Mira Chen"]),
         BenchmarkAssertion(kind="answer_regex", expected=r"mira\.chen@.*\.test"),
         BenchmarkAssertion(
             kind="answer_in_order",
@@ -251,6 +254,10 @@ async def test_evaluator_scores_final_answer_and_observed_source(monkeypatch) ->
         ),
         BenchmarkAssertion(kind="answer_not_contains", expected="Noah is the lead"),
         BenchmarkAssertion(kind="history_url_observed", expected="http://example.test/final"),
+        BenchmarkAssertion(
+            kind="history_url_observed_any",
+            expected=["http://missing.test", "http://example.test/final"],
+        ),
     )
 
     evaluation = await TerminalStateEvaluator(_Page()).evaluate(  # type: ignore[arg-type]
@@ -264,8 +271,14 @@ async def test_evaluator_scores_final_answer_and_observed_source(monkeypatch) ->
     )
 
     assert evaluation.passed is True
-    assert evaluation.answer_assertion_count == 5
-    assert evaluation.answer_assertion_passed == 5
+    assert evaluation.answer_assertion_count == 7
+    assert evaluation.answer_assertion_passed == 7
+
+    typography = await TerminalStateEvaluator(_Page()).evaluate(  # type: ignore[arg-type]
+        _task(BenchmarkAssertion(kind="answer_contains", expected="comma-separated")),
+        _agent_result(summary="comma separated values"),
+    )
+    assert typography.passed is True
 
     reversed_order = await TerminalStateEvaluator(_Page()).evaluate(  # type: ignore[arg-type]
         _task(

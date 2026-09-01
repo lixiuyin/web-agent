@@ -6,6 +6,7 @@ import asyncio
 import hashlib
 import json
 import logging
+import os
 import re
 import shutil
 import time
@@ -41,7 +42,7 @@ from webagent.agent.strategy import (
     StrategyUpdate,
 )
 from webagent.browser.controller import BrowserController
-from webagent.browser.snapshot import take_snapshot
+from webagent.browser.snapshot import take_snapshot, wait_for_page_stability
 from webagent.core.config import AgentConfig
 from webagent.core.models import (
     AgentResult,
@@ -177,9 +178,13 @@ class WebAgent:
         # Loop detection
         self.loop_detector: LoopDetector | None = None
         if self.config.enable_loop_detection:
+            effective_window = min(
+                self.config.loop_window_size,
+                max(3, self.config.max_steps // 2),
+            )
             self.loop_detector = LoopDetector(
-                window_size=self.config.loop_window_size,
-                threshold=self.config.loop_threshold,
+                window_size=effective_window,
+                threshold=min(self.config.loop_threshold, effective_window),
             )
 
         # Captcha handling state
@@ -329,6 +334,7 @@ class WebAgent:
                 step_limit = state.next_step + max_steps - 1 if follow_up else max_steps
                 step_count = await self._run_steps(state, step_limit)
         finally:
+            await self._elicit_terminal_confidence(state, step_count)
             total_duration = time.time() - state.start_time
             for hook in self._hooks:
                 await hook.on_task_end(self._task_status.value, step_count)
@@ -365,12 +371,75 @@ class WebAgent:
             )
         return result
 
+    async def _elicit_terminal_confidence(self, state: _LoopState, step_count: int) -> None:
+        """Collect confidence for every terminal status before benchmark judging."""
+        if not self.config.elicit_terminal_confidence:
+            return
+        if "success_probability" in state.final_result:
+            return
+        estimator = getattr(self._planner, "estimate_task_success", None)
+        if not callable(estimator):
+            self._runtime_events.append(
+                {
+                    "type": "confidence_unavailable",
+                    "timestamp": datetime.now(UTC).isoformat(),
+                    "reason": "planner does not implement terminal confidence elicitation",
+                }
+            )
+            return
+        try:
+            async with asyncio.timeout(self.config.confidence_timeout_seconds):
+                probability = await estimator(
+                    task=self._current_task,
+                    status=self._task_status.value,
+                    history_text=self._history.format_for_llm(),
+                )
+            state.final_result = {
+                **state.final_result,
+                "success_probability": float(probability),
+                "confidence_source": "terminal_self_report",
+                "confidence_elicited_at_step": max(step_count, 1),
+            }
+            self._runtime_events.append(
+                {
+                    "type": "confidence_elicited",
+                    "timestamp": datetime.now(UTC).isoformat(),
+                    "success_probability": float(probability),
+                }
+            )
+        except Exception as exc:
+            self._runtime_events.append(
+                {
+                    "type": "confidence_unavailable",
+                    "timestamp": datetime.now(UTC).isoformat(),
+                    "reason": f"{type(exc).__name__}: {exc}",
+                }
+            )
+
     async def _run_steps(self, state: _LoopState, max_steps: int) -> int:
         """Execute bounded logical steps and normalize terminal exceptions."""
         step_count = state.next_step - 1
         try:
             for step_count in range(state.next_step, max_steps + 1):
-                if not await self._execute_step(step_count, state):
+                remaining = self.config.task_timeout - (time.time() - state.start_time)
+                if remaining <= 0:
+                    self._task_status = TaskStatus.TIMEOUT
+                    break
+                try:
+                    async with asyncio.timeout(remaining):
+                        should_continue = await self._execute_step(step_count, state)
+                except TimeoutError:
+                    self._task_status = TaskStatus.TIMEOUT
+                    self._runtime_events.append(
+                        {
+                            "type": "task_deadline_exceeded",
+                            "timestamp": datetime.now(UTC).isoformat(),
+                            "step_number": step_count,
+                            "task_timeout_seconds": self.config.task_timeout,
+                        }
+                    )
+                    break
+                if not should_continue:
                     break
             else:
                 self._task_status = TaskStatus.MAX_STEPS_REACHED
@@ -577,9 +646,15 @@ class WebAgent:
 
         # ``done`` is side-effect free for the browser. Reusing the pre-action
         # state avoids a redundant DOM/screenshot round trip on every success.
-        post_action_state = (
-            browser_state if tool_call.tool_name == "done" else await self._observe()
-        )
+        if tool_call.tool_name == "done":
+            post_action_state = browser_state
+        else:
+            # This delay belongs before the post-action observation. Previously
+            # it ran after the screenshot was already persisted, so it could not
+            # prevent captures of half-loaded pages.
+            if self.config.post_action_wait_ms > 0:
+                await asyncio.sleep(self.config.post_action_wait_ms / 1000)
+            post_action_state = await self._observe()
         _save_step_screenshot(post_action_state, self._step_screenshot_path(step_count))
 
         self._update_failure_tracking(tool_call, tool_result, state)
@@ -634,7 +709,6 @@ class WebAgent:
             self._task_status = TaskStatus.FAILED
             return False
 
-        await asyncio.sleep(self.config.post_action_wait_ms / 1000)
         return True
 
     def _timed_out(self, state: _LoopState) -> bool:
@@ -671,6 +745,11 @@ class WebAgent:
             mode,
         )
         if mode == "fail" or self.config.browser_headless:
+            if self.config.search_engine_only:
+                event["outcome"] = "blocked"
+                event["browser_closed"] = False
+                event["browser_retained_for_isolated_reset"] = True
+                return "blocked"
             return await self._block_captcha_and_close(event, outcome="blocked")
 
         deadline = time.monotonic() + self.config.captcha_wait_timeout_seconds
@@ -823,6 +902,12 @@ class WebAgent:
                 except Exception:
                     pass
 
+                await wait_for_page_stability(
+                    self._browser.page,
+                    timeout_ms=self.config.observation_stability_timeout_ms,
+                    stable_ms=self.config.observation_stable_ms,
+                )
+
                 use_cdp = self.config.use_cdp
                 max_elements = self.config.max_snapshot_elements
 
@@ -832,6 +917,7 @@ class WebAgent:
                     use_cdp=use_cdp,
                     max_elements=max_elements,
                     filter_ads=self.config.enable_ad_filtering,
+                    wait_after_load=0,
                 )
                 dom_summary = snapshot.get("markdown", "")
                 screenshot = None
@@ -935,6 +1021,13 @@ class WebAgent:
                 )
                 if tool_call is None:
                     error = "planner returned no executable tool call"
+                else:
+                    validator = getattr(self._tool_executor, "validate_tool_call", None)
+                    if callable(validator):
+                        validation_error = validator(tool_call)
+                        if validation_error is not None:
+                            error = f"invalid tool call: {validation_error}"
+                            tool_call = None
             except Exception as exc:
                 tool_call = None
                 timed_out = isinstance(exc, TimeoutError)
@@ -949,9 +1042,10 @@ class WebAgent:
                 return tool_call
             if timed_out:
                 break
-            history_text += "\n\nPREVIOUS PLANNER ATTEMPT FAILED: " + _planner_repair_hint(
-                self._planner
-            )
+            repair = _planner_repair_hint(self._planner)
+            if error:
+                repair = f"{error}. {repair}"
+            history_text += "\n\nPREVIOUS PLANNER ATTEMPT FAILED: " + repair
         if state is not None and state.strategy_manager is not None:
             update = state.strategy_manager.observe(
                 StrategyObservation(
@@ -976,6 +1070,13 @@ class WebAgent:
         metadata = getattr(self._planner, "last_call_metadata", {})
         if not isinstance(metadata, dict):
             metadata = {}
+        transport_retries = metadata.get("transport_retries", 0)
+        if (
+            not isinstance(transport_retries, int)
+            or isinstance(transport_retries, bool)
+            or transport_retries < 0
+        ):
+            transport_retries = 0
         self._planner_attempts.append(
             PlannerAttempt(
                 step_number=step_number,
@@ -984,6 +1085,7 @@ class WebAgent:
                 duration_seconds=time.time() - started_at,
                 success=success,
                 error=error,
+                transport_retries=transport_retries,
                 response_length=metadata.get("response_length"),
                 finish_reason=metadata.get("finish_reason"),
                 prompt_tokens=metadata.get("prompt_tokens"),
@@ -1074,6 +1176,7 @@ def _config_fingerprint(config: AgentConfig) -> str:
         mode="json",
         exclude={
             "model_api_key",
+            "google_search_api_key",
             "vllm_api_key",
             "marker_api_key",
             "mineru_api_key",
@@ -1452,7 +1555,9 @@ def _made_progress(result: ToolResult, before: BrowserState, after: BrowserState
     if before.url != after.url or before.dom_summary != after.dom_summary:
         return True
     if result.tool_name.casefold() in {
+        "click_link",
         "get_url",
+        "search",
         "screenshot",
         "wait",
         "wait_for_element",
@@ -1505,8 +1610,26 @@ def _save_step_screenshot(
     browser_state: BrowserState,
     screenshot_path: Path,
 ) -> None:
-    if browser_state.screenshot is not None:
-        browser_state.screenshot.save(screenshot_path)
+    if browser_state.screenshot is None:
+        return
+    encoded = BytesIO()
+    browser_state.screenshot.save(encoded, format="JPEG")
+    payload = encoded.getvalue()
+    screenshot_path.parent.mkdir(parents=True, exist_ok=True)
+    match = re.fullmatch(r"step_(\d+)\.jpg", screenshot_path.name)
+    previous = (
+        screenshot_path.with_name(f"step_{int(match.group(1)) - 1:03d}.jpg")
+        if match is not None and int(match.group(1)) > 1
+        else None
+    )
+    if previous is not None and previous.is_file():
+        try:
+            if previous.read_bytes() == payload:
+                os.link(previous, screenshot_path)
+                return
+        except OSError:
+            pass
+    screenshot_path.write_bytes(payload)
 
 
 # Tools whose successful result identifies an image the agent focused on; the
@@ -1613,7 +1736,7 @@ def _persist_final_outputs(
         layout.attachments_dir.mkdir(parents=True, exist_ok=True)
         if figure_bytes is not None and figure_name is not None:
             dest = layout.attachments_dir / figure_name
-            dest.write_bytes(figure_bytes)
+            _link_or_write_attachment(figure, figure_bytes, dest)
             logger.info("Saved found figure to %s", dest)
     except OSError as exc:
         logger.warning("Failed to refresh result attachments: %s", exc)
@@ -1626,6 +1749,7 @@ def _persist_final_outputs(
             summary=summary,
             figure_name=figure_name,
             figure_bytes=figure_bytes,
+            figure_source=dest,
         )
     return dest
 
@@ -1637,6 +1761,7 @@ def _persist_turn_result_snapshot(
     summary: str,
     figure_name: str | None,
     figure_bytes: bytes | None,
+    figure_source: Path | None = None,
 ) -> None:
     """Publish one result turn atomically and never replace prior evidence."""
     target = layout.turn_result_dir(turn_index)
@@ -1649,7 +1774,11 @@ def _persist_turn_result_snapshot(
         (staging / "attachments").mkdir(parents=True)
         (staging / "summary.txt").write_text(summary or "", encoding="utf-8")
         if figure_name is not None and figure_bytes is not None:
-            (staging / "attachments" / figure_name).write_bytes(figure_bytes)
+            _link_or_write_attachment(
+                figure_source,
+                figure_bytes,
+                staging / "attachments" / figure_name,
+            )
         staging.replace(target)
     except OSError as exc:
         logger.warning("Failed to persist result turn snapshot %s: %s", target, exc)
@@ -1688,7 +1817,19 @@ def _ensure_turn_result_snapshot(
         summary=summary if isinstance(summary, str) else str(summary),
         figure_name=figure_name,
         figure_bytes=figure_bytes,
+        figure_source=figure,
     )
+
+
+def _link_or_write_attachment(source: Path | None, payload: bytes, target: Path) -> None:
+    """Preserve a self-contained result path without duplicating immutable bytes."""
+    if source is not None and source.is_file():
+        try:
+            os.link(source, target)
+            return
+        except OSError:
+            pass
+    target.write_bytes(payload)
 
 
 def _persist_run_trace(
@@ -1707,10 +1848,12 @@ def _persist_run_trace(
 ) -> None:
     """Persist an auditable, screenshot-free execution trace."""
     run_id = run_id or str(uuid4())
+    layout = RunLayout.from_root(output_dir)
     anti_shortcut_configured = bool(
         config.strict_eval_mode
         and config.search_engine_only
         and config.browser_profile_mode == "temporary"
+        and config.browser_channel == "bundled"
         and not config.persistent_pdf_cache
     )
     trace_payload = {
@@ -1724,7 +1867,7 @@ def _persist_run_trace(
         "success": result.success,
         "steps_taken": sum(step.step_number >= turn_start_step for step in result.history),
         "total_duration": result.total_duration,
-        "final_result": _trace_value(result.final_result),
+        "final_result": _portable_trace_final_result(result.final_result, layout),
         "evaluation": {
             "agent_source_sha256": package_source_fingerprint(),
             "mode": (
@@ -1747,6 +1890,7 @@ def _persist_run_trace(
             "strict_eval_mode": config.strict_eval_mode,
             "search_engine_only": config.search_engine_only,
             "browser_profile_mode": config.browser_profile_mode,
+            "browser_channel": config.browser_channel,
             "persistent_pdf_cache": config.persistent_pdf_cache,
         },
         "planner_attempts": [
@@ -1769,7 +1913,7 @@ def _persist_run_trace(
                 ),
                 "planner_visible_result": planner_result_preview(
                     step.tool_call.tool_name,
-                    step.tool_result.data,
+                    _portable_run_paths(step.tool_result.data, layout),
                     success=step.tool_result.success,
                 ),
                 "policy": _trace_value(step.tool_result.audit),
@@ -1780,16 +1924,15 @@ def _persist_run_trace(
             if step.step_number >= turn_start_step
         ],
     }
-    layout = RunLayout.from_root(output_dir)
+    trace_payload = _portable_run_paths(trace_payload, layout)
     path = layout.trace_path
     temporary = path.with_suffix(".json.tmp")
     turn_temporary: Path | None = None
     try:
+        path.parent.mkdir(parents=True, exist_ok=True)
         trace = build_run_trace_v8(trace_payload)
-        temporary.write_text(
-            json.dumps(trace, ensure_ascii=False, indent=2),
-            encoding="utf-8",
-        )
+        encoded_trace = json.dumps(trace, ensure_ascii=False, indent=2).encode("utf-8")
+        temporary.write_bytes(encoded_trace)
         temporary.replace(path)
         if config.strict_eval_mode:
             from webagent.evaluation.trace_verifier import write_verification_certificate
@@ -1800,13 +1943,14 @@ def _persist_run_trace(
             if turn_path.exists():
                 raise FileExistsError(f"turn trace snapshot already exists: {turn_path}")
             turn_path.parent.mkdir(parents=True, exist_ok=True)
-            turn_temporary = turn_path.with_name(f".{turn_path.name}-{uuid4().hex}.tmp")
             turn_trace = _trace_for_turn_snapshot(trace, layout, turn_index)
-            turn_temporary.write_text(
-                json.dumps(turn_trace, ensure_ascii=False, indent=2),
-                encoding="utf-8",
-            )
-            turn_temporary.replace(turn_path)
+            encoded_turn = json.dumps(turn_trace, ensure_ascii=False, indent=2).encode("utf-8")
+            if encoded_turn == encoded_trace:
+                os.link(path, turn_path)
+            else:
+                turn_temporary = turn_path.with_name(f".{turn_path.name}-{uuid4().hex}.tmp")
+                turn_temporary.write_bytes(encoded_turn)
+                turn_temporary.replace(turn_path)
     except (OSError, TypeError, ValueError) as exc:
         with suppress(OSError):
             temporary.unlink(missing_ok=True)
@@ -1838,15 +1982,59 @@ def _trace_for_turn_snapshot(
         if not isinstance(attachment, str):
             rewritten.append(attachment)
             continue
-        path = Path(attachment).expanduser().resolve()
+        if attachment.startswith(("http://", "https://")):
+            rewritten.append(attachment)
+            continue
+        candidate = Path(attachment).expanduser()
+        path = (candidate if candidate.is_absolute() else layout.root / candidate).resolve()
         if path.parent == canonical_root:
             immutable = immutable_root / path.name
             if immutable.is_file():
-                rewritten.append(str(immutable.resolve()))
+                rewritten.append(immutable.relative_to(layout.root).as_posix())
                 continue
         rewritten.append(attachment)
     final_result["attachments"] = rewritten
     return snapshot
+
+
+def _portable_trace_final_result(value: Any, layout: RunLayout) -> Any:
+    """Redact the final result and store run-contained attachments as relative paths."""
+    portable = _trace_value(value)
+    if not isinstance(portable, dict):
+        return portable
+    attachments = portable.get("attachments")
+    if not isinstance(attachments, list):
+        return portable
+    rewritten: list[Any] = []
+    for attachment in attachments:
+        if not isinstance(attachment, str) or attachment.startswith(("http://", "https://")):
+            rewritten.append(attachment)
+            continue
+        candidate = Path(attachment).expanduser()
+        resolved = (candidate if candidate.is_absolute() else layout.root / candidate).resolve()
+        if resolved == layout.root or resolved.is_relative_to(layout.root):
+            rewritten.append(resolved.relative_to(layout.root).as_posix())
+        else:
+            rewritten.append(attachment)
+    portable["attachments"] = rewritten
+    return portable
+
+
+def _portable_run_paths(value: Any, layout: RunLayout) -> Any:
+    """Rewrite absolute paths contained by a run so frozen evidence can be moved."""
+    if isinstance(value, dict):
+        return {str(key): _portable_run_paths(item, layout) for key, item in value.items()}
+    if isinstance(value, list):
+        return [_portable_run_paths(item, layout) for item in value]
+    if not isinstance(value, str) or not Path(value).is_absolute():
+        return value
+    try:
+        resolved = Path(value).expanduser().resolve()
+        if resolved == layout.root or resolved.is_relative_to(layout.root):
+            return resolved.relative_to(layout.root).as_posix()
+    except OSError:
+        return value
+    return value
 
 
 def _trace_value(value: Any, key: str = "") -> Any:

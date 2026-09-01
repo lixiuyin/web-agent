@@ -176,17 +176,24 @@ def benchmark_config_evidence(
     *,
     manifest_sha256: str,
     max_steps_per_task: int,
+    discovery_max_steps_per_task: int | None = None,
     discovery_task_count: int,
     provider: str = "unknown",
     study_manifest_sha256: str = "unknown",
 ) -> dict[str, Any]:
     """Select final non-secret AgentConfig values that determine benchmark behavior."""
     return {
-        "schema_version": 1,
+        "schema_version": 3,
         "manifest_sha256": manifest_sha256,
         "provider": provider,
+        "declared_endpoint_access_mode": cfg.endpoint_access_mode,
         "study_manifest_sha256": study_manifest_sha256,
         "max_steps_per_task": max_steps_per_task,
+        "discovery_max_steps_per_task": (
+            discovery_max_steps_per_task
+            if discovery_max_steps_per_task is not None
+            else max_steps_per_task
+        ),
         "discovery_task_count": discovery_task_count,
         "browser_profile_mode": cfg.browser_profile_mode,
         "browser_headless": cfg.browser_headless,
@@ -211,8 +218,15 @@ def benchmark_config_evidence(
         "tool_timeout": cfg.tool_timeout,
         "api_timeout": cfg.api_timeout,
         "api_hard_timeout": cfg.api_hard_timeout,
+        "api_transient_retries": cfg.api_transient_retries,
+        "api_retry_base_seconds": cfg.api_retry_base_seconds,
+        "api_retry_max_seconds": cfg.api_retry_max_seconds,
         "use_vllm": cfg.use_vllm,
         "allow_google_search": cfg.allow_google_search,
+        "search_default_engine": cfg.search_default_engine,
+        "search_bing_market": cfg.search_bing_market,
+        "strict_search_default_engine": "bing",
+        "strict_search_bing_market": "en-US",
         "planner_output_mode": cfg.planner_output_mode,
         "use_structured_output": cfg.use_structured_output,
         "planner_max_tokens": cfg.planner_max_tokens,
@@ -256,6 +270,12 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--headed", action="store_true")
     parser.add_argument("--model", help="Override the configured planner model")
     parser.add_argument("--max-steps-per-task", type=int, default=8)
+    parser.add_argument(
+        "--discovery-max-steps-per-task",
+        type=int,
+        default=12,
+        help="Action budget for search-discovery tasks; direct tasks keep --max-steps-per-task",
+    )
     parser.add_argument("--shard-count", type=int, default=1, help=argparse.SUPPRESS)
     parser.add_argument("--shard-index", type=int, default=0, help=argparse.SUPPRESS)
     parser.add_argument("--report-provider", default=None, help=argparse.SUPPRESS)
@@ -277,8 +297,11 @@ async def run_benchmark(args: argparse.Namespace) -> int:
     manifest_path = args.manifest.resolve()
     suite, tasks, manifest_hash = load_manifest(manifest_path)
     max_steps_per_task = int(getattr(args, "max_steps_per_task", 8))
+    discovery_max_steps_per_task = int(getattr(args, "discovery_max_steps_per_task", 12))
     if max_steps_per_task < 1:
         raise ValueError("--max-steps-per-task must be positive")
+    if discovery_max_steps_per_task < 1:
+        raise ValueError("--discovery-max-steps-per-task must be positive")
     shard_count = int(getattr(args, "shard_count", 1))
     shard_index = int(getattr(args, "shard_index", 0))
     if shard_count < 1 or not 0 <= shard_index < shard_count:
@@ -289,7 +312,16 @@ async def run_benchmark(args: argparse.Namespace) -> int:
     tasks = tasks[shard_index::shard_count]
     if not tasks:
         raise ValueError("selected shard has no tasks")
-    tasks = [task.model_copy(update={"max_steps": max_steps_per_task}) for task in tasks]
+    tasks = [
+        task.model_copy(
+            update={
+                "max_steps": (
+                    discovery_max_steps_per_task if task.discovery_required else max_steps_per_task
+                )
+            }
+        )
+        for task in tasks
+    ]
     force_search_engine_only = bool(getattr(args, "search_engine_only", False))
     if force_search_engine_only and any(not task.discovery_required for task in tasks):
         raise ValueError("--search-engine-only requires every task to set discovery_required")
@@ -322,6 +354,7 @@ async def run_benchmark(args: argparse.Namespace) -> int:
         planner_max_tokens=6000 if has_discovery_tasks else 4096,
         planner_reasoning_effort="low" if has_discovery_tasks else None,
         use_structured_output=has_discovery_tasks,
+        elicit_terminal_confidence=True,
         **config_overrides,
     )
     output_dir = (
@@ -365,6 +398,7 @@ async def run_benchmark(args: argparse.Namespace) -> int:
         cfg,
         manifest_sha256=manifest_hash,
         max_steps_per_task=max_steps_per_task,
+        discovery_max_steps_per_task=discovery_max_steps_per_task,
         discovery_task_count=full_discovery_task_count,
         provider=provider,
         study_manifest_sha256=study_manifest_sha256,
@@ -396,6 +430,10 @@ async def run_benchmark(args: argparse.Namespace) -> int:
                     "max_steps": task.max_steps,
                     "strict_eval_mode": strict_discovery,
                     "search_engine_only": strict_discovery,
+                    "search_default_engine": (
+                        "bing" if strict_discovery else cfg.search_default_engine
+                    ),
+                    "search_bing_market": "en-US" if strict_discovery else cfg.search_bing_market,
                     "task_timeout": 2400 if strict_discovery else 300,
                 }
             )
@@ -442,7 +480,7 @@ async def run_benchmark(args: argparse.Namespace) -> int:
                     if has_discovery_tasks
                     else "open-web-agent"
                 ),
-                "manifest": str(evidence_manifest_path),
+                "manifest": evidence_manifest_path.relative_to(output_dir).as_posix(),
                 "manifest_sha256": manifest_hash,
                 "benchmark_config": benchmark_config,
                 "benchmark_config_sha256": benchmark_config_sha256,
@@ -452,12 +490,16 @@ async def run_benchmark(args: argparse.Namespace) -> int:
                 "captcha_handling": args.captcha_handling,
                 "model": cfg.model_name,
                 "provider": provider,
+                "declared_endpoint_access_mode": cfg.endpoint_access_mode,
                 "study_id": study_context.study_id if study_context is not None else None,
                 "study_manifest": (
-                    str(study_manifest_path) if study_manifest_path is not None else None
+                    study_manifest_path.relative_to(output_dir).as_posix()
+                    if study_manifest_path is not None
+                    else None
                 ),
                 "study_manifest_sha256": study_manifest_sha256,
                 "max_steps_per_task": max_steps_per_task,
+                "discovery_max_steps_per_task": discovery_max_steps_per_task,
                 "discovery_mode": "browser-grounded",
                 "high_risk_action_policy": "deny",
                 "stealth_mode": cfg.stealth_mode,

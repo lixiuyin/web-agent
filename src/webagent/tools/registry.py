@@ -8,6 +8,9 @@ from copy import deepcopy
 from dataclasses import dataclass
 from typing import Any
 
+from jsonschema import Draft202012Validator  # type: ignore[import-untyped]
+from jsonschema.exceptions import ValidationError  # type: ignore[import-untyped]
+
 from webagent.core.models import ToolResult
 from webagent.core.protocols import Tool
 from webagent.tools.schemas import (
@@ -173,19 +176,27 @@ class ToolRegistry:
 
     async def execute(self, name: str, params: dict[str, Any]) -> ToolResult:
         """Validate and execute a tool by name."""
-        impl = self._tools.get(name)
-        if impl is None:
-            return ToolResult(success=False, tool_name=name, error=f"Unknown tool: {name}")
-
-        try:
-            impl.validate_params(params)
-        except ValueError as exc:
-            return ToolResult(success=False, tool_name=name, error=f"Validation: {exc}")
+        validation_error = self.validate_call(name, params)
+        if validation_error is not None:
+            return ToolResult(success=False, tool_name=name, error=validation_error)
+        impl = self._tools[name]
 
         try:
             return await impl.execute(params)
         except Exception as exc:
             return ToolResult(success=False, tool_name=name, error=f"Execution: {exc}")
+
+    def validate_call(self, name: str, params: dict[str, Any]) -> str | None:
+        """Return a planner-facing validation error without executing the tool."""
+        impl = self._tools.get(name)
+        if impl is None:
+            return f"Unknown tool: {name}"
+        try:
+            Draft202012Validator(self._schemas[name]).validate(params)
+            impl.validate_params(params)
+        except (ValidationError, ValueError) as exc:
+            return f"Validation: {exc}"
+        return None
 
 
 def _compact_description(description: str, max_chars: int = 500) -> str:

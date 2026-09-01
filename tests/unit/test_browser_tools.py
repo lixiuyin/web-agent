@@ -167,25 +167,13 @@ class TestType:
         with pytest.raises(ValueError):
             tool.validate_params({"selector": {"type": "css", "value": "#i"}})
 
-    async def test_success_clicks_first(self) -> None:
+    async def test_success_uses_single_type_operation(self) -> None:
         browser = FakeBrowser(type_text={"success": True})
         result = await TypeTool(browser=browser).execute(
             {"selector": {"type": "css", "value": "#i"}, "text": "hi"}
         )
         assert result.success
-        assert any(c[0] == "click" for c in browser.calls)
-        assert any(c[0] == "type_text" for c in browser.calls)
-
-    async def test_click_precheck_swallows_errors(self) -> None:
-        class RaisingBrowser(FakeBrowser):
-            async def click(self, selector: str, force: bool = False) -> dict[str, Any]:
-                raise RuntimeError("no element")
-
-        browser = RaisingBrowser(type_text={"success": True})
-        result = await TypeTool(browser=browser).execute(
-            {"selector": {"type": "css", "value": "#i"}, "text": "hi"}
-        )
-        assert result.success
+        assert [call[0] for call in browser.calls] == ["type_text"]
 
     async def test_failure(self) -> None:
         browser = FakeBrowser(type_text={"success": False})

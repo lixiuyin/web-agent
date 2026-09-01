@@ -30,6 +30,12 @@ def default_study_dir(study_id: str) -> Path:
     return Path("outputs") / "studies" / normalized
 
 
+def default_campaign_dir(campaign_id: str) -> Path:
+    """Return the repository-relative root for one multi-study campaign."""
+    normalized = safe_slug(campaign_id, fallback="campaign")
+    return Path("outputs") / "campaigns" / normalized
+
+
 def execution_model_label(*, mode: str, configured_model: str) -> str:
     """Return the real model label, or the explicit non-model baseline label."""
     if mode == "scripted-harness-baseline":
@@ -70,6 +76,7 @@ def allocate_execution_dir(
 
 __all__ = [
     "allocate_execution_dir",
+    "default_campaign_dir",
     "default_study_dir",
     "execution_model_label",
     "packaged_manifest_path",

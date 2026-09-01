@@ -16,17 +16,9 @@ from webagent.evaluation.trace_schema import (
     migrate_trace_to_v8,
 )
 from webagent.tools.exposure import DIRECT_SOURCE_DISCOVERY_TOOLS
+from webagent.tools.policy import PLANNER_VISIBLE_URL_PROVENANCE_SOURCES
 
 _FORBIDDEN_DISCOVERY_TOOLS = DIRECT_SOURCE_DISCOVERY_TOOLS
-_VISIBLE_PROVENANCE_SOURCES = {
-    "planner_state_current_url",
-    "search_planner_visible",
-    "get_all_links_planner_visible",
-    "get_attribute_planner_visible",
-    "get_search_results_planner_visible",
-    "get_url_planner_visible",
-    "inspect_download_links_planner_visible",
-}
 
 
 def verify_trace(trace: dict[str, Any]) -> dict[str, Any]:
@@ -137,6 +129,7 @@ def _check_evaluation(evaluation: dict[str, Any], failures: list[str]) -> None:
         "high_risk_action_policy": "deny",
         "stealth_mode": False,
         "browser_profile_mode": "temporary",
+        "browser_channel": "bundled",
         "persistent_pdf_cache": False,
     }
     for key, expected_value in expected.items():
@@ -235,7 +228,7 @@ def _check_step_policies(valid_steps: list[dict[str, Any]], failures: list[str])
         ):
             provenance = policy.get("provenance")
             source = provenance.get("source") if isinstance(provenance, dict) else None
-            if source not in _VISIBLE_PROVENANCE_SOURCES:
+            if source not in PLANNER_VISIBLE_URL_PROVENANCE_SOURCES:
                 failures.append(
                     f"step {step.get('step_number')} URL lacks planner-visible provenance"
                 )

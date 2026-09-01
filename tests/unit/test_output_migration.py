@@ -19,6 +19,7 @@ def test_migration_dry_run_does_not_move_and_apply_preserves_bytes(tmp_path: Pat
     (old_run / "run.json").write_bytes(payload)
     (output_root / "runs").mkdir()
     (output_root / "studies").mkdir()
+    (output_root / "campaigns").mkdir()
 
     plan = plan_legacy_migration(output_root, label="pre-layout")
 
@@ -35,6 +36,7 @@ def test_migration_dry_run_does_not_move_and_apply_preserves_bytes(tmp_path: Pat
     assert manifest["total_bytes"] == len(payload)
     assert (output_root / "runs").is_dir()
     assert (output_root / "studies").is_dir()
+    assert (output_root / "campaigns").is_dir()
 
     assert migrate_legacy_outputs(output_root, label="pre-layout") == manifest_path
 

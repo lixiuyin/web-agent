@@ -15,7 +15,6 @@ from webagent.core.config import AgentConfig
 from webagent.core.models import AgentResult, ToolCall
 from webagent.core.protocols import Planner
 from webagent.evaluation.artifacts import OutputWorkspace, RunLayout
-from webagent.planner.stub import StubPlanner
 from webagent.tools.executor import ToolExecutor
 from webagent.tools.exposure import allowed_tools_for_discovery_mode
 from webagent.tools.registry import ToolRegistry
@@ -133,6 +132,18 @@ def parse_args() -> argparse.Namespace:
         help="Override browser profile isolation mode",
     )
     p.add_argument(
+        "--browser-channel",
+        choices=("bundled", "chrome"),
+        help="Use Playwright's bundled Chromium or the locally installed stable Chrome",
+    )
+    p.add_argument(
+        "--browser-proxy-server",
+        type=str,
+        help=(
+            "Explicit browser proxy URL without embedded credentials; unset keeps the direct route"
+        ),
+    )
+    p.add_argument(
         "--captcha-handling",
         choices=("report", "fail", "wait_for_human"),
         help=(
@@ -156,51 +167,9 @@ def parse_args() -> argparse.Namespace:
 
 def _build_planner(cfg: AgentConfig) -> Planner:
     """Select planner based on config."""
-    if cfg.model_api_url and cfg.model_api_key:
-        from webagent.planner.api import APIPlanner
+    from webagent.planner.factory import build_planner
 
-        return APIPlanner(
-            api_url=cfg.model_api_url,
-            api_key=cfg.model_api_key,
-            model_name=cfg.model_name,
-            timeout=cfg.api_timeout,
-            hard_timeout=cfg.api_hard_timeout,
-            use_structured_output=cfg.use_structured_output,
-            output_mode=cfg.planner_output_mode,
-            max_tokens=cfg.planner_max_tokens,
-            reasoning_effort=cfg.planner_reasoning_effort,
-            vision_max_tokens=cfg.vision_max_tokens,
-            vision_brief_max_tokens=cfg.vision_brief_max_tokens,
-            vision_max_words=cfg.vision_max_words,
-        )
-    if cfg.use_vllm:
-        from webagent.planner.api import APIPlanner
-
-        logger.info(
-            "No remote API credentials configured — using local vLLM endpoint %s",
-            cfg.vllm_api_url,
-        )
-        return APIPlanner(
-            api_url=cfg.vllm_api_url,
-            api_key=cfg.vllm_api_key,
-            model_name=cfg.vllm_model_name,
-            timeout=cfg.api_timeout,
-            hard_timeout=cfg.api_hard_timeout,
-            use_structured_output=cfg.use_structured_output,
-            output_mode=cfg.planner_output_mode,
-            max_tokens=cfg.planner_max_tokens,
-            reasoning_effort=cfg.planner_reasoning_effort,
-            vision_max_tokens=cfg.vision_max_tokens,
-            vision_brief_max_tokens=cfg.vision_brief_max_tokens,
-            vision_max_words=cfg.vision_max_words,
-        )
-    logger.warning(
-        "No API credentials configured — using StubPlanner (no real planning). "
-        "Set AGENT_MODEL_API_URL and AGENT_MODEL_API_KEY (or pass --api-url/--api-key) "
-        "to enable the LLM planner, or pass --use-vllm for a local OpenAI-compatible "
-        "vLLM server."
-    )
-    return StubPlanner()
+    return build_planner(cfg)
 
 
 def _build_tool_registry(
@@ -230,6 +199,8 @@ def _build_browser(cfg: AgentConfig) -> BrowserController:
         stale_profile_max_age_seconds=cfg.browser_stale_profile_max_age_seconds,
         user_data_dir=cfg.browser_profile_dir,
         temporary_profile=cfg.strict_eval_mode or cfg.browser_profile_mode == "temporary",
+        browser_channel=None if cfg.browser_channel == "bundled" else cfg.browser_channel,
+        proxy_server=cfg.browser_proxy_server or None,
     )
 
 
@@ -264,6 +235,12 @@ def _apply_browser_overrides(cfg: AgentConfig, args: argparse.Namespace) -> None
     profile_mode = getattr(args, "browser_profile_mode", None)
     if profile_mode:
         cfg.browser_profile_mode = profile_mode
+    browser_channel = getattr(args, "browser_channel", None)
+    if browser_channel:
+        cfg.browser_channel = browser_channel
+    browser_proxy_server = getattr(args, "browser_proxy_server", None)
+    if browser_proxy_server:
+        cfg.browser_proxy_server = browser_proxy_server
 
 
 def _apply_evaluation_overrides(cfg: AgentConfig, args: argparse.Namespace) -> None:
@@ -278,8 +255,14 @@ def _apply_evaluation_overrides(cfg: AgentConfig, args: argparse.Namespace) -> N
         cfg.high_risk_action_policy = "deny"
         cfg.persistent_pdf_cache = False
         cfg.browser_profile_mode = "temporary"
+        cfg.browser_channel = "bundled"
+        cfg.search_default_engine = "bing"
         if cfg.captcha_handling == "report":
             cfg.captcha_handling = "fail"
+    if cfg.browser_channel == "chrome" and cfg.stealth_mode:
+        raise ValueError(
+            "browser_channel=chrome must use native browser properties; disable stealth_mode"
+        )
 
 
 def _apply_cli_overrides(cfg: AgentConfig, args: argparse.Namespace) -> None:
@@ -396,14 +379,17 @@ async def run_task(args: argparse.Namespace) -> None:
             from webagent.tools.policy import SearchEngineOnlyPolicy
 
             policy = SearchEngineOnlyPolicy(browser, artifacts_dir=cfg.artifacts_dir)
-        elif cfg.discovery_mode == "browser-grounded":
+        else:
             from webagent.tools.policy import BrowserGroundedPolicy
 
-            assert allowed_tools is not None
+            policy_tools = allowed_tools or frozenset(registry.names())
             policy = BrowserGroundedPolicy(
                 browser,
                 artifacts_dir=cfg.artifacts_dir,
-                allowed_tools=allowed_tools,
+                allowed_tools=policy_tools,
+                require_browser_search=cfg.discovery_mode == "browser-grounded",
+                official_report_max_attempts=cfg.hybrid_official_report_max_attempts,
+                evidence_repeat_limit=cfg.hybrid_evidence_repeat_limit,
             )
         risk_policy = ActionRiskPolicy(
             cfg.high_risk_action_policy,

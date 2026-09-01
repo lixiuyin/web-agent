@@ -15,6 +15,8 @@ from webagent.evaluation.artifacts import (
     RUN_MANIFEST_SCHEMA_URI,
     RUN_MANIFEST_SCHEMA_VERSION,
     STUDY_EXECUTION_FORMAT,
+    CampaignBatchLayout,
+    CampaignLayout,
     OutputWorkspace,
     RunLayout,
     RunOwnershipError,
@@ -69,6 +71,45 @@ def test_workspace_allocates_unique_dated_model_task_paths(tmp_path: Path) -> No
     assert first.root.name.startswith("find-the-most-recent-qwen-report-")
     assert first.root != second.root
     assert not workspace.root.exists()
+
+
+def test_workspace_allocates_date_scoped_campaign_batches(tmp_path: Path) -> None:
+    workspace = OutputWorkspace.from_root(tmp_path / "outputs")
+    campaign = workspace.campaign("generality-v2")
+    timestamp = datetime(2026, 9, 1, 1, 2, 3, tzinfo=UTC)
+    batch = campaign.allocate_batch(now=timestamp, batch_id="batch-001")
+
+    assert isinstance(campaign, CampaignLayout)
+    assert isinstance(batch, CampaignBatchLayout)
+    assert campaign.root == workspace.campaigns_dir / "generality-v2"
+    assert batch.root.relative_to(campaign.root).parts == (
+        "batches",
+        "2026-09-01",
+        "batch-001",
+    )
+    assert batch.endpoint_preflight_path == batch.root / "evidence" / "endpoint-probes.json"
+    assert batch.portfolio_path == batch.root / "analysis" / "portfolio.json"
+    assert not workspace.root.exists()
+
+    campaign.prepare()
+    batch.prepare()
+    assert campaign.studies_dir.is_dir()
+    assert campaign.portfolios_dir.is_dir()
+    assert batch.logs_dir.is_dir()
+    with pytest.raises(FileExistsError, match="already contains evidence"):
+        batch.prepare()
+
+
+def test_campaign_layout_rejects_nonempty_unowned_root(tmp_path: Path) -> None:
+    campaign = CampaignLayout.from_root(tmp_path / "campaign")
+    campaign.root.mkdir()
+    sentinel = campaign.root / "manual.txt"
+    sentinel.write_text("keep", encoding="utf-8")
+
+    with pytest.raises(RunOwnershipError, match="no campaign contract"):
+        campaign.prepare()
+
+    assert sentinel.read_text(encoding="utf-8") == "keep"
 
 
 def test_study_layout_separates_inputs_runs_ledger_and_analysis(tmp_path: Path) -> None:
@@ -147,7 +188,8 @@ def test_prepare_creates_owned_layout_without_storing_plain_task(tmp_path: Path)
     layout = RunLayout.from_root(tmp_path / "run")
     layout.prepare(run_id="run-1", task="private research question", model="model-a")
 
-    for directory in (
+    assert layout.root.is_dir()
+    for optional_directory in (
         layout.trajectory_dir,
         layout.trajectory_turns_dir,
         layout.screenshots_dir,
@@ -160,7 +202,7 @@ def test_prepare_creates_owned_layout_without_storing_plain_task(tmp_path: Path)
         layout.result_turns_dir,
         layout.evaluation_dir,
     ):
-        assert directory.is_dir()
+        assert not optional_directory.exists()
     raw = layout.manifest_path.read_text(encoding="utf-8")
     manifest = json.loads(raw)
     assert manifest["format"] == RUN_MANIFEST_FORMAT
@@ -204,6 +246,7 @@ def test_prepare_cleans_only_generated_entries_of_owned_run(tmp_path: Path) -> N
     layout = RunLayout.from_root(tmp_path / "run")
     layout.prepare(run_id="old", task="old task", model="old-model")
     stale = layout.artifacts_dir / "stale.txt"
+    stale.parent.mkdir(parents=True)
     stale.write_text("stale", encoding="utf-8")
     manual = layout.root / "research-notes.md"
     manual.write_text("preserve", encoding="utf-8")
@@ -234,6 +277,8 @@ def test_current_readers_fall_back_to_legacy_control_and_trace_files(tmp_path: P
     assert RunLayout.root_from_checkpoint(layout.legacy_checkpoint_path) == layout.root
 
     layout.ensure_for_resume(run_id="run-1", task="legacy task", model="model/a")
+    layout.trajectory_dir.mkdir(parents=True)
+    layout.checkpoints_dir.mkdir(parents=True)
     layout.trace_path.write_text("{}", encoding="utf-8")
     layout.verification_path.write_text("{}", encoding="utf-8")
     layout.checkpoint_path.write_text("{}", encoding="utf-8")

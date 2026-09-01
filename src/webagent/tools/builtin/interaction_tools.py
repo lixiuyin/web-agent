@@ -335,21 +335,28 @@ class GetSearchResultsTool(BrowserToolBase):
             results = resp.get("results", [])
             total_count = resp.get("count", 0)
 
+            def format_result(result: dict[str, Any]) -> dict[str, str]:
+                url = str(result.get("url") or result.get("link") or "")
+                return {
+                    "title": str(result.get("title", "")),
+                    "url": url,
+                    # Retain ``link`` for compatibility with existing planner
+                    # prompts and external consumers while making ``url`` the
+                    # canonical evidence field used by policy code.
+                    "link": url,
+                    "snippet": str(result.get("snippet", "")),
+                }
+
             # Format results for LLM consumption
             # By default, show top 5 results with full details, summarize the rest
             # If show_all=True, show all results
             default_shown = 5
             if show_all:
                 # Show all results with full details
-                formatted_results = [
-                    {
-                        "title": r.get("title", ""),
-                        "link": r.get("link", ""),
-                        "snippet": r.get("snippet", ""),
-                    }
-                    for r in results
-                ]
+                formatted_results = [format_result(r) for r in results]
                 data = {
+                    "engine": resp.get("engine", ""),
+                    "query": resp.get("query", ""),
                     "results": formatted_results,
                     "count": len(results),
                     "total_available": total_count,
@@ -357,16 +364,11 @@ class GetSearchResultsTool(BrowserToolBase):
             elif len(results) > default_shown:
                 # Show top N results in detail, summarize the rest
                 top_results = results[:default_shown]
-                formatted_results = [
-                    {
-                        "title": r.get("title", ""),
-                        "link": r.get("link", ""),
-                        "snippet": r.get("snippet", ""),
-                    }
-                    for r in top_results
-                ]
+                formatted_results = [format_result(r) for r in top_results]
                 remaining_count = len(results) - default_shown
                 data = {
+                    "engine": resp.get("engine", ""),
+                    "query": resp.get("query", ""),
                     "results": formatted_results,
                     "count": default_shown,
                     "total_available": total_count,
@@ -374,15 +376,10 @@ class GetSearchResultsTool(BrowserToolBase):
                 }
             else:
                 # Show all results (less than default_shown)
-                formatted_results = [
-                    {
-                        "title": r.get("title", ""),
-                        "link": r.get("link", ""),
-                        "snippet": r.get("snippet", ""),
-                    }
-                    for r in results
-                ]
+                formatted_results = [format_result(r) for r in results]
                 data = {
+                    "engine": resp.get("engine", ""),
+                    "query": resp.get("query", ""),
                     "results": formatted_results,
                     "count": len(results),
                     "total_available": total_count,

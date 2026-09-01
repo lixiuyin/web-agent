@@ -55,11 +55,32 @@ def _known_text(value: object) -> str:
     return text if text and text != "unknown" else "unknown"
 
 
+def _resolve_evidence_path(value: str, *, report_path: Path, history_path: Path) -> Path:
+    """Resolve new relative evidence paths and relocated legacy absolute paths safely."""
+    evidence_root = _evidence_root(history_path)
+    raw = Path(value)
+    candidates: list[Path] = []
+    if raw.is_absolute():
+        candidates.append(raw)
+        root_name = evidence_root.name
+        matching = [index for index, part in enumerate(raw.parts) if part == root_name]
+        if matching:
+            candidates.append(evidence_root.joinpath(*raw.parts[matching[-1] + 1 :]))
+    else:
+        candidates.extend((report_path.resolve().parent / raw, evidence_root / raw))
+    for candidate in candidates:
+        resolved = candidate.resolve()
+        if resolved.is_file() and resolved.is_relative_to(evidence_root):
+            return resolved
+    raise ValueError("evidence path is missing or escapes the local evidence root")
+
+
 def _verified_study_identity(
     metadata: dict[str, Any],
     benchmark_config: dict[str, Any],
     *,
     history_path: Path,
+    report_path: Path,
     report_suite: str,
     report_model: str,
     task_manifest_sha256: str,
@@ -89,15 +110,9 @@ def _verified_study_identity(
     if re.fullmatch(r"[0-9a-f]{64}", study_hash) is None:
         raise ValueError("study_manifest_sha256 must be a lowercase SHA-256 digest")
 
-    study_path = Path(manifest_value)
-    if not study_path.is_absolute() or not study_path.is_file():
-        raise ValueError("study manifest path must be an existing absolute file")
-    try:
-        study_path.resolve().relative_to(_evidence_root(history_path))
-    except ValueError as exc:
-        raise ValueError(
-            "retained study manifest must stay below the ledger evidence root"
-        ) from exc
+    study_path = _resolve_evidence_path(
+        manifest_value, report_path=report_path, history_path=history_path
+    )
     raw = study_path.read_bytes()
     if hashlib.sha256(raw).hexdigest() != study_hash:
         raise ValueError("study_manifest_sha256 does not match the retained study manifest")
@@ -147,13 +162,9 @@ def evidence_record_from_report(
     manifest_value = metadata.get("manifest")
     if not isinstance(manifest_value, str) or not manifest_value:
         raise ValueError("benchmark report must record an absolute manifest path")
-    manifest_path = Path(manifest_value)
-    if not manifest_path.is_absolute() or not manifest_path.is_file():
-        raise ValueError("benchmark report manifest path must be an existing absolute file")
-    try:
-        manifest_path.resolve().relative_to(_evidence_root(history_path))
-    except ValueError as exc:
-        raise ValueError("retained manifest must stay below the local ledger directory") from exc
+    manifest_path = _resolve_evidence_path(
+        manifest_value, report_path=resolved_report, history_path=history_path
+    )
     manifest_raw = manifest_path.read_bytes()
     computed_manifest_hash = hashlib.sha256(manifest_raw).hexdigest()
     manifest_hash = str(metadata.get("manifest_sha256", "unknown"))
@@ -175,6 +186,7 @@ def evidence_record_from_report(
         metadata,
         benchmark_config,
         history_path=history_path,
+        report_path=resolved_report,
         report_suite=report_suite,
         report_model=report_model,
         task_manifest_sha256=manifest_hash,

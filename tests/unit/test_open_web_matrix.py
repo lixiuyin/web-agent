@@ -5,16 +5,28 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+from datetime import date
 from pathlib import Path
 
 import pytest
 from benchmarks.studies.open_web_longitudinal import load_slices
 from benchmarks.studies.open_web_matrix import (
+    _ordered_models,
     append_ledger,
     ledger_record_from_report,
     run_matrix,
 )
 from benchmarks.suites.open_web.runner import canonical_sha256
+
+
+def test_model_order_is_deterministically_counterbalanced_by_date() -> None:
+    models = ["a", "b"]
+
+    first = _ordered_models(models, date(2026, 8, 30), "rotate-by-date")
+    second = _ordered_models(models, date(2026, 8, 31), "rotate-by-date")
+
+    assert first == list(reversed(second))
+    assert _ordered_models(models, date(2026, 8, 30), "as-given") == models
 
 
 def _report(tmp_path: Path, run_id: str = "run-1") -> tuple[dict[str, object], Path, Path]:
@@ -116,6 +128,22 @@ def test_canonical_nested_ledger_can_bind_execution_evidence(tmp_path: Path) -> 
 
     assert record["report_path"] == report_path.relative_to(tmp_path).as_posix()
     assert load_slices([ledger])[0]["run_id"] == "run-1"
+
+
+def test_relocated_legacy_absolute_evidence_paths_resolve_by_root_suffix(
+    tmp_path: Path,
+) -> None:
+    report, report_path, _legacy_ledger = _report(tmp_path)
+    metadata = report["metadata"]
+    assert isinstance(metadata, dict)
+    metadata["manifest"] = f"/missing/original/{tmp_path.name}/manifest.json"
+    metadata["study_manifest"] = f"/missing/original/{tmp_path.name}/study.json"
+    report_path.write_text(json.dumps(report), encoding="utf-8")
+    ledger = tmp_path / "ledger" / "time-slices.jsonl"
+
+    record = ledger_record_from_report(report, report_path=report_path, ledger_path=ledger)
+
+    assert record["run_id"] == "run-1"
 
 
 def test_new_time_slice_binds_benchmark_harness_source(tmp_path: Path) -> None:

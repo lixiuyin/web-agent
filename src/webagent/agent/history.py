@@ -75,6 +75,11 @@ class SessionHistory:
                     )
                 elif step.tool_result.audit.get("latest_evidence_complete") is True:
                     result += ", latest-evidence checklist complete"
+            next_action = step.tool_result.audit.get("required_next_action")
+            if isinstance(next_action, dict):
+                result += ", policy required next action: " + json.dumps(
+                    next_action, ensure_ascii=False
+                )
             lines.append(f"Step {step.step_number}: {action} -> {result}")
         return "\n".join(lines)
 

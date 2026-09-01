@@ -21,7 +21,7 @@
 | post-action wait 配置 | config | Agent loop | Agent unit | 低 | 毫秒转秒，拒绝负数 |
 | Bing→Yahoo→DDG / Google opt-in | `SearchTool` | search 工具 | mock 单测 + 在线诊断 | 中/高 | 默认避免 Google 人机认证；真实 DOM 非平稳 |
 | 官方 GitHub 报告发现 | `GitHubSearchTool` | search 工具 | 单测 + QwenLM 在线验证 | 中 | 无 token 配额低；raw/Atom 有兜底 |
-| 多源官方报告聚合 | `OfficialReportSearchTool` | 仅显式 hybrid/API-augmented 模式暴露 | fixture 单测 + QwenLM 历史在线验证 | 中 | 默认 browser-grounded 不可见；arXiv authorship 仍需独立核验 |
+| 多源官方报告聚合 | `OfficialReportSearchTool` | 默认 hybrid/API-augmented 模式暴露 | fixture 单测 + QwenLM 历史在线验证 | 中 | 精确 owner、报告 PDF 与 commit 日期可计入 Hybrid 身份/范围证据；arXiv authorship 仍需独立核验 |
 | 严格无捷径评测 | CLI/Browser/policy/run trace | `--strict-eval` | 单测 + real-browser integration | 中 | strict 强制 search-only；certificate 检查单一 run 与 provenance，但不能自行证明答案语义正确 |
 | 通用网页终态/答案评测 | `evaluation/` + sandbox benchmarks | benchmark 路径 | unit + real-browser calibration | 中 | 11 项基础 + 5 项双源复杂工作流；脚本校准不是模型成绩 |
 | 带日期开放网页评测 | `benchmarks.suites.open_web.*`、`benchmarks.studies.open_web_*` + 30-task manifest | benchmark 路径 | manifest/matrix/runner unit | 中/高 | 10 项真实搜索发现；三日期/多模型成绩尚待实际积累 |

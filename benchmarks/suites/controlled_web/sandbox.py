@@ -47,6 +47,19 @@ from webagent.tools.risk import ActionRiskPolicy, BrowserRiskContext
 from webagent.utils.runtime import agent_source_fingerprint, benchmark_source_fingerprint
 
 
+def _transport_evidence(cfg: AgentConfig) -> dict[str, object]:
+    """Return non-secret endpoint and retry settings that affect agent availability."""
+    return {
+        "declared_endpoint_access_mode": cfg.endpoint_access_mode,
+        "api_transient_retries": cfg.api_transient_retries,
+        "api_retry_base_seconds": cfg.api_retry_base_seconds,
+        "api_retry_max_seconds": cfg.api_retry_max_seconds,
+        "max_steps_per_task": cfg.max_steps,
+        "task_timeout_seconds": cfg.task_timeout,
+        "browser_timeout_ms": cfg.browser_timeout,
+    }
+
+
 def _css(value: str) -> dict[str, str]:
     return {"type": "css", "value": value}
 
@@ -99,10 +112,7 @@ def _scripted_actions(task: BenchmarkTask, artifacts_dir: Path) -> list[ToolCall
         "download_upload_handoff": [
             ToolCall(
                 tool_name="download_file",
-                parameters={
-                    "selector": _css("#download-payload"),
-                    "filename": "sandbox-payload.txt",
-                },
+                parameters={"selector": _css("#download-payload")},
             ),
             ToolCall(tool_name="click", parameters={"selector": _css("#upload-destination")}),
             ToolCall(
@@ -202,16 +212,24 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         help="Provider identity retained for cross-suite empirical portfolios",
     )
     parser.add_argument("--headed", action="store_true")
-    parser.add_argument("--max-steps-per-task", type=int, default=12)
+    parser.add_argument("--max-steps-per-task", type=int, default=20)
+    parser.add_argument("--task-timeout-seconds", type=int, default=600)
+    parser.add_argument("--browser-timeout-ms", type=int, default=5000)
     add_study_run_arguments(parser)
     return parser.parse_args(argv)
 
 
 async def run_benchmark(args: argparse.Namespace) -> int:
     mode = "scripted-harness-baseline" if args.mode == "scripted" else args.mode
-    max_steps = int(getattr(args, "max_steps_per_task", 12))
+    max_steps = int(getattr(args, "max_steps_per_task", 20))
     if max_steps < 1:
         raise ValueError("--max-steps-per-task must be positive")
+    task_timeout = int(getattr(args, "task_timeout_seconds", 600))
+    browser_timeout = int(getattr(args, "browser_timeout_ms", 5000))
+    if task_timeout < 1:
+        raise ValueError("--task-timeout-seconds must be positive")
+    if browser_timeout < 1:
+        raise ValueError("--browser-timeout-ms must be positive")
     requested_model = getattr(args, "model", None)
     configured_model = requested_model or AgentConfig().model_name
     model_label = execution_model_label(
@@ -237,15 +255,17 @@ async def run_benchmark(args: argparse.Namespace) -> int:
     cfg = AgentConfig(
         model_name=configured_model,
         output_dir=output_dir,
+        elicit_terminal_confidence=True,
         browser_profile_mode="temporary",
         AGENT_BROWSER_HEADLESS=not args.headed,
         browser_humanize_delays=False,
         post_action_wait_ms=0,
+        browser_timeout=browser_timeout,
         captcha_pause=False,
         high_risk_action_policy="deny",
         persistent_pdf_cache=False,
         max_steps=max_steps,
-        task_timeout=180,
+        task_timeout=task_timeout,
     )
     shared_planner: Planner | None = None
     if mode == "agent":
@@ -260,6 +280,7 @@ async def run_benchmark(args: argparse.Namespace) -> int:
         temporary_profile_root=layout.browser_profiles_dir,
         stealth_mode=False,
         humanize_delays=False,
+        default_timeout=cfg.browser_timeout,
     )
     await browser.start()
     try:
@@ -334,6 +355,7 @@ async def run_benchmark(args: argparse.Namespace) -> int:
                     "origin_count": 2,
                     "public_mutations_allowed": False,
                     "sandbox_mutations_allowed": True,
+                    **_transport_evidence(cfg),
                     "agent_source_sha256": agent_source_fingerprint(),
                     "benchmark_source_sha256": benchmark_source_fingerprint(),
                 },

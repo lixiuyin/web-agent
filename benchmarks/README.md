@@ -9,10 +9,90 @@ benchmarks/
 ├── suites/
 │   ├── open_web/                 public-web discovery and reading
 │   ├── controlled_web/           general and sandbox interaction workflows
-│   └── document_figures/         document/figure detection and rendering
+│   ├── document_figures/         document/figure detection and rendering
+│   └── browsergym/               standard WebArena/VWA observation-action adapter
 ├── studies/                      repeated-model and longitudinal aggregation
 └── manifests/                    versioned task and expectation snapshots
 ```
+
+## Two-layer evaluation
+
+The repository deliberately separates two kinds of evidence:
+
+1. **Diagnostic layer:** the repository-owned open-web, controlled sandbox, and
+   long-horizon suites below. These retain rich trajectories and failure diagnostics.
+2. **External layer:** WebArena-Verified Hard and VisualWebArena, executed through
+   BrowserGym's standard observation/action API and scored by their native evaluators.
+
+The layers are never averaged. A model can be strong on one layer and weak on the
+other, and both results remain visible. `two_layer_portfolio` is a readiness gate,
+not a new composite leaderboard score.
+
+BrowserGym 0.14.3 pins Playwright 1.44 and `greenlet` versions that require Python
+3.12, while the main agent environment uses Python 3.13 and a newer Playwright.
+VisualWebArena also brings a large Torch/captioning dependency. Install the external
+layer into its intentionally isolated Python 3.12 environment:
+
+```bash
+scripts/setup_browsergym_env.sh
+```
+
+The installer also pins the BrowserGym packages, installs Chromium and the fixed NLTK
+tokenizer resource, and validates the 258/910-task catalogs. VisualWebArena's native
+image evaluator downloads `Salesforce/blip2-flan-t5-xl` on first use, so provision the
+model cache and disk space before starting the full suite.
+
+Then deploy the official WebArena and VisualWebArena sites and configure their URLs.
+The isolated runner loads the repository `.env` before BrowserGym initializes.
+The required WebArena variables are `WA_SHOPPING`, `WA_SHOPPING_ADMIN`, `WA_REDDIT`,
+`WA_GITLAB`, `WA_WIKIPEDIA`, `WA_MAP`, and `WA_HOMEPAGE`. VisualWebArena uses
+`VWA_CLASSIFIEDS`, `VWA_CLASSIFIEDS_RESET_TOKEN`, `VWA_SHOPPING`, `VWA_REDDIT`,
+`VWA_WIKIPEDIA`, `VWA_HOMEPAGE`, and optionally `VWA_FULL_RESET`.
+
+The standard matched-model external run is:
+
+```bash
+.venv/bin/python -m benchmarks.studies.browsergym_matrix \
+  --provider openrouter \
+  --models z-ai/glm-5.3-flash qwen/qwen3.8-flash
+```
+
+This runs the official 258-task WebArena-Verified Hard subset and the full 910-task
+VisualWebArena suite, each with BrowserGym's standard 30-step budget and deterministic
+per-task seed schedule. Task name, seed, order, and source fingerprints are bound into
+the execution contract. It is expensive.
+For adapter/server calibration, pass explicit `--webarena-task-ids` and
+`--visual-task-ids`; those reports are correctly marked `custom` and cannot satisfy
+the publication-grade two-layer readiness gate. Interrupted executions retain a
+partial report and can be continued with `--resume`; `--retry-errors` reruns only
+episodes that recorded system errors.
+
+BrowserGym writes its native episode evidence below the external execution's `runs/`
+directory. `browsergym-results.json` records task-set identity, package versions,
+an opaque backend-configuration hash, coverage, system errors, native mean reward,
+binary success, a Wilson 95% interval, and task-level results. The matrix rejects
+cross-model reports whose backend or package fingerprints differ, then adds exact
+paired McNemar comparisons. It does not
+reuse the repository's substring or terminal-state evaluator.
+
+After the internal three-date portfolio and both external suites are complete, bind
+them without pooling their scores:
+
+```bash
+.venv/bin/python -m benchmarks.studies.two_layer_portfolio \
+  --diagnostic outputs/campaigns/<campaign>/analysis/portfolios/latest.json \
+  --external \
+    outputs/studies/browsergym-external-model-matrix/executions/date/model-a/webarena_verified/batch/browsergym-results.json \
+    outputs/studies/browsergym-external-model-matrix/executions/date/model-a/visualwebarena/batch/browsergym-results.json \
+    outputs/studies/browsergym-external-model-matrix/executions/date/model-b/webarena_verified/batch/browsergym-results.json \
+    outputs/studies/browsergym-external-model-matrix/executions/date/model-b/visualwebarena/batch/browsergym-results.json \
+  --output outputs/campaigns/<campaign>/analysis/two-layer-portfolio.json \
+  --require-ready
+```
+
+The external list must contain one complete official WebArena-Verified Hard report
+and one complete official VisualWebArena report for every diagnostic endpoint. Source
+fingerprints must also match, so changing the agent or adapter starts a new comparison.
 
 New code should import these canonical modules. The former flat modules, such as
 `benchmarks.open_web` and `benchmarks.web_interaction`, are thin wrappers retained
@@ -151,23 +231,27 @@ python -m benchmarks.suites.open_web.parallel \
   --manifest benchmarks/manifests/open_web_general.json \
   --model z-ai/glm-5.3-flash \
   --shards 3 \
-  --max-steps-per-task 8
+  --max-steps-per-task 8 \
+  --discovery-max-steps-per-task 12
 python -m benchmarks.studies.open_web_longitudinal \
   outputs/studies/open-web-model-matrix/ledger/time-slices.jsonl \
   --minimum-distinct-dates 3 --minimum-models 2 --expected-task-count 30
 ```
 
-Collect a current-date slice for two or three models with:
+Collect a current-date slice for the two configured models with:
 
 ```bash
 python -m benchmarks.studies.open_web_matrix \
   --provider openrouter \
-  --models z-ai/glm-5.3-flash qwen/qwen3.8-flash deepseek/deepseek-v4-flash-vision-exp \
+  --models z-ai/glm-5.3-flash qwen/qwen3.8-flash \
   --manifest benchmarks/manifests/open_web_general.json \
   --output outputs/studies/open-web-model-matrix --shards 3
 ```
 
 There is deliberately no `--date` override. Re-run on at least three actual dates.
+Serial model order rotates deterministically by UTC date to counterbalance provider
+warm-up/rate-limit order effects, and same-date reruns are refused by default. Use
+`--no-require-new-date` only for an explicitly documented same-day repetition.
 The longitudinal gate accepts two or three models and requires dates common to every
 model, exactly 30 tasks in every included repetition, and one manifest/config/task-set
 hash. It reloads each retained `results.json`, recomputes its report/date/evidence
@@ -232,8 +316,7 @@ Collect a complete current-date slice across all three evidence surfaces:
 ```bash
 python -m benchmarks.studies.generality_campaign \
   --provider openrouter \
-  --models z-ai/glm-5.3-flash qwen/qwen3.8-flash \
-           deepseek/deepseek-v4-flash-vision-exp
+  --models z-ai/glm-5.3-flash qwen/qwen3.8-flash
 ```
 
 The campaign runs the 30-task/10-origin open-web suite, five multi-origin
@@ -245,7 +328,11 @@ excluded as unavailable endpoints rather than scored as model failures; the
 requested and evaluated model sets remain explicit in both campaign and
 portfolio evidence. The
 preflight can be skipped only with the auditable `--skip-endpoint-preflight`
-offline-harness option. Re-run on three
+offline-harness option. Open-web execution is serial by default so shared-provider
+rate limits do not become a model-quality confound; pass `--shards` explicitly only
+when the endpoint has an independently controlled quota. Campaign state is written
+atomically as `running`, `failed`, or `completed`, and retained report paths are
+relative to the campaign root for portable release artifacts. Re-run on three
 actual UTC dates; there is no date override. A portfolio becomes `ready` only
 when every comparable provider/model/date cell contains all three complementary suites,
 passes the coverage floor, includes a 50+-action trajectory, and the same two or
@@ -255,6 +342,9 @@ fingerprint. After changing either source tree, start a new campaign root rather
 than appending to an earlier longitudinal condition. Failed tasks remain valid
 empirical outcomes when planning was actually available; scripted harness
 reports are rejected as model evidence.
+Direct open-web tasks retain an eight-action default while genuine search-discovery
+tasks receive twelve actions. Override these independently with `--open-max-steps`
+and `--open-discovery-max-steps`.
 
 To audit an explicit set of retained reports independently:
 
@@ -286,7 +376,11 @@ claimed date cannot pass merely because the expected date appears elsewhere in t
 
 CAPTCHAs are never solved or bypassed. Benchmarks fail closed. An ordinary visible
 run defaults to `report`, which logs the challenge and polls only until the user
-manually clears it or the configured timeout expires; timeout and headless runs block and close.
+manually clears it or the configured timeout expires. Timeout and ordinary headless
+runs block and close. Strict headless search is confined to the audited Bing, Yahoo
+Japan, and Seznam pool; a challenged task blocks immediately, while its isolated
+browser is retained only for the mandatory state reset before the next task so one
+challenge cannot corrupt the remaining matrix.
 
 ## Browser and authorization boundaries
 

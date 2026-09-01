@@ -272,18 +272,44 @@ def _observed_findings(evaluation: TaskEvaluation) -> list[FailureFinding]:
                 note="A challenge was observed, whether or not the task later recovered.",
             )
         )
-    failed_assertions = sum(not outcome.passed for outcome in evaluation.assertions)
-    if failed_assertions:
+    failed_answer_assertions = sum(
+        not outcome.passed
+        for outcome in evaluation.assertions
+        if outcome.assertion.kind.startswith("answer_")
+    )
+    if failed_answer_assertions:
         findings.append(
             _finding(
                 evaluation,
                 status="observed",
                 layer="answer_grounding",
-                subtype="judge_assertion_failure",
+                subtype="answer_assertion_failure",
                 source="assertion",
-                key="failed_assertion_count",
-                observed=failed_assertions,
-                note="The external judge observed unmet conditions; this does not identify a cause.",
+                key="failed_answer_assertion_count",
+                observed=failed_answer_assertions,
+                note="The external judge rejected answer content or citation conditions.",
+                terminal=not evaluation.passed,
+            )
+        )
+    failed_state_assertions = sum(
+        not outcome.passed
+        for outcome in evaluation.assertions
+        if not outcome.assertion.kind.startswith("answer_")
+    )
+    if failed_state_assertions:
+        findings.append(
+            _finding(
+                evaluation,
+                status="observed",
+                layer="execution_control",
+                subtype="terminal_state_assertion_failure",
+                source="assertion",
+                key="failed_state_assertion_count",
+                observed=failed_state_assertions,
+                note=(
+                    "The external judge rejected trajectory, artifact, browser, or server state; "
+                    "this symptom alone does not establish a reasoning cause."
+                ),
                 terminal=not evaluation.passed,
             )
         )

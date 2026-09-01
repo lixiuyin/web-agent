@@ -114,6 +114,31 @@ class TestCaptchaDetector:
         assert result["type"] == "unknown"
 
     @pytest.mark.asyncio
+    async def test_google_sorry_route_is_detected(self, mock_page):
+        mock_page.title = AsyncMock(return_value="Sorry...")
+        mock_page.url = "https://www.google.com/sorry/index?continue=redacted"
+
+        result = await CaptchaDetector().detect_captcha(mock_page)
+
+        assert result["detected"] is True
+        assert result["type"] == "google_unusual_traffic"
+        assert result["confidence"] == 0.95
+
+    @pytest.mark.asyncio
+    async def test_duckduckgo_bot_challenge_body_is_detected(self, mock_page):
+        mock_page.title = AsyncMock(return_value="Search results")
+        mock_page.url = "https://duckduckgo.com/?q=python"
+        mock_page.inner_text = AsyncMock(
+            return_value="Unfortunately, bots use DuckDuckGo too. Complete this challenge."
+        )
+
+        result = await CaptchaDetector().detect_captcha(mock_page)
+
+        assert result["detected"] is True
+        assert result["type"] == "duckduckgo_bot_challenge"
+        assert result["confidence"] == 0.95
+
+    @pytest.mark.asyncio
     async def test_detection_reports_type_and_confidence(self, mock_page):
         """A positive detection returns a non-null type and positive confidence."""
         mock_page.title = AsyncMock(return_value="Login")

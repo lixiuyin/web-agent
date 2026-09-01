@@ -180,7 +180,7 @@ async def test_select_dropdown_validation_error(tool_executor):
     )
 
     assert result.success is False
-    assert "one of" in (result.error or "").lower()
+    assert "not valid under any of the given schemas" in (result.error or "").lower()
 
 
 # Wait For Element Tool Tests
@@ -379,6 +379,7 @@ async def test_get_search_results_success(tool_executor):
     assert "more_results" not in result.data
     assert len(result.data["results"]) == 2
     assert result.data["results"][0]["title"] == "Qwen Technical Report"
+    assert result.data["results"][0]["url"] == "https://arxiv.org/pdf/2505.09388"
     assert result.data["results"][0]["link"] == "https://arxiv.org/pdf/2505.09388"
 
 

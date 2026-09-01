@@ -255,6 +255,7 @@ async def run_benchmark(args: argparse.Namespace) -> int:
     cfg = AgentConfig(
         model_name=configured_model,
         output_dir=output_dir,
+        elicit_terminal_confidence=True,
         strict_eval_mode=False,
         persistent_pdf_cache=False,
         browser_profile_mode="temporary",

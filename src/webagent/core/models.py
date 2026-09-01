@@ -74,6 +74,7 @@ class PlannerAttempt(BaseModel):
     duration_seconds: float
     success: bool
     error: str | None = None
+    transport_retries: int = Field(default=0, ge=0)
     response_length: int | None = None
     finish_reason: str | None = None
     prompt_tokens: int | None = None

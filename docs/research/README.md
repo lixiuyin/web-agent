@@ -22,6 +22,7 @@ benchmarks/suites/            task definitions and suite runners
 benchmarks/studies/           repeated, multi-model, longitudinal experiments
 outputs/runs/                 isolated ad-hoc execution records
 outputs/studies/              non-overwriting benchmark executions and analyses
+outputs/campaigns/            immutable multi-study contracts and dated collection batches
 outputs/legacy/               hash-inventoried historical outputs
 ```
 
@@ -62,6 +63,12 @@ one exact execution at
 its individual tasks live in `runs/<task-id>/`. A user-supplied `--output`
 always names the exact run or execution root rather than the enclosing
 workspace.
+
+Campaigns are not flattened study directories. A campaign root contains an immutable
+`campaign.json`, reusable component studies under `studies/`, and one isolated
+`batches/<UTC-date>/<batch-id>/` directory per collection attempt. Batch state, endpoint
+probes, process logs, and the batch portfolio remain together; cross-date portfolio views
+stay under the campaign-level `analysis/` directory.
 
 Ordinary interactive follow-ups remain in one owned run. The latest canonical
 trace/result stay at their top-level locations, while immutable snapshots are

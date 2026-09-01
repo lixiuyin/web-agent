@@ -19,7 +19,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
 
-_RESERVED_NAMES = frozenset({"legacy", "runs", "studies", "cache", "tmp"})
+_RESERVED_NAMES = frozenset({"legacy", "runs", "studies", "campaigns", "cache", "tmp"})
 _LABEL_CHARS = frozenset("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_")
 
 

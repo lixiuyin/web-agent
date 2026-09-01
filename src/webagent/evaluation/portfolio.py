@@ -83,6 +83,7 @@ def load_empirical_portfolio(
     minimum_models: int = 2,
     minimum_dates: int = 3,
     requested_endpoints: Sequence[tuple[str, str]] | None = None,
+    path_root: Path | None = None,
 ) -> EmpiricalPortfolio:
     """Load retained reports and require complete generality/long-horizon cells."""
     if minimum_models < 2 or minimum_models > 3:
@@ -111,8 +112,13 @@ def load_empirical_portfolio(
         if timestamp.tzinfo is None:
             raise ValueError(f"{resolved}: created_at must include a timezone")
         day = timestamp.astimezone(UTC).date().isoformat()
+        stored_path = (
+            resolved.relative_to(path_root.expanduser().resolve()).as_posix()
+            if path_root is not None and resolved.is_relative_to(path_root.expanduser().resolve())
+            else str(resolved)
+        )
         evidence = PortfolioInput(
-            path=str(resolved),
+            path=stored_path,
             sha256=hashlib.sha256(raw).hexdigest(),
             run_id=run_id,
             suite=report.suite,

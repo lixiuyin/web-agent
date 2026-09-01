@@ -210,7 +210,8 @@ def test_calibration_reports_missing_coverage_without_imputation() -> None:
         ]
     )
 
-    assert analysis.status == "available"
+    assert analysis.status == "partial"
+    assert analysis.reason == "missing confidence for 1 task(s)"
     assert analysis.confidence_count == 2
     assert analysis.confidence_coverage == pytest.approx(2 / 3)
     assert analysis.brier_score == pytest.approx(0.1)

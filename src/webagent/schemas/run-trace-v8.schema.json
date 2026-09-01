@@ -113,6 +113,7 @@
         "strict_eval_mode": {"type": "boolean"},
         "search_engine_only": {"type": "boolean"},
         "browser_profile_mode": {"type": "string"},
+        "browser_channel": {"type": "string", "enum": ["bundled", "chrome"]},
         "persistent_pdf_cache": {"type": "boolean"}
       }
     },

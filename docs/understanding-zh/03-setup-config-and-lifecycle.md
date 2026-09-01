@@ -57,18 +57,26 @@ AGENT_OUTPUT_DIR=./outputs
 | `browser_slow_mo_ms`     | `int` ms |                0 | BrowserController    | 精确 Playwright 操作延迟 |
 | `browser_humanize_delays` |  `bool` |            false | BrowserController    | 随机等待仅显式兼容时开启 |
 | `browser_profile_mode`   |    `str` |        temporary | BrowserController    | 默认隔离；persistent 显式开启 |
+| `browser_channel`        |    `str` |          bundled | BrowserController    | bundled 用于可复现实验；chrome 仅用于可信交互会话 |
 | `browser_stale_profile_max_age_seconds` | `float` 秒 | 3600 | BrowserController | 仅回收带标记、超龄且 owner PID 已消失的临时 profile |
 | `history_full_result_steps` | `int` | 2 | SessionHistory | 最近多少步保留完整工具结果；更早步骤仅保留紧凑摘要与 policy audit |
 | `checkpoint_enabled` / `checkpoint_filename` | `bool` / `str` | true / `latest.json` | Agent/CheckpointStore | 普通 run 写 `control/checkpoints/`；strict/search 禁用 |
 | `browser_locale` / `browser_timezone_id` | `str?` | `None` | BrowserController | 默认采用浏览器/系统原生值 |
+| `browser_proxy_server` | `str` | 空 | BrowserController | 显式浏览器代理；不会自动继承 shell 的 HTTP_PROXY |
 | `stealth_mode`           |   `bool` |            false | BrowserController      | 显式兼容选项；strict 强制关闭 |
 | `allow_google_search`    |   `bool` |            false | SearchTool             | 默认不访问 Google，避免人机认证 |
+| `search_default_engine`  |    `str` |             bing | SearchTool             | strict/search 强制 Bing 首选；Yahoo Japan、Seznam 作为可靠回退 |
+| `search_bing_market`     |   `str?` |            en-US | SearchTool             | 固定 Bing 市场以减少区域结果漂移 |
 | `github_token`           |    `str` |               空 | GitHubSearchTool       | 可选；提高 GitHub API 配额 |
 | `official_report_source_timeout_seconds` | `float` 秒 | 15 | OfficialReportSearchTool | 每个并发来源独立硬上限 |
+| `hybrid_official_report_max_attempts` | `int` | 2 | BrowserGroundedPolicy Hybrid 分支 | 同一 owner/主题族的聚合检索调用上限 |
+| `hybrid_evidence_repeat_limit` | `int` | 3 | BrowserGroundedPolicy Hybrid 分支 | 相同补证缺口连续出现到上限后停止补证并推进下载 |
 | `max_steps`              |    `int` |              100 | Agent loop           | 已接线                   |
 | `task_timeout`           |  `int` 秒 |             1200 | Agent loop           | 已接线，但仅在步骤边界检查         |
 | `tool_timeout`           |  `int` 秒 |              600 | ToolExecutor         | 已接线                   |
-| `post_action_wait_ms`    | `int` ms |              500 | Agent loop             | 已接线，且必须非负            |
+| `post_action_wait_ms`    | `int` ms |              500 | Agent loop             | 动作完成后、动作后观察和截图前的最小等待 |
+| `observation_stability_timeout_ms` | `int` ms | 3000 | Agent loop | URL、readyState、DOM 规模稳定检测的总上限 |
+| `observation_stable_ms` | `int` ms | 400 | Agent loop | 截图前必须连续稳定的时间窗口 |
 | `captcha_pause`          |   `bool` |             true | Agent loop           | 兼容开关；控制每轮是否检测挑战 |
 | `captcha_handling`       |    `str` |           report | Agent loop           | headed report 等待人工；超时/headless 阻断并关闭；strict 默认 fail |
 | `captcha_wait_timeout_seconds` | `float` 秒 | 180 | Agent loop | headed 人工接管最长等待；不求解验证码 |
@@ -136,13 +144,16 @@ async def run_task(args: argparse.Namespace) -> None:
 ## 输出目录的破坏性边界
 
 未显式传 `--output` 时，`AGENT_OUTPUT_DIR` 是 workspace；CLI 通过 `OutputWorkspace` 为本次进程
-分配 `outputs/runs/<UTC-date>/<model>/<task>-<run-id>/`，不会清空同 workspace 中的旧 run、study
-或 legacy archive。显式 `--output` 则准确指向一个 run 根目录。
+分配 `outputs/runs/<UTC-date>/<model>/<task>-<run-id>/`，不会清空同 workspace 中的旧 run、study、
+campaign 或 legacy archive。显式 `--output` 则准确指向一个 run 根目录。
 
 `RunLayout.prepare()` 拒绝文件系统根、当前工作目录，以及没有有效 `manifest.json` 的非空目录。
 只有确认属于 webagent 的旧 run 才会重新初始化；此时仅移除 manifest、trajectory、observations、
 control、artifacts、result、evaluation 等已知生成 namespace，未知同级文件仍保留。因此依然不应把
 手工工作目录当作 `--output`，但它不再对任意路径执行无条件递归清空。
+
+`RunLayout.prepare()` 只创建 run 根和 ownership manifest；其余 namespace 在首次写入时生成。
+因此缺失的 `artifacts/` 或 `evaluation/` 明确表示该 run 没有产生对应内容，而不是遗留空目录。
 
 交互模式在进程启动时只分配一个 run 根。后续任务调用 `run(reset_history=False)` 保留会话
 history、artifacts 与 owned run，不再重新初始化目录；step 与 turn 编号继续递增。顶层

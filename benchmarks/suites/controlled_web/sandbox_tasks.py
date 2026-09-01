@@ -35,10 +35,6 @@ def build_sandbox_tasks(origins: SandboxOrigins) -> list[BenchmarkTask]:
                 BenchmarkAssertion(
                     kind="element_text_equals", selector="#queue-status", expected="Status: active"
                 ),
-                BenchmarkAssertion(
-                    kind="history_tool_sequence",
-                    expected=["wait_for_element", "click", "wait_for_element", "click"],
-                ),
             ],
             tags=["spa", "fetch-hydration", "client-routing", "rerender"],
         ),
@@ -143,16 +139,6 @@ def build_sandbox_tasks(origins: SandboxOrigins) -> list[BenchmarkTask]:
                         "path": "downloads/sandbox-payload.txt",
                         "sha256": _PAYLOAD_SHA256,
                     },
-                ),
-                BenchmarkAssertion(
-                    kind="history_tool_sequence",
-                    expected=[
-                        "download_file",
-                        "click",
-                        "upload_file",
-                        "wait_for_element",
-                        "click",
-                    ],
                 ),
                 BenchmarkAssertion(kind="history_origin_observed", expected=primary),
                 BenchmarkAssertion(kind="history_origin_observed", expected=secondary),

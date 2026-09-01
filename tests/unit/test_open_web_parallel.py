@@ -133,7 +133,7 @@ def test_merged_report_binds_provider_and_retained_study_manifest(tmp_path: Path
         output_dir=execution.root,
     )
 
-    retained = Path(str(bound.metadata["study_manifest"]))
+    retained = execution.root / str(bound.metadata["study_manifest"])
     digest = hashlib.sha256(study.manifest_path.read_bytes()).hexdigest()
     assert retained.is_file()
     assert retained.is_relative_to(execution.inputs_dir)

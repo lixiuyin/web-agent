@@ -70,6 +70,20 @@ def test_old_results_are_summarized_while_recent_evidence_stays_full():
     assert "https://recent.example/candidate" in text
 
 
+def test_search_market_is_retained_in_planner_visible_evidence() -> None:
+    history = SessionHistory()
+    step = _make_step(1, "search")
+    step.tool_result.data = {
+        "query": "official docs",
+        "engine": "bing",
+        "search_market": "en-US",
+        "results": [{"url": "https://example.test/docs"}],
+    }
+    history.add(step)
+
+    assert '"search_market": "en-US"' in history.format_for_llm()
+
+
 def test_clear():
     h = SessionHistory()
     h.add(_make_step(1))
@@ -106,6 +120,25 @@ def test_completed_policy_checklist_is_visible_to_planner_history():
     h.add(step)
 
     assert "latest-evidence checklist complete" in h.format_for_llm()
+
+
+def test_policy_required_next_action_is_visible_to_planner_history():
+    h = SessionHistory()
+    step = _make_step(1, "search")
+    step.tool_result.audit = {
+        "latest_evidence_complete": True,
+        "latest_missing_prerequisites": [],
+        "required_next_action": {
+            "tool": "download_pdf",
+            "parameters": {"url": "https://example.test/report.pdf"},
+        },
+    }
+    h.add(step)
+
+    text = h.format_for_llm()
+
+    assert "policy required next action" in text
+    assert "download_pdf" in text
 
 
 def test_failed_download_does_not_expose_implicit_recovery_urls_to_planner():

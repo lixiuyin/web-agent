@@ -1,0 +1,38 @@
+{
+  "schema_version": 2,
+  "suite": "open-web-v6-targeted",
+  "tasks": [
+    {
+      "id": "python_creator", "category": "documentation", "goal": "Starting from a blank page, use browser search to find the official page titled 'General Python FAQ', identify Python's creator, and cite the exact URL.",
+      "start_url": "about:blank", "source_urls": ["https://docs.python.org/3/faq/general.html"],
+      "snapshot_id": "python-faq-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "development", "task_family": "programming_language_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_docs_python_org", "target_failure_modes": ["search_discovery", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "medium",
+      "discovery_required": true, "scenario": "search_discovery", "environment": "public_web", "entry_mode": "search", "risk_scope": "read_only",
+      "assertions": [{"kind": "answer_contains", "expected": "Guido van Rossum"}, {"kind": "answer_contains", "expected": "https://docs.python.org/3/faq/general.html"}, {"kind": "history_url_observed", "expected": "https://docs.python.org/3/faq/general.html"}, {"kind": "certificate_valid", "expected": true}]
+    },
+    {
+      "id": "github_git_difference", "category": "collaboration", "goal": "Starting from a blank page, use browser search to find the official GitHub Docs explanation of Git versus GitHub, explain the distinction, and cite the exact URL.",
+      "start_url": "about:blank", "source_urls": ["https://docs.github.com/en/get-started/start-your-journey/what-is-github"],
+      "snapshot_id": "github-git-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "held_out_task", "task_family": "collaboration_platform_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_docs_github_com", "target_failure_modes": ["search_discovery", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "medium",
+      "discovery_required": true, "scenario": "search_discovery", "environment": "public_web", "entry_mode": "search", "risk_scope": "read_only",
+      "assertions": [{"kind": "answer_contains", "expected": "version control"}, {"kind": "answer_contains", "expected": "https://docs.github.com/en/get-started/start-your-journey/what-is-github"}, {"kind": "history_url_observed", "expected": "https://docs.github.com/en/get-started/start-your-journey/what-is-github"}, {"kind": "certificate_valid", "expected": true}]
+    },
+    {
+      "id": "pandas_table", "category": "data_science", "goal": "Starting from a blank page, use browser search to find pandas' official tutorial titled 'What kind of data does pandas handle?', identify the tabular structure it introduces, and cite the exact URL.",
+      "start_url": "about:blank", "source_urls": ["https://pandas.pydata.org/docs/getting_started/intro_tutorials/01_table_oriented.html"],
+      "snapshot_id": "pandas-table-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "held_out_task", "task_family": "data_library_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_pandas_pydata_org", "target_failure_modes": ["search_discovery", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "medium",
+      "discovery_required": true, "scenario": "search_discovery", "environment": "public_web", "entry_mode": "search", "risk_scope": "read_only",
+      "assertions": [{"kind": "answer_contains", "expected": "DataFrame"}, {"kind": "answer_contains", "expected": "https://pandas.pydata.org/docs/getting_started/intro_tutorials/01_table_oriented.html"}, {"kind": "history_url_observed", "expected": "https://pandas.pydata.org/docs/getting_started/intro_tutorials/01_table_oriented.html"}, {"kind": "certificate_valid", "expected": true}]
+    },
+    {
+      "id": "go_documentation", "category": "programming_language", "goal": "Starting from a blank page, use browser search to find the official Go documentation hub, describe what it provides, and cite the exact URL.",
+      "start_url": "about:blank", "source_urls": ["https://go.dev/doc/"],
+      "snapshot_id": "go-doc-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
+      "split": "held_out_setting", "task_family": "programming_language_documentation", "setting_id": "language_portal_documentation", "leakage_group": "host_go_dev", "target_failure_modes": ["search_discovery", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "medium",
+      "discovery_required": true, "scenario": "search_discovery", "environment": "public_web", "entry_mode": "search", "risk_scope": "read_only",
+      "assertions": [{"kind": "answer_contains", "expected": "Go"}, {"kind": "answer_contains", "expected": "https://go.dev/doc/"}, {"kind": "history_url_observed", "expected": "https://go.dev/doc/"}, {"kind": "certificate_valid", "expected": true}]
+    }
+  ]
+}

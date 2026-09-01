@@ -25,6 +25,7 @@ from benchmarks.suites.open_web.runner import (
     append_time_slice,
     canonical_sha256,
     load_manifest,
+    retain_manifest_snapshot,
     retain_report_snapshot,
     retain_study_manifest_snapshot,
 )
@@ -68,7 +69,7 @@ def bind_study_identity(
         {
             "provider": context.provider,
             "study_id": context.study_id,
-            "study_manifest": str(study_manifest_path),
+            "study_manifest": study_manifest_path.relative_to(output_dir).as_posix(),
             "study_manifest_sha256": study_manifest_sha256,
             "benchmark_config": benchmark_config,
             "benchmark_config_sha256": canonical_sha256(benchmark_config),
@@ -101,6 +102,7 @@ def merge_shard_reports(
             "high_risk_action_policy",
             "captcha_handling",
             "max_steps_per_task",
+            "discovery_max_steps_per_task",
         )
     }
     tasks: list[TaskEvaluation] = []
@@ -206,6 +208,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--model", required=True)
     parser.add_argument("--shards", type=int, default=3)
     parser.add_argument("--max-steps-per-task", type=int, default=8)
+    parser.add_argument("--discovery-max-steps-per-task", type=int, default=12)
     parser.add_argument("--captcha-handling", choices=("report", "fail"), default="fail")
     add_study_run_arguments(parser)
     return parser.parse_args(argv)
@@ -235,7 +238,16 @@ def run_parallel(args: argparse.Namespace) -> int:
         task_set_sha256=(study_context.task_set_sha256 if study_context else None),
     )
     planned_tasks = [
-        task.model_copy(update={"max_steps": args.max_steps_per_task}) for task in manifest_tasks
+        task.model_copy(
+            update={
+                "max_steps": (
+                    args.discovery_max_steps_per_task
+                    if task.discovery_required
+                    else args.max_steps_per_task
+                )
+            }
+        )
+        for task in manifest_tasks
     ]
     if study_context is not None:
         validate_study_task_set(
@@ -259,6 +271,8 @@ def run_parallel(args: argparse.Namespace) -> int:
             args.model,
             "--max-steps-per-task",
             str(args.max_steps_per_task),
+            "--discovery-max-steps-per-task",
+            str(args.discovery_max_steps_per_task),
             "--captcha-handling",
             args.captcha_handling,
             "--shard-count",
@@ -284,6 +298,14 @@ def run_parallel(args: argparse.Namespace) -> int:
         reports,
         expected_task_ids={task.id for task in planned_tasks},
     )
+    retained_manifest = retain_manifest_snapshot(
+        manifest,
+        output_dir=output_dir,
+        manifest_sha256=manifest_hash,
+    )
+    portable_metadata = dict(merged.metadata)
+    portable_metadata["manifest"] = retained_manifest.relative_to(output_dir).as_posix()
+    merged = merged.model_copy(update={"metadata": portable_metadata})
     if study_context is not None:
         merged = bind_study_identity(
             merged,

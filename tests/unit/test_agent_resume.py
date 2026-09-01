@@ -167,6 +167,7 @@ async def test_resume_continues_history_and_preserves_trace_run_id(tmp_path: Pat
     layout = RunLayout.from_root(output)
     trace_before = json.loads(layout.trace_path.read_text())
     checkpoint = layout.checkpoint_path
+    layout.legacy_checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
     layout.legacy_checkpoint_path.write_bytes(checkpoint.read_bytes())
     checkpoint.unlink()
     layout.manifest_path.unlink()

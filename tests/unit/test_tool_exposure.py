@@ -54,7 +54,9 @@ async def test_hybrid_explicitly_exposes_direct_source_tools(registry: ToolRegis
     executor = ToolExecutor(registry, allowed_tools=allowed)
 
     descriptions = executor.get_tool_descriptions()
-    result = await executor.execute(ToolCall(tool_name="official_report_search"))
+    result = await executor.execute(
+        ToolCall(tool_name="official_report_search", parameters={"subject": "Qwen"})
+    )
 
     assert "official_report_search: official_report_search description" in descriptions
     assert result.success is True

@@ -52,4 +52,4 @@ ToolResult ◀── ToolExecutor/Registry ◀── Browser/PDF/File/Search imp
 
 ## 学习产物
 
-CLI 的独立运行由 `outputs/runs/` 管理，可比较实验由 `outputs/studies/` 管理，迁移前历史产物只放入带 hash inventory 的 `outputs/legacy/`；不要把手工笔记混入这些机器生成目录。研究流程与证据规则见 [../research/README.md](../research/README.md)。申请材料只写自己实际运行、定位、修改或评估过的部分，模板见 [14-ra-interview-preparation.md](14-ra-interview-preparation.md)。
+CLI 的独立运行由 `outputs/runs/` 管理，可比较实验由 `outputs/studies/` 管理，跨 suite、跨日期的采集由 `outputs/campaigns/` 管理；迁移前历史产物只放入带 hash inventory 的 `outputs/legacy/`。不要把手工笔记混入这些机器生成目录。研究流程与证据规则见 [../research/README.md](../research/README.md)。申请材料只写自己实际运行、定位、修改或评估过的部分，模板见 [14-ra-interview-preparation.md](14-ra-interview-preparation.md)。

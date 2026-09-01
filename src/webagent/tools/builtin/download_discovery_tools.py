@@ -16,23 +16,26 @@ from webagent.tools.registry import tool
 def _embedded_download_urls(page_html: str) -> list[str]:
     """Read page-declared download metadata without synthesizing repository URLs."""
     urls: list[str] = []
-    for match in re.finditer(r'"rawBlobUrl"\s*:\s*("(?:[^"\\]|\\.)*")', page_html):
-        try:
-            value = json.loads(match.group(1))
-        except (json.JSONDecodeError, TypeError):
-            continue
-        if isinstance(value, str):
-            urls.append(value)
+    for document in (page_html, html.unescape(page_html)):
+        for match in re.finditer(r'"rawBlobUrl"\s*:\s*("(?:[^"\\]|\\.)*")', document):
+            try:
+                value = json.loads(match.group(1))
+            except (json.JSONDecodeError, TypeError):
+                continue
+            if isinstance(value, str) and value not in urls:
+                urls.append(value)
     return urls
 
 
 def _normalize_candidate(value: str, source_url: str) -> str | None:
     resolved = urldefrag(urljoin(source_url, html.unescape(value))).url
     parsed = urlparse(resolved)
-    lowered = resolved.casefold()
     if parsed.scheme not in {"http", "https"} or not parsed.netloc:
         return None
-    if ".pdf" not in lowered or resolved == urldefrag(source_url).url:
+    # A real PDF candidate has a filename-like path ending in .pdf. GitHub's
+    # ``viewscreen.../view/pdf?...`` iframe is an HTML viewer wrapper and must
+    # not outrank the page-declared rawBlobUrl.
+    if not parsed.path.casefold().endswith(".pdf") or resolved == urldefrag(source_url).url:
         return None
     if parsed.path.casefold().startswith("/login") or "/commits/" in parsed.path.casefold():
         return None

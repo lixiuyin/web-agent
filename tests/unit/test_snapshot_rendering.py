@@ -70,8 +70,8 @@ class TestInteractiveControlsLines:
             {"tag": "a", "text": "Home", "attrs": {}, "_priority": 40, "css_path": "a.first"},
         ]
         lines = _interactive_controls_lines(elements, max_elements=50)
-        assert any("Search" in ln and "[e1]" in ln for ln in lines)
-        assert any("Home" in ln and "[e2]" in ln for ln in lines)
+        assert any("Search" in ln and "control 1" in ln for ln in lines)
+        assert any("Home" in ln and "control 2" in ln for ln in lines)
 
     def test_ellipsis_for_hidden_elements(self) -> None:
         elements = [{"tag": "a", "text": f"L{i}", "attrs": {}} for i in range(5)]

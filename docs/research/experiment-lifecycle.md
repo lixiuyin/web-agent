@@ -54,6 +54,10 @@ The namespaces have deliberately different meanings:
 - `result/` is the agent's claim.
 - `evaluation/` is an external judgment of that claim and terminal state.
 
+Run namespaces are materialized on first write. Their absence is therefore meaningful
+(`artifacts/` absent means no task artifact was produced) and archives do not accumulate
+empty placeholder trees.
+
 An ordinary interactive session retains one owned run rather than cleaning it
 between follow-ups. Step and turn numbers increase monotonically. The canonical
 `trajectory/trace.json` and `result/` files expose the latest turn, while the two
@@ -73,8 +77,10 @@ tool history, artifact hashes, and strict-run certificates independently from
 the agent's `done` text.  Agent-reported completion and empirical success remain
 separate fields so false completion is measurable.
 
-An optional `success_probability` is elicited by `done` before external judging.
-It refers only to whole-task success.  CAPTCHA and figure-detector confidence
+`success_probability` is elicited before external judging. A successful `done` may
+report it directly; benchmark runs also perform a bounded terminal elicitation so
+timeout, failure, blocked, and max-step outcomes are covered rather than silently
+missing. It refers only to whole-task success. CAPTCHA and figure-detector confidence
 are different quantities and are never reused for task calibration.
 
 ## 4. Analyze without overstating attribution
@@ -84,8 +90,12 @@ attribution.  A failed assertion can establish that an answer was unsupported;
 it does not by itself establish an internal reasoning or memory mechanism.
 Those causal labels require trace evidence plus adjudication or a controlled
 intervention.
+Failed semantic and URL assertions are additionally exported to
+`analysis/adjudication-queue.json`. Queue membership does not change the score and is
+not a causal label; it identifies cases requiring trace review.
 
-Calibration reports state confidence coverage before Brier/ECE values.  A
+Calibration reports state confidence coverage before Brier/ECE values. Reports with
+some but not all task probabilities are explicitly `partial`, not `available`. A
 transfer report is unavailable when a required split is absent; it does not
 silently treat development tasks as held-out data.
 
@@ -131,6 +141,52 @@ aggregated. Development gains, held-out-task gains, and
 held-out-setting gains are reported separately. Historical outputs moved into `outputs/legacy/` keep
 their original bytes and receive a migration inventory; missing research
 metadata is not backfilled.
+
+## 6. Coordinate multiple studies in a campaign
+
+```text
+outputs/campaigns/<campaign-id>/
+├── campaign.json                     # immutable provider/model/source/budget contract
+├── studies/                          # canonical component StudyLayout roots
+│   ├── open-web/
+│   ├── sandbox-interaction/
+│   └── long-horizon/
+├── batches/<UTC-date>/<batch-id>/
+│   ├── batch.json                    # atomic running/completed/failed state
+│   ├── evidence/endpoint-probes.json
+│   ├── logs/
+│   └── analysis/portfolio.json
+└── analysis/portfolios/latest.json   # derived cross-date compatibility view
+```
+
+Changing the model set, task manifest, source fingerprint, budgets, CAPTCHA policy, or
+preflight policy requires a new campaign root. This prevents a convenient folder name
+from silently combining incomparable executions.
+
+The external BrowserGym layer is retained as a separate study rather than inserted
+into the diagnostic `results.json` population:
+
+```text
+outputs/studies/browsergym-external-model-matrix/
+├── browsergym-matrix-state.json
+├── executions/<date>/<model>/
+│   ├── webarena_verified/<batch>/
+│   │   ├── browsergym-execution.json
+│   │   ├── browsergym-results.json
+│   │   └── runs/<task-episode>/
+│   └── visualwebarena/<batch>/...
+├── evidence/logs/
+└── analysis/matrices/<batch>.json
+```
+
+The final `two-layer-portfolio.json` references and hashes both the internal campaign
+portfolio and external reports. It contains per-layer scores only; there is no pooled
+"overall" score because the task populations and judges are different. Official
+readiness requires WebArena-Verified Hard and full VisualWebArena for every diagnostic
+endpoint, with complete task coverage, zero unscored system errors, and matching source
+fingerprints. External execution contracts additionally bind BrowserGym's canonical
+ordered task names and deterministic per-task seeds; changing either invalidates a
+paired comparison.
 
 Formal comparison metadata uses the packaged v1 JSON Schemas for `study.json`
 and each study run record. Writers retain `$schema`, `schema_version`, immutable

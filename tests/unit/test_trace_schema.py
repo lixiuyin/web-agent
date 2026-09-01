@@ -76,6 +76,7 @@ def test_v7_migration_is_deterministic_and_validates_against_packaged_schema() -
     assert migrated["$schema"] == RUN_TRACE_SCHEMA_ID
     assert migrated["created_at"] == "2026-08-30T01:02:03+00:00"
     assert migrated["evaluation"]["anti_shortcut_contract"] == "search_engine_only_v8"
+    assert migrated["evaluation"]["browser_channel"] == "bundled"
     assert migrated["resume_count"] == 0
     assert migrated["checkpoint_schema_version"] is None
     assert migrated["resumed_from_checkpoint"] is False

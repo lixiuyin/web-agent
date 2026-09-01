@@ -321,20 +321,10 @@ class RunLayout:
                 path.unlink()
 
     def _create_directories(self) -> None:
-        for path in (
-            self.trajectory_dir,
-            self.trajectory_turns_dir,
-            self.screenshots_dir,
-            self.checkpoints_dir,
-            self.downloads_dir,
-            self.documents_dir,
-            self.figures_dir,
-            self.files_dir,
-            self.attachments_dir,
-            self.result_turns_dir,
-            self.evaluation_dir,
-        ):
-            path.mkdir(parents=True, exist_ok=True)
+        # Run namespaces are materialized by their writers. Creating every
+        # optional leaf up front produced hundreds of empty directories in
+        # benchmark archives and made absence indistinguishable from unused.
+        self.root.mkdir(parents=True, exist_ok=True)
 
     def _write_manifest(self, *, run_id: str, task: str, model: str) -> None:
         manifest = {
@@ -370,9 +360,19 @@ class OutputWorkspace:
     def studies_dir(self) -> Path:
         return self.root / "studies"
 
+    @property
+    def campaigns_dir(self) -> Path:
+        return self.root / "campaigns"
+
     def study(self, study_id: str) -> StudyLayout:
         """Return a canonical study layout without creating it."""
         return StudyLayout.from_root(self.studies_dir / safe_component(study_id, "study_id"))
+
+    def campaign(self, campaign_id: str) -> CampaignLayout:
+        """Return a canonical multi-study campaign layout without creating it."""
+        return CampaignLayout.from_root(
+            self.campaigns_dir / safe_component(campaign_id, "campaign_id")
+        )
 
     def allocate_run(
         self,
@@ -392,6 +392,111 @@ class OutputWorkspace:
         leaf = f"{task_slug}-{identifier.replace('-', '')[:10]}"
         return RunLayout.from_root(
             self.runs_dir / timestamp.astimezone(UTC).date().isoformat() / model_slug / leaf
+        )
+
+
+@dataclass(frozen=True, slots=True)
+class CampaignBatchLayout:
+    """One dated, immutable collection attempt within a multi-study campaign."""
+
+    root: Path
+
+    @classmethod
+    def from_root(cls, root: str | Path) -> CampaignBatchLayout:
+        return cls(Path(root).expanduser().resolve())
+
+    @property
+    def state_path(self) -> Path:
+        return self.root / "batch.json"
+
+    @property
+    def evidence_dir(self) -> Path:
+        return self.root / "evidence"
+
+    @property
+    def endpoint_preflight_path(self) -> Path:
+        return self.evidence_dir / "endpoint-probes.json"
+
+    @property
+    def logs_dir(self) -> Path:
+        return self.root / "logs"
+
+    @property
+    def analysis_dir(self) -> Path:
+        return self.root / "analysis"
+
+    @property
+    def portfolio_path(self) -> Path:
+        return self.analysis_dir / "portfolio.json"
+
+    def prepare(self) -> None:
+        """Materialize only namespaces that every campaign batch owns."""
+        if self.root.exists() and any(self.root.iterdir()):
+            raise FileExistsError(f"campaign batch already contains evidence: {self.root}")
+        for path in (self.evidence_dir, self.logs_dir, self.analysis_dir):
+            path.mkdir(parents=True, exist_ok=True)
+
+
+@dataclass(frozen=True, slots=True)
+class CampaignLayout:
+    """Canonical root for a longitudinal campaign spanning multiple studies."""
+
+    root: Path
+
+    @classmethod
+    def from_root(cls, root: str | Path) -> CampaignLayout:
+        return cls(Path(root).expanduser().resolve())
+
+    @property
+    def manifest_path(self) -> Path:
+        return self.root / "campaign.json"
+
+    @property
+    def batches_dir(self) -> Path:
+        return self.root / "batches"
+
+    @property
+    def studies_dir(self) -> Path:
+        return self.root / "studies"
+
+    @property
+    def analysis_dir(self) -> Path:
+        return self.root / "analysis"
+
+    @property
+    def portfolios_dir(self) -> Path:
+        return self.analysis_dir / "portfolios"
+
+    @property
+    def latest_portfolio_path(self) -> Path:
+        return self.portfolios_dir / "latest.json"
+
+    def prepare(self) -> None:
+        """Create stable campaign namespaces without claiming a new batch."""
+        if self.root.exists() and any(self.root.iterdir()) and not self.manifest_path.is_file():
+            raise RunOwnershipError(
+                f"campaign root is non-empty but has no campaign contract: {self.root}"
+            )
+        for path in (self.batches_dir, self.studies_dir, self.portfolios_dir):
+            path.mkdir(parents=True, exist_ok=True)
+
+    def allocate_batch(
+        self,
+        *,
+        now: datetime | None = None,
+        batch_id: str | None = None,
+    ) -> CampaignBatchLayout:
+        """Return one UTC-date-scoped batch without mutating the campaign."""
+        timestamp = now or datetime.now(UTC)
+        if timestamp.tzinfo is None:
+            timestamp = timestamp.replace(tzinfo=UTC)
+        timestamp = timestamp.astimezone(UTC)
+        identifier = safe_component(
+            batch_id or timestamp.strftime("%Y%m%dT%H%M%S%fZ"),
+            "batch_id",
+        )
+        return CampaignBatchLayout.from_root(
+            self.batches_dir / timestamp.date().isoformat() / identifier
         )
 
 
@@ -779,6 +884,8 @@ __all__ = [
     "RUN_MANIFEST_SCHEMA_VERSION",
     "STUDY_EXECUTION_FORMAT",
     "STUDY_EXECUTION_LAYOUT_VERSION",
+    "CampaignBatchLayout",
+    "CampaignLayout",
     "OutputWorkspace",
     "RunLayout",
     "RunOwnershipError",

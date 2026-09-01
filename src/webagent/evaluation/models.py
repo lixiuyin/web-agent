@@ -25,12 +25,14 @@ AssertionKind = Literal[
     "attribute_equals",
     "json_equals",
     "answer_contains",
+    "answer_contains_any",
     "answer_date",
     "answer_labeled_date",
     "answer_not_contains",
     "answer_regex",
     "answer_in_order",
     "history_url_observed",
+    "history_url_observed_any",
     "history_origin_observed",
     "history_tool_succeeded",
     "history_tool_sequence",
@@ -145,6 +147,12 @@ class BenchmarkAssertion(BaseModel):
             raise ValueError("json_equals requires endpoint and json_path")
         if self.kind == "history_url_observed" and not isinstance(self.expected, str):
             raise ValueError("history_url_observed requires a string expected URL/prefix")
+        if self.kind in {"answer_contains_any", "history_url_observed_any"} and (
+            not isinstance(self.expected, list)
+            or not self.expected
+            or not all(isinstance(item, str) and item.strip() for item in self.expected)
+        ):
+            raise ValueError(f"{self.kind} requires a non-empty string list")
         if self.kind == "history_origin_observed" and not isinstance(self.expected, str):
             raise ValueError("history_origin_observed requires a string origin")
         if self.kind == "history_tool_succeeded" and not isinstance(self.expected, str):
@@ -272,14 +280,24 @@ class BenchmarkTask(BaseModel):
                     "network_required tasks must declare snapshot_id, valid_from, and valid_until"
                 )
             observed_sources = {
-                str(assertion.expected)
+                str(value)
                 for assertion in self.assertions
-                if assertion.kind == "history_url_observed"
+                if assertion.kind in {"history_url_observed", "history_url_observed_any"}
+                for value in (
+                    assertion.expected
+                    if isinstance(assertion.expected, list)
+                    else [assertion.expected]
+                )
             }
             cited_sources = {
-                str(assertion.expected)
+                str(value)
                 for assertion in self.assertions
-                if assertion.kind == "answer_contains"
+                if assertion.kind in {"answer_contains", "answer_contains_any"}
+                for value in (
+                    assertion.expected
+                    if isinstance(assertion.expected, list)
+                    else [assertion.expected]
+                )
             }
             if not any(source in observed_sources for source in self.source_urls):
                 raise ValueError(
@@ -305,6 +323,14 @@ class AssertionOutcome(BaseModel):
     passed: bool
     observed: Any = None
     error: str | None = None
+    adjudication_candidate: bool = False
+    adjudication_reason: str | None = None
+
+    @model_validator(mode="after")
+    def validate_adjudication(self) -> AssertionOutcome:
+        if self.adjudication_reason is not None and not self.adjudication_candidate:
+            raise ValueError("adjudication_reason requires adjudication_candidate")
+        return self
 
 
 class TaskEvaluation(BaseModel):
@@ -346,7 +372,7 @@ class TaskEvaluation(BaseModel):
     source_origins: list[str] = Field(default_factory=list)
     trajectory: TrajectoryDiagnostics | None = None
     success_probability: float | None = Field(default=None, ge=0.0, le=1.0)
-    confidence_source: Literal["self_reported"] | None = None
+    confidence_source: Literal["self_reported", "terminal_self_report"] | None = None
     confidence_elicited_at_step: int | None = Field(default=None, ge=1)
     assertions: list[AssertionOutcome]
 

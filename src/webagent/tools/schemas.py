@@ -196,7 +196,9 @@ TOOL_PARAMETER_SCHEMAS: dict[str, JsonSchema] = {
     "search": _object(
         {
             "query": _string(),
-            "engine": _string(enum=("bing", "yahoo", "duckduckgo", "google")),
+            "engine": _string(
+                enum=("bing", "seznam", "yahoo_japan", "yahoo", "duckduckgo", "google")
+            ),
             "recency": _string(enum=("week", "month", "year", "latest")),
         },
         required=("query",),

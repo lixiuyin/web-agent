@@ -6,9 +6,10 @@ import hashlib
 import json
 import math
 import re
+import unicodedata
 from datetime import date
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 from urllib.parse import urljoin, urlsplit
 
 import httpx
@@ -73,7 +74,12 @@ def _answer_starts_with_date(expected: str, observed: str) -> bool:
 def _matches_answer_assertion(assertion: BenchmarkAssertion, observed: Any) -> bool:
     kind = assertion.kind
     if kind == "answer_contains":
-        return str(assertion.expected).casefold() in str(observed).casefold()
+        return _normalized_match_text(assertion.expected) in _normalized_match_text(observed)
+    if kind == "answer_contains_any":
+        return isinstance(assertion.expected, list) and any(
+            _normalized_match_text(expected) in _normalized_match_text(observed)
+            for expected in assertion.expected
+        )
     if kind == "answer_date":
         return _answer_contains_date(str(assertion.expected), str(observed))
     if kind == "answer_labeled_date":
@@ -87,21 +93,29 @@ def _matches_answer_assertion(assertion: BenchmarkAssertion, observed: Any) -> b
         field_value = str(observed)[match.end() :].splitlines()[0]
         return _answer_starts_with_date(str(expected.get("date", "")), field_value)
     if kind == "answer_not_contains":
-        return str(assertion.expected).casefold() not in str(observed).casefold()
+        return _normalized_match_text(assertion.expected) not in _normalized_match_text(observed)
     if kind == "answer_regex":
         return re.search(str(assertion.expected), str(observed), flags=re.IGNORECASE) is not None
     if kind == "answer_in_order":
         if not isinstance(assertion.expected, list):
             return False
-        text = str(observed).casefold()
+        text = _normalized_match_text(observed)
         cursor = 0
         for expected in assertion.expected:
-            position = text.find(str(expected).casefold(), cursor)
+            normalized_expected = _normalized_match_text(expected)
+            position = text.find(normalized_expected, cursor)
             if position < 0:
                 return False
-            cursor = position + len(str(expected))
+            cursor = position + len(normalized_expected)
         return True
     return False
+
+
+def _normalized_match_text(value: Any) -> str:
+    """Normalize typography while preserving semantic punctuation such as URL slashes."""
+    text = unicodedata.normalize("NFKC", str(value)).casefold()
+    text = re.sub(r"[\u2010\u2011\u2012\u2013\u2014\u2212-]+", " ", text)
+    return " ".join(text.split())
 
 
 class TerminalStateEvaluator:
@@ -133,11 +147,18 @@ class TerminalStateEvaluator:
             item
             for item in outcomes
             if item.assertion.kind.startswith("answer_")
-            or item.assertion.kind in {"history_url_observed", "history_origin_observed"}
+            or item.assertion.kind
+            in {"history_url_observed", "history_url_observed_any", "history_origin_observed"}
         ]
         status = result.status.casefold()
         success_probability = _success_probability(result.final_result)
-        confidence_step = next(
+        raw_confidence_source = result.final_result.get("confidence_source")
+        confidence_source: Literal["self_reported", "terminal_self_report"] = (
+            "terminal_self_report"
+            if raw_confidence_source == "terminal_self_report"
+            else "self_reported"
+        )
+        confidence_step = result.final_result.get("confidence_elicited_at_step") or next(
             (
                 step.step_number
                 for step in reversed(result.history)
@@ -195,7 +216,7 @@ class TerminalStateEvaluator:
             ),
             trajectory=trajectory_diagnostics(result),
             success_probability=success_probability,
-            confidence_source=("self_reported" if success_probability is not None else None),
+            confidence_source=confidence_source if success_probability is not None else None,
             confidence_elicited_at_step=(
                 confidence_step if success_probability is not None else None
             ),
@@ -212,7 +233,21 @@ class TerminalStateEvaluator:
         try:
             observed = await self._observe(task, assertion, client, result)
             passed = self._matches(assertion, observed)
-            return AssertionOutcome(assertion=assertion, passed=passed, observed=observed)
+            candidate = not passed and (
+                assertion.kind.startswith("answer_")
+                or assertion.kind in {"history_url_observed", "history_url_observed_any"}
+            )
+            return AssertionOutcome(
+                assertion=assertion,
+                passed=passed,
+                observed=observed,
+                adjudication_candidate=candidate,
+                adjudication_reason=(
+                    "semantic or URL assertion failed; inspect trace before assigning cause"
+                    if candidate
+                    else None
+                ),
+            )
         except Exception as exc:
             return AssertionOutcome(
                 assertion=assertion,
@@ -238,10 +273,18 @@ class TerminalStateEvaluator:
             return _json_path(response.json(), assertion.json_path or "")
         if assertion.kind.startswith("answer_"):
             return str(result.final_result.get("summary", ""))
-        if assertion.kind == "history_url_observed":
-            expected = str(assertion.expected)
+        if assertion.kind in {"history_url_observed", "history_url_observed_any"}:
+            expected_values = (
+                assertion.expected
+                if assertion.kind == "history_url_observed_any"
+                else [str(assertion.expected)]
+            )
             observed_urls = [step.browser_state.url for step in result.history]
-            return any(url.startswith(expected) for url in observed_urls)
+            return any(
+                url.startswith(str(expected))
+                for expected in expected_values
+                for url in observed_urls
+            )
         if assertion.kind == "history_origin_observed":
             expected = str(assertion.expected).rstrip("/")
             observed_origins = {
@@ -344,7 +387,7 @@ class TerminalStateEvaluator:
             return str(assertion.expected) in str(observed)
         if assertion.kind.startswith("answer_"):
             return _matches_answer_assertion(assertion, observed)
-        if assertion.kind == "history_url_observed":
+        if assertion.kind in {"history_url_observed", "history_url_observed_any"}:
             return observed is True
         if assertion.kind in {
             "history_origin_observed",

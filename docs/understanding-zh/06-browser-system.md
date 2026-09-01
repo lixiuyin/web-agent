@@ -54,7 +54,7 @@
             device_scale_factor=1.0,
             ignore_https_errors=self.ignore_https_errors,
             accept_downloads=True,
-            proxy=None,
+            proxy={"server": self.proxy_server} if self.proxy_server else None,
         )
 
         # Get CDP session for enhanced snapshot extraction.
@@ -83,7 +83,7 @@
             await asyncio.sleep(random.uniform(0.5, 1.5))
 ```
 
-输入来自构造函数：`headless: bool`、viewport 像素、默认 timeout 毫秒、`slow_mo` 毫秒、profile 路径、TLS、locale/timezone 与 stealth 开关。`slow_mo=0` 就是零固定延迟；随机等待由默认关闭的 `humanize_delays` 显式控制。默认 locale/timezone 为 `None`，保留浏览器/系统原生环境；默认临时 profile，只有显式 persistent 才跨运行复用。异常会直接抛给 CLI。
+输入来自构造函数：`headless: bool`、viewport 像素、默认 timeout 毫秒、`slow_mo` 毫秒、profile 路径、browser channel、显式 proxy、TLS、locale/timezone 与 stealth 开关。`browser_channel=None` 使用 Playwright bundled Chromium；`chrome` 使用本机稳定版 Chrome，但仍必须配独立自动化 profile，不能指向日常 Chrome 用户目录。浏览器默认直连且不会隐式继承 shell 的 `HTTP_PROXY`；只有配置 `browser_proxy_server` 才改变浏览器网络区域。`slow_mo=0` 就是零固定延迟；随机等待由默认关闭的 `humanize_delays` 显式控制。默认 locale/timezone 为 `None`，保留浏览器/系统原生环境；默认临时 profile，只有显式 persistent 才跨运行复用。异常会直接抛给 CLI。
 
 ### 关闭完整原代码
 

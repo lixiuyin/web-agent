@@ -18,6 +18,7 @@ from webagent.browser.snapshot import (
     _extract_elements_enhanced,
     _extract_from_ax_tree,
     take_snapshot,
+    wait_for_page_stability,
 )
 
 
@@ -68,6 +69,65 @@ class TestTakeSnapshot:
         result = await take_snapshot(page, use_cdp=False, wait_after_load=5)
         assert result["meta"]["viewport"] == {"width": 1280, "height": 720}
 
+    async def test_rejects_html_screenshot_pair_crossing_navigation(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        async def fake_extract(page):
+            return []
+
+        class NavigatingPage(FakePage):
+            async def screenshot(self, full_page: bool = False, type: str = "png") -> bytes:
+                self.url = "https://example.com/redirected"
+                return b"PNGDATA"
+
+        monkeypatch.setattr(snap, "extract_interactive_elements", fake_extract)
+        with pytest.raises(RuntimeError, match="page navigated during snapshot"):
+            await take_snapshot(NavigatingPage(), use_cdp=False, wait_after_load=0)
+
+
+class TestWaitForPageStability:
+    async def test_waits_for_repeated_ready_dom_signature(self) -> None:
+        class StabilizingPage:
+            def __init__(self) -> None:
+                self.states = iter(
+                    [
+                        {
+                            "url": "https://example.com",
+                            "readyState": "loading",
+                            "nodeCount": 2,
+                            "textLength": 0,
+                            "scrollHeight": 100,
+                        },
+                        {
+                            "url": "https://example.com",
+                            "readyState": "complete",
+                            "nodeCount": 20,
+                            "textLength": 200,
+                            "scrollHeight": 800,
+                        },
+                        {
+                            "url": "https://example.com",
+                            "readyState": "complete",
+                            "nodeCount": 20,
+                            "textLength": 200,
+                            "scrollHeight": 800,
+                        },
+                    ]
+                )
+
+            async def evaluate(self, _script: str) -> dict[str, Any]:
+                return next(self.states)
+
+        assert (
+            await wait_for_page_stability(
+                StabilizingPage(), timeout_ms=1000, stable_ms=0, poll_ms=0
+            )
+            is True
+        )
+
+    async def test_zero_timeout_skips_stability_wait(self) -> None:
+        assert await wait_for_page_stability(FakePage(), timeout_ms=0) is False
+
 
 class _FakeCDP:
     def __init__(self, ax_tree: Any) -> None:
@@ -88,11 +148,29 @@ class TestExtractElementsEnhanced:
         monkeypatch.setattr(snap, "CDPService", lambda page: _FakeCDP({"nodes": []}))
 
         async def fake_from_ax(ax_tree, page):
-            return [{"tag": "button", "text": "AX"}]
+            return [{"tag": "button", "text": "AX", "css_path": "#ax"}]
 
         monkeypatch.setattr(snap, "_extract_from_ax_tree", fake_from_ax)
         out = await _extract_elements_enhanced(FakePage())
-        assert out == [{"tag": "button", "text": "AX"}]
+        assert out == [{"tag": "button", "text": "AX", "css_path": "#ax"}]
+
+    async def test_falls_back_to_js_when_ax_tree_has_no_actionable_selectors(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.setattr(snap, "CDPService", lambda page: _FakeCDP({"nodes": []}))
+
+        async def fake_from_ax(ax_tree, page):
+            return [{"tag": "textbox", "text": "User"}]
+
+        async def fake_extract(page):
+            return [{"tag": "input", "text": "", "css_path": "#username"}]
+
+        monkeypatch.setattr(snap, "_extract_from_ax_tree", fake_from_ax)
+        monkeypatch.setattr(snap, "extract_interactive_elements", fake_extract)
+
+        out = await _extract_elements_enhanced(FakePage())
+
+        assert out == [{"tag": "input", "text": "", "css_path": "#username"}]
 
     async def test_falls_back_to_js_when_no_ax_tree(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setattr(snap, "CDPService", lambda page: _FakeCDP(None))

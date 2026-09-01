@@ -10,6 +10,8 @@ from webagent.browser.search_parsers import (
     parse_bing_results,
     parse_duckduckgo_results,
     parse_google_results,
+    parse_seznam_results,
+    parse_yahoo_japan_results,
 )
 
 
@@ -103,6 +105,12 @@ class TestDetectSearchEngine:
 
     def test_duckduckgo(self) -> None:
         assert detect_search_engine("https://duckduckgo.com/?q=x") == "duckduckgo"
+
+    def test_seznam(self) -> None:
+        assert detect_search_engine("https://search.seznam.cz/?q=x") == "seznam"
+
+    def test_yahoo_japan(self) -> None:
+        assert detect_search_engine("https://search.yahoo.co.jp/search?p=x") == "yahoo_japan"
 
     def test_unknown(self) -> None:
         assert detect_search_engine("https://arxiv.org") is None
@@ -208,6 +216,31 @@ def _ddg_link_element(href: str, title: str) -> FakeElement:
 
 
 class TestDuckDuckGoParser:
+    async def test_extracts_current_data_testid_result_cards(self) -> None:
+        title = FakeElement(
+            href="https://docs.python.org/3/faq/general.html",
+            text="General Python FAQ",
+        )
+        internal = FakeElement(href="https://duckduckgo.com/?q=internal", text="")
+        container = FakeElement(
+            tag_name="ARTICLE",
+            children={
+                'a[data-testid="result-title-a"], h2 a[href], a.result__a[href]': title,
+                "a[href]": internal,
+            },
+        )
+        page = FakePage({'article[data-testid="result"]': [container]})
+
+        results = await parse_duckduckgo_results(page, max_results=10)
+
+        assert results == [
+            {
+                "title": "General Python FAQ",
+                "link": "https://docs.python.org/3/faq/general.html",
+                "snippet": "",
+            }
+        ]
+
     async def test_extracts_direct_link_containers(self) -> None:
         page = FakePage(
             {
@@ -249,6 +282,58 @@ class TestDuckDuckGoParser:
         page = FakePage({"article.result": [el]})
         results = await parse_duckduckgo_results(page, max_results=10)
         assert results[0]["title"] == "Attr Title"
+
+
+class TestSeznamParser:
+    async def test_extracts_heading_links(self) -> None:
+        page = FakePage(
+            {
+                'a[data-e-a="heading"]': [
+                    FakeElement(
+                        href="https://docs.python.org/3/faq/general.html", text="General FAQ"
+                    ),
+                    FakeElement(href="/internal", text="Internal"),
+                ]
+            }
+        )
+
+        results = await parse_seznam_results(page, max_results=10)
+
+        assert results == [
+            {
+                "title": "General FAQ",
+                "link": "https://docs.python.org/3/faq/general.html",
+                "snippet": "",
+            }
+        ]
+
+
+class TestYahooJapanParser:
+    async def test_extracts_direct_result_and_trims_metadata_lines(self) -> None:
+        page = FakePage(
+            {
+                "a.sw-Card__titleInner": [
+                    FakeElement(
+                        href="https://docs.python.org/3/faq/general.html",
+                        text=(
+                            "General Python FAQ — Python documentation\n"
+                            "docs.python.org\nhttps://docs.python.org>faq>general"
+                        ),
+                    ),
+                    FakeElement(href="/internal", text="Internal"),
+                ]
+            }
+        )
+
+        results = await parse_yahoo_japan_results(page, max_results=10)
+
+        assert results == [
+            {
+                "title": "General Python FAQ — Python documentation",
+                "link": "https://docs.python.org/3/faq/general.html",
+                "snippet": "",
+            }
+        ]
 
 
 class TestExtractKeywordWords:

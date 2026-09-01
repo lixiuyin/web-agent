@@ -18,6 +18,14 @@ class TestDoneTool:
     def test_validation_accepts_result_alias(self) -> None:
         DoneTool().validate_params({"result": "an answer"})
 
+    @pytest.mark.parametrize("summary", ["...", "…", "---", " ( ) "])
+    def test_validation_rejects_punctuation_only_placeholders(self, summary: str) -> None:
+        with pytest.raises(ValueError, match="placeholder"):
+            DoneTool().validate_params({"summary": summary})
+
+    def test_validation_accepts_short_meaningful_answer(self) -> None:
+        DoneTool().validate_params({"summary": "Go"})
+
     @pytest.mark.parametrize("value", [-0.01, 1.01, float("inf"), True, "0.8"])
     def test_validation_rejects_invalid_success_probability(self, value: object) -> None:
         with pytest.raises(ValueError, match="success_probability"):

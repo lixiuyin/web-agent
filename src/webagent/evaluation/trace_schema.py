@@ -50,6 +50,7 @@ class TraceEvaluationV8(_StrictModel):
     strict_eval_mode: bool
     search_engine_only: bool
     browser_profile_mode: str
+    browser_channel: str = "bundled"
     persistent_pdf_cache: bool
 
 

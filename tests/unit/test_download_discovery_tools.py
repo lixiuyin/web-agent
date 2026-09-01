@@ -52,6 +52,36 @@ async def test_reports_dom_and_declared_metadata_urls_explicitly() -> None:
     assert result.data["candidates"][1]["url"] == metadata_url
 
 
+async def test_rejects_viewer_wrapper_and_reads_html_escaped_raw_blob_url() -> None:
+    metadata_url = "https://github.com/org/repo/raw/refs/heads/main/report.pdf"
+    page = _Page(
+        [
+            {
+                "value": (
+                    "https://viewscreen.githubusercontent.com/view/pdf?"
+                    "browser=chrome&amp;enc_url=report.pdf"
+                ),
+                "element": "iframe",
+                "text": "",
+            }
+        ],
+        (f"<script>{{&quot;rawBlobUrl&quot;:&quot;{metadata_url}&quot;}}</script>"),
+    )
+
+    result = await InspectDownloadLinksTool(browser=_Browser(page)).execute({})
+
+    assert result.success is True
+    assert result.data["candidate_count"] == 1
+    assert result.data["candidates"] == [
+        {
+            "url": metadata_url,
+            "evidence_type": "declared_page_metadata",
+            "element": "script",
+            "text": "rawBlobUrl",
+        }
+    ]
+
+
 async def test_reports_visible_datetime_and_file_history_links() -> None:
     page = _Page(
         [

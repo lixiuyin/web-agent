@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from datetime import date
+from datetime import UTC, date, datetime
 from importlib import resources
 from pathlib import Path
 from types import SimpleNamespace
@@ -37,6 +37,7 @@ from webagent.evaluation.studies import (
     append_study_record,
     load_study_records,
     publish_study_run_records,
+    validate_study_task_set,
     write_study_manifest,
 )
 from webagent.evaluation.task_binding import task_set_sha256
@@ -235,6 +236,7 @@ def test_published_task_record_is_hash_bound_to_preregistered_study(tmp_path: Pa
     execution = StudyLayout.from_root(study_root).allocate_execution(
         model="qwen/qwen3.8-flash",
         condition="baseline",
+        now=datetime(2026, 8, 30, 1, tzinfo=UTC),
     )
     registered_task_set_sha256 = task_set_sha256([task])
     execution.prepare(
@@ -415,3 +417,105 @@ async def test_study_runner_rejects_subset_or_changed_tasks_before_execution(
     with pytest.raises(ValueError, match="complete preregistered"):
         await runner.run(manifest.suite, changed)
     assert called is False
+
+
+def test_study_task_set_enforces_preregistered_task_class_budgets(tmp_path: Path) -> None:
+    tasks = [
+        BenchmarkTask(
+            id="direct-task",
+            category="document",
+            goal="read a known page",
+            start_url="https://example.test/direct",
+            assertions=[BenchmarkAssertion(kind="text_contains", expected="done")],
+            max_steps=20,
+        ),
+        BenchmarkTask(
+            id="discovery-task",
+            category="discovery",
+            goal="find a page",
+            start_url="about:blank",
+            assertions=[
+                BenchmarkAssertion(kind="certificate_valid", expected=True),
+                BenchmarkAssertion(
+                    kind="history_url_observed",
+                    expected="https://example.test/found",
+                ),
+                BenchmarkAssertion(
+                    kind="answer_contains",
+                    expected="https://example.test/found",
+                ),
+            ],
+            max_steps=20,
+            network_required=True,
+            discovery_required=True,
+            source_urls=["https://example.test/found"],
+            snapshot_id="discovery-snapshot",
+            valid_from="2026-01-01",
+            valid_until="2026-12-31",
+        ),
+    ]
+    payload = json.dumps([task.model_dump(mode="json") for task in tasks]).encode("utf-8")
+    digest = hashlib.sha256(payload).hexdigest()
+    manifest = _manifest().model_copy(
+        update={
+            "task_manifest_sha256": digest,
+            "task_split_counts": {"development": 2},
+            "models": (StudyModel(provider="openrouter", model="model-a"),),
+            "conditions": (
+                StudyCondition(
+                    id="baseline",
+                    kind="baseline",
+                    description="Class-specific task budgets",
+                    config_overrides={
+                        "task_step_budgets": {"default": 8, "discovery_required": 12}
+                    },
+                ),
+            ),
+            "budgets": StudyBudgets(
+                max_steps=12,
+                task_timeout_seconds=1200,
+                tool_timeout_seconds=300,
+                planner_max_tokens=6000,
+            ),
+        }
+    )
+    root = tmp_path / manifest.study_id
+    initialize_matrix_study(root, manifest, task_manifest_bytes=payload)
+    execution = StudyLayout.from_root(root).allocate_execution(
+        model="model-a",
+        condition="baseline",
+    )
+    task_digest = task_set_sha256(tasks)
+    execution.prepare(
+        study_id=manifest.study_id,
+        task_manifest_sha256=digest,
+        task_set_sha256=task_digest,
+    )
+    context = StudyRunContext(
+        study_root=root,
+        study_id=manifest.study_id,
+        provider="openrouter",
+        model="model-a",
+        condition_id="baseline",
+        repetition=1,
+        task_manifest_sha256=digest,
+        task_set_sha256=task_digest,
+    )
+    planned = [
+        tasks[0].model_copy(update={"max_steps": 8}),
+        tasks[1].model_copy(update={"max_steps": 12}),
+    ]
+
+    validate_study_task_set(
+        context,
+        execution=execution,
+        suite=manifest.suite,
+        tasks=planned,
+    )
+    with pytest.raises(ValueError, match="max_steps differs"):
+        validate_study_task_set(
+            context,
+            execution=execution,
+            suite=manifest.suite,
+            tasks=[planned[0].model_copy(update={"max_steps": 7}), planned[1]],
+        )

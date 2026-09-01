@@ -12,6 +12,7 @@ import pytest
 from webagent import cli
 from webagent.cli import (
     _apply_cli_overrides,
+    _apply_evaluation_overrides,
     _build_browser,
     _build_planner,
     _print_result,
@@ -105,7 +106,25 @@ def test_build_browser_applies_stealth_config():
     assert browser.ignore_https_errors is True
     assert browser.locale == "fr-FR"
     assert browser.timezone_id == "Europe/Paris"
+    assert browser.proxy_server is None
     assert browser.stale_profile_max_age_seconds == 7200
+    assert browser.browser_channel is None
+
+
+def test_build_browser_uses_local_chrome_channel() -> None:
+    cfg = AgentConfig(_env_file=None, browser_channel="chrome")
+
+    browser = _build_browser(cfg)
+
+    assert browser.browser_channel == "chrome"
+
+
+def test_build_browser_applies_explicit_proxy_without_logging_credentials() -> None:
+    cfg = AgentConfig(_env_file=None, browser_proxy_server="http://127.0.0.1:7897")
+
+    browser = _build_browser(cfg)
+
+    assert browser.proxy_server == "http://127.0.0.1:7897"
 
 
 def test_build_browser_disables_random_delays_in_strict_eval():
@@ -174,6 +193,8 @@ def _args(**kw: Any) -> argparse.Namespace:
         "discovery_mode": None,
         "high_risk_actions": None,
         "browser_profile_mode": None,
+        "browser_channel": None,
+        "browser_proxy_server": None,
         "captcha_handling": None,
         "captcha_wait_timeout": None,
         "planner_output_mode": None,
@@ -201,16 +222,26 @@ class TestApplyCliOverrides:
         _apply_cli_overrides(cfg, _args(headless=True))
         assert cfg.browser_headless is True
 
+    def test_browser_channel_override(self):
+        cfg = AgentConfig(_env_file=None)
+        _apply_cli_overrides(cfg, _args(browser_channel="chrome"))
+        assert cfg.browser_channel == "chrome"
+
+    def test_browser_proxy_override(self):
+        cfg = AgentConfig(_env_file=None)
+        _apply_cli_overrides(cfg, _args(browser_proxy_server="http://127.0.0.1:7897"))
+        assert cfg.browser_proxy_server == "http://127.0.0.1:7897"
+
     def test_use_vllm_toggle(self):
         cfg = AgentConfig(_env_file=None, use_vllm=True)
         _apply_cli_overrides(cfg, _args(use_vllm=False))
         assert cfg.use_vllm is False
 
-    def test_hybrid_discovery_requires_explicit_override(self):
+    def test_browser_grounded_discovery_requires_explicit_override(self):
         cfg = AgentConfig(_env_file=None)
-        assert cfg.discovery_mode == "browser-grounded"
-        _apply_cli_overrides(cfg, _args(discovery_mode="hybrid"))
         assert cfg.discovery_mode == "hybrid"
+        _apply_cli_overrides(cfg, _args(discovery_mode="browser-grounded"))
+        assert cfg.discovery_mode == "browser-grounded"
 
     def test_high_risk_action_policy_requires_explicit_override(self):
         cfg = AgentConfig(_env_file=None)
@@ -228,6 +259,7 @@ class TestApplyCliOverrides:
         assert cfg.high_risk_action_policy == "deny"
         assert cfg.persistent_pdf_cache is False
         assert cfg.browser_profile_mode == "temporary"
+        assert cfg.browser_channel == "bundled"
         assert cfg.captcha_handling == "fail"
         assert cfg.checkpoint_enabled is False
         assert (tmp_path / "outputs" / "runs") in cfg.output_dir.parents
@@ -263,6 +295,24 @@ class TestApplyCliOverrides:
 def test_parse_args_supports_search_engine_only(monkeypatch):
     monkeypatch.setattr(sys, "argv", ["webagent", "--task", "x", "--search-engine-only"])
     assert parse_args().search_engine_only is True
+
+
+def test_parse_args_supports_browser_channel(monkeypatch):
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["webagent", "--task", "x", "--browser-channel", "chrome"],
+    )
+    assert parse_args().browser_channel == "chrome"
+
+
+def test_parse_args_supports_browser_proxy(monkeypatch):
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["webagent", "--task", "x", "--browser-proxy-server", "http://127.0.0.1:7897"],
+    )
+    assert parse_args().browser_proxy_server == "http://127.0.0.1:7897"
 
 
 def test_parse_args_supports_hybrid_discovery(monkeypatch):
@@ -316,6 +366,14 @@ def test_parse_args_supports_provider_planner_output_mode(monkeypatch):
 def test_build_browser_uses_temporary_profile_for_strict_eval():
     cfg = AgentConfig(_env_file=None, strict_eval_mode=True)
     assert _build_browser(cfg).temporary_profile is True
+
+
+def test_cli_strict_eval_forces_bing_search_default() -> None:
+    cfg = AgentConfig(_env_file=None, search_default_engine="duckduckgo")
+
+    _apply_evaluation_overrides(cfg, _args(strict_eval=True))
+
+    assert cfg.search_default_engine == "bing"
 
 
 def test_build_browser_uses_isolated_native_defaults():

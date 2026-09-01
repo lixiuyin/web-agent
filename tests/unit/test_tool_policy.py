@@ -46,8 +46,12 @@ async def _complete_search(
     query: str = "report",
     *,
     result_title: str = "",
+    recency: str | None = None,
 ) -> dict[str, Any]:
-    call = ToolCall(tool_name="search", parameters={"query": query})
+    parameters: dict[str, Any] = {"query": query}
+    if recency is not None:
+        parameters["recency"] = recency
+    call = ToolCall(tool_name="search", parameters=parameters)
     decision = await policy.authorize(call)
     assert decision.allowed is True
     result = ToolResult(
@@ -88,6 +92,29 @@ async def test_first_successful_action_must_be_browser_search(tmp_path: Path) ->
     assert goto.allowed is False
     assert done.allowed is False
     assert "first successful action" in goto.reason
+
+
+async def test_download_filename_override_requires_exact_user_request(tmp_path: Path) -> None:
+    policy = SearchEngineOnlyPolicy(_Browser(), artifacts_dir=tmp_path / "artifacts")
+    policy.reset("Download the file and upload that exact downloaded file")
+
+    denied = await policy.authorize(
+        ToolCall(
+            tool_name="download_file",
+            parameters={"selector": {"type": "text", "value": "Download"}, "filename": "case_file"},
+        )
+    )
+    assert denied.allowed is False
+    assert "browser-suggested" in denied.reason
+
+    policy.reset("Download it and rename the file case_file")
+    allowed_name = await policy.authorize(
+        ToolCall(
+            tool_name="download_file",
+            parameters={"selector": {"type": "text", "value": "Download"}, "filename": "case_file"},
+        )
+    )
+    assert "browser-suggested" not in allowed_name.reason
 
 
 async def test_failed_search_does_not_unlock_other_tools(tmp_path: Path) -> None:
@@ -137,6 +164,98 @@ async def test_goto_accepts_observed_search_result_and_rejects_guess(tmp_path: P
     assert allowed.provenance["source"] == "search_planner_visible"
     assert denied.allowed is False
     assert "not observed" in denied.reason
+
+
+async def test_goto_rejects_exact_current_url_as_no_progress(tmp_path: Path) -> None:
+    browser = _Browser()
+    policy = SearchEngineOnlyPolicy(browser, artifacts_dir=tmp_path / "artifacts")
+    observed = "https://example.test/current"
+    await _complete_search(policy, observed)
+    browser.page.url = observed
+
+    denied = await policy.authorize(ToolCall(tool_name="goto", parameters={"url": observed}))
+
+    assert denied.allowed is False
+    assert "already on this exact URL" in denied.reason
+
+
+async def test_done_requires_a_visited_non_search_evidence_page(tmp_path: Path) -> None:
+    browser = _Browser()
+    policy = SearchEngineOnlyPolicy(browser, artifacts_dir=tmp_path / "artifacts")
+    observed = "https://example.test/report"
+    await _complete_search(policy, observed)
+
+    denied = await policy.authorize(
+        ToolCall(tool_name="done", parameters={"summary": f"Found {observed}"})
+    )
+    assert denied.allowed is False
+    assert "visiting a non-search evidence page" in denied.reason
+
+    goto = ToolCall(tool_name="goto", parameters={"url": observed})
+    decision = await policy.authorize(goto)
+    browser.page.url = observed
+    await _record_result(
+        policy,
+        goto,
+        ToolResult(success=True, tool_name="goto", data={"url": observed}),
+        decision,
+    )
+
+    allowed = await policy.authorize(
+        ToolCall(tool_name="done", parameters={"summary": f"Source: `{observed}`"})
+    )
+    assert allowed.allowed is True
+
+
+async def test_planner_visible_url_upgrades_internal_visit_provenance(tmp_path: Path) -> None:
+    browser = _Browser()
+    policy = SearchEngineOnlyPolicy(browser, artifacts_dir=tmp_path / "artifacts")
+    await _complete_search(policy, "https://example.test/start")
+
+    click = ToolCall(tool_name="click_link", parameters={"text": "Docs"})
+    decision = await policy.authorize(click)
+    destination = "https://example.test/docs"
+    browser.page.url = destination
+    await _record_result(
+        policy,
+        click,
+        ToolResult(success=True, tool_name="click_link", data={"text": "Docs"}),
+        decision,
+    )
+    assert policy._observed_urls[destination]["source"] == "visited_page"
+
+    await policy.authorize(ToolCall(tool_name="get_url", parameters={}))
+    assert policy._observed_urls[destination]["source"] == "planner_state_current_url"
+
+    browser.page.url = "https://www.bing.com/search?q=docs"
+    allowed = await policy.authorize(ToolCall(tool_name="goto", parameters={"url": destination}))
+    assert allowed.allowed is True
+    assert allowed.provenance["source"] == "planner_state_current_url"
+
+
+async def test_done_rejects_unobserved_cited_url(tmp_path: Path) -> None:
+    browser = _Browser()
+    policy = SearchEngineOnlyPolicy(browser, artifacts_dir=tmp_path / "artifacts")
+    observed = "https://example.test/report"
+    await _complete_search(policy, observed)
+    goto = ToolCall(tool_name="goto", parameters={"url": observed})
+    decision = await policy.authorize(goto)
+    browser.page.url = observed
+    await _record_result(
+        policy,
+        goto,
+        ToolResult(success=True, tool_name="goto", data={"url": observed}),
+        decision,
+    )
+
+    denied = await policy.authorize(
+        ToolCall(
+            tool_name="done",
+            parameters={"summary": "Source: https://example.test/invented"},
+        )
+    )
+    assert denied.allowed is False
+    assert "absent from browser evidence" in denied.reason
 
 
 async def test_policy_checkpoint_restores_grounded_url_and_counters(tmp_path: Path) -> None:
@@ -455,7 +574,42 @@ async def test_release_landscape_requires_semantic_result_evidence(tmp_path: Pat
     assert policy._release_landscape_evidence_urls == {"https://qwen.example/models/qwen3.8"}
 
 
-async def test_owner_scope_must_return_selected_repository(tmp_path: Path) -> None:
+async def test_year_recency_counts_as_current_year_evidence(tmp_path: Path) -> None:
+    policy = SearchEngineOnlyPolicy(_Browser(), artifacts_dir=tmp_path / "artifacts")
+    policy.reset("Find the latest Qwen technical report")
+
+    await _complete_search(
+        policy,
+        "https://qwen.example/models/qwen3.8",
+        "Qwen model release lineup",
+        result_title="Qwen3.8 model release",
+        recency="year",
+    )
+
+    assert policy._broad_current_year_search_completed is True
+    assert policy._release_landscape_search_completed is True
+
+
+async def test_result_labelled_official_establishes_repository_identity(
+    tmp_path: Path,
+) -> None:
+    policy = SearchEngineOnlyPolicy(_Browser(), artifacts_dir=tmp_path / "artifacts")
+    policy.reset("Find the latest Qwen technical report")
+
+    await _complete_search(
+        policy,
+        "https://github.com/QwenLM/Qwen",
+        "Qwen technical report",
+        result_title="The official repo of Qwen",
+    )
+
+    assert policy._official_identity_search_completed is True
+    assert policy._official_identity_urls == {"https://github.com/QwenLM/Qwen"}
+
+
+async def test_owner_scope_can_corroborate_exact_candidate_seen_in_earlier_search(
+    tmp_path: Path,
+) -> None:
     policy = SearchEngineOnlyPolicy(_Browser(), artifacts_dir=tmp_path / "artifacts")
     policy.reset("Find the latest Qwen technical report")
     year = datetime.now(UTC).year
@@ -469,12 +623,13 @@ async def test_owner_scope_must_return_selected_repository(tmp_path: Path) -> No
         f"Qwen model release lineup {year}",
         result_title="Qwen3.8 model release",
     )
+    await _complete_search(policy, target, "Qwen3.8 technical report")
     await _complete_search(
         policy,
         owner_only,
-        f"GitHub QwenLM Qwen technical report {year}",
+        "GitHub QwenLM Qwen technical report",
     )
-    wrong_repository = await policy.authorize(
+    corroborated = await policy.authorize(
         ToolCall(tool_name="download_pdf", parameters={"url": target})
     )
     await _complete_search(
@@ -484,8 +639,7 @@ async def test_owner_scope_must_return_selected_repository(tmp_path: Path) -> No
     )
     allowed = await policy.authorize(ToolCall(tool_name="download_pdf", parameters={"url": target}))
 
-    assert wrong_repository.allowed is False
-    assert "selected candidate repository" in wrong_repository.reason
+    assert corroborated.allowed is True
     assert allowed.allowed is True
 
 
@@ -581,6 +735,76 @@ async def test_executor_reset_clears_policy_evidence(tmp_path: Path) -> None:
 
     assert denied.allowed is False
     assert "first successful action" in denied.reason
+
+
+async def test_extracted_search_results_count_as_search_evidence(tmp_path: Path) -> None:
+    policy = SearchEngineOnlyPolicy(_Browser(), artifacts_dir=tmp_path / "artifacts")
+    await _complete_search(policy, "https://qwen.ai/home", "Qwen official website")
+    call = ToolCall(tool_name="get_search_results", parameters={})
+    decision = await policy.authorize(call)
+    audit = await _record_result(
+        policy,
+        call,
+        ToolResult(
+            success=True,
+            tool_name="get_search_results",
+            data={
+                "engine": "bing",
+                "query": "Qwen3.8 technical report",
+                "results": [
+                    {
+                        "title": "Qwen3.8-Flash-Next technical report",
+                        "link": (
+                            "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf"
+                        ),
+                    }
+                ],
+            },
+        ),
+        decision,
+    )
+
+    assert audit["successful_searches"] == 2
+    assert audit["new_urls_observed"] == 1
+
+
+def test_current_pdf_page_promotes_selected_candidate(tmp_path: Path) -> None:
+    browser = _Browser()
+    policy = SearchEngineOnlyPolicy(browser, artifacts_dir=tmp_path / "artifacts")
+    target = "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf"
+    browser.page.url = target
+
+    policy._record_current_page_url()
+
+    assert policy._selected_candidate_url == target
+
+
+async def test_done_requires_requested_pdf_and_figure_analysis(tmp_path: Path) -> None:
+    browser = _Browser()
+    policy = SearchEngineOnlyPolicy(browser, artifacts_dir=tmp_path / "artifacts")
+    policy.reset("Download the PDF and interpret Figure 1")
+    evidence_url = "https://example.test/report"
+    await _complete_search(policy, evidence_url, "report PDF")
+    browser.page.url = evidence_url
+    policy._record_current_page_visit()
+
+    before_download = await policy.authorize(
+        ToolCall(tool_name="done", parameters={"summary": "finished"})
+    )
+    artifact = (tmp_path / "artifacts" / "report.pdf").resolve()
+    policy._downloaded_paths[artifact] = {"source_url": evidence_url}
+    before_figure = await policy.authorize(
+        ToolCall(tool_name="done", parameters={"summary": "finished"})
+    )
+    policy._figure_analysis_completed = True
+    allowed = await policy.authorize(ToolCall(tool_name="done", parameters={"summary": "finished"}))
+
+    assert before_download.allowed is False
+    assert "download_pdf" in before_download.reason
+    assert "pdf_analyze_figure" in before_download.reason
+    assert before_figure.allowed is False
+    assert "pdf_analyze_figure" in before_figure.reason
+    assert allowed.allowed is True
 
 
 async def test_visible_pdf_link_can_be_downloaded_then_analyzed(tmp_path: Path) -> None:

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 
+import httpx
 import pytest
 from PIL import Image
 
@@ -41,12 +42,18 @@ class _FakeResp:
         self._data = data
         self.status_code = status
         self.text = ""
+        self.headers: dict[str, str] = {}
 
     def json(self) -> dict:
         return self._data
 
     def raise_for_status(self) -> None:
-        return None
+        if self.status_code >= 400:
+            request = httpx.Request("POST", "https://x/v1/chat/completions")
+            response = httpx.Response(self.status_code, request=request, text=self.text)
+            raise httpx.HTTPStatusError(
+                f"HTTP {self.status_code}", request=request, response=response
+            )
 
 
 class _FakeClient:
@@ -78,6 +85,97 @@ async def test_post_returns_choice_content(monkeypatch):
     assert out == '{"tool": "done"}'
 
 
+async def test_post_retries_429_before_returning_success(monkeypatch):
+    planner = APIPlanner(
+        api_url="https://x/v1/chat/completions",
+        api_key="k",
+        model_name="m",
+        transient_retries=2,
+        retry_base_seconds=0,
+    )
+    responses = [
+        _FakeResp({"error": "limited"}, status=429),
+        _FakeResp({"choices": [{"message": {"content": '{"tool": "done"}'}}]}),
+    ]
+
+    async def bounded_post(*args, **kwargs):
+        del args, kwargs
+        return responses.pop(0)
+
+    monkeypatch.setattr(planner, "_bounded_post", bounded_post)
+    out = await planner._post({})
+
+    assert out == '{"tool": "done"}'
+    assert planner.last_call_metadata["transport_retries"] == 1
+
+
+async def test_post_preserves_retry_count_when_429_is_exhausted(monkeypatch):
+    planner = APIPlanner(
+        api_url="https://x/v1/chat/completions",
+        api_key="k",
+        model_name="m",
+        transient_retries=2,
+        retry_base_seconds=0,
+    )
+    responses = [_FakeResp({"error": "limited"}, status=429) for _ in range(3)]
+
+    async def bounded_post(*args, **kwargs):
+        del args, kwargs
+        return responses.pop(0)
+
+    monkeypatch.setattr(planner, "_bounded_post", bounded_post)
+
+    with pytest.raises(httpx.HTTPStatusError):
+        await planner._post({})
+
+    assert planner.last_call_metadata["transport_retries"] == 2
+
+
+async def test_terminal_confidence_uses_strict_prejudge_schema(monkeypatch):
+    planner = _planner()
+    payloads: list[dict] = []
+
+    async def post_data(payload, timeout=None):
+        del timeout
+        payloads.append(payload)
+        return {"choices": [{"message": {"content": '{"success_probability":0.35}'}}]}
+
+    monkeypatch.setattr(planner, "_post_data", post_data)
+
+    probability = await planner.estimate_task_success(
+        task="task", status="max_steps_reached", history_text="one failed action"
+    )
+
+    assert probability == 0.35
+    assert payloads[0]["response_format"]["json_schema"]["strict"] is True
+
+
+async def test_terminal_confidence_falls_back_only_when_json_schema_is_unsupported(
+    monkeypatch,
+):
+    planner = _planner()
+    payloads: list[dict] = []
+
+    async def post_data(payload, timeout=None):
+        del timeout
+        payloads.append(payload.copy())
+        if "response_format" in payload:
+            request = httpx.Request("POST", "https://provider.test/v1/chat/completions")
+            response = httpx.Response(400, request=request, text="response_format is not supported")
+            raise httpx.HTTPStatusError("unsupported", request=request, response=response)
+        return {"choices": [{"message": {"content": '```json\n{"success_probability":0.1}\n```'}}]}
+
+    monkeypatch.setattr(planner, "_post_data", post_data)
+
+    probability = await planner.estimate_task_success(
+        task="task", status="failed", history_text="failed"
+    )
+
+    assert probability == 0.1
+    assert len(payloads) == 2
+    assert "response_format" not in payloads[1]
+
+
 async def test_post_captures_usage_finish_reason_and_response_length(monkeypatch):
     planner = _planner()
     content = '{"tool": "done"}'
@@ -97,6 +195,7 @@ async def test_post_captures_usage_finish_reason_and_response_length(monkeypatch
         "prompt_tokens": 12,
         "completion_tokens": 7,
         "total_tokens": 19,
+        "transport_retries": 0,
     }
 
 
@@ -210,6 +309,62 @@ async def test_plan_action_sends_dom_without_blank_screenshot():
     assert isinstance(user_content, str)
     assert "PAGE:\n<body>blank browser shell</body>" in user_content
     assert "image_url" not in user_content
+
+
+async def test_plan_action_auto_omits_screenshot_for_text_rich_page():
+    planner = _planner()
+    planner._supports_vision = True
+    payloads: list[dict] = []
+
+    async def capture_post(payload: dict) -> str:
+        payloads.append(payload)
+        return '{"tool": "done", "parameters": {"summary": "ok"}}'
+
+    planner._post = capture_post  # type: ignore[method-assign]
+    state = BrowserState(
+        screenshot=Image.new("RGB", (20, 20), "red"),
+        dom_summary="<main>" + ("Search result with title, URL, and snippet. " * 20) + "</main>",
+        url="https://www.bing.com/search?q=report",
+        title="Search",
+        timestamp="2024-01-01",
+    )
+
+    await planner.plan_action(
+        task="find a report",
+        browser_state=state,
+        history_text="No previous actions.",
+        available_tools="goto, done",
+    )
+
+    assert isinstance(payloads[0]["messages"][1]["content"], str)
+
+
+async def test_plan_action_visual_strategy_keeps_text_rich_screenshot():
+    planner = _planner()
+    planner._supports_vision = True
+    payloads: list[dict] = []
+
+    async def capture_post(payload: dict) -> str:
+        payloads.append(payload)
+        return '{"tool": "done", "parameters": {"summary": "ok"}}'
+
+    planner._post = capture_post  # type: ignore[method-assign]
+    state = BrowserState(
+        screenshot=Image.new("RGB", (20, 20), "red"),
+        dom_summary="<main>" + ("Ambiguous controls. " * 30) + "</main>",
+        url="https://example.com/app",
+        title="App",
+        timestamp="2024-01-01",
+    )
+
+    await planner.plan_action(
+        task="click the chart control",
+        browser_state=state,
+        history_text="CONTROLLER STRATEGY HINT: visual-grounding",
+        available_tools="click, done",
+    )
+
+    assert isinstance(payloads[0]["messages"][1]["content"], list)
 
 
 async def test_plan_action_sends_configured_reasoning_effort_without_reasoning_content():

@@ -8,7 +8,7 @@
       "snapshot_id": "iana-example-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
       "split": "development", "task_family": "official_standards_reference", "setting_id": "stable_official_reference", "leakage_group": "host_www_iana_org", "target_failure_modes": ["search_discovery", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "medium",
       "discovery_required": true, "scenario": "search_discovery", "environment": "public_web", "entry_mode": "search", "risk_scope": "read_only",
-      "assertions": [{"kind": "answer_contains", "expected": "documentation"}, {"kind": "answer_contains", "expected": "https://www.iana.org/help/example-domains"}, {"kind": "history_url_observed", "expected": "https://www.iana.org/help/example-domains"}, {"kind": "certificate_valid", "expected": true}]
+      "assertions": [{"kind": "answer_contains_any", "expected": ["documentation", "reserved"]}, {"kind": "answer_contains_any", "expected": ["https://www.iana.org/help/example-domains", "https://www.iana.org/domains/reserved"]}, {"kind": "history_url_observed_any", "expected": ["https://www.iana.org/help/example-domains", "https://www.iana.org/domains/reserved"]}, {"kind": "certificate_valid", "expected": true}]
     },
     {
       "id": "iana_reserved_domains", "category": "standards", "goal": "Report what IANA says about reserved domains and cite the exact URL.",
@@ -25,7 +25,7 @@
       "assertions": [{"kind": "answer_contains", "expected": "Internet"}, {"kind": "answer_contains", "expected": "https://www.iana.org/about"}, {"kind": "history_url_observed", "expected": "https://www.iana.org/about"}]
     },
     {
-      "id": "python_creator", "category": "documentation", "goal": "Starting from a blank page, use browser search to find the official Python FAQ, identify Python's creator, and cite the exact URL.",
+      "id": "python_creator", "category": "documentation", "goal": "Starting from a blank page, use browser search to find the official page titled 'General Python FAQ', identify Python's creator, and cite the exact URL.",
       "start_url": "about:blank", "source_urls": ["https://docs.python.org/3/faq/general.html"],
       "snapshot_id": "python-faq-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
       "split": "development", "task_family": "programming_language_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_docs_python_org", "target_failure_modes": ["search_discovery", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "medium",
@@ -110,15 +110,15 @@
       "start_url": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github", "source_urls": ["https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github"],
       "snapshot_id": "github-auth-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
       "split": "held_out_task", "task_family": "collaboration_platform_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_docs_github_com", "target_failure_modes": ["information_extraction", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "short",
-      "assertions": [{"kind": "answer_contains", "expected": "authenticate"}, {"kind": "answer_contains", "expected": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github"}, {"kind": "history_url_observed", "expected": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github"}]
+      "assertions": [{"kind": "answer_contains", "expected": "authentication"}, {"kind": "answer_contains", "expected": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github"}, {"kind": "history_url_observed", "expected": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github"}]
     },
     {
       "id": "mdn_html", "category": "web_platform", "goal": "Starting from a blank page, use browser search to find MDN's official HTML page, describe HTML's role, and cite the exact URL.",
-      "start_url": "about:blank", "source_urls": ["https://developer.mozilla.org/en-US/docs/Web/HTML"],
+      "start_url": "about:blank", "source_urls": ["https://developer.mozilla.org/en-US/docs/Web/HTML", "https://developer.mozilla.org/zh-CN/docs/Web/HTML"],
       "snapshot_id": "mdn-html-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
       "split": "held_out_setting", "task_family": "web_platform_documentation", "setting_id": "localized_web_platform_reference", "leakage_group": "host_developer_mozilla_org", "target_failure_modes": ["search_discovery", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "medium",
       "discovery_required": true, "scenario": "search_discovery", "environment": "public_web", "entry_mode": "search", "risk_scope": "read_only",
-      "assertions": [{"kind": "answer_contains", "expected": "HTML"}, {"kind": "answer_contains", "expected": "https://developer.mozilla.org/en-US/docs/Web/HTML"}, {"kind": "history_url_observed", "expected": "https://developer.mozilla.org/en-US/docs/Web/HTML"}, {"kind": "certificate_valid", "expected": true}]
+      "assertions": [{"kind": "answer_contains", "expected": "HTML"}, {"kind": "answer_contains_any", "expected": ["https://developer.mozilla.org/en-US/docs/Web/HTML", "https://developer.mozilla.org/zh-CN/docs/Web/HTML"]}, {"kind": "history_url_observed_any", "expected": ["https://developer.mozilla.org/en-US/docs/Web/HTML", "https://developer.mozilla.org/zh-CN/docs/Web/HTML"]}, {"kind": "certificate_valid", "expected": true}]
     },
     {
       "id": "mdn_css", "category": "web_platform", "goal": "Describe CSS's role using MDN and cite the exact URL.",
@@ -136,11 +136,11 @@
     },
     {
       "id": "numpy_beginners", "category": "data_science", "goal": "Starting from a blank page, use browser search to find NumPy's official beginner guide, identify its central array object, and cite the exact URL.",
-      "start_url": "about:blank", "source_urls": ["https://numpy.org/doc/stable/user/absolute_beginners.html"],
+      "start_url": "about:blank", "source_urls": ["https://numpy.org/doc/stable/user/absolute_beginners.html", "https://numpy.org/devdocs/user/absolute_beginners.html"],
       "snapshot_id": "numpy-beginner-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
       "split": "development", "task_family": "data_library_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_numpy_org", "target_failure_modes": ["search_discovery", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "medium",
       "discovery_required": true, "scenario": "search_discovery", "environment": "public_web", "entry_mode": "search", "risk_scope": "read_only",
-      "assertions": [{"kind": "answer_contains", "expected": "ndarray"}, {"kind": "answer_contains", "expected": "https://numpy.org/doc/stable/user/absolute_beginners.html"}, {"kind": "history_url_observed", "expected": "https://numpy.org/doc/stable/user/absolute_beginners.html"}, {"kind": "certificate_valid", "expected": true}]
+      "assertions": [{"kind": "answer_contains", "expected": "ndarray"}, {"kind": "answer_contains_any", "expected": ["https://numpy.org/doc/stable/user/absolute_beginners.html", "https://numpy.org/devdocs/user/absolute_beginners.html"]}, {"kind": "history_url_observed_any", "expected": ["https://numpy.org/doc/stable/user/absolute_beginners.html", "https://numpy.org/devdocs/user/absolute_beginners.html"]}, {"kind": "certificate_valid", "expected": true}]
     },
     {
       "id": "numpy_array", "category": "data_science", "goal": "Explain what numpy.array creates and cite the exact reference URL.",
@@ -157,7 +157,7 @@
       "assertions": [{"kind": "answer_contains", "expected": "arithmetic mean"}, {"kind": "answer_contains", "expected": "https://numpy.org/doc/stable/reference/generated/numpy.mean.html"}, {"kind": "history_url_observed", "expected": "https://numpy.org/doc/stable/reference/generated/numpy.mean.html"}]
     },
     {
-      "id": "pandas_table", "category": "data_science", "goal": "Starting from a blank page, use browser search to find pandas' official tabular-data tutorial, identify the structure it uses, and cite the exact URL.",
+      "id": "pandas_table", "category": "data_science", "goal": "Starting from a blank page, use browser search to find pandas' official tutorial titled 'What kind of data does pandas handle?', identify the tabular structure it introduces, and cite the exact URL.",
       "start_url": "about:blank", "source_urls": ["https://pandas.pydata.org/docs/getting_started/intro_tutorials/01_table_oriented.html"],
       "snapshot_id": "pandas-table-2026-08", "valid_from": "2026-08-01", "valid_until": "2027-08-31", "network_required": true,
       "split": "held_out_task", "task_family": "data_library_documentation", "setting_id": "versioned_official_documentation", "leakage_group": "host_pandas_pydata_org", "target_failure_modes": ["search_discovery", "tool_use", "answer_grounding"], "feedback": {"kind": "verifiable"}, "expected_horizon": "medium",

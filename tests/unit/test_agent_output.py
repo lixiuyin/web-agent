@@ -73,6 +73,7 @@ def test_non_strict_trace_persistence_remains_best_effort(tmp_path) -> None:
         total_duration=0.1,
     )
 
+    RunLayout.from_root(tmp_path).trajectory_dir.write_text("blocks directory", encoding="utf-8")
     _persist_run_trace(
         tmp_path,
         "ordinary task",
@@ -97,6 +98,7 @@ def test_strict_trace_write_failure_fails_closed(tmp_path) -> None:
         browser_profile_mode="temporary",
         persistent_pdf_cache=False,
     )
+    RunLayout.from_root(tmp_path).trajectory_dir.write_text("blocks directory", encoding="utf-8")
 
     with pytest.raises(TracePersistenceError, match="strict evaluation failed"):
         _persist_run_trace(tmp_path, "strict task", result, config)
@@ -176,6 +178,7 @@ async def test_agent_run_cleans_owned_outputs_but_preserves_unknown_siblings(tmp
     layout = RunLayout.from_root(output_dir)
     layout.prepare(run_id="old", task="old", model="old")
     stale_screenshot = layout.screenshots_dir / "step_001.jpg"
+    stale_screenshot.parent.mkdir(parents=True)
     stale_screenshot.write_bytes(b"old screenshot")
     unrelated_screenshot = layout.screenshots_dir / "manual.jpg"
     unrelated_screenshot.write_bytes(b"generated-tree content")
@@ -214,7 +217,7 @@ async def test_agent_run_cleans_owned_outputs_but_preserves_unknown_siblings(tmp
     assert result.status == "completed"
     assert notes.read_text(encoding="utf-8") == "preserve"
     assert not unrelated_screenshot.exists()
-    assert layout.artifacts_dir.is_dir()
+    assert not layout.artifacts_dir.exists()
     assert layout.screenshots_dir.is_dir()
     screenshot = layout.screenshots_dir / "step_001.jpg"
     assert screenshot.exists()
@@ -461,6 +464,7 @@ async def test_follow_up_reuses_run_and_persists_immutable_turn_snapshots(tmp_pa
     first_manifest = layout.manifest_path.read_bytes()
     first_trace_snapshot = layout.turn_trace_path(1).read_bytes()
     shared_artifact = layout.files_dir / "shared.txt"
+    shared_artifact.parent.mkdir(parents=True, exist_ok=True)
     shared_artifact.write_text("retain across turns", encoding="utf-8")
 
     canonical_figure = layout.attachments_dir / "figure.png"
@@ -488,8 +492,10 @@ async def test_follow_up_reuses_run_and_persists_immutable_turn_snapshots(tmp_pa
     assert [step["step_number"] for step in latest_trace["steps"]] == [3, 4]
     assert latest_trace["task"] == "follow-up task"
     assert first_trace["final_result"]["attachments"] == [
-        str((layout.turn_attachments_dir(1) / "figure.png").resolve())
+        "result/turns/turn-001/attachments/figure.png"
     ]
+    assert str(layout.root) not in json.dumps(first_trace)
+    assert layout.trace_path.stat().st_ino == layout.turn_trace_path(2).stat().st_ino
 
     assert layout.turn_summary_path(1).read_text(encoding="utf-8") == "first answer"
     assert layout.turn_summary_path(2).read_text(encoding="utf-8") == "second answer"

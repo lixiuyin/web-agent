@@ -44,6 +44,11 @@ Find the most recent Qwen technical report and interpret Figure 1.
 声明，`evaluation` 是独立判分；这些概念不能混用。可比较 benchmark 的 execution 位于
 `outputs/studies/<suite>/executions/<UTC-date>/<model>/<condition>/<execution-id>/`，每项任务仍在
 其 `runs/<task-id>/` 下；历史目录经清单与 hash 校验后进入 `outputs/legacy/`。
+
+跨 suite 的纵向 campaign 使用 `outputs/campaigns/<campaign-id>/`：不可变的
+`campaign.json` 固定模型集合、任务 manifest、源码指纹和预算；每次真实采集进入
+`batches/<UTC-date>/<batch-id>/`，组件研究则保持在其 `studies/` 子目录。这样批次状态、
+endpoint probe、日志和 portfolio 不会与跨日期聚合结果混在一起。
 普通 interactive follow-up 复用同一个 run，step/turn 编号单调递增，并用 `turns/` 保留不可覆盖
 快照；strict/search-only 为保持单次连续证书而禁止多轮。
 

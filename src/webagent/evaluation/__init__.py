@@ -1,6 +1,8 @@
 """Reusable terminal-state evaluation for deterministic web-agent benchmarks."""
 
 from webagent.evaluation.artifacts import (
+    CampaignBatchLayout,
+    CampaignLayout,
     OutputWorkspace,
     RunLayout,
     RunOwnershipError,
@@ -17,6 +19,13 @@ from webagent.evaluation.calibration import (
 )
 from webagent.evaluation.endpoints import EndpointProbe, probe_chat_endpoint
 from webagent.evaluation.evaluator import TerminalStateEvaluator
+from webagent.evaluation.external import (
+    ExternalBenchmarkReport,
+    ExternalBenchmarkSummary,
+    ExternalTaskResult,
+    new_external_report,
+    summarize_external_results,
+)
 from webagent.evaluation.failures import (
     FailureAnalysis,
     FailureEvidence,
@@ -27,6 +36,13 @@ from webagent.evaluation.failures import (
     merge_adjudicated_findings,
 )
 from webagent.evaluation.generality import GeneralityAnalysis, analyze_generality
+from webagent.evaluation.layers import (
+    LayeredModelResult,
+    LayerEvidence,
+    TwoLayerPortfolio,
+    analyze_two_layer_portfolio,
+    load_two_layer_portfolio,
+)
 from webagent.evaluation.long_horizon import (
     HorizonBucket,
     LongHorizonAnalysis,
@@ -89,8 +105,13 @@ __all__ = [
     "BenchmarkTask",
     "CalibrationAnalysis",
     "CalibrationBin",
+    "CampaignBatchLayout",
+    "CampaignLayout",
     "EmpiricalPortfolio",
     "EndpointProbe",
+    "ExternalBenchmarkReport",
+    "ExternalBenchmarkSummary",
+    "ExternalTaskResult",
     "FailureAnalysis",
     "FailureEvidence",
     "FailureEvidenceSource",
@@ -100,6 +121,8 @@ __all__ = [
     "GeneralityAnalysis",
     "HorizonBucket",
     "InterventionTransferAnalysis",
+    "LayerEvidence",
+    "LayeredModelResult",
     "LongHorizonAnalysis",
     "OutputWorkspace",
     "PairedConditionEffect",
@@ -122,6 +145,7 @@ __all__ = [
     "TerminalStateEvaluator",
     "TrajectoryDiagnostics",
     "TransferAnalysis",
+    "TwoLayerPortfolio",
     "aggregate_evaluations",
     "analyze_calibration",
     "analyze_empirical_portfolio",
@@ -131,16 +155,20 @@ __all__ = [
     "analyze_long_horizon",
     "analyze_study_intervention_transfer",
     "analyze_transfer",
+    "analyze_two_layer_portfolio",
     "append_study_record",
     "append_study_records",
     "load_empirical_portfolio",
     "load_study_records",
+    "load_two_layer_portfolio",
     "merge_adjudicated_findings",
+    "new_external_report",
     "probe_chat_endpoint",
     "publish_study_run_records",
     "read_study_manifest",
     "safe_component",
     "safe_slug",
+    "summarize_external_results",
     "trajectory_diagnostics",
     "validate_study_run_context",
     "validate_study_task_set",

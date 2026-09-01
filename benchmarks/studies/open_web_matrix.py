@@ -9,7 +9,7 @@ import subprocess
 import sys
 from collections import Counter
 from collections.abc import Sequence
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Any, cast
 
@@ -80,7 +80,19 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument("--shards", type=int, default=3)
     parser.add_argument("--repetitions", type=int, default=1)
+    parser.add_argument(
+        "--model-order",
+        choices=("as-given", "reverse", "rotate-by-date"),
+        default="rotate-by-date",
+    )
+    parser.add_argument(
+        "--require-new-date",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Refuse another matrix slice for a UTC date already present in this study",
+    )
     parser.add_argument("--max-steps-per-task", type=int, default=8)
+    parser.add_argument("--discovery-max-steps-per-task", type=int, default=12)
     parser.add_argument("--captcha-handling", choices=("fail", "report"), default="fail")
     parser.add_argument("--minimum-success-rate", type=float, default=0.0)
     parser.add_argument("--maximum-false-completion-rate", type=float, default=1.0)
@@ -88,8 +100,9 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
 
 
 def run_matrix(args: argparse.Namespace) -> int:
-    models = list(dict.fromkeys(str(model) for model in args.models))
-    if not 2 <= len(models) <= 3:
+    requested_models = list(dict.fromkeys(str(model) for model in args.models))
+    discovery_max_steps = int(getattr(args, "discovery_max_steps_per_task", 12))
+    if not 2 <= len(requested_models) <= 3:
         raise ValueError("open-web matrix requires two or three distinct models")
     if args.repetitions < 1:
         raise ValueError("--repetitions must be positive")
@@ -100,6 +113,11 @@ def run_matrix(args: argparse.Namespace) -> int:
     expected_task_ids = sorted(task.id for task in tasks)
 
     collection_started_at = datetime.now(UTC)
+    models = _ordered_models(
+        requested_models,
+        collection_started_at.date(),
+        str(getattr(args, "model_order", "rotate-by-date")),
+    )
     output = args.output.resolve()
     study_id = output.name
     defaults = AgentConfig()
@@ -115,17 +133,23 @@ def run_matrix(args: argparse.Namespace) -> int:
         suite=suite,
         task_manifest_sha256=manifest_hash,
         task_split_counts=dict(Counter(task.split for task in tasks)),
-        models=tuple(StudyModel(provider=args.provider, model=model) for model in models),
+        models=tuple(StudyModel(provider=args.provider, model=model) for model in requested_models),
         conditions=(
             StudyCondition(
                 id="browser-grounded",
                 kind="baseline",
                 description="Browser-grounded open-web agent with retained execution evidence",
+                config_overrides={
+                    "task_step_budgets": {
+                        "default": args.max_steps_per_task,
+                        "discovery_required": discovery_max_steps,
+                    }
+                },
             ),
         ),
         repetitions=args.repetitions,
         budgets=StudyBudgets(
-            max_steps=args.max_steps_per_task,
+            max_steps=max(args.max_steps_per_task, discovery_max_steps),
             task_timeout_seconds=2400,
             tool_timeout_seconds=defaults.tool_timeout,
             planner_max_tokens=6000,
@@ -145,6 +169,13 @@ def run_matrix(args: argparse.Namespace) -> int:
     study_manifest_sha256 = hashlib.sha256(layout.manifest_path.read_bytes()).hexdigest()
     ledger_path = layout.time_slices_path
     collection_date = collection_started_at.date().isoformat()
+    if bool(getattr(args, "require_new_date", True)) and ledger_path.is_file():
+        existing_dates = {str(item["benchmark_date"]) for item in load_slices([ledger_path])}
+        if collection_date in existing_dates:
+            raise RuntimeError(
+                f"study already contains a real slice for {collection_date}; wait for a new UTC "
+                "date or pass --no-require-new-date for an explicit same-day repetition"
+            )
     batch_id = collection_started_at.strftime("%Y%m%dT%H%M%S%fZ")
     collected: dict[str, list[dict[str, Any]]] = {model: [] for model in models}
     acceptable = True
@@ -171,6 +202,8 @@ def run_matrix(args: argparse.Namespace) -> int:
                 str(args.shards),
                 "--max-steps-per-task",
                 str(args.max_steps_per_task),
+                "--discovery-max-steps-per-task",
+                str(discovery_max_steps),
                 "--captcha-handling",
                 args.captcha_handling,
                 "--study-root",
@@ -229,7 +262,9 @@ def run_matrix(args: argparse.Namespace) -> int:
         "collection_date": collection_date,
         "batch_id": batch_id,
         "provider": args.provider,
-        "models": models,
+        "requested_models": requested_models,
+        "execution_model_order": models,
+        "model_order_policy": str(getattr(args, "model_order", "rotate-by-date")),
         "study_manifest_sha256": study_manifest_sha256,
         "repetitions": args.repetitions,
         "runs": collected,
@@ -258,6 +293,19 @@ def run_matrix(args: argparse.Namespace) -> int:
     return 0 if acceptable else 1
 
 
+def _ordered_models(models: list[str], collection_date: date, policy: str) -> list[str]:
+    """Counterbalance serial provider effects without random, unrecorded ordering."""
+    ordered = list(models)
+    if policy == "as-given":
+        return ordered
+    if policy == "reverse":
+        return list(reversed(ordered))
+    if policy != "rotate-by-date":
+        raise ValueError(f"unsupported model order policy: {policy}")
+    offset = collection_date.toordinal() % len(ordered)
+    return ordered[offset:] + ordered[:offset]
+
+
 def main() -> None:
     raise SystemExit(run_matrix(parse_args()))
 
@@ -266,4 +314,4 @@ if __name__ == "__main__":
     main()
 
 
-__all__ = ["append_ledger", "ledger_record_from_report", "run_matrix"]
+__all__ = ["_ordered_models", "append_ledger", "ledger_record_from_report", "run_matrix"]

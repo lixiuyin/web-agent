@@ -81,12 +81,22 @@ def test_general_manifest_has_thirty_tasks_across_ten_domains() -> None:
         any(assertion.kind == "certificate_valid" for assertion in task.assertions)
         for task in discovery_tasks
     )
-    assert all(task.network_required and len(task.source_urls) == 1 for task in tasks)
+    assert all(task.network_required and len(task.source_urls) >= 1 for task in tasks)
     assert all(
-        {"answer_contains", "history_url_observed"}
-        <= {assertion.kind for assertion in task.assertions}
+        any(
+            assertion.kind in {"answer_contains", "answer_contains_any"}
+            for assertion in task.assertions
+        )
+        and any(
+            assertion.kind in {"history_url_observed", "history_url_observed_any"}
+            for assertion in task.assertions
+        )
         for task in tasks
     )
+    pandas_task = next(task for task in tasks if task.id == "pandas_table")
+    assert "What kind of data does pandas handle?" in pandas_task.goal
+    python_task = next(task for task in tasks if task.id == "python_creator")
+    assert "General Python FAQ" in python_task.goal
 
 
 def test_general_manifest_predeclares_leakage_safe_transfer_splits() -> None:
@@ -125,6 +135,22 @@ def test_general_manifest_predeclares_leakage_safe_transfer_splits() -> None:
     }
     assert held_out_task_settings <= development_settings
     assert held_out_setting_settings.isdisjoint(development_settings)
+
+
+def test_v6_targeted_manifest_contains_only_adjudicated_failure_tasks() -> None:
+    suite, tasks, _digest = load_manifest(
+        Path("benchmarks/manifests/open_web_v6_targeted.json"),
+        today=date(2026, 8, 31),
+    )
+
+    assert suite == "open-web-v6-targeted"
+    assert {task.id for task in tasks} == {
+        "python_creator",
+        "github_git_difference",
+        "pandas_table",
+        "go_documentation",
+    }
+    assert all(task.discovery_required for task in tasks)
 
 
 def test_qwen_strict_manifest_targets_long_held_out_document_workflow() -> None:
@@ -233,7 +259,16 @@ def test_time_slice_history_appends_without_overwriting(tmp_path: Path) -> None:
 
 
 def test_benchmark_config_hash_input_uses_final_effective_agent_config(tmp_path: Path) -> None:
-    stealth = AgentConfig(output_dir=tmp_path, stealth_mode=True, browser_timeout=4567)
+    stealth = AgentConfig(
+        output_dir=tmp_path,
+        stealth_mode=True,
+        browser_timeout=4567,
+        search_bing_market="en-US",
+        endpoint_access_mode="byok",
+        api_transient_retries=3,
+        api_retry_base_seconds=10,
+        api_retry_max_seconds=60,
+    )
     plain = AgentConfig(output_dir=tmp_path, stealth_mode=False, browser_timeout=4567)
 
     stealth_evidence = benchmark_config_evidence(
@@ -255,6 +290,14 @@ def test_benchmark_config_hash_input_uses_final_effective_agent_config(tmp_path:
 
     assert stealth_evidence["stealth_mode"] is True
     assert stealth_evidence["browser_timeout"] == 4567
+    assert stealth_evidence["search_default_engine"] == "bing"
+    assert stealth_evidence["search_bing_market"] == "en-US"
+    assert stealth_evidence["strict_search_default_engine"] == "bing"
+    assert stealth_evidence["strict_search_bing_market"] == "en-US"
+    assert stealth_evidence["declared_endpoint_access_mode"] == "byok"
+    assert stealth_evidence["api_transient_retries"] == 3
+    assert stealth_evidence["api_retry_base_seconds"] == 10
+    assert stealth_evidence["api_retry_max_seconds"] == 60
     assert plain_evidence["provider"] == "openrouter"
     assert plain_evidence["study_manifest_sha256"] == "s" * 64
     assert canonical_sha256(stealth_evidence) != canonical_sha256(plain_evidence)

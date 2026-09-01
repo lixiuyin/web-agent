@@ -239,6 +239,37 @@ async def test_auto_falls_back_only_after_explicit_capability_error() -> None:
     assert planner.structured_fallbacks[0]["from"] == "native-tools"
 
 
+async def test_auto_negotiates_native_auto_when_required_tool_choice_is_unsupported() -> None:
+    planner = _planner("auto")
+    payloads: list[dict[str, Any]] = []
+
+    async def post_data(payload: dict[str, Any], timeout: int | None = None) -> dict:
+        del timeout
+        payloads.append(payload)
+        if payload.get("tool_choice") == "required":
+            request = httpx.Request("POST", "https://provider.test/v1/chat/completions")
+            response = httpx.Response(
+                400,
+                request=request,
+                text="tool_choice parameter does not support required or object in thinking mode",
+            )
+            raise httpx.HTTPStatusError("unsupported", request=request, response=response)
+        return _native_response("done", '{"summary":"ok"}')
+
+    planner._post_data = post_data  # type: ignore[method-assign]
+
+    first = await planner.plan_action("finish", _state(), "", "goto, done")
+    first_metadata = planner.last_call_metadata
+    second = await planner.plan_action("finish", _state(), "", "goto, done")
+
+    assert first is not None and second is not None
+    assert [payload["tool_choice"] for payload in payloads] == ["required", "auto", "auto"]
+    assert planner.effective_output_mode == "native-tools"
+    assert first_metadata["structured_fallbacks"][0]["to"] == "native-tools:auto"
+    assert planner.last_call_metadata["structured_fallbacks"] == []
+    assert planner.last_call_metadata["session_structured_fallback_count"] == 1
+
+
 async def test_auto_does_not_mask_auth_or_operational_errors() -> None:
     planner = _planner("auto")
 

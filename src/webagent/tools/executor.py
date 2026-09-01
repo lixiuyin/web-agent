@@ -59,6 +59,13 @@ class ToolExecutor:
         """Return provider-native function schemas for exactly the exposed tools."""
         return self._registry.specs(self._allowed_tools)
 
+    def validate_tool_call(self, tool_call: ToolCall) -> str | None:
+        """Validate planner output before it consumes an environment action step."""
+        name = (tool_call.tool_name or "").casefold()
+        # Exposure and policy denials remain real, auditable action outcomes.  This
+        # preflight only repairs malformed names/arguments that cannot execute at all.
+        return self._registry.validate_call(name, tool_call.parameters or {})
+
     def reset_policy(self, task: str) -> None:
         """Reset per-task policy evidence before a new agent run."""
         if self._policy is not None:

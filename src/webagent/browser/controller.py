@@ -15,7 +15,7 @@ import time
 from io import BytesIO
 from pathlib import Path
 from typing import Any, Literal
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 from PIL import Image
 from playwright.async_api import (
@@ -165,6 +165,22 @@ def _checkpoint_url_allowed(value: str) -> bool:
     return parsed.scheme.casefold() in {"http", "https"} and bool(parsed.hostname)
 
 
+def _same_navigation_site(requested_url: str, current_url: str) -> bool:
+    """Return whether an aborted navigation reached the requested site's domain."""
+    try:
+        requested = (urlparse(requested_url).hostname or "").casefold().rstrip(".")
+        current = (urlparse(current_url).hostname or "").casefold().rstrip(".")
+    except ValueError:
+        return False
+    if not requested or not current:
+        return False
+    requested_parts = requested.split(".")
+    current_parts = current.split(".")
+    requested_site = ".".join(requested_parts[-2:])
+    current_site = ".".join(current_parts[-2:])
+    return requested_site == current_site
+
+
 class BrowserController:
     """Async Playwright Chromium controller with opt-in compatibility stealth."""
 
@@ -178,6 +194,8 @@ class BrowserController:
         user_data_dir: str | Path = "./browser_profile",
         temporary_profile: bool = True,
         temporary_profile_root: str | Path | None = None,
+        browser_channel: str | None = None,
+        proxy_server: str | None = None,
         stealth_mode: bool = False,
         humanize_delays: bool = False,
         ignore_https_errors: bool = False,
@@ -196,6 +214,8 @@ class BrowserController:
             Path(temporary_profile_root).resolve() if temporary_profile_root is not None else None
         )
         self._owned_profile_dir: Path | None = None
+        self.browser_channel = browser_channel
+        self.proxy_server = proxy_server.strip() if proxy_server else None
         self.stealth_mode = stealth_mode
         self.humanize_delays = humanize_delays
         self.ignore_https_errors = ignore_https_errors
@@ -254,7 +274,8 @@ class BrowserController:
             device_scale_factor=1.0,
             ignore_https_errors=self.ignore_https_errors,
             accept_downloads=True,
-            proxy=None,
+            proxy={"server": self.proxy_server} if self.proxy_server else None,
+            channel=self.browser_channel,
         )
 
         # CDP is used for richer page observation, not browser fingerprint modification.
@@ -599,7 +620,41 @@ class BrowserController:
         except PlaywrightTimeout as e:
             return {"success": False, "url": url, "title": None, "error": f"Timeout: {e}"}
         except Exception as e:
-            return {"success": False, "url": url, "title": None, "error": str(e)}
+            error = str(e)
+            # Chromium can raise ERR_ABORTED when a navigation is replaced by
+            # an immediate redirect even though the destination page finishes
+            # loading.  Search engines do this frequently for regional routing.
+            # Recover only when an ordinary HTTP(S) document is inspectable;
+            # downloads and genuinely aborted/blank navigations still fail.
+            if "net::ERR_ABORTED" in error:
+                for attempt in range(3):
+                    try:
+                        await self.page.wait_for_load_state("domcontentloaded", timeout=2000)
+                    except Exception:
+                        pass
+                    try:
+                        current_url = self.page.url
+                        parsed = urlparse(current_url)
+                        title = await self.page.title()
+                        body = await self.page.locator("body").count()
+                        if (
+                            parsed.scheme in {"http", "https"}
+                            and parsed.hostname
+                            and body
+                            and _same_navigation_site(url, current_url)
+                        ):
+                            return {
+                                "success": True,
+                                "url": current_url,
+                                "title": title,
+                                "status": None,
+                                "recovered_from": "net::ERR_ABORTED",
+                            }
+                    except Exception:
+                        pass
+                    if attempt < 2:
+                        await asyncio.sleep(0.5)
+            return {"success": False, "url": url, "title": None, "error": error}
 
     async def click(
         self, selector: str, timeout: int | None = None, force: bool = False
@@ -903,7 +958,22 @@ class BrowserController:
                 )
 
             results = await parser(self.page, max_results)
-            return {"success": True, "results": results, "count": len(results)}
+            query_params = parse_qs(urlparse(self.page.url).query)
+            query = next(
+                (
+                    values[0]
+                    for key in ("q", "p", "query")
+                    if (values := query_params.get(key)) and values[0]
+                ),
+                "",
+            )
+            return {
+                "success": True,
+                "engine": engine,
+                "query": query,
+                "results": results,
+                "count": len(results),
+            }
 
         except Exception as e:
             return {"success": False, "results": [], "count": 0, "error": str(e)}

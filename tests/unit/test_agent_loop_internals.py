@@ -8,6 +8,7 @@ failure tracking, captcha, timeouts) are actually executed.
 
 from __future__ import annotations
 
+import asyncio
 from io import BytesIO
 from pathlib import Path
 from types import SimpleNamespace
@@ -143,9 +144,11 @@ class TestThink:
 
     async def test_returns_tool_call(self, tmp_path: Path) -> None:
         planner = FakePlanner(ToolCall(tool_name="goto", parameters={"url": "https://x"}))
+        planner.last_call_metadata = {"transport_retries": 2}
         agent = _agent(tmp_path, planner, FakeBrowser())
         call = await agent._think(self._state())
         assert call is not None and call.tool_name == "goto"
+        assert agent._planner_attempts[0].transport_retries == 2
 
     async def test_planner_exception_returns_none(self, tmp_path: Path) -> None:
         planner = FakePlanner(raises=True)
@@ -179,6 +182,39 @@ class TestThink:
             (4, 1, False),
             (4, 2, True),
         ]
+
+    async def test_invalid_tool_arguments_are_repaired_before_action_step(
+        self, tmp_path: Path
+    ) -> None:
+        class RepairingPlanner(FakePlanner):
+            def __init__(self) -> None:
+                super().__init__()
+                self.calls = 0
+                self.histories: list[str] = []
+
+            async def plan_action(self, task, browser_state, history_text, available_tools):
+                del task, browser_state, available_tools
+                self.calls += 1
+                self.histories.append(history_text)
+                if self.calls == 1:
+                    return ToolCall(tool_name="goto", parameters={"url": 3})
+                return ToolCall(tool_name="done", parameters={"summary": "repaired"})
+
+        class ValidatingExecutor(FakeExecutor):
+            def validate_tool_call(self, call: ToolCall) -> str | None:
+                if call.tool_name == "goto" and not isinstance(call.parameters.get("url"), str):
+                    return "Validation: url must be a string"
+                return None
+
+        planner = RepairingPlanner()
+        agent = _agent(tmp_path, planner, FakeBrowser())
+        agent._tool_executor = ValidatingExecutor()
+
+        call = await agent._think(self._state(), 2)
+
+        assert call is not None and call.tool_name == "done"
+        assert "url must be a string" in planner.histories[1]
+        assert [attempt.success for attempt in agent._planner_attempts] == [False, True]
 
     async def test_vision_disabled_warning_injected(self, tmp_path: Path) -> None:
         planner = FakePlanner(ToolCall(tool_name="done", parameters={"summary": "x"}))
@@ -421,6 +457,32 @@ class TestWarnIfCaptcha:
         assert agent._runtime_events[0]["outcome"] == "blocked"
         assert browser.closed is True
 
+    async def test_strict_search_captcha_blocks_without_closing_shared_browser(
+        self, tmp_path: Path
+    ) -> None:
+        browser = FakeBrowser(
+            captcha={
+                "detected": True,
+                "type": "recaptcha",
+                "confidence": 0.9,
+                "reason": "visible challenge",
+            }
+        )
+        agent = _agent(
+            tmp_path,
+            FakePlanner(),
+            browser,
+            browser_headless=True,
+            captcha_handling="fail",
+            search_engine_only=True,
+        )
+
+        assert await agent._handle_captcha() == "blocked"
+        assert agent._runtime_events[0]["outcome"] == "blocked"
+        assert agent._runtime_events[0]["browser_closed"] is False
+        assert agent._runtime_events[0]["browser_retained_for_isolated_reset"] is True
+        assert browser.closed is False
+
     async def test_captcha_remains_blocked_if_browser_close_fails(self, tmp_path: Path) -> None:
         class CloseFailureBrowser(FakeBrowser):
             async def close(self) -> None:
@@ -448,6 +510,56 @@ class TestWarnIfCaptcha:
 
 
 class TestExecuteStepBranches:
+    def test_loop_window_fits_short_task_budget(self, tmp_path: Path) -> None:
+        agent = _agent(
+            tmp_path,
+            FakePlanner(),
+            FakeBrowser(),
+            enable_loop_detection=True,
+            max_steps=8,
+            loop_window_size=10,
+        )
+
+        assert agent.loop_detector is not None
+        assert agent.loop_detector.window_size == 4
+
+    async def test_terminal_confidence_is_recorded_for_failed_run(self, tmp_path: Path) -> None:
+        class ConfidencePlanner(FakePlanner):
+            async def estimate_task_success(self, **kwargs: Any) -> float:
+                assert kwargs["status"] == "failed"
+                return 0.2
+
+        agent = _agent(
+            tmp_path,
+            ConfidencePlanner(),
+            FakeBrowser(),
+            elicit_terminal_confidence=True,
+        )
+        agent._current_task = "task"
+        agent._task_status = TaskStatus.FAILED
+        state = _LoopState(start_time=0.0)
+
+        await agent._elicit_terminal_confidence(state, 3)
+
+        assert state.final_result["success_probability"] == 0.2
+        assert state.final_result["confidence_source"] == "terminal_self_report"
+        assert agent._runtime_events[-1]["type"] == "confidence_elicited"
+
+    async def test_run_steps_cancels_in_flight_step_at_task_deadline(self, tmp_path: Path) -> None:
+        agent = _agent(tmp_path, FakePlanner(), FakeBrowser(), task_timeout=1)
+        state = _LoopState(start_time=__import__("time").time() - 0.98)
+
+        async def slow_step(step_count: int, loop_state: _LoopState) -> bool:
+            del step_count, loop_state
+            await asyncio.sleep(1)
+            return True
+
+        agent._execute_step = slow_step  # type: ignore[method-assign]
+        await agent._run_steps(state, max_steps=2)
+
+        assert agent._task_status == TaskStatus.TIMEOUT
+        assert agent._runtime_events[-1]["type"] == "task_deadline_exceeded"
+
     async def test_timeout_before_observe(self, tmp_path: Path) -> None:
         agent = _agent(tmp_path, FakePlanner(), FakeBrowser(), task_timeout=0)
         state = _LoopState(start_time=0.0)
@@ -471,6 +583,39 @@ class TestExecuteStepBranches:
         # Second None: hits the failure ceiling and stops
         assert await agent._execute_step(2, state) is False
         assert agent._task_status == TaskStatus.FAILED
+
+    async def test_post_action_wait_precedes_post_action_observation(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        events: list[str] = []
+        planner = FakePlanner(ToolCall(tool_name="goto", parameters={"url": "https://x"}))
+        agent = _agent(tmp_path, planner, FakeBrowser(), post_action_wait_ms=125)
+
+        async def observe() -> BrowserState:
+            events.append("observe")
+            return BrowserState(
+                screenshot=None,
+                dom_summary="page",
+                url="https://example.com",
+                title="Example",
+                timestamp="now",
+            )
+
+        async def act(tool_call: ToolCall) -> ToolResult:
+            events.append("act")
+            return ToolResult(success=True, tool_name=tool_call.tool_name)
+
+        async def sleep(seconds: float) -> None:
+            events.append(f"sleep:{seconds}")
+
+        agent._observe = observe  # type: ignore[method-assign]
+        agent._act = act  # type: ignore[method-assign]
+        monkeypatch.setattr(loop_mod.asyncio, "sleep", sleep)
+        agent._task_status = TaskStatus.RUNNING
+        state = _LoopState(start_time=__import__("time").time())
+
+        assert await agent._execute_step(1, state) is True
+        assert events == ["observe", "act", "sleep:0.125", "observe"]
 
     async def test_denied_done_does_not_complete_task(self, tmp_path: Path) -> None:
         planner = FakePlanner(ToolCall(tool_name="done", parameters={"summary": "too early"}))
@@ -560,11 +705,33 @@ class TestPersistHelpers:
     def test_persist_copies_figure(self, tmp_path: Path) -> None:
         src = tmp_path / "src.png"
         Image.new("RGB", (4, 4), "red").save(src)
-        _persist_final_outputs(tmp_path, "s", src)
-        assert (RunLayout.from_root(tmp_path).attachments_dir / "figure.png").exists()
+        _persist_final_outputs(tmp_path, "s", src, turn_index=1)
+        layout = RunLayout.from_root(tmp_path)
+        canonical = layout.attachments_dir / "figure.png"
+        snapshot = layout.turn_attachments_dir(1) / "figure.png"
+        assert canonical.exists()
+        assert snapshot.exists()
+        assert canonical.stat().st_ino == snapshot.stat().st_ino
 
     def test_save_step_screenshot_noop_without_image(self, tmp_path: Path) -> None:
         state = BrowserState(screenshot=None, dom_summary="b", url="u", title="", timestamp="n")
         # Should not raise even though there is no screenshot to write.
         _save_step_screenshot(state, tmp_path / "shot.jpg")
         assert not (tmp_path / "shot.jpg").exists()
+
+    def test_save_step_screenshot_hardlinks_unchanged_frames(self, tmp_path: Path) -> None:
+        state = BrowserState(
+            screenshot=Image.new("RGB", (8, 8), "blue"),
+            dom_summary="b",
+            url="u",
+            title="",
+            timestamp="n",
+        )
+        first = tmp_path / "step_001.jpg"
+        second = tmp_path / "step_002.jpg"
+
+        _save_step_screenshot(state, first)
+        _save_step_screenshot(state, second)
+
+        assert first.read_bytes() == second.read_bytes()
+        assert first.stat().st_ino == second.stat().st_ino

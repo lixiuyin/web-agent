@@ -10,6 +10,7 @@ from benchmarks import sandbox_interaction as legacy_sandbox
 from benchmarks import web_interaction as legacy_general
 from benchmarks.core import (
     allocate_execution_dir,
+    default_campaign_dir,
     default_study_dir,
     execution_model_label,
     packaged_manifest_path,
@@ -19,12 +20,17 @@ from benchmarks.studies import open_web_matrix
 from benchmarks.suites.controlled_web import general, sandbox
 from benchmarks.suites.open_web import parallel, runner
 
+from webagent.core.config import AgentConfig
+
 
 def test_default_study_and_task_run_paths_are_purpose_scoped() -> None:
     study = default_study_dir("open-web-general-v2")
 
     assert study == Path("outputs/studies/open-web-general-v2")
     assert task_run_dir(study, "discover-source") == study / "runs" / "discover-source"
+    assert default_campaign_dir("Generality Campaign V2") == Path(
+        "outputs/campaigns/generality-campaign-v2"
+    )
 
 
 @pytest.mark.parametrize("value", ("", ".", "..", "nested/task", "nested\\task", "..\\task"))
@@ -74,6 +80,37 @@ def test_harness_baseline_is_the_default_mode() -> None:
     assert sandbox.parse_args([]).mode == "scripted-harness-baseline"
     assert general.parse_args([]).output is None
     assert sandbox.parse_args([]).output is None
+
+
+def test_sandbox_transport_evidence_records_nonsecret_endpoint_condition() -> None:
+    cfg = AgentConfig(
+        _env_file=None,
+        endpoint_access_mode="byok",
+        api_transient_retries=3,
+        api_retry_base_seconds=10,
+        api_retry_max_seconds=60,
+        max_steps=20,
+        task_timeout=600,
+        browser_timeout=5000,
+    )
+
+    assert sandbox._transport_evidence(cfg) == {
+        "declared_endpoint_access_mode": "byok",
+        "api_transient_retries": 3,
+        "api_retry_base_seconds": 10.0,
+        "api_retry_max_seconds": 60.0,
+        "max_steps_per_task": 20,
+        "task_timeout_seconds": 600,
+        "browser_timeout_ms": 5000,
+    }
+
+
+def test_sandbox_performance_defaults_are_recordable_and_model_independent() -> None:
+    args = sandbox.parse_args([])
+
+    assert args.max_steps_per_task == 20
+    assert args.task_timeout_seconds == 600
+    assert args.browser_timeout_ms == 5000
 
 
 def test_execution_model_label_never_uses_a_placeholder_for_agent_mode() -> None:

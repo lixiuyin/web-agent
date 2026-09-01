@@ -249,6 +249,26 @@ class BenchmarkRunner:
             analysis_dir / "long-horizon.json",
             report.research.long_horizon.model_dump(mode="json"),
         )
+        queue = [
+            {
+                "task_id": task.task_id,
+                "assertion": outcome.assertion.model_dump(mode="json"),
+                "observed": outcome.observed,
+                "reason": outcome.adjudication_reason,
+            }
+            for task in report.tasks
+            for outcome in task.assertions
+            if outcome.adjudication_candidate
+        ]
+        self._write_json(
+            analysis_dir / "adjudication-queue.json",
+            {
+                "schema_version": 1,
+                "candidate_count": len(queue),
+                "boundary": "Candidates are not judge overrides or causal labels.",
+                "candidates": queue,
+            },
+        )
 
     @staticmethod
     def _write_json(target: Path, payload: object) -> None:

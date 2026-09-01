@@ -79,6 +79,47 @@ async def test_registry_execute_validation_error():
     assert "Validation" in (result.error or "")
 
 
+def test_registry_can_validate_without_executing() -> None:
+    reg = ToolRegistry()
+    reg.auto_discover()
+
+    assert reg.validate_call("test_echo", {"message": "hello"}) is None
+    assert "Validation" in (reg.validate_call("test_echo", {}) or "")
+    assert reg.validate_call("missing", {}) == "Unknown tool: missing"
+
+
+@pytest.mark.asyncio
+async def test_registry_enforces_json_schema_before_tool_validator() -> None:
+    schema = {
+        "type": "object",
+        "properties": {"message": {"type": "string"}},
+        "required": ["message"],
+        "additionalProperties": False,
+    }
+
+    @tool("strict_schema_test", "Strict schema test", parameters=schema)
+    class StrictSchemaTool:
+        def validate_params(self, params: dict[str, Any]) -> None:
+            del params
+
+        async def execute(self, params: dict[str, Any]) -> ToolResult:
+            return ToolResult(success=True, tool_name="strict_schema_test", data=params)
+
+    try:
+        reg = ToolRegistry()
+        reg.auto_discover()
+
+        wrong_type = await reg.execute("strict_schema_test", {"message": 3})
+        extra = await reg.execute("strict_schema_test", {"message": "ok", "guess": True})
+
+        assert wrong_type.success is False
+        assert "not of type 'string'" in (wrong_type.error or "")
+        assert extra.success is False
+        assert "Additional properties" in (extra.error or "")
+    finally:
+        _TOOL_REGISTRY.pop("strict_schema_test")
+
+
 @pytest.mark.asyncio
 async def test_registry_execute_unknown_tool():
     reg = ToolRegistry()

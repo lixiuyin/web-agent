@@ -31,13 +31,13 @@ It is **model-agnostic** across OpenAI-compatible endpoints (with automatic visi
 | Area | What makes it interesting |
 |------|---------------------------|
 | **Agentic core** | A clean **Observe → Think → Act → Record** loop built on `typing.Protocol` interfaces (`Planner`, `Tool`, `AgentHook`) — components are structurally typed and hot-swappable, no inheritance required. |
-| **Multimodal planning** | Each step sends a JPEG-compressed screenshot **and** an ad-filtered DOM-to-Markdown snapshot. The planner **auto-probes** the endpoint for real vision support and silently degrades to text-only when a model can't see. |
+| **Multimodal planning** | Each step captures an ad-filtered DOM-to-Markdown snapshot and adaptively sends a JPEG screenshot for sparse or visual states. The planner **auto-probes** the endpoint for real vision support and silently degrades to text-only when a model can't see. |
 | **Structured actions** | Provider-native function tools are the default. `auto` falls back only on an explicit capability error through provider JSON Schema and, finally, prompt JSON; all 60+ exposed tools have machine-readable parameter schemas. |
 | **Robustness engineering** | Five-signal **loop detection**, bounded strategy switching/replanning, atomic resumable checkpoints, request/tool/task timeouts, malformed-output retries, consecutive-failure aborts, and per-attempt token/finish metadata. |
-| **Resilient web search** | Browser search defaults to **Bing → Yahoo → DuckDuckGo**, records per-engine failures (`challenge`, selector drift, empty results, navigation), unwraps Yahoo result redirects, and cascades without inventing results. Direct arXiv/GitHub discovery APIs are hidden by default and require explicit `--discovery-mode hybrid` opt-in. |
+| **Resilient web search** | Browser search defaults to **Bing → Yahoo → DuckDuckGo**, records per-engine failures (`challenge`, selector drift, empty results, navigation), unwraps Yahoo result redirects, and cascades without inventing results. Ordinary runs also expose first-party report/GitHub/arXiv discovery; strict evaluation hides those shortcuts. |
 | **Document intelligence** | A caption-grounded local vector/raster Figure fast path (with conservative cloud fallback), plus a quality-gated OCR cascade and optional content-addressed parse cache. |
 | **Isolated browser/evaluation** | Persistent profiles remain available for signed-in work; temporary profiles and `--strict-eval` eliminate prior-session and PDF-cache state. Every run writes an auditable `trajectory/trace.json`. |
-| **Evidence-grounded benchmarks** | A dated 30-task public-web suite includes real search discovery; a two-origin loopback suite covers a hydrated SPA, login state, cross-site forms, download/upload handoff, and sandbox checkout. Longitudinal gates require 2–3 models on three real common dates. |
+| **Two-layer evaluation** | Internal dated public-web, sandbox, and 60-stage suites provide diagnosis; BrowserGym adapters run WebArena-Verified Hard and full VisualWebArena as separately scored external evidence. Cross-layer readiness never averages unlike metrics. |
 | **Engineering quality** | **60+ built-in tools**, branch coverage gated at **85%**, strict type-checking (`mypy`), and `ruff` linting/formatting. |
 
 ---
@@ -105,11 +105,11 @@ src/webagent/
 benchmarks/
 ├── core/                         # Shared benchmark layout and helpers
 ├── environments/controlled_web/  # Reproducible local web environments
-├── suites/                        # Open-web, controlled-web, and document suites
-└── studies/                       # Repeated, multi-model, longitudinal studies
+├── suites/                        # Internal suites + BrowserGym external adapter
+└── studies/                       # Repeated, multi-model, longitudinal/two-layer studies
 
 docs/research/     # Experiment lifecycle, evidence rules, and failure taxonomy
-outputs/           # Gitignored workspace: runs/, studies/, and legacy/
+outputs/           # Gitignored workspace: runs/, studies/, campaigns/, and legacy/
 ```
 
 ---
@@ -169,6 +169,8 @@ judgment:
 `artifacts/` contains acquired or derived task files; `result/` is the agent's claim;
 and `evaluation/` is independent judgment. See
 [the research workflow](docs/research/README.md) for the full artifact contract.
+Optional namespaces are created on first write, so an absent directory means that the run
+did not produce that class of evidence rather than leaving an empty placeholder.
 An ordinary interactive session keeps one owned run: the canonical trace/result represent
 the latest turn, while `trajectory/turns/` and `result/turns/` preserve immutable per-turn
 snapshots with monotonic step numbers. Strict/search-only evaluation forbids multi-turn runs.
@@ -244,20 +246,22 @@ webagent --task "…" \
 webagent --task "…" --strict-eval --headed \
   --captcha-handling wait_for_human --captcha-wait-timeout 180
 
+# Interactive Google use: opt in, retain the verified session, and solve any
+# Google challenge yourself in the visible browser (the agent never bypasses it)
+AGENT_ALLOW_GOOGLE_SEARCH=true AGENT_SEARCH_DEFAULT_ENGINE=google \
+  webagent --task "Search Google for …" --headed --browser-channel chrome \
+  --browser-profile-mode persistent --captcha-handling wait_for_human
+
 # Verify that one completed run satisfies the anti-shortcut contract
 python -m webagent.evaluation.trace_verifier \
   outputs/runs/2026-08-30/model/task-runid/trajectory/trace.json
 ```
 
-Ordinary runs default to isolated `browser-grounded`: the planner cannot see or execute
-`official_report_search`, `github_search`, or `arxiv_search`. Discovery tasks without a
-user-provided URL or loaded HTTP(S) page must begin with browser search, and latest/newest web discovery tasks must satisfy
-the recency and official-source evidence gates. The planner receives the complete
-latest-evidence checklist up front, and any denial returns every remaining item in
-one structured list instead of exposing one prerequisite per retry. Use
-`--discovery-mode hybrid` only when API-augmented retrieval is intended; the selected
-mode is recorded in `trajectory/trace.json` so hybrid output cannot be mistaken for browser-only
-evidence.
+Ordinary runs default to `hybrid`: the planner may combine browser evidence with
+`official_report_search`, `github_search`, and `arxiv_search` for higher task success.
+Use `--discovery-mode browser-grounded` when direct-source APIs must be hidden. The selected
+mode is recorded in `trajectory/trace.json`, so API-augmented output cannot be mistaken for
+browser-only evidence.
 
 `--strict-eval` and `--search-engine-only` enforce the same stronger discovery contract;
 there is no “strict but direct-API” loophole. They create an isolated output and
@@ -333,10 +337,9 @@ directory, so a large/external `--output` volume also isolates runtime profile d
 
 ## 🧪 End-to-end walkthrough
 
-The optional hybrid fast path below is efficient, but it is **not** a search-engine
-benchmark because step 1 uses structured source APIs. It must be enabled explicitly
-with `--discovery-mode hybrid`. Default runs hide these tools; use `--strict-eval` for
-an isolated, certificate-backed browser-search evaluation.
+The default hybrid fast path below is efficient, but it is **not** a search-engine
+benchmark because step 1 may use structured source APIs. Use `--strict-eval` for an
+isolated, certificate-backed browser-search evaluation.
 
 **Task:** `Find the most recent Qwen technical report and interpret Figure 1`
 
@@ -374,9 +377,11 @@ Configuration is centralized in `core/config.py` (`pydantic-settings`); every ke
 | `model_api_url` / `model_api_key` / `model_name` | — | LLM backend (OpenAI-compatible) |
 | `api_timeout` | `60` | Per-read HTTP timeout for planner calls |
 | `api_hard_timeout` | `300` | Hard wall-clock cap per call — bounds trickling/hung responses |
+| `api_transient_retries` / `api_retry_base_seconds` / `api_retry_max_seconds` | `2` / `0.5` / `10` | Bounded backoff for planner HTTP 429/5xx responses |
 | `planner_max_tokens` / `vision_max_tokens` | `4096` / `2000` | Separate output budgets for tool planning and detailed figure analysis |
 | `history_context_length` / `history_full_result_steps` | `10` / `2` | Keep ten actions but replay full tool payloads only for the newest two; older evidence is summarized |
 | `planner_reasoning_effort` | — | Optional `none`–`max` reasoning budget for compatible planner providers; omitted by default |
+| `planner_screenshot_mode` | `auto` | `auto` sends screenshots only for sparse/visual states; `always` and `never` override it |
 | `vision_brief_max_tokens` / `vision_max_words` | `1200` / `350` | Bound probe/brief vision output and request concise evidence |
 | `planner_max_attempts` | `2` | Repair attempts for empty/malformed planner output per logical step |
 | `checkpoint_enabled` / `checkpoint_filename` | `True` / `latest.json` | Atomic non-secret controller recovery state below `control/checkpoints/` |
@@ -385,23 +390,34 @@ Configuration is centralized in `core/config.py` (`pydantic-settings`); every ke
 | `max_steps` | `100` | Loop iteration limit |
 | `task_timeout` | `1200` | Seconds before the task times out |
 | `tool_timeout` | `600` | Per-tool wall-clock timeout |
+| `post_action_wait_ms` | `500` | Minimum delay before the post-action observation, not after its screenshot |
+| `observation_stability_timeout_ms` / `observation_stable_ms` | `3000` / `400` | Bounded URL/readyState/DOM stability check before snapshot capture |
 | `planner_output_mode` | `auto` | Prefer provider-native tools; explicit alternatives are `json-schema` and `prompt-json` |
 | `stealth_mode` | `False` | Explicit compatibility opt-in; strict evaluation always disables it |
 | `browser_slow_mo_ms` / `browser_humanize_delays` | `0` / `False` | Fixed operation delay plus explicit randomized-wait compatibility opt-in |
 | `browser_locale` / `browser_timezone_id` | — / — | Preserve native browser/system values unless explicitly overridden |
+| `browser_proxy_server` | — | Explicit browser-only proxy URL without embedded credentials; empty keeps direct routing |
 | `browser_ignore_https_errors` | `False` | Validate TLS by default; unsafe bypass is explicit |
 | `allow_google_search` | `False` | Opt in to automated Google search; default avoids human verification |
+| `search_default_engine` | `bing` | Widely used headless-safe default; strict headless evaluation is confined to Bing, Yahoo Japan, and Seznam, while interactive runs retain the broader engine catalog |
+| `google_search_api_key` / `google_search_engine_id` | — / — | Optional supported Google JSON API path for existing customers; credentials are never written to checkpoints/fingerprints |
+| `google_search_api_timeout_seconds` | `15` | Hard timeout for the optional Google JSON API request |
+| `search_bing_market` | `en-US` | Deterministic Bing market; set `None` programmatically to preserve regional routing |
+| `search_engine_cooldown_seconds` | `300` | Session cooldown after a challenged, unreachable, or clearly irrelevant search engine |
 | `captcha_handling` | `report` | Headed `report` waits for manual clearance; timeout/headless blocks and closes the browser. Strict fails immediately; no mode bypasses a challenge |
 | `captcha_wait_timeout_seconds` | `180` | Maximum headed wait for manual challenge clearance |
 | `github_token` | — | Optional higher GitHub API rate limit for official report discovery |
 | `official_report_source_timeout_seconds` | `15` | Independent arXiv/GitHub cap so one slow source cannot delay usable evidence |
-| `discovery_mode` | `browser-grounded` | Hide direct-source APIs by default; set `hybrid` only for explicit API-augmented discovery |
+| `discovery_mode` | `hybrid` | Use browser plus direct first-party discovery; strict evaluation forces `browser-grounded` |
+| `hybrid_official_report_max_attempts` | `2` | Per-subject cap for repeated `official_report_search` calls |
+| `hybrid_evidence_repeat_limit` | `3` | Stop unchanged Hybrid corroboration after three attempts and advance to the verified download |
 | `high_risk_action_policy` | `deny` | Deny externally consequential actions; `prompt` asks in the terminal and `allow` is explicit opt-in |
 | `browser_profile_mode` | `temporary` | Isolated per-process profile; persistent session state is an explicit opt-in |
+| `browser_channel` | `bundled` | Reproducible bundled Chromium; `chrome` uses the local stable Chrome only for trusted interactive sessions |
 | `browser_stale_profile_max_age_seconds` | `3600` | Reap only marked temporary profiles older than this whose owner PID is gone |
 | `browser_upload_root` | `./uploads` | Constrain files that the approved `upload_file` action may disclose |
 | `persistent_pdf_cache` | `False` | Cross-run parse reuse is an explicit opt-in |
-| `strict_eval_mode` | `False` | Force temporary state, search-only discovery, no persistent PDF cache, and a verification certificate |
+| `strict_eval_mode` | `False` | Force Bing-first search, temporary state, browser-only discovery, no persistent PDF cache, and a verification certificate |
 | `search_engine_only` | `False` | Require browser search and reject direct-source tools/unobserved URLs |
 | `use_cdp` | `True` | CDP-enhanced element detection |
 | `enable_loop_detection` | `True` | Five-signal loop detector including scroll churn |
@@ -473,6 +489,13 @@ matrices and `benchmarks.suites.*` for one suite execution.
 An execution separates declared/generated `inputs/`, task `runs/`, append-only
 `ledger/time-slices.jsonl`, retained `evidence/`, derived `artifacts/`, aggregate `analysis/`,
 and the complete `results.json` report.
+
+Multi-suite longitudinal collection uses
+`outputs/campaigns/<campaign-id>/`. Its immutable `campaign.json` binds the provider,
+model set, task-manifest hash, source hash, budgets, and collection policy. Each attempt
+is isolated below `batches/<UTC-date>/<batch-id>/`, while reusable component studies live
+below `studies/`. Batch-local endpoint probes, logs, state, and portfolio output therefore
+cannot be confused with aggregate cross-date analysis.
 
 Historical top-level output trees can be inventoried and moved without rewriting
 their bytes:

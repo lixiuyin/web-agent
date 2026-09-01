@@ -72,3 +72,13 @@ def test_strategy_budget_exhausts_instead_of_cycling_forever() -> None:
     assert second.switch is None
     assert second.exhausted is True
     assert second.replan_required is True
+
+
+def test_long_tool_error_is_bounded_before_strategy_switch_validation() -> None:
+    manager = StrategyManager(failure_threshold=1)
+
+    update = manager.observe(_observation(error="x" * 2000), step_number=1)
+
+    assert update.switch is not None
+    assert len(update.switch.reason) == 1000
+    assert update.switch.reason.endswith("…")

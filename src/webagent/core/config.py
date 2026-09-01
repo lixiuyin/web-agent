@@ -9,6 +9,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 from typing import Literal
+from urllib.parse import urlsplit
 
 from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings
@@ -35,6 +36,12 @@ class AgentConfig(BaseSettings):
     model_name: str = Field(default="qwen-vl-plus", description="Model identifier")
     model_api_url: str | None = Field(default=None, description="Remote API endpoint")
     model_api_key: str | None = Field(default=None, description="Remote API key")
+    endpoint_access_mode: Literal["unknown", "shared", "byok"] = Field(
+        default="unknown",
+        description=(
+            "Non-secret declaration of the provider credential path used for an experiment"
+        ),
+    )
     github_token: str = Field(
         default="",
         description="Optional GitHub token for higher-rate public repository metadata searches",
@@ -44,6 +51,20 @@ class AgentConfig(BaseSettings):
         ge=0.1,
         le=120.0,
         description="Hard timeout for each source queried by official_report_search",
+    )
+    hybrid_official_report_max_attempts: int = Field(
+        default=2,
+        ge=1,
+        le=5,
+        description="Maximum official_report_search attempts for one normalized subject family",
+    )
+    hybrid_evidence_repeat_limit: int = Field(
+        default=3,
+        ge=2,
+        le=5,
+        description=(
+            "Consecutive unchanged Hybrid evidence gaps before bounded corroboration ends"
+        ),
     )
     api_timeout: int = Field(
         default=60,
@@ -56,6 +77,24 @@ class AgentConfig(BaseSettings):
             "hung/trickling connections that evade the per-read api_timeout so one "
             "stalled request cannot consume the whole task_timeout budget."
         ),
+    )
+    api_transient_retries: int = Field(
+        default=2,
+        ge=0,
+        le=8,
+        description="Retries for planner HTTP 429 and 5xx responses after the initial request",
+    )
+    api_retry_base_seconds: float = Field(
+        default=0.5,
+        ge=0.0,
+        le=30.0,
+        description="Initial exponential-backoff delay for transient planner HTTP responses",
+    )
+    api_retry_max_seconds: float = Field(
+        default=10.0,
+        ge=0.0,
+        le=120.0,
+        description="Maximum Retry-After or exponential-backoff delay per planner retry",
     )
     planner_max_tokens: int = Field(
         default=4096,
@@ -70,6 +109,13 @@ class AgentConfig(BaseSettings):
         description=(
             "Optional OpenAI/OpenRouter reasoning effort for planner calls; omitted by "
             "default for provider compatibility"
+        ),
+    )
+    planner_screenshot_mode: Literal["auto", "always", "never"] = Field(
+        default="auto",
+        description=(
+            "Whether planner calls include browser screenshots. auto sends them for sparse or "
+            "explicitly visual states while keeping text-rich pages DOM-only."
         ),
     )
     vision_max_tokens: int = Field(
@@ -128,8 +174,40 @@ class AgentConfig(BaseSettings):
         description=(
             "Allow automated Google searches. Disabled by default because repeated "
             "Playwright searches commonly trigger Google's human-verification page; "
-            "Bing and DuckDuckGo remain available."
+            "other configured search engines remain available."
         ),
+    )
+    search_default_engine: Literal[
+        "bing", "seznam", "yahoo_japan", "yahoo", "duckduckgo", "google"
+    ] = Field(
+        default="bing",
+        description=(
+            "Search engine used when the planner omits the engine parameter; Google still "
+            "requires browser opt-in or configured API credentials"
+        ),
+    )
+    google_search_api_key: str = Field(
+        default="",
+        repr=False,
+        description=(
+            "Optional Google Custom Search JSON API key for an existing Google customer; "
+            "never written to checkpoints or configuration fingerprints"
+        ),
+    )
+    google_search_engine_id: str = Field(
+        default="",
+        description="Optional Programmable Search Engine identifier paired with the API key",
+    )
+    google_search_api_timeout_seconds: float = Field(
+        default=15.0,
+        ge=0.1,
+        le=120.0,
+        description="Hard timeout for Google Custom Search JSON API requests",
+    )
+    search_bing_market: str | None = Field(
+        default="en-US",
+        pattern=r"^[a-z]{2}-[A-Z]{2}$",
+        description=("Bing market such as en-US; None preserves Bing's regional default"),
     )
     browser_locale: str | None = Field(
         default=None,
@@ -138,6 +216,23 @@ class AgentConfig(BaseSettings):
     browser_timezone_id: str | None = Field(
         default=None,
         description="Explicit IANA timezone override; None preserves the browser/system default",
+    )
+    browser_proxy_server: str = Field(
+        default="",
+        repr=False,
+        description=(
+            "Optional explicit browser proxy URL; empty keeps the browser's direct route. "
+            "Embedded credentials are rejected"
+        ),
+    )
+    search_engine_cooldown_seconds: float = Field(
+        default=300.0,
+        ge=0.0,
+        le=86400.0,
+        description=(
+            "Session cooldown after a search engine returns a challenge, navigation failure, "
+            "or clearly irrelevant constrained results"
+        ),
     )
     browser_stale_profile_max_age_seconds: float = Field(
         default=3600.0,
@@ -154,6 +249,21 @@ class AgentConfig(BaseSettings):
     tool_timeout: int = Field(default=600, description="Max seconds any single tool call may run")
     max_consecutive_failures: int = 5
     post_action_wait_ms: int = Field(default=500, ge=0)
+    observation_stability_timeout_ms: int = Field(
+        default=3000,
+        ge=0,
+        le=30000,
+        description=(
+            "Maximum time to wait for URL, readyState, and DOM-size signals to stabilize before "
+            "capturing an observation"
+        ),
+    )
+    observation_stable_ms: int = Field(
+        default=400,
+        ge=0,
+        le=5000,
+        description="Continuous DOM-stability window required before an observation is captured",
+    )
     history_context_length: int = 10
     history_full_result_steps: int = Field(
         default=2,
@@ -169,6 +279,19 @@ class AgentConfig(BaseSettings):
         ge=1,
         le=3,
         description="Planner attempts per logical step; retries malformed/empty responses once",
+    )
+    elicit_terminal_confidence: bool = Field(
+        default=False,
+        description=(
+            "Ask the planner for a task-success probability after terminal execution but before "
+            "the external benchmark judge runs"
+        ),
+    )
+    confidence_timeout_seconds: float = Field(
+        default=30.0,
+        gt=0.0,
+        le=120.0,
+        description="Wall-clock cap for terminal task-success confidence elicitation",
     )
 
     # Captcha handling
@@ -329,10 +452,10 @@ class AgentConfig(BaseSettings):
         ),
     )
     discovery_mode: Literal["browser-grounded", "hybrid"] = Field(
-        default="browser-grounded",
+        default="hybrid",
         description=(
-            "Tool exposure profile: browser-grounded hides direct arXiv/GitHub discovery APIs; "
-            "hybrid explicitly enables API-augmented discovery"
+            "Tool exposure profile: hybrid uses browser and direct first-party discovery for "
+            "ordinary performance; browser-grounded hides direct APIs for controlled evaluation"
         ),
     )
     high_risk_action_policy: Literal["deny", "prompt", "allow"] = Field(
@@ -353,6 +476,13 @@ class AgentConfig(BaseSettings):
     browser_profile_mode: str = Field(
         default="temporary",
         description="Browser profile mode: persistent or temporary",
+    )
+    browser_channel: Literal["bundled", "chrome"] = Field(
+        default="bundled",
+        description=(
+            "Browser binary: Playwright's reproducible bundled Chromium or the locally "
+            "installed stable Google Chrome channel"
+        ),
     )
     browser_profile_dir: Path = Field(
         default=Path("./browser_profile"),
@@ -404,6 +534,30 @@ class AgentConfig(BaseSettings):
             raise ValueError("captcha_handling must be report, fail, or wait_for_human")
         return normalized
 
+    @field_validator("browser_proxy_server")
+    @classmethod
+    def _validate_browser_proxy_server(cls, value: str) -> str:
+        normalized = value.strip()
+        if not normalized:
+            return ""
+        parsed = urlsplit(normalized)
+        if parsed.scheme not in {"http", "https", "socks4", "socks5"} or not parsed.hostname:
+            raise ValueError("browser_proxy_server must be an http, https, socks4, or socks5 URL")
+        if parsed.username or parsed.password:
+            raise ValueError("browser_proxy_server must not contain embedded credentials")
+        return normalized
+
+    @model_validator(mode="after")
+    def _validate_google_search_api_credentials(self) -> AgentConfig:
+        """Require the Google API key and engine ID as one atomic configuration."""
+        has_key = bool(self.google_search_api_key.strip())
+        has_engine_id = bool(self.google_search_engine_id.strip())
+        if has_key != has_engine_id:
+            raise ValueError(
+                "google_search_api_key and google_search_engine_id must be configured together"
+            )
+        return self
+
     @model_validator(mode="after")
     def _enforce_evaluation_isolation(self) -> AgentConfig:
         """Make every strict/search evaluation non-persistent and shortcut-free."""
@@ -420,8 +574,32 @@ class AgentConfig(BaseSettings):
             self.stealth_mode = False
             self.persistent_pdf_cache = False
             self.browser_profile_mode = "temporary"
+            self.browser_channel = "bundled"
+            self.search_default_engine = "bing"
             if self.captcha_handling == "report":
                 self.captcha_handling = "fail"
+
+        if self.browser_channel == "chrome" and self.stealth_mode:
+            raise ValueError(
+                "browser_channel=chrome must use native browser properties; disable stealth_mode"
+            )
+
+        if self.browser_profile_mode == "persistent":
+            profile_dir = self.browser_profile_dir.resolve()
+            home = Path.home().resolve()
+            default_profile_roots = (
+                home / "Library/Application Support/Google/Chrome",
+                home / ".config/google-chrome",
+                Path(os.environ.get("LOCALAPPDATA", "__unset_local_app_data__"))
+                / "Google/Chrome/User Data",
+            )
+            for root in default_profile_roots:
+                root = root.resolve()
+                if profile_dir == root or root in profile_dir.parents:
+                    raise ValueError(
+                        "browser_profile_dir must be a dedicated automation profile, not the "
+                        "daily Chrome user-data directory"
+                    )
         return self
 
     @property

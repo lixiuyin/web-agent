@@ -33,8 +33,8 @@ class RiskCoveragePoint(BaseModel):
 class CalibrationAnalysis(BaseModel):
     """Coverage-aware calibration report; missing confidence is never imputed."""
 
-    schema_version: int = 1
-    status: Literal["available", "unavailable"]
+    schema_version: int = 2
+    status: Literal["available", "partial", "unavailable"]
     reason: str | None = None
     task_count: int = Field(ge=0)
     confidence_count: int = Field(ge=0)
@@ -88,7 +88,12 @@ def analyze_calibration(
             continue
         ece += item.count / len(samples) * abs(item.mean_confidence - item.empirical_success_rate)
     return CalibrationAnalysis(
-        status="available",
+        status="available" if len(samples) == len(evaluations) else "partial",
+        reason=(
+            None
+            if len(samples) == len(evaluations)
+            else f"missing confidence for {len(evaluations) - len(samples)} task(s)"
+        ),
         task_count=len(evaluations),
         confidence_count=len(samples),
         confidence_coverage=coverage,

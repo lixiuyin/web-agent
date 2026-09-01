@@ -167,6 +167,19 @@ async def test_upload_is_confined_and_download_filename_is_sanitized(tmp_path: P
     assert uploaded.data["filename"] == "allowed.txt"
     assert Path(downloaded.data["path"]).name == "safe.txt"
     assert Path(downloaded.data["path"]).read_text(encoding="utf-8") == "payload"
+    assert downloaded.data["suggested_filename"] == "suggested.txt"
+    assert downloaded.data["renamed"] is True
+    assert len(downloaded.data["sha256"]) == 64
+
+
+async def test_download_preserves_browser_suggested_filename_by_default(tmp_path: Path) -> None:
+    result = await DownloadFileTool(browser=_Browser(), artifacts_dir=tmp_path).execute(
+        {"selector": _css()}
+    )
+
+    assert result.success is True
+    assert result.data["filename"] == "suggested.txt"
+    assert result.data["renamed"] is False
 
 
 async def test_browser_download_same_content_is_idempotent_without_touching_target(

@@ -184,6 +184,7 @@ async def test_strict_eval_is_isolated_traceable_and_answer_agnostic(tmp_path: P
             "strict_eval_mode": True,
             "search_engine_only": True,
             "browser_profile_mode": "temporary",
+            "browser_channel": "bundled",
             "persistent_pdf_cache": False,
         }
         assert [step["tool"] for step in trace["steps"]] == executor.calls

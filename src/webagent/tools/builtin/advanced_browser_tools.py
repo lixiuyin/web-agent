@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -184,8 +185,9 @@ class UploadFileTool:
 
 @tool(
     "download_file",
-    "Click an element and save the resulting browser download. "
-    "params: selector={type:'text'|'css',value:string}, filename?",
+    "Click an element and save the resulting browser download. Omit filename to preserve the "
+    "server/browser suggested filename. Supply filename only when the user explicitly requested "
+    "that exact new name. params: selector={type:'text'|'css',value:string}, filename?",
 )
 class DownloadFileTool:
     def __init__(
@@ -209,7 +211,8 @@ class DownloadFileTool:
             async with self.browser.page.expect_download() as pending:
                 await self.browser.page.locator(selector).click()
             download = await pending.value
-            requested = Path(str(params.get("filename") or download.suggested_filename)).name
+            suggested_filename = Path(str(download.suggested_filename)).name
+            requested = Path(str(params.get("filename") or suggested_filename)).name
             filename = requested if requested not in {"", ".", ".."} else "download.bin"
             destination = self.artifacts_dir / "downloads" / filename
             with temporary_artifact_path(destination) as temporary:
@@ -234,6 +237,9 @@ class DownloadFileTool:
                 data={
                     "path": str(destination),
                     "filename": filename,
+                    "suggested_filename": suggested_filename,
+                    "renamed": filename != suggested_filename,
+                    "sha256": hashlib.sha256(destination.read_bytes()).hexdigest(),
                     "deduplicated": deduplicated,
                 },
             )

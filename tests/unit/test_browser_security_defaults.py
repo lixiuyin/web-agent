@@ -26,3 +26,4 @@ def test_controller_validates_https_by_default() -> None:
     assert browser.humanize_delays is False
     assert browser.locale is None
     assert browser.timezone_id is None
+    assert browser.proxy_server is None

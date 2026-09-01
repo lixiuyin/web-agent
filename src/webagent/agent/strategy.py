@@ -58,6 +58,8 @@ _PROMPT_HINTS: dict[StrategyName, str] = {
     ),
 }
 
+_MAX_SWITCH_REASON_CHARS = 1000
+
 
 class StrategySwitch(BaseModel):
     """One auditable transition between strategies."""
@@ -175,7 +177,7 @@ class StrategyManager:
             step_number=step_number,
             previous=self._state.current,
             current=target,
-            reason=reason,
+            reason=_bounded_reason(reason),
         )
         attempted = (
             self._state.attempted
@@ -257,6 +259,14 @@ def _preferred_strategies(observation: StrategyObservation) -> tuple[StrategyNam
     if observation.planner_failure:
         return ("recovery", "semantic-dom", "alternate-navigation")
     return ("alternate-navigation", "semantic-dom", "recovery")
+
+
+def _bounded_reason(reason: str, max_chars: int = _MAX_SWITCH_REASON_CHARS) -> str:
+    """Keep untrusted provider/tool errors within the checkpoint schema boundary."""
+    normalized = " ".join(reason.split())
+    if len(normalized) <= max_chars:
+        return normalized
+    return normalized[: max_chars - 1].rstrip() + "…"
 
 
 __all__ = [

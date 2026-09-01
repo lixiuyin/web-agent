@@ -47,6 +47,10 @@ def detect_search_engine(url: str) -> str | None:
         return "bing"
     if "duckduckgo.com" in lower:
         return "duckduckgo"
+    if "search.yahoo.co.jp" in lower:
+        return "yahoo_japan"
+    if "search.seznam.cz" in lower:
+        return "seznam"
     return None
 
 
@@ -154,7 +158,11 @@ async def _parse_ddg_element(element: ElementHandle) -> dict[str, Any] | None:
     """Parse one DuckDuckGo result container into a normalized entry."""
     link_el: ElementHandle | None = element
     if await element.evaluate("el => el.tagName") != "A":
-        link_el = await element.query_selector("a[href]")
+        link_el = await element.query_selector(
+            'a[data-testid="result-title-a"], h2 a[href], a.result__a[href]'
+        )
+        if not link_el:
+            link_el = await element.query_selector("a[href]")
     if not link_el:
         return None
 
@@ -180,7 +188,9 @@ async def parse_duckduckgo_results(page: Page, max_results: int) -> list[dict[st
     ``div.web-result``, then all links inside the main content area.
     """
     results: list[dict[str, Any]] = []
-    elements = await page.query_selector_all("article.result")
+    elements = await page.query_selector_all('article[data-testid="result"]')
+    if not elements:
+        elements = await page.query_selector_all("article.result")
     if not elements:
         elements = await page.query_selector_all("div.web-result")
     if not elements:
@@ -212,10 +222,43 @@ async def _ddg_snippet(element: Any, link_el: Any) -> str:
     return ""
 
 
+async def parse_seznam_results(page: Page, max_results: int) -> list[dict[str, Any]]:
+    """Extract Seznam organic-result heading links."""
+    results: list[dict[str, Any]] = []
+    links = await page.query_selector_all('a[data-e-a="heading"]')
+    for link_el in links[:max_results]:
+        try:
+            href = await link_el.get_attribute("href")
+            title = (await link_el.text_content() or "").strip()
+            if href and href.startswith("http") and title:
+                results.append({"title": title, "link": href, "snippet": ""})
+        except Exception:
+            continue
+    return results
+
+
+async def parse_yahoo_japan_results(page: Page, max_results: int) -> list[dict[str, Any]]:
+    """Extract Yahoo Japan organic-result cards with direct destination links."""
+    results: list[dict[str, Any]] = []
+    links = await page.query_selector_all("a.sw-Card__titleInner")
+    for link_el in links[:max_results]:
+        try:
+            href = await link_el.get_attribute("href")
+            text = (await link_el.text_content() or "").strip()
+            title = next((line.strip() for line in text.splitlines() if line.strip()), "")
+            if href and href.startswith("http") and title:
+                results.append({"title": title, "link": href, "snippet": ""})
+        except Exception:
+            continue
+    return results
+
+
 SEARCH_PARSERS: dict[str, Callable[[Page, int], Awaitable[list[dict[str, Any]]]]] = {
     "google": parse_google_results,
     "bing": parse_bing_results,
     "duckduckgo": parse_duckduckgo_results,
+    "seznam": parse_seznam_results,
+    "yahoo_japan": parse_yahoo_japan_results,
 }
 
 

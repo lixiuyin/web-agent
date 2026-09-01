@@ -111,6 +111,10 @@ planner data 的 `policy` 审计字段。Figure 分析结果还可包含
 `result/turns/turn-NNN/{summary.txt,attachments/}`；顶层 canonical 文件可以随最新 turn 更新，历史
 turn 快照不覆盖。strict/search-only 不允许一个 run 含多个 turn。
 
+trace 内指向当前 run 的文件路径统一写成 run-relative POSIX 路径；运行时返回值仍可使用绝对路径。
+这使冻结后的 run 可以整体移动，同时不改变证据指向。latest trace 与 turn trace 字节完全一致时，
+两条规范路径通过硬链接共享内容，但逻辑语义仍分别是“最新视图”和“不可变 turn 快照”。
+
 ## Planner request
 
 OpenAI-compatible text-only：

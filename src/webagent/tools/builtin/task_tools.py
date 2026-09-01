@@ -35,7 +35,12 @@ class RememberTool:
 
 @tool(
     "done",
-    "Mark task complete with final answer. params: summary (string, REQUIRED - the actual answer to the user's question, not just 'done'), attachments? (list of file paths to include), success_probability? (number from 0 to 1 estimating task success before external judging)",
+    "Mark task complete with final answer. For interaction tasks, call this only after the "
+    "current page confirms submission/completion and every requested form control or file step "
+    "was actually performed; typing or uploading alone is not submission. params: summary "
+    "(string, REQUIRED - the actual answer to the user's question, not placeholder punctuation "
+    "or just 'done'), attachments? (list of file paths to include), success_probability? "
+    "(number from 0 to 1 estimating task success before external judging)",
 )
 class DoneTool:
     def __init__(self, **kw: Any) -> None:
@@ -45,6 +50,8 @@ class DoneTool:
         summary = params.get("summary") or params.get("result")
         if not isinstance(summary, str) or not summary.strip():
             raise ValueError("'summary' is required and must be a non-empty answer")
+        if not any(character.isalnum() for character in summary):
+            raise ValueError("'summary' must contain an actual answer, not placeholder punctuation")
         probability = params.get("success_probability")
         if probability is not None and (
             isinstance(probability, bool)

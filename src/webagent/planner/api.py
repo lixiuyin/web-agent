@@ -5,10 +5,13 @@ from __future__ import annotations
 import asyncio
 import base64
 import io
+import json
 import logging
+import math
 import re
 from collections.abc import Sequence
 from typing import Any
+from urllib.parse import urlparse
 
 import httpx
 from PIL import Image
@@ -54,6 +57,16 @@ def _local_artifact_history(history_text: str, url: str) -> bool:
     return url.casefold().startswith("file://") and any(
         marker in history_text for marker in _LOCAL_ARTIFACT_TOOLS
     )
+
+
+def _planning_screenshot_needed(browser_state: BrowserState, history_text: str) -> bool:
+    """Use visual tokens only when DOM text is unlikely to ground the next action."""
+    if "visual-grounding" in history_text.casefold():
+        return True
+    if len(browser_state.dom_summary.strip()) < 400:
+        return True
+    path = urlparse(browser_state.url).path.casefold()
+    return path.endswith((".png", ".jpg", ".jpeg", ".webp", ".gif"))
 
 
 def _strip_thinking_tags(text: str) -> str:
@@ -148,7 +161,11 @@ class APIPlanner:
         vision_brief_max_tokens: int = 1200,
         vision_max_words: int = 350,
         hard_timeout: int = 300,
+        transient_retries: int = 2,
+        retry_base_seconds: float = 0.5,
+        retry_max_seconds: float = 10.0,
         output_mode: str | None = None,
+        screenshot_mode: str = "auto",
     ) -> None:
         self.api_url = api_url
         self.api_key = api_key
@@ -160,6 +177,10 @@ class APIPlanner:
         # enforces a true upper bound so one stalled call cannot eat the whole
         # task budget; on expiry the call fails and the agent recovers.
         self.hard_timeout = max(hard_timeout, timeout)
+        self.transient_retries = max(0, transient_retries)
+        self.retry_base_seconds = max(0.0, retry_base_seconds)
+        self.retry_max_seconds = max(0.0, retry_max_seconds)
+        self._last_transport_retries = 0
         self.temperature = temperature
         self.use_structured_output = use_structured_output
         configured_mode = output_mode or ("auto" if use_structured_output else "prompt-json")
@@ -169,10 +190,15 @@ class APIPlanner:
         )
         self._tool_specs: list[ToolSpec] = []
         self._structured_fallbacks: list[dict[str, Any]] = []
+        self._call_structured_fallbacks: list[dict[str, Any]] = []
+        self._native_tool_choice = "required"
         # Cap output length. Generous enough for reasoning models (which spend
         # tokens thinking before emitting the action JSON) without truncation.
         self.max_tokens = max_tokens
         self.reasoning_effort = reasoning_effort
+        if screenshot_mode not in {"auto", "always", "never"}:
+            raise ValueError("screenshot_mode must be one of: auto, always, never")
+        self.screenshot_mode = screenshot_mode
         self.vision_max_tokens = vision_max_tokens
         self.vision_brief_max_tokens = vision_brief_max_tokens
         self.vision_max_words = vision_max_words
@@ -262,7 +288,14 @@ class APIPlanner:
             response_instruction=response_instruction,
         )
 
-        if not self._supports_vision:
+        if (
+            not self._supports_vision
+            or self.screenshot_mode == "never"
+            or (
+                self.screenshot_mode == "auto"
+                and not _planning_screenshot_needed(browser_state, history_text)
+            )
+        ):
             screenshot_b64 = None
         elif screenshot_b64 and _local_artifact_history(history_text, browser_state.url):
             # A browser PDF/image preview is redundant once a structured file/PDF
@@ -276,6 +309,7 @@ class APIPlanner:
             screenshot_b64 is not None,
         )
         self._last_call_metadata = {}
+        self._call_structured_fallbacks = []
         if provider_mode == "prompt-json":
             raw = await self._call(prompt, screenshot_b64)
             self._annotate_output_mode("prompt-json")
@@ -333,6 +367,80 @@ class APIPlanner:
 
         # Fall back to chat completions API with inline image
         return await self._analyze_image_chat(b64, question)
+
+    async def estimate_task_success(
+        self,
+        *,
+        task: str,
+        status: str,
+        history_text: str,
+    ) -> float:
+        """Self-report terminal success likelihood before an external judge is consulted."""
+        payload = {
+            "model": self.model_name,
+            "messages": [
+                {
+                    "role": "system",
+                    "content": (
+                        "Estimate whether the task is actually complete and correct from the "
+                        "recorded execution only. Return a calibrated probability, not optimism."
+                    ),
+                },
+                {
+                    "role": "user",
+                    "content": (
+                        f"TASK:\n{task}\n\nTERMINAL STATUS: {status}\n\n"
+                        f"EXECUTION HISTORY:\n{history_text[-12000:]}"
+                    ),
+                },
+            ],
+            "temperature": 0.0,
+            "max_tokens": 80,
+            "response_format": {
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "task_success_confidence",
+                    "strict": True,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "success_probability": {
+                                "type": "number",
+                                "minimum": 0.0,
+                                "maximum": 1.0,
+                            }
+                        },
+                        "required": ["success_probability"],
+                        "additionalProperties": False,
+                    },
+                },
+            },
+        }
+        try:
+            data = await self._post_data(payload)
+        except httpx.HTTPStatusError as exc:
+            if not _structured_output_unsupported(exc, "json-schema"):
+                raise
+            payload.pop("response_format", None)
+            messages = payload["messages"]
+            assert isinstance(messages, list) and isinstance(messages[-1], dict)
+            messages[-1]["content"] = (
+                str(messages[-1]["content"])
+                + '\n\nReturn JSON only: {"success_probability": number from 0 to 1}.'
+            )
+            data = await self._post_data(payload)
+        raw = _strip_thinking_tags(response_text(data))
+        match = re.search(r"\{[^{}]*\}", raw, flags=re.DOTALL)
+        decoded = json.loads(match.group(0) if match is not None else raw)
+        probability = decoded.get("success_probability") if isinstance(decoded, dict) else None
+        if (
+            isinstance(probability, bool)
+            or not isinstance(probability, (int, float))
+            or not math.isfinite(float(probability))
+            or not 0.0 <= float(probability) <= 1.0
+        ):
+            raise ValueError("provider returned an invalid task-success probability")
+        return float(probability)
 
     async def _analyze_image_vlm(self, b64: str, question: str) -> str:
         """Analyze an image via a dedicated VLM endpoint (e.g. MiniMax)."""
@@ -518,6 +626,28 @@ class APIPlanner:
             try:
                 data = await self._post_data(payload)
             except httpx.HTTPStatusError as exc:
+                if (
+                    self.output_mode == "auto"
+                    and mode == "native-tools"
+                    and self._native_tool_choice == "required"
+                    and _required_tool_choice_unsupported(exc)
+                ):
+                    self._record_structured_fallback(
+                        "native-tools:required", "native-tools:auto", exc
+                    )
+                    self._native_tool_choice = "auto"
+                    payload = self._structured_payload(prompt, screenshot_b64, mode)
+                    try:
+                        data = await self._post_data(payload)
+                    except httpx.HTTPStatusError as retry_exc:
+                        exc = retry_exc
+                    else:
+                        raw = _strip_thinking_tags(response_text(data))
+                        call = parse_provider_tool_call(data)
+                        self._capture_response_metadata(data, len(raw))
+                        self._effective_output_mode = mode
+                        self._annotate_output_mode(mode)
+                        return call
                 if self.output_mode != "auto" or not _structured_output_unsupported(exc, mode):
                     raise
                 next_mode = modes[index + 1] if index + 1 < len(modes) else None
@@ -572,7 +702,7 @@ class APIPlanner:
         )
         if mode == "native-tools":
             payload["tools"] = openai_function_tools(self._tool_specs)
-            payload["tool_choice"] = "required"
+            payload["tool_choice"] = self._native_tool_choice
             payload["parallel_tool_calls"] = False
         elif mode == "json-schema":
             payload["response_format"] = openai_response_format(self._tool_specs)
@@ -582,8 +712,8 @@ class APIPlanner:
 
     def _record_structured_fallback(
         self,
-        source: PlannerOutputMode,
-        target: PlannerOutputMode,
+        source: str,
+        target: str,
         exc: httpx.HTTPStatusError,
     ) -> None:
         response = exc.response
@@ -594,6 +724,7 @@ class APIPlanner:
             "reason": response.text[:300],
         }
         self._structured_fallbacks.append(event)
+        self._call_structured_fallbacks.append(event)
         logger.warning(
             "Planner provider does not support %s; falling back to %s (%d)",
             source,
@@ -606,7 +737,9 @@ class APIPlanner:
             {
                 "requested_output_mode": self.output_mode,
                 "effective_output_mode": effective,
-                "structured_fallbacks": self.structured_fallbacks,
+                "structured_fallbacks": [dict(item) for item in self._call_structured_fallbacks],
+                "session_structured_fallback_count": len(self._structured_fallbacks),
+                "native_tool_choice": self._native_tool_choice,
             }
         )
 
@@ -813,7 +946,31 @@ class APIPlanner:
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self.api_key}",
         }
-        resp = await self._bounded_post(self.api_url, payload, headers, timeout=timeout)
+        resp: httpx.Response | None = None
+        self._last_transport_retries = 0
+        for attempt in range(self.transient_retries + 1):
+            resp = await self._bounded_post(self.api_url, payload, headers, timeout=timeout)
+            transient = resp.status_code == 429 or 500 <= resp.status_code < 600
+            if not transient or attempt >= self.transient_retries:
+                break
+            retry_after = _retry_after_seconds(resp)
+            delay = min(
+                self.retry_max_seconds,
+                retry_after if retry_after is not None else self.retry_base_seconds * (2**attempt),
+            )
+            self._last_transport_retries += 1
+            logger.warning(
+                "Planner API %d; retrying in %.2fs (%d/%d)",
+                resp.status_code,
+                delay,
+                attempt + 1,
+                self.transient_retries,
+            )
+            await asyncio.sleep(delay)
+        assert resp is not None
+        # Preserve exhausted transport retries even when ``raise_for_status``
+        # prevents normal response metadata capture.
+        self._last_call_metadata["transport_retries"] = self._last_transport_retries
         if resp.status_code != 200:
             logger.error("API %d: %s", resp.status_code, resp.text[:500])
         resp.raise_for_status()
@@ -845,11 +1002,23 @@ class APIPlanner:
             "prompt_tokens": _optional_int(usage.get("prompt_tokens")),
             "completion_tokens": _optional_int(usage.get("completion_tokens")),
             "total_tokens": _optional_int(usage.get("total_tokens")),
+            "transport_retries": self._last_transport_retries,
         }
 
 
 def _optional_int(value: Any) -> int | None:
     return value if isinstance(value, int) and not isinstance(value, bool) else None
+
+
+def _retry_after_seconds(response: httpx.Response) -> float | None:
+    value = response.headers.get("Retry-After")
+    if value is None:
+        return None
+    try:
+        parsed = float(value)
+    except ValueError:
+        return None
+    return max(0.0, parsed)
 
 
 def _structured_output_unsupported(exc: httpx.HTTPStatusError, mode: PlannerOutputMode) -> bool:
@@ -896,4 +1065,22 @@ def _structured_output_unsupported(exc: httpx.HTTPStatusError, mode: PlannerOutp
     )
     return any(term in body for term in explicit_capability_errors) and any(
         term in body for term in feature_terms
+    )
+
+
+def _required_tool_choice_unsupported(exc: httpx.HTTPStatusError) -> bool:
+    """Detect providers that support tools but reject forced tool selection."""
+    response = exc.response
+    if response.status_code not in {400, 404, 415, 422}:
+        return False
+    body = response.text.casefold()
+    return "tool_choice" in body and any(
+        phrase in body
+        for phrase in (
+            "does not support required",
+            "doesn't support required",
+            "required or object",
+            "required is not supported",
+            "only supports auto",
+        )
     )

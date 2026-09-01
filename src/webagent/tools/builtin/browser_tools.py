@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import asyncio
 from typing import Any
 
 from webagent.core.models import ToolResult
@@ -176,11 +175,6 @@ class TypeTool(BrowserToolBase):
         text = str(params["text"])
         delay = int(params.get("delay_ms", 50))
         clear = bool(params.get("clear_first", True))
-        try:
-            await self.browser.click(selector, force=False)
-            await asyncio.sleep(0.2)
-        except Exception:
-            pass
         resp = await self.browser.type_text(selector, text, delay=delay, clear_first=clear)
         if resp.get("success"):
             return ToolResult(

@@ -11,8 +11,10 @@ Inspired by browser-use's approach to page content understanding.
 
 from __future__ import annotations
 
+import asyncio
 import logging
 import re
+import time
 from datetime import UTC, datetime
 from typing import Any
 
@@ -28,11 +30,70 @@ from webagent.browser.priority import sort_elements_by_priority
 
 logger = logging.getLogger("webagent")
 
+_PAGE_STABILITY_SCRIPT = """() => {
+    const root = document.documentElement;
+    const body = document.body;
+    return {
+        url: location.href,
+        readyState: document.readyState,
+        nodeCount: root ? root.getElementsByTagName('*').length : 0,
+        textLength: body ? (body.innerText || '').length : 0,
+        scrollHeight: root ? root.scrollHeight : 0,
+    };
+}"""
+
 # Patterns for filtering ads/noise
 AD_REGEX = re.compile(
     r"\b(ad|ads|sponsor|banner|promo|tracking|cookie|subscribe|advertisement|affiliate)\b",
     re.IGNORECASE,
 )
+
+
+async def wait_for_page_stability(
+    page: Page,
+    *,
+    timeout_ms: int = 3000,
+    stable_ms: int = 400,
+    poll_ms: int = 100,
+) -> bool:
+    """Wait until navigation and coarse DOM signals remain unchanged for a bounded window.
+
+    ``networkidle`` is intentionally avoided because analytics, streaming, and long-polling can
+    keep an otherwise usable page busy forever. A timeout is not an error: the caller may still
+    attempt a snapshot and use its existing retry path if navigation races the capture.
+    """
+    evaluate = getattr(page, "evaluate", None)
+    if not callable(evaluate) or timeout_ms <= 0:
+        return False
+    deadline = time.monotonic() + timeout_ms / 1000
+    stable_since: float | None = None
+    previous: tuple[Any, ...] | None = None
+    while time.monotonic() < deadline:
+        try:
+            raw = await evaluate(_PAGE_STABILITY_SCRIPT)
+            if not isinstance(raw, dict):
+                return False
+            signature = (
+                raw.get("url"),
+                raw.get("readyState"),
+                raw.get("nodeCount"),
+                raw.get("textLength"),
+                raw.get("scrollHeight"),
+            )
+            now = time.monotonic()
+            ready = raw.get("readyState") in {"interactive", "complete"}
+            if ready and signature == previous:
+                stable_since = stable_since or now
+                if (now - stable_since) * 1000 >= stable_ms:
+                    return True
+            else:
+                stable_since = None
+            previous = signature
+        except Exception:
+            stable_since = None
+            previous = None
+        await asyncio.sleep(max(poll_ms, 0) / 1000)
+    return False
 
 
 async def take_snapshot(
@@ -70,7 +131,10 @@ async def take_snapshot(
         except Exception:
             pass
 
-    # Capture basic page info
+    # Capture one internally consistent page generation. If a navigation starts
+    # during capture, discard this mixed HTML/screenshot pair and let the agent's
+    # bounded observation retry take a fresh snapshot.
+    initial_url = page.url
     html = await page.content()
     screenshot_bytes = await page.screenshot(full_page=full_page, type="png")
     title = await page.title()
@@ -81,6 +145,9 @@ async def take_snapshot(
         elements = await _extract_elements_enhanced(page)
     else:
         elements = await _extract_elements_basic(page)
+
+    if page.url != initial_url:
+        raise RuntimeError(f"page navigated during snapshot: {initial_url!r} -> {page.url!r}")
 
     # Filter and prioritize
     elements = _filter_and_dedupe(elements, filter_ads=filter_ads)
@@ -121,6 +188,17 @@ async def _extract_elements_enhanced(page: Page) -> list[dict[str, Any]]:
             # Fall back to JavaScript extraction if AX tree unavailable
             if ax_tree:
                 elements = await _extract_from_ax_tree(ax_tree, page)
+                # AX nodes carry useful roles and names, but Chromium's AX tree
+                # does not expose a directly executable CSS selector.  An
+                # observation that says ``selector: unknown`` is actively
+                # harmful: the planner has to guess selectors even though the
+                # DOM contains stable ids/names.  Prefer the JavaScript
+                # extractor whenever the AX projection is not actionable.
+                if not any(
+                    str(element.get("css_path") or "").strip() not in {"", "unknown"}
+                    for element in elements
+                ):
+                    elements = await extract_interactive_elements(page)
             else:
                 elements = await extract_interactive_elements(page)
 
@@ -352,7 +430,9 @@ def _interactive_controls_lines(elements: list[dict[str, Any]], max_elements: in
         css_path = e.get("css_path", "unknown")
 
         parts.append(
-            f"- {label} `[e{shown_count}]` (priority: {priority:.0f})  \n  selector: `{css_path}`\n"
+            f"- {label} (control {shown_count}, priority: {priority:.0f}; "
+            "use the CSS selector below)  \n"
+            f"  selector: `{css_path}`\n"
         )
 
     # Add ellipsis for remaining elements
