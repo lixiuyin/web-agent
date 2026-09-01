@@ -91,7 +91,7 @@ jobs:
           "$GITHUB_WORKSPACE/.package-smoke/bin/python" -m benchmarks.suites.open_web.runner --help
           cd "$GITHUB_WORKSPACE"
           .package-smoke/bin/webagent --help
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: distributions
           path: build-one/*
