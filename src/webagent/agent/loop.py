@@ -1035,6 +1035,16 @@ class WebAgent:
                 )
                 if tool_call is None:
                     error = "planner returned no executable tool call"
+                elif (
+                    remaining_actions == 1
+                    and terminal_evidence_hint
+                    and tool_call.tool_name.casefold() != "done"
+                ):
+                    error = (
+                        "final action must be done because visited evidence is already available; "
+                        "answer from that evidence instead of gathering or re-reading"
+                    )
+                    tool_call = None
                 else:
                     validator = getattr(self._tool_executor, "validate_tool_call", None)
                     if callable(validator):

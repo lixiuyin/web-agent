@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 import os
 import time
@@ -429,10 +430,16 @@ class TestInteractions:
                 self.pages = [source]
 
         context = Context()
+        delayed_tasks: list[asyncio.Task[None]] = []
 
         async def click_and_open(selector: str, **kwargs: Any) -> None:
             source.calls.append(("click", {"selector": selector, **kwargs}))
-            context.pages.append(popup)
+
+            async def delayed_open() -> None:
+                await asyncio.sleep(0.1)
+                context.pages.append(popup)
+
+            delayed_tasks.append(asyncio.create_task(delayed_open()))
 
         source.click = click_and_open  # type: ignore[method-assign]
         controller = _controller(source)
@@ -445,6 +452,7 @@ class TestInteractions:
         assert result["opened_new_tab"] is True
         assert result["url"] == "https://destination.test/docs"
         assert result["tab_index"] == 1
+        assert delayed_tasks[0].done()
 
     async def test_type_text(self) -> None:
         page = FakePage()

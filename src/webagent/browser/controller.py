@@ -701,6 +701,14 @@ class BrowserController:
         if self._context is None:
             return {}
         new_pages = [page for page in self._context.pages if page not in pages_before]
+        # Chromium can emit the page event just after ``page.click`` resolves.
+        # Wait briefly for that bounded race instead of forcing the planner to
+        # spend two environment steps on list_tabs + switch_tab.
+        for _ in range(10):
+            if new_pages:
+                break
+            await asyncio.sleep(0.05)
+            new_pages = [page for page in self._context.pages if page not in pages_before]
         if not new_pages:
             return {}
         self._page = new_pages[-1]

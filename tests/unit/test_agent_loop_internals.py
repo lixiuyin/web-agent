@@ -294,6 +294,31 @@ class TestThink:
         assert "https://example.test/visited" in planner.received_history
         assert "https://example.test/missing" in planner.received_history
 
+    async def test_final_non_done_is_replanned_without_consuming_step(self, tmp_path: Path) -> None:
+        class RepairingPlanner(FakePlanner):
+            def __init__(self) -> None:
+                super().__init__()
+                self.calls = 0
+                self.histories: list[str] = []
+
+            async def plan_action(self, task, browser_state, history_text, available_tools):
+                del task, browser_state, available_tools
+                self.calls += 1
+                self.histories.append(history_text)
+                if self.calls == 1:
+                    return ToolCall(tool_name="extract_text", parameters={})
+                return ToolCall(tool_name="done", parameters={"summary": "finished"})
+
+        planner = RepairingPlanner()
+        agent = _agent(tmp_path, planner, FakeBrowser(), max_steps=8)
+
+        call = await agent._think(self._state(), step_number=8)
+
+        assert call is not None and call.tool_name == "done"
+        assert planner.calls == 2
+        assert "final action must be done" in planner.histories[1]
+        assert [attempt.success for attempt in agent._planner_attempts] == [False, True]
+
 
 class TestWarnIfCaptcha:
     async def test_logs_when_detected(self, tmp_path: Path, caplog) -> None:
