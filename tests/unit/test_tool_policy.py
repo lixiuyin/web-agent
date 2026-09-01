@@ -302,6 +302,31 @@ async def test_complete_link_projection_records_urls_without_truncation(tmp_path
     assert "https://example.test/docs/20" not in policy._observed_urls
 
 
+async def test_terminal_evidence_hint_lists_visited_page_not_unvisited_variant(
+    tmp_path: Path,
+) -> None:
+    browser = _Browser()
+    policy = SearchEngineOnlyPolicy(browser, artifacts_dir=tmp_path / "artifacts")
+    visited = "https://numpy.org/devdocs/user/absolute_beginners.html"
+    unvisited = "https://numpy.org/doc/stable/user/absolute_beginners.html"
+    await _complete_search(policy, "https://numpy.org/")
+    goto = ToolCall(tool_name="goto", parameters={"url": "https://numpy.org/"})
+    decision = await policy.authorize(goto)
+    browser.page.url = visited
+    await _record_result(
+        policy,
+        goto,
+        ToolResult(success=True, tool_name="goto", data={"url": visited}),
+        decision,
+    )
+
+    hint = policy.terminal_evidence_hint()
+
+    assert visited in hint
+    assert unvisited not in hint
+    assert "do not reconstruct URL variants" in hint
+
+
 async def test_policy_checkpoint_restores_grounded_url_and_counters(tmp_path: Path) -> None:
     observed = "https://example.test/report.pdf"
     original = SearchEngineOnlyPolicy(_Browser(), artifacts_dir=tmp_path / "artifacts")

@@ -59,6 +59,16 @@ class ToolExecutor:
         """Return provider-native function schemas for exactly the exposed tools."""
         return self._registry.specs(self._allowed_tools)
 
+    def terminal_evidence_hint(self) -> str:
+        """Return policy-owned final-answer evidence without exposing policy internals."""
+        if self._policy is None:
+            return ""
+        provider = getattr(self._policy, "terminal_evidence_hint", None)
+        if not callable(provider):
+            return ""
+        value = provider()
+        return value if isinstance(value, str) else ""
+
     def validate_tool_call(self, tool_call: ToolCall) -> str | None:
         """Validate planner output before it consumes an environment action step."""
         name = (tool_call.tool_name or "").casefold()

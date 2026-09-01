@@ -962,6 +962,12 @@ class WebAgent:
             history_text += "\n\nOBSERVED TRANSIENT PAGE: " + transient_hint
 
         remaining_actions = max(self.config.max_steps - step_number + 1, 0)
+        terminal_evidence_hint_provider = getattr(
+            self._tool_executor, "terminal_evidence_hint", None
+        )
+        terminal_evidence_hint = (
+            terminal_evidence_hint_provider() if callable(terminal_evidence_hint_provider) else ""
+        )
         if remaining_actions == 1:
             history_text = (
                 f"{history_text}\n\n"
@@ -969,12 +975,16 @@ class WebAgent:
                 "answers the task, call 'done' now with the answer and exact source URL. "
                 "Do not spend the final action re-reading evidence already visible."
             )
+            if terminal_evidence_hint:
+                history_text += "\n\n" + terminal_evidence_hint
         elif remaining_actions == 2:
             history_text = (
                 f"{history_text}\n\n"
                 "ACTION BUDGET: Two actions remain. Reserve the final action for 'done'; "
                 "perform at most one essential evidence-gathering action first."
             )
+            if terminal_evidence_hint:
+                history_text += "\n\n" + terminal_evidence_hint
 
         # Check for loops before planning — inject nudge into history so LLM sees it
         if self.loop_detector:

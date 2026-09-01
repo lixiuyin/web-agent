@@ -538,6 +538,29 @@ class SearchEngineOnlyPolicy:
             "figure_analysis_completed": self._figure_analysis_completed,
         }
 
+    def terminal_evidence_hint(self) -> str:
+        """Expose a bounded exact-URL allowlist for the final planner action."""
+        current = _canonical_url(self._browser.page.url)
+        content_visits = {
+            url
+            for url in self._visited_urls
+            if not any(
+                marker in (urlsplit(url).hostname or "") for marker in _SEARCH_ENGINE_HOST_MARKERS
+            )
+        }
+        ordered = ([current] if current in content_visits else []) + sorted(
+            content_visits - ({current} if current is not None else set())
+        )
+        if not ordered:
+            return ""
+        return (
+            "FINAL CITATION ALLOWLIST — visited non-search pages: "
+            + ", ".join(ordered[:12])
+            + ". Cite the primary source using exactly one URL from this list. Omit every "
+            "canonical, stable, alternate-version, or supporting URL that is not explicitly "
+            "present in prior visible evidence; do not reconstruct URL variants from memory."
+        )
+
     def import_state(self, state: dict[str, Any], *, task: str) -> None:
         """Restore a checkpoint produced by :meth:`export_state`, failing closed."""
         if state.get("schema_version") != 3 or state.get("policy") != self.name:

@@ -78,6 +78,9 @@ class FakeExecutor:
     def get_tool_descriptions(self) -> str:
         return "tool docs"
 
+    def terminal_evidence_hint(self) -> str:
+        return "FINAL CITATION ALLOWLIST: https://example.test/visited"
+
 
 def _agent(tmp_path: Path, planner: FakePlanner, browser: FakeBrowser, **cfg: Any) -> WebAgent:
     cfg.setdefault("enable_loop_detection", False)
@@ -285,6 +288,7 @@ class TestThink:
         assert planner.received_history is not None
         assert "final allowed action" in planner.received_history
         assert "exact source URL" in planner.received_history
+        assert "https://example.test/visited" in planner.received_history
 
 
 class TestWarnIfCaptcha:
