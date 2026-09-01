@@ -94,6 +94,35 @@ _QUOTED_QUERY_RE = re.compile(r'["“](.+?)["”]')
 _PHRASE_STOP_WORDS = frozenset(
     {"a", "an", "and", "for", "in", "is", "of", "official", "page", "the", "to"}
 )
+_TOPICAL_QUERY_STOP_WORDS = frozenset(
+    {
+        "about",
+        "documentation",
+        "docs",
+        "encyclopedia",
+        "find",
+        "framework",
+        "guide",
+        "home",
+        "homepage",
+        "installation",
+        "introduction",
+        "latest",
+        "neutral",
+        "newest",
+        "official",
+        "overview",
+        "page",
+        "recent",
+        "report",
+        "search",
+        "site",
+        "technical",
+        "topic",
+        "tutorial",
+        "website",
+    }
+)
 
 
 def _result_quality_issue(query: str, results: list[dict[str, str]]) -> str | None:
@@ -148,6 +177,26 @@ def _result_quality_issue(query: str, results: list[dict[str, str]]) -> str | No
             for result in results
         ):
             return "results ignored the quoted title constraint"
+
+    # Reject only gross topical mismatches. Search engines occasionally return a
+    # fully populated but stale/corrupted SERP (for example, a FastAPI query whose
+    # ten results are all about poetry or sports). Requiring one distinctive query
+    # token anywhere in title/URL/snippet is conservative enough to preserve
+    # synonym-heavy results while preventing such pages from counting as success.
+    topical_terms = {
+        term.casefold()
+        for term in re.findall(r"[A-Za-z][A-Za-z0-9_-]{3,}", query)
+        if term.casefold() not in _TOPICAL_QUERY_STOP_WORDS
+        and not term.casefold().startswith(("http", "www"))
+    }
+    if topical_terms and not any(
+        any(
+            term in " ".join(str(value) for value in result.values()).casefold()
+            for term in topical_terms
+        )
+        for result in results
+    ):
+        return "results are unrelated to the distinctive query terms"
     return None
 
 

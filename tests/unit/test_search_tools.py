@@ -45,7 +45,13 @@ class MockPage:
         return MockLocator(1 if "result" in self._body.lower() else 0)
 
     async def evaluate(self, _script, _limit):
-        return [{"title": "Example result", "url": "https://example.test/result", "date": ""}]
+        return [
+            {
+                "title": "Python documentation example result",
+                "url": "https://example.test/result",
+                "date": "",
+            }
+        ]
 
 
 class MockBrowser:
@@ -521,6 +527,33 @@ def test_result_quality_does_not_second_guess_unconstrained_topic() -> None:
         )
         is None
     )
+
+
+def test_result_quality_rejects_gross_unconstrained_topic_mismatch() -> None:
+    issue = _result_quality_issue(
+        "FastAPI official website",
+        [
+            {"title": "Poems", "url": "https://poetry.example/poems"},
+            {"title": "Football news", "url": "https://sports.example/news"},
+        ],
+    )
+
+    assert issue == "results are unrelated to the distinctive query terms"
+
+
+def test_result_quality_accepts_one_distinctive_topic_match() -> None:
+    issue = _result_quality_issue(
+        "FastAPI framework official website",
+        [
+            {
+                "title": "FastAPI",
+                "url": "https://fastapi.tiangolo.com/",
+                "snippet": "A modern Python web framework",
+            }
+        ],
+    )
+
+    assert issue is None
 
 
 def test_result_quality_does_not_treat_version_or_filename_as_domain() -> None:
