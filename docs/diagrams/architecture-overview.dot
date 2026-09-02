@@ -1,0 +1,118 @@
+digraph WebAgentArchitecture {
+  graph [
+    bgcolor="white",
+    rankdir=TB,
+    splines=polyline,
+    pad=0.22,
+    nodesep=0.42,
+    ranksep=0.52,
+    fontname="Arial",
+    fontsize=18,
+    labelloc="t",
+    label="WebAgent: policy-bound planning, browser execution, and auditable evidence"
+  ];
+  node [
+    shape=box,
+    style="rounded,filled",
+    fillcolor="#F8FAFC",
+    color="#164E63",
+    fontcolor="#102A43",
+    fontname="Arial",
+    fontsize=10.5,
+    penwidth=1.35,
+    margin="0.15,0.10"
+  ];
+  edge [
+    color="#2563A6",
+    fontcolor="#334E68",
+    fontname="Arial",
+    fontsize=8.5,
+    penwidth=1.25,
+    arrowsize=0.7
+  ];
+
+  task [label="Natural-language task", fillcolor="#E0F2FE"];
+  cli [label="CLI / benchmark adapter"];
+  config [label="AgentConfig\nvalidated settings + discovery mode", fillcolor="#ECFDF5", color="#15803D"];
+  task -> cli -> config;
+
+  planner [
+    label="PLANNER\nPlanner factory -> APIPlanner or StubPlanner\nAPI auto ladder: native tools -> JSON Schema -> prompt JSON",
+    fillcolor="#EEF2FF",
+    color="#6366F1"
+  ];
+  agent [
+    label="WEBAGENT ORCHESTRATION\nObserve -> Think -> Act -> Record\nLoopDetector + StrategyManager + bounded state\nCAPTCHA: report/wait or fail closed",
+    fillcolor="#CCFBF1",
+    color="#0F766E",
+    penwidth=2.0,
+    fontsize=11.5
+  ];
+  browser [
+    label="BROWSER STATE\nPlaywright Chromium\nstability wait + URL + DOM snapshot + adaptive screenshot",
+    fillcolor="#E0F2FE"
+  ];
+
+  registry [label="TOOL REGISTRY\nauto-discovered ToolSpecs"];
+  exposure [
+    label="EXPOSURE FILTER\ndiscovery mode + configured allowlist\none allowed set for planner and executor",
+    fillcolor="#FFF7ED",
+    color="#D97706"
+  ];
+  executor [
+    label="TOOL EXECUTOR\nvalidate -> execution policy -> risk policy -> timeout -> dispatch",
+    fillcolor="#FEF3C7",
+    color="#D97706"
+  ];
+  tools [label="BUILT-IN TOOLS\nbrowser / search / PDF / file / task"];
+
+  documents [
+    label="DOCUMENT INTELLIGENCE\nlocal profile -> ordered cloud providers -> quality gate\nfirst passing result wins; PyMuPDF only after all cloud providers fail\nstructured text + tables + captioned figures",
+    fillcolor="#F5F3FF",
+    color="#7C3AED"
+  ];
+  checkpoint [
+    label="ATOMIC CHECKPOINT STORE\nwrite-ahead pending action before execution\ncommitted next step + bounded recovery state",
+    fillcolor="#ECFDF5",
+    color="#15803D"
+  ];
+  trace [
+    label="VERSIONED TRACE + HOOKS\nplanner attempts + browser state + ToolCall + ToolResult + events",
+    fillcolor="#ECFDF5",
+    color="#15803D"
+  ];
+  result [
+    label="GROUNDED TERMINAL RESULT\nattachments + observable evidence + independent evaluation boundary",
+    fillcolor="#DCFCE7",
+    color="#15803D",
+    penwidth=1.8
+  ];
+
+  {rank=same; planner; agent; browser;}
+  {rank=same; registry; exposure; executor; tools;}
+  {rank=same; documents; checkpoint; trace;}
+
+  config -> agent [label="construct run"];
+  config -> planner [style=dashed, color="#64748B", label="provider settings"];
+  config -> browser [style=dashed, color="#64748B", label="browser settings"];
+
+  agent -> planner [label="task + BrowserState + history + exposed schemas"];
+  planner -> agent [label="validated ToolCall", color="#6366F1", fontcolor="#4F46E5"];
+  browser -> agent [label="stable BrowserState"];
+  agent -> browser [label="observe / browser action"];
+
+  registry -> exposure [label="ToolSpecs"];
+  exposure -> planner [label="configure_tools(exposed specs)", color="#D97706", fontcolor="#B45309"];
+  exposure -> executor [label="same allowed set", color="#D97706", fontcolor="#B45309"];
+  agent -> executor [label="ToolCall"];
+  executor -> agent [label="ToolResult", color="#15803D", fontcolor="#15803D"];
+  executor -> tools [label="authorized dispatch"];
+  tools -> browser [label="browser tools"];
+  tools -> documents [label="PDF tools", color="#7C3AED", fontcolor="#7C3AED"];
+  documents -> tools [label="structured evidence", color="#7C3AED", fontcolor="#7C3AED"];
+
+  agent -> checkpoint [label="write-ahead + commit"];
+  agent -> trace [label="record steps + events"];
+  checkpoint -> result [label="recoverable state", color="#15803D", fontcolor="#15803D"];
+  trace -> result [label="auditable evidence", color="#15803D", fontcolor="#15803D"];
+}

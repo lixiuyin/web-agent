@@ -43,7 +43,7 @@ caption, and analyzing the extracted image with vision.
 Three structural interfaces—`Planner`, `Tool`, and `AgentHook`—separate model planning,
 execution capabilities, and lifecycle observation.
 
-![WebAgent system architecture](docs/assets/architecture-overview.png)
+![WebAgent system architecture showing policy-filtered planner tools, browser execution, document parsing, checkpoints, and trace evidence](docs/assets/architecture-overview.svg)
 
 ```text
 src/webagent/
@@ -66,12 +66,15 @@ One step observes stable browser state, builds planner context, selects an allow
 executes it within time/risk bounds, records the result, and atomically updates ordinary
 recovery state.
 
-![One WebAgent step from observation to checkpointed execution](docs/assets/agent-step-sequence.png)
+![One WebAgent step from stable observation through CAPTCHA handling, planning, write-ahead checkpoint, tool execution, and committed evidence](docs/assets/agent-step-sequence.svg)
 
 Figure requests are resolved by number and caption rather than by extraction order, so a
 logo or cover decoration cannot silently become “Figure 1.”
 
-![Caption-grounded PDF figure resolution](docs/assets/figure-resolution-flow.png)
+![Caption-grounded PDF Figure resolution using a local fast path or a quality-gated cloud parser cascade with last-resort local fallback](docs/assets/figure-resolution-flow.svg)
+
+Editable Graphviz sources and the reproducible renderer are documented in
+[`docs/diagrams/`](docs/diagrams/README.md).
 
 ## Quick start
 

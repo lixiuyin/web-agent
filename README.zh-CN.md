@@ -38,7 +38,7 @@ Figure，以及用视觉模型解读抽取图片的文档智能管线。
 
 `Planner`、`Tool` 和 `AgentHook` 三个结构化接口把模型规划、执行能力和生命周期观测分开。
 
-![WebAgent 系统架构](docs/assets/architecture-overview.png)
+![WebAgent 系统架构：策略过滤后的规划工具、浏览器执行、文档解析、checkpoint 与轨迹证据](docs/assets/architecture-overview.svg)
 
 ```text
 src/webagent/
@@ -60,12 +60,15 @@ outputs/         默认忽略；可发布经过审阅的选定证据包
 每一步先观察稳定浏览器状态，再构造 planner context、选择被允许的工具、在时间和风险边界内执行、
 记录结果，并原子更新普通运行的恢复状态。
 
-![从观察到 checkpoint 执行的单步流程](docs/assets/agent-step-sequence.png)
+![WebAgent 单步流程：稳定观察、CAPTCHA 处理、规划、写前 checkpoint、工具执行与证据提交](docs/assets/agent-step-sequence.svg)
 
 Figure 请求按编号和 caption 解析，而不是按抽取顺序，因此 logo 或封面装饰不会被误当成
 “Figure 1”。
 
-![按 caption 定位 PDF Figure](docs/assets/figure-resolution-flow.png)
+![按 caption 定位 PDF Figure：本地快路径或质量门控的云端解析级联，并以本地解析作为最后回退](docs/assets/figure-resolution-flow.svg)
+
+可编辑的 Graphviz 图源与可复现渲染入口见
+[`docs/diagrams/`](docs/diagrams/README.md)。
 
 ## 快速开始
 
