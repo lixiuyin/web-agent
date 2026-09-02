@@ -17,6 +17,7 @@ from dotenv import load_dotenv
 from benchmarks.core import allocate_execution_dir, default_study_dir
 from benchmarks.suites.browsergym.adapter import (
     backend_configuration_sha256,
+    require_evaluator_device,
     task_id_from_name,
     task_set_sha256,
 )
@@ -87,7 +88,7 @@ def run(args: argparse.Namespace) -> int:
         EvaluatorDevice,
         args.visual_evaluator_device if benchmark == "visualwebarena" else "not_applicable",
     )
-    _require_evaluator_device(benchmark, evaluator_device)
+    require_evaluator_device(benchmark, evaluator_device)
     output = (
         args.output.expanduser().resolve()
         if args.output is not None
@@ -382,18 +383,6 @@ def _write_partial_report(
     _write_json_atomic(
         layout.root / "browsergym-results.partial.json", report.model_dump(mode="json")
     )
-
-
-def _require_evaluator_device(benchmark: BenchmarkName, evaluator_device: EvaluatorDevice) -> None:
-    """Fail before an episode when the requested native evaluator device is unavailable."""
-    if benchmark != "visualwebarena" or evaluator_device != "cuda":
-        return
-    import torch  # type: ignore[import-untyped]
-
-    if not torch.cuda.is_available():
-        raise RuntimeError(
-            "VisualWebArena CUDA evaluation was requested, but torch.cuda.is_available() is false"
-        )
 
 
 def _package_versions() -> dict[str, str]:

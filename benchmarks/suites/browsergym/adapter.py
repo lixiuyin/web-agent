@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import base64
 import hashlib
+import importlib
 import io
 import json
 import os
@@ -50,6 +51,25 @@ def backend_configuration_sha256(benchmark: str) -> str:
     payload = {name: os.environ.get(name, "") for name in (*variables, reset_variable)}
     encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
     return hashlib.sha256(encoded).hexdigest()
+
+
+def require_evaluator_device(benchmark: str, evaluator_device: str) -> None:
+    """Validate the optional VisualWebArena CUDA evaluator only when requested."""
+    if benchmark != "visualwebarena" or evaluator_device != "cuda":
+        return
+    try:
+        torch: Any = importlib.import_module("torch")
+    except ModuleNotFoundError as exc:
+        if exc.name != "torch":
+            raise
+        raise RuntimeError(
+            "VisualWebArena CUDA evaluation requires torch in the BrowserGym environment"
+        ) from exc
+
+    if not torch.cuda.is_available():
+        raise RuntimeError(
+            "VisualWebArena CUDA evaluation was requested, but torch.cuda.is_available() is false"
+        )
 
 
 def browsergym_tool_specs(descriptors: Sequence[dict[str, Any]]) -> list[ToolSpec]:
@@ -224,6 +244,7 @@ __all__ = [
     "goal_text",
     "planner_screenshot",
     "render_browsergym_action",
+    "require_evaluator_device",
     "task_id_from_name",
     "task_set_sha256",
 ]
