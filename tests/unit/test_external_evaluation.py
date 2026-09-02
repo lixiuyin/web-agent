@@ -25,6 +25,7 @@ def test_external_report_is_official_only_when_complete() -> None:
         model="model-a",
         max_steps=30,
         headless=True,
+        evaluator_device="cuda",
         task_set_sha256="a" * 64,
         backend_configuration_sha256="d" * 64,
         agent_source_sha256="b" * 64,
@@ -35,6 +36,7 @@ def test_external_report_is_official_only_when_complete() -> None:
     )
 
     assert report.protocol_status == "official"
+    assert report.evaluator_device == "cuda"
     assert report.summary.success_rate == 0.5
     assert report.summary.mean_reward == 0.5
     assert report.summary.success_rate_ci95 is not None

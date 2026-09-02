@@ -14,6 +14,7 @@ def _report(
     *,
     benchmark: str = "visualwebarena",
     backend_digest: str = "d" * 64,
+    evaluator_device: str = "not_applicable",
 ):
     tasks = [
         ExternalTaskResult(
@@ -41,6 +42,7 @@ def _report(
         model=model,
         max_steps=30,
         headless=True,
+        evaluator_device=evaluator_device,
         task_set_sha256="a" * 64,
         backend_configuration_sha256=backend_digest,
         agent_source_sha256="b" * 64,
@@ -77,4 +79,20 @@ def test_matrix_rejects_different_backend_instances() -> None:
     ]
 
     with pytest.raises(ValueError, match="different backend configurations"):
+        _aggregate_matrix("openrouter", ["left", "right"], reports)
+
+
+def test_matrix_rejects_different_evaluator_devices() -> None:
+    reports = [
+        _report(
+            model,
+            [True],
+            benchmark=benchmark,
+            evaluator_device=(device if benchmark == "visualwebarena" else "not_applicable"),
+        )
+        for model, device in (("left", "cpu"), ("right", "cuda"))
+        for benchmark in ("webarena_verified", "visualwebarena")
+    ]
+
+    with pytest.raises(ValueError, match="different execution protocols"):
         _aggregate_matrix("openrouter", ["left", "right"], reports)

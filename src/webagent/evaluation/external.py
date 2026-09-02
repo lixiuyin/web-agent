@@ -53,6 +53,7 @@ class ExternalBenchmarkReport(BaseModel):
     created_at: str
     max_steps: int = Field(ge=1)
     headless: bool
+    evaluator_device: Literal["not_applicable", "cpu", "cuda"] = "not_applicable"
     task_set_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     backend_configuration_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     agent_source_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
@@ -100,6 +101,7 @@ def new_external_report(
     model: str,
     max_steps: int,
     headless: bool,
+    evaluator_device: Literal["not_applicable", "cpu", "cuda"] = "not_applicable",
     task_set_sha256: str,
     backend_configuration_sha256: str,
     agent_source_sha256: str,
@@ -123,6 +125,7 @@ def new_external_report(
         created_at=datetime.now(UTC).isoformat(),
         max_steps=max_steps,
         headless=headless,
+        evaluator_device=evaluator_device,
         task_set_sha256=task_set_sha256,
         backend_configuration_sha256=backend_configuration_sha256,
         agent_source_sha256=agent_source_sha256,

@@ -57,6 +57,7 @@ both models:
 .venv/bin/python -m benchmarks.studies.browsergym_matrix \
   --provider openrouter \
   --models z-ai/glm-5.3-flash qwen/qwen3.8-flash \
+  --visual-evaluator-device cuda \
   --webarena-task-ids 0 \
   --visual-task-ids 0 \
   --output outputs/studies/browsergym-calibration
@@ -72,6 +73,7 @@ Use a fresh output root after calibration:
 .venv/bin/python -m benchmarks.studies.browsergym_matrix \
   --provider openrouter \
   --models z-ai/glm-5.3-flash qwen/qwen3.8-flash \
+  --visual-evaluator-device cuda \
   --output outputs/studies/browsergym-external-model-matrix
 ```
 
@@ -87,7 +89,9 @@ add `--retry-errors` only to rerun episodes recorded as system errors.
 
 Native BrowserGym episode evidence lives below each external execution's `runs/`.
 `browsergym-results.json` records task-set identity, packages, backend hash, coverage,
-system errors, native mean reward, binary success, Wilson 95% interval, and task rows.
+system errors, native mean reward, binary success, Wilson 95% interval, evaluator device,
+and task rows. Use `--visual-evaluator-device cuda` on a CUDA runner; the default `cpu`
+preserves upstream BrowserGym behavior and is substantially slower.
 
 The matrix rejects cross-model comparison when backend or package fingerprints differ and
 adds exact paired McNemar comparisons. It does not reuse repository substring or

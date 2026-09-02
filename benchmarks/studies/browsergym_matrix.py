@@ -38,6 +38,11 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--headed", action="store_true")
     parser.add_argument("--record-video", action="store_true")
     parser.add_argument(
+        "--visual-evaluator-device",
+        choices=("cpu", "cuda"),
+        default="cpu",
+    )
+    parser.add_argument(
         "--prepare-backend",
         action=argparse.BooleanOptionalAction,
         default=True,
@@ -71,6 +76,7 @@ def run(args: argparse.Namespace) -> int:
         "max_steps": args.max_steps,
         "headless": not args.headed,
         "record_video": args.record_video,
+        "visual_evaluator_device": args.visual_evaluator_device,
         "prepare_backend": args.prepare_backend,
         "browsergym_python": str(python),
         "agent_source_sha256": agent_source_fingerprint(),
@@ -122,6 +128,8 @@ def run(args: argparse.Namespace) -> int:
                     str(execution),
                     "--max-steps",
                     str(args.max_steps),
+                    "--visual-evaluator-device",
+                    args.visual_evaluator_device,
                 ]
                 task_ids = (
                     args.webarena_task_ids
@@ -218,7 +226,10 @@ def _aggregate_matrix(
         digests = {report.task_set_sha256 for report in values}
         if len(digests) != 1:
             raise ValueError(f"{benchmark} reports use different task sets")
-        protocols = {(report.profile, report.max_steps, report.headless) for report in values}
+        protocols = {
+            (report.profile, report.max_steps, report.headless, report.evaluator_device)
+            for report in values
+        }
         if len(protocols) != 1:
             raise ValueError(f"{benchmark} reports use different execution protocols")
         backend_digests = {report.backend_configuration_sha256 for report in values}

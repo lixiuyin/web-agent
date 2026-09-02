@@ -30,6 +30,7 @@ from webagent.evaluation import (
 from webagent.utils.runtime import agent_source_fingerprint, benchmark_source_fingerprint
 
 BenchmarkName = Literal["webarena_verified", "visualwebarena"]
+EvaluatorDevice = Literal["not_applicable", "cpu", "cuda"]
 _DEFAULT_STEPS = 30
 
 
@@ -47,6 +48,12 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--max-steps", type=int, default=_DEFAULT_STEPS)
     parser.add_argument("--headed", action="store_true")
     parser.add_argument("--record-video", action="store_true")
+    parser.add_argument(
+        "--visual-evaluator-device",
+        choices=("cpu", "cuda"),
+        default="cpu",
+        help="Device for VisualWebArena's native BLIP-2 evaluator",
+    )
     parser.add_argument("--resume", action="store_true")
     parser.add_argument(
         "--retry-errors",
@@ -76,6 +83,11 @@ def run(args: argparse.Namespace) -> int:
     selected_seeds = [seed_by_task[name] for name in selected]
     custom = args.task_ids is not None
     profile = "custom" if custom else default_profile
+    evaluator_device = cast(
+        EvaluatorDevice,
+        args.visual_evaluator_device if benchmark == "visualwebarena" else "not_applicable",
+    )
+    _require_evaluator_device(benchmark, evaluator_device)
     output = (
         args.output.expanduser().resolve()
         if args.output is not None
@@ -108,6 +120,7 @@ def run(args: argparse.Namespace) -> int:
         "model": args.model,
         "max_steps": args.max_steps,
         "headless": not args.headed,
+        "evaluator_device": evaluator_device,
         "prepare_backend": args.prepare_backend,
         "task_set_sha256": task_digest,
         "backend_configuration_sha256": backend_digest,
@@ -159,6 +172,7 @@ def run(args: argparse.Namespace) -> int:
                     max_steps=args.max_steps,
                     headless=not args.headed,
                     record_video=args.record_video,
+                    evaluator_device=evaluator_device,
                     root=layout.root,
                 )
             )
@@ -171,6 +185,7 @@ def run(args: argparse.Namespace) -> int:
                 model=args.model,
                 max_steps=args.max_steps,
                 headless=not args.headed,
+                evaluator_device=evaluator_device,
                 task_digest=task_digest,
                 backend_digest=backend_digest,
                 expected_tasks=len(selected),
@@ -192,6 +207,7 @@ def run(args: argparse.Namespace) -> int:
         model=args.model,
         max_steps=args.max_steps,
         headless=not args.headed,
+        evaluator_device=evaluator_device,
         task_set_sha256=task_digest,
         backend_configuration_sha256=backend_digest,
         agent_source_sha256=agent_source_fingerprint(),
@@ -285,6 +301,7 @@ def _run_task(
     max_steps: int,
     headless: bool,
     record_video: bool,
+    evaluator_device: EvaluatorDevice,
     root: Path,
 ) -> ExternalTaskResult:
     from browsergym.experiments import EnvArgs, ExpArgs  # type: ignore[import-not-found]
@@ -298,6 +315,11 @@ def _run_task(
             headless=headless,
             record_video=record_video,
             wait_for_user_message=False,
+            task_kwargs=(
+                {"eval_captioning_model_device": evaluator_device}
+                if evaluator_device != "not_applicable"
+                else None
+            ),
         ),
         save_screenshot=True,
         save_som=False,
@@ -334,6 +356,7 @@ def _write_partial_report(
     model: str,
     max_steps: int,
     headless: bool,
+    evaluator_device: EvaluatorDevice,
     task_digest: str,
     backend_digest: str,
     expected_tasks: int,
@@ -347,6 +370,7 @@ def _write_partial_report(
         model=model,
         max_steps=max_steps,
         headless=headless,
+        evaluator_device=evaluator_device,
         task_set_sha256=task_digest,
         backend_configuration_sha256=backend_digest,
         agent_source_sha256=agent_source_fingerprint(),
@@ -358,6 +382,18 @@ def _write_partial_report(
     _write_json_atomic(
         layout.root / "browsergym-results.partial.json", report.model_dump(mode="json")
     )
+
+
+def _require_evaluator_device(benchmark: BenchmarkName, evaluator_device: EvaluatorDevice) -> None:
+    """Fail before an episode when the requested native evaluator device is unavailable."""
+    if benchmark != "visualwebarena" or evaluator_device != "cuda":
+        return
+    import torch  # type: ignore[import-untyped]
+
+    if not torch.cuda.is_available():
+        raise RuntimeError(
+            "VisualWebArena CUDA evaluation was requested, but torch.cuda.is_available() is false"
+        )
 
 
 def _package_versions() -> dict[str, str]:
