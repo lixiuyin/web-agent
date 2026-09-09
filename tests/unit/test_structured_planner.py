@@ -48,7 +48,7 @@ def _planner(mode: str) -> APIPlanner:
         model_name="model",
         output_mode=mode,
     )
-    planner._supports_vision = False
+    planner._vision._supports_vision = False
     planner.configure_tools([_spec("goto", ("url",)), _spec("done", ("summary",))])
     return planner
 
@@ -361,7 +361,7 @@ async def test_explicit_structured_mode_requires_bound_specs() -> None:
         api_key="k",
         output_mode="native-tools",
     )
-    planner._supports_vision = False
+    planner._vision._supports_vision = False
 
     with pytest.raises(RuntimeError, match="configure_tools"):
         await planner.plan_action("task", _state(), "", "done")
@@ -376,3 +376,17 @@ async def test_native_mode_rejects_unexposed_tool_name() -> None:
 
     planner._post_data = post_data  # type: ignore[method-assign]
     assert await planner.plan_action("task", _state(), "", "goto, done") is None
+
+
+@pytest.mark.parametrize(("name", "expected"), [(" DONE ", "done"), ("unexposed_tool", None)])
+async def test_native_choice_retry_uses_same_normalization_and_catalog_check(name, expected):
+    planner = _planner("auto")
+
+    async def post_data(payload, timeout=None):
+        if payload.get("tool_choice") == "required":
+            raise _unsupported("tool_choice required is not supported")
+        return _native_response(name, '{"summary":"The answer is 42"}')
+
+    planner._post_data = post_data
+    call = await planner.plan_action("answer", _state(), "", "goto, done")
+    assert (call.tool_name if call is not None else None) == expected

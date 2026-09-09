@@ -1,0 +1,1465 @@
+{
+  "schema_version": 3,
+  "status": "insufficient",
+  "input_reports": [
+    {
+      "path": "studies/long-horizon/executions/2026-09-09/qwen-qwen3-8-flash/agent/081154-339889-20260909t081154339889z/results.json",
+      "sha256": "dcd1b3f6322ef67aca91fce631e098518e38efc571af03745f0855d61c28ab76",
+      "run_id": "80b7bc0b-0c8c-475a-8df4-063907565981",
+      "suite": "long-horizon-controlled-v1",
+      "date": "2026-09-09",
+      "provider": "openrouter",
+      "model": "qwen/qwen3.8-flash",
+      "task_count": 1,
+      "agent_source_sha256": "6c1b3109711ca0a3450a0b8ee5ca286a91fee74a673fe9db437bb33ec94601a0",
+      "benchmark_source_sha256": "a7bcdefe53c9fe03bc960677d44911362aad5a1bfeff1fe6c9b076565c9cd92b"
+    },
+    {
+      "path": "studies/long-horizon/executions/2026-09-09/z-ai-glm-5-3-flash/agent/081154-339889-20260909t081154339889z/results.json",
+      "sha256": "73ac02718adcc2a5f511c6db011a4bfa0d47328031bd763a0d3cbd532df4a169",
+      "run_id": "9e6bde5a-2fb1-4cec-b3ee-c3189e8cc810",
+      "suite": "long-horizon-controlled-v1",
+      "date": "2026-09-09",
+      "provider": "openrouter",
+      "model": "z-ai/glm-5.3-flash",
+      "task_count": 1,
+      "agent_source_sha256": "6c1b3109711ca0a3450a0b8ee5ca286a91fee74a673fe9db437bb33ec94601a0",
+      "benchmark_source_sha256": "a7bcdefe53c9fe03bc960677d44911362aad5a1bfeff1fe6c9b076565c9cd92b"
+    },
+    {
+      "path": "studies/open-web/executions/2026-09-09/qwen-qwen3-8-flash/browser-grounded/081158-175874-20260909t081158175874z-r01/results.json",
+      "sha256": "27671a4f01cf61cf3e92c50be4800df62096cb0935c7e45a2138deb31bae4ffd",
+      "run_id": "ee4ae254-9f86-4dc1-8874-576d5875fdcc",
+      "suite": "open-web-general-v2",
+      "date": "2026-09-09",
+      "provider": "openrouter",
+      "model": "qwen/qwen3.8-flash",
+      "task_count": 30,
+      "agent_source_sha256": "6c1b3109711ca0a3450a0b8ee5ca286a91fee74a673fe9db437bb33ec94601a0",
+      "benchmark_source_sha256": "a7bcdefe53c9fe03bc960677d44911362aad5a1bfeff1fe6c9b076565c9cd92b"
+    },
+    {
+      "path": "studies/open-web/executions/2026-09-09/z-ai-glm-5-3-flash/browser-grounded/081158-175874-20260909t081158175874z-r01/results.json",
+      "sha256": "a6f129e9f114d2f83a8ba5d5aa78a1722679fa9609f29d0d7e1fce79a5e59c07",
+      "run_id": "5de87f34-25a4-4eee-bc95-b076a8171712",
+      "suite": "open-web-general-v2",
+      "date": "2026-09-09",
+      "provider": "openrouter",
+      "model": "z-ai/glm-5.3-flash",
+      "task_count": 30,
+      "agent_source_sha256": "6c1b3109711ca0a3450a0b8ee5ca286a91fee74a673fe9db437bb33ec94601a0",
+      "benchmark_source_sha256": "a7bcdefe53c9fe03bc960677d44911362aad5a1bfeff1fe6c9b076565c9cd92b"
+    },
+    {
+      "path": "studies/sandbox-interaction/executions/2026-09-09/qwen-qwen3-8-flash/agent/081154-339889-20260909t081154339889z/results.json",
+      "sha256": "5faf8dd276d3cc83086acedae56a99a846661a28d5260f56476acf333b17631a",
+      "run_id": "12041e5d-3e7f-43e3-b259-ed3cc2cf792f",
+      "suite": "sandbox-interaction-v1",
+      "date": "2026-09-09",
+      "provider": "openrouter",
+      "model": "qwen/qwen3.8-flash",
+      "task_count": 5,
+      "agent_source_sha256": "6c1b3109711ca0a3450a0b8ee5ca286a91fee74a673fe9db437bb33ec94601a0",
+      "benchmark_source_sha256": "a7bcdefe53c9fe03bc960677d44911362aad5a1bfeff1fe6c9b076565c9cd92b"
+    },
+    {
+      "path": "studies/sandbox-interaction/executions/2026-09-09/z-ai-glm-5-3-flash/agent/081154-339889-20260909t081154339889z/results.json",
+      "sha256": "a94af435bb3d64660c7788e4b285795ce22fa8214c11c23dc009ddbfbe845c43",
+      "run_id": "2a5b93ed-0b83-47aa-951a-69d13d711678",
+      "suite": "sandbox-interaction-v1",
+      "date": "2026-09-09",
+      "provider": "openrouter",
+      "model": "z-ai/glm-5.3-flash",
+      "task_count": 5,
+      "agent_source_sha256": "6c1b3109711ca0a3450a0b8ee5ca286a91fee74a673fe9db437bb33ec94601a0",
+      "benchmark_source_sha256": "a7bcdefe53c9fe03bc960677d44911362aad5a1bfeff1fe6c9b076565c9cd92b"
+    }
+  ],
+  "requested_endpoint_count": 2,
+  "endpoint_count": 2,
+  "excluded_endpoints": [],
+  "agent_source_sha256s": [
+    "6c1b3109711ca0a3450a0b8ee5ca286a91fee74a673fe9db437bb33ec94601a0"
+  ],
+  "benchmark_source_sha256s": [
+    "a7bcdefe53c9fe03bc960677d44911362aad5a1bfeff1fe6c9b076565c9cd92b"
+  ],
+  "distinct_dates": [
+    "2026-09-09"
+  ],
+  "common_complete_dates": [
+    "2026-09-09"
+  ],
+  "cells": [
+    {
+      "provider": "openrouter",
+      "model": "qwen/qwen3.8-flash",
+      "date": "2026-09-09",
+      "report_count": 3,
+      "suite_count": 3,
+      "task_count": 36,
+      "success_rate": 0.9722222222222222,
+      "endpoint_status": "available",
+      "failures": {
+        "schema_version": 2,
+        "failure_taxonomy_version": "1",
+        "task_count": 36,
+        "affected_task_count": 14,
+        "finding_count": 19,
+        "observed_count": 18,
+        "candidate_count": 1,
+        "adjudicated_count": 0,
+        "observed_by_layer": {
+          "execution_control": 2,
+          "planning": 5,
+          "tool_execution": 11
+        },
+        "candidate_by_layer": {
+          "unknown": 1
+        },
+        "adjudicated_by_layer": {},
+        "recurrence_by_signature": {
+          "execution_control:false_completion": 1,
+          "execution_control:terminal_state_assertion_failure": 1,
+          "planning:planner_attempt_failure": 5,
+          "tool_execution:tool_action_failure": 11,
+          "unknown:grounding_selection_or_page_state_candidate": 1
+        },
+        "findings": [
+          {
+            "taxonomy_version": "1",
+            "task_id": "mission_60_stage_resume",
+            "status": "observed",
+            "layer": "planning",
+            "subtype": "planner_attempt_failure",
+            "detector": "aggregate-rule-v1",
+            "terminal": false,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "planner_failure_count",
+                "observed": 3,
+                "reference": null
+              }
+            ],
+            "note": "One or more planner attempts failed; the underlying cause is not inferred."
+          },
+          {
+            "taxonomy_version": "1",
+            "task_id": "python_creator",
+            "status": "observed",
+            "layer": "tool_execution",
+            "subtype": "tool_action_failure",
+            "detector": "aggregate-rule-v1",
+            "terminal": false,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "failed_action_count",
+                "observed": 2,
+                "reference": null
+              }
+            ],
+            "note": "The tool result directly reported one or more failed actions."
+          },
+          {
+            "taxonomy_version": "1",
+            "task_id": "git_clone",
+            "status": "observed",
+            "layer": "tool_execution",
+            "subtype": "tool_action_failure",
+            "detector": "aggregate-rule-v1",
+            "terminal": false,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "failed_action_count",
+                "observed": 1,
+                "reference": null
+              }
+            ],
+            "note": "The tool result directly reported one or more failed actions."
+          },
+          {
+            "taxonomy_version": "1",
+            "task_id": "github_authentication",
+            "status": "observed",
+            "layer": "tool_execution",
+            "subtype": "tool_action_failure",
+            "detector": "aggregate-rule-v1",
+            "terminal": false,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "failed_action_count",
+                "observed": 1,
+                "reference": null
+              }
+            ],
+            "note": "The tool result directly reported one or more failed actions."
+          },
+          {
+            "taxonomy_version": "1",
+            "task_id": "numpy_beginners",
+            "status": "observed",
+            "layer": "tool_execution",
+            "subtype": "tool_action_failure",
+            "detector": "aggregate-rule-v1",
+            "terminal": false,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "failed_action_count",
+                "observed": 1,
+                "reference": null
+              }
+            ],
+            "note": "The tool result directly reported one or more failed actions."
+          },
+          {
+            "taxonomy_version": "1",
+            "task_id": "pandas_table",
+            "status": "observed",
+            "layer": "tool_execution",
+            "subtype": "tool_action_failure",
+            "detector": "aggregate-rule-v1",
+            "terminal": false,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "failed_action_count",
+                "observed": 2,
+                "reference": null
+              }
+            ],
+            "note": "The tool result directly reported one or more failed actions."
+          },
+          {
+            "taxonomy_version": "1",
+            "task_id": "pandas_dataframe",
+            "status": "observed",
+            "layer": "tool_execution",
+            "subtype": "tool_action_failure",
+            "detector": "aggregate-rule-v1",
+            "terminal": false,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "failed_action_count",
+                "observed": 1,
+                "reference": null
+              }
+            ],
+            "note": "The tool result directly reported one or more failed actions."
+          },
+          {
+            "taxonomy_version": "1",
+            "task_id": "pandas_read_csv",
+            "status": "observed",
+            "layer": "tool_execution",
+            "subtype": "tool_action_failure",
+            "detector": "aggregate-rule-v1",
+            "terminal": false,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "failed_action_count",
+                "observed": 2,
+                "reference": null
+              }
+            ],
+            "note": "The tool result directly reported one or more failed actions."
+          },
+          {
+            "taxonomy_version": "1",
+            "task_id": "go_getting_started",
+            "status": "observed",
+            "layer": "planning",
+            "subtype": "planner_attempt_failure",
+            "detector": "aggregate-rule-v1",
+            "terminal": false,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "planner_failure_count",
+                "observed": 1,
+                "reference": null
+              }
+            ],
+            "note": "One or more planner attempts failed; the underlying cause is not inferred."
+          },
+          {
+            "taxonomy_version": "1",
+            "task_id": "go_getting_started",
+            "status": "observed",
+            "layer": "tool_execution",
+            "subtype": "tool_action_failure",
+            "detector": "aggregate-rule-v1",
+            "terminal": false,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "failed_action_count",
+                "observed": 1,
+                "reference": null
+              }
+            ],
+            "note": "The tool result directly reported one or more failed actions."
+          },
+          {
+            "taxonomy_version": "1",
+            "task_id": "go_effective",
+            "status": "observed",
+            "layer": "tool_execution",
+            "subtype": "tool_action_failure",
+            "detector": "aggregate-rule-v1",
+            "terminal": false,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "failed_action_count",
+                "observed": 3,
+                "reference": null
+              }
+            ],
+            "note": "The tool result directly reported one or more failed actions."
+          },
+          {
+            "taxonomy_version": "1",
+            "task_id": "spa_hydration_route",
+            "status": "observed",
+            "layer": "planning",
+            "subtype": "planner_attempt_failure",
+            "detector": "aggregate-rule-v1",
+            "terminal": false,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "planner_failure_count",
+                "observed": 1,
+                "reference": null
+              }
+            ],
+            "note": "One or more planner attempts failed; the underlying cause is not inferred."
+          },
+          {
+            "taxonomy_version": "1",
+            "task_id": "authenticated_account",
+            "status": "observed",
+            "layer": "tool_execution",
+            "subtype": "tool_action_failure",
+            "detector": "aggregate-rule-v1",
+            "terminal": false,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "failed_action_count",
+                "observed": 1,
+                "reference": null
+              }
+            ],
+            "note": "The tool result directly reported one or more failed actions."
+          },
+          {
+            "taxonomy_version": "1",
+            "task_id": "cross_origin_intake",
+            "status": "observed",
+            "layer": "planning",
+            "subtype": "planner_attempt_failure",
+            "detector": "aggregate-rule-v1",
+            "terminal": false,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "planner_failure_count",
+                "observed": 1,
+                "reference": null
+              }
+            ],
+            "note": "One or more planner attempts failed; the underlying cause is not inferred."
+          },
+          {
+            "taxonomy_version": "1",
+            "task_id": "sandbox_checkout",
+            "status": "observed",
+            "layer": "planning",
+            "subtype": "planner_attempt_failure",
+            "detector": "aggregate-rule-v1",
+            "terminal": false,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "planner_failure_count",
+                "observed": 1,
+                "reference": null
+              }
+            ],
+            "note": "One or more planner attempts failed; the underlying cause is not inferred."
+          },
+          {
+            "taxonomy_version": "1",
+            "task_id": "sandbox_checkout",
+            "status": "observed",
+            "layer": "tool_execution",
+            "subtype": "tool_action_failure",
+            "detector": "aggregate-rule-v1",
+            "terminal": false,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "failed_action_count",
+                "observed": 2,
+                "reference": null
+              }
+            ],
+            "note": "The tool result directly reported one or more failed actions."
+          },
+          {
+            "taxonomy_version": "1",
+            "task_id": "sandbox_checkout",
+            "status": "observed",
+            "layer": "execution_control",
+            "subtype": "terminal_state_assertion_failure",
+            "detector": "aggregate-rule-v1",
+            "terminal": true,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "assertion",
+                "key": "failed_state_assertion_count",
+                "observed": 5,
+                "reference": null
+              }
+            ],
+            "note": "The external judge rejected trajectory, artifact, browser, or server state; this symptom alone does not establish a reasoning cause."
+          },
+          {
+            "taxonomy_version": "1",
+            "task_id": "sandbox_checkout",
+            "status": "observed",
+            "layer": "execution_control",
+            "subtype": "false_completion",
+            "detector": "aggregate-rule-v1",
+            "terminal": true,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "agent_reported_success",
+                "observed": true,
+                "reference": null
+              }
+            ],
+            "note": "The agent declared completion while the external judge rejected the result."
+          },
+          {
+            "taxonomy_version": "1",
+            "task_id": "sandbox_checkout",
+            "status": "candidate",
+            "layer": "unknown",
+            "subtype": "grounding_selection_or_page_state_candidate",
+            "detector": "aggregate-rule-v1",
+            "terminal": false,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "failed_action_count",
+                "observed": 2,
+                "reference": null
+              }
+            ],
+            "note": "Failed actions warrant trace inspection for grounding, tool selection, parameters, or page-state drift; none is established here."
+          }
+        ],
+        "causal_boundary": "Automatic findings identify observable symptoms only; reasoning and memory causes are never assigned automatically. Adjudicated causal labels require a referenced controlled intervention or both referenced trace evidence and human adjudication."
+      },
+      "calibration": {
+        "schema_version": 2,
+        "status": "partial",
+        "reason": "missing confidence for 1 task(s)",
+        "task_count": 36,
+        "confidence_count": 35,
+        "confidence_coverage": 0.9722222222222222,
+        "brier_score": 0.003585714285714286,
+        "log_loss": 0.03823711047189018,
+        "expected_calibration_error": 0.036285714285714296,
+        "bins": [
+          {
+            "lower": 0.0,
+            "upper": 0.1,
+            "count": 0,
+            "mean_confidence": null,
+            "empirical_success_rate": null
+          },
+          {
+            "lower": 0.1,
+            "upper": 0.2,
+            "count": 1,
+            "mean_confidence": 0.15,
+            "empirical_success_rate": 0.0
+          },
+          {
+            "lower": 0.2,
+            "upper": 0.3,
+            "count": 0,
+            "mean_confidence": null,
+            "empirical_success_rate": null
+          },
+          {
+            "lower": 0.3,
+            "upper": 0.4,
+            "count": 0,
+            "mean_confidence": null,
+            "empirical_success_rate": null
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.5,
+            "count": 0,
+            "mean_confidence": null,
+            "empirical_success_rate": null
+          },
+          {
+            "lower": 0.5,
+            "upper": 0.6,
+            "count": 0,
+            "mean_confidence": null,
+            "empirical_success_rate": null
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.7,
+            "count": 0,
+            "mean_confidence": null,
+            "empirical_success_rate": null
+          },
+          {
+            "lower": 0.7,
+            "upper": 0.8,
+            "count": 0,
+            "mean_confidence": null,
+            "empirical_success_rate": null
+          },
+          {
+            "lower": 0.8,
+            "upper": 0.9,
+            "count": 2,
+            "mean_confidence": 0.85,
+            "empirical_success_rate": 1.0
+          },
+          {
+            "lower": 0.9,
+            "upper": 1.0,
+            "count": 32,
+            "mean_confidence": 0.974375,
+            "empirical_success_rate": 1.0
+          }
+        ],
+        "risk_coverage_curve": [
+          {
+            "coverage": 0.02857142857142857,
+            "selective_risk": 0.0,
+            "minimum_confidence": 1.0
+          },
+          {
+            "coverage": 0.05714285714285714,
+            "selective_risk": 0.0,
+            "minimum_confidence": 1.0
+          },
+          {
+            "coverage": 0.08571428571428572,
+            "selective_risk": 0.0,
+            "minimum_confidence": 1.0
+          },
+          {
+            "coverage": 0.11428571428571428,
+            "selective_risk": 0.0,
+            "minimum_confidence": 1.0
+          },
+          {
+            "coverage": 0.14285714285714285,
+            "selective_risk": 0.0,
+            "minimum_confidence": 1.0
+          },
+          {
+            "coverage": 0.17142857142857143,
+            "selective_risk": 0.0,
+            "minimum_confidence": 1.0
+          },
+          {
+            "coverage": 0.2,
+            "selective_risk": 0.0,
+            "minimum_confidence": 1.0
+          },
+          {
+            "coverage": 0.22857142857142856,
+            "selective_risk": 0.0,
+            "minimum_confidence": 1.0
+          },
+          {
+            "coverage": 0.2571428571428571,
+            "selective_risk": 0.0,
+            "minimum_confidence": 1.0
+          },
+          {
+            "coverage": 0.2857142857142857,
+            "selective_risk": 0.0,
+            "minimum_confidence": 1.0
+          },
+          {
+            "coverage": 0.3142857142857143,
+            "selective_risk": 0.0,
+            "minimum_confidence": 1.0
+          },
+          {
+            "coverage": 0.34285714285714286,
+            "selective_risk": 0.0,
+            "minimum_confidence": 1.0
+          },
+          {
+            "coverage": 0.37142857142857144,
+            "selective_risk": 0.0,
+            "minimum_confidence": 1.0
+          },
+          {
+            "coverage": 0.4,
+            "selective_risk": 0.0,
+            "minimum_confidence": 1.0
+          },
+          {
+            "coverage": 0.42857142857142855,
+            "selective_risk": 0.0,
+            "minimum_confidence": 1.0
+          },
+          {
+            "coverage": 0.45714285714285713,
+            "selective_risk": 0.0,
+            "minimum_confidence": 1.0
+          },
+          {
+            "coverage": 0.4857142857142857,
+            "selective_risk": 0.0,
+            "minimum_confidence": 1.0
+          },
+          {
+            "coverage": 0.5142857142857142,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.98
+          },
+          {
+            "coverage": 0.5428571428571428,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.97
+          },
+          {
+            "coverage": 0.5714285714285714,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.97
+          },
+          {
+            "coverage": 0.6,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.97
+          },
+          {
+            "coverage": 0.6285714285714286,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.97
+          },
+          {
+            "coverage": 0.6571428571428571,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.97
+          },
+          {
+            "coverage": 0.6857142857142857,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.96
+          },
+          {
+            "coverage": 0.7142857142857143,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.96
+          },
+          {
+            "coverage": 0.7428571428571429,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.95
+          },
+          {
+            "coverage": 0.7714285714285715,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.95
+          },
+          {
+            "coverage": 0.8,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.93
+          },
+          {
+            "coverage": 0.8285714285714286,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.9
+          },
+          {
+            "coverage": 0.8571428571428571,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.9
+          },
+          {
+            "coverage": 0.8857142857142857,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.9
+          },
+          {
+            "coverage": 0.9142857142857143,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.9
+          },
+          {
+            "coverage": 0.9428571428571428,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.85
+          },
+          {
+            "coverage": 0.9714285714285714,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.85
+          },
+          {
+            "coverage": 1.0,
+            "selective_risk": 0.02857142857142857,
+            "minimum_confidence": 0.15
+          }
+        ],
+        "area_under_risk_coverage_curve": 0.0008163265306122448,
+        "interpretation_notice": "Metrics cover only tasks with a self-reported success_probability recorded before external judging; missing values are reported, not imputed."
+      },
+      "transfer": {
+        "schema_version": 1,
+        "status": "available",
+        "reason": null,
+        "splits": {
+          "development": {
+            "status": "available",
+            "reason": null,
+            "task_count": 23,
+            "success_rate": 0.9565217391304348,
+            "mean_score": 0.9728260869565217
+          },
+          "validation": {
+            "status": "unavailable",
+            "reason": "validation split is empty",
+            "task_count": 0,
+            "success_rate": null,
+            "mean_score": null
+          },
+          "held_out_task": {
+            "status": "available",
+            "reason": null,
+            "task_count": 6,
+            "success_rate": 1.0,
+            "mean_score": 1.0
+          },
+          "held_out_setting": {
+            "status": "available",
+            "reason": null,
+            "task_count": 7,
+            "success_rate": 1.0,
+            "mean_score": 1.0
+          }
+        },
+        "held_out_task_success_delta": 0.04347826086956519,
+        "held_out_setting_success_delta": 0.04347826086956519,
+        "pooled_held_out_success_delta": 0.04347826086956519,
+        "leakage_groups": [],
+        "interpretation_notice": "Deltas are descriptive held-out minus development success rates for one condition. They do not establish that an intervention transfers without a paired baseline."
+      },
+      "generality": {
+        "schema_version": 1,
+        "status": "ready",
+        "task_count": 36,
+        "category_count": 17,
+        "source_origin_count": 10,
+        "discovery_task_count": 10,
+        "scenario_counts": {
+          "authenticated_session": 1,
+          "cross_origin_form": 1,
+          "document_read": 20,
+          "file_workflow": 1,
+          "recovery": 1,
+          "sandbox_transaction": 1,
+          "search_discovery": 10,
+          "spa_interaction": 1
+        },
+        "environment_counts": {
+          "public_web": 30,
+          "sandbox": 6
+        },
+        "split_counts": {
+          "development": 23,
+          "held_out_setting": 7,
+          "held_out_task": 6
+        },
+        "source_origins": [
+          "https://developer.mozilla.org",
+          "https://docs.github.com",
+          "https://docs.python.org",
+          "https://fastapi.tiangolo.com",
+          "https://git-scm.com",
+          "https://go.dev",
+          "https://numpy.org",
+          "https://pandas.pydata.org",
+          "https://playwright.dev",
+          "https://www.iana.org"
+        ],
+        "missing_requirements": [],
+        "interpretation_notice": "Readiness means the retained task set crosses a preregistered coverage floor. It does not by itself prove performance, robustness, or transfer across the covered settings."
+      },
+      "long_horizon": {
+        "schema_version": 2,
+        "status": "available",
+        "reason": null,
+        "task_count": 36,
+        "long_task_count": 1,
+        "resumed_task_count": 1,
+        "buckets": {
+          "short": {
+            "task_count": 35,
+            "success_rate": 0.9714285714285714,
+            "mean_score": 0.9821428571428571
+          },
+          "medium": {
+            "task_count": 0,
+            "success_rate": null,
+            "mean_score": null
+          },
+          "long": {
+            "task_count": 1,
+            "success_rate": 1.0,
+            "mean_score": 1.0
+          }
+        },
+        "long_success_rate": 1.0,
+        "long_mean_score": 1.0,
+        "reliability_degradation": -0.02857142857142858,
+        "collapse_incidence": 0.0,
+        "stagnation_incidence": 0.0,
+        "mean_recovery_count": 2.0,
+        "mean_replan_count": 0.0,
+        "mean_strategy_switch_count": 0.0,
+        "interpretation_notice": "Reliability degradation is short success rate minus long success rate. Collapse onset tracks repeated actions; stagnation onset tracks extended unchanged page state even when tools vary. Neither signal is a causal diagnosis of reasoning or memory."
+      },
+      "ready": true,
+      "reasons": []
+    },
+    {
+      "provider": "openrouter",
+      "model": "z-ai/glm-5.3-flash",
+      "date": "2026-09-09",
+      "report_count": 3,
+      "suite_count": 3,
+      "task_count": 36,
+      "success_rate": 1.0,
+      "endpoint_status": "available",
+      "failures": {
+        "schema_version": 2,
+        "failure_taxonomy_version": "1",
+        "task_count": 36,
+        "affected_task_count": 6,
+        "finding_count": 7,
+        "observed_count": 7,
+        "candidate_count": 0,
+        "adjudicated_count": 0,
+        "observed_by_layer": {
+          "planning": 4,
+          "tool_execution": 3
+        },
+        "candidate_by_layer": {},
+        "adjudicated_by_layer": {},
+        "recurrence_by_signature": {
+          "planning:planner_attempt_failure": 4,
+          "tool_execution:tool_action_failure": 3
+        },
+        "findings": [
+          {
+            "taxonomy_version": "1",
+            "task_id": "mission_60_stage_resume",
+            "status": "observed",
+            "layer": "planning",
+            "subtype": "planner_attempt_failure",
+            "detector": "aggregate-rule-v1",
+            "terminal": false,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "planner_failure_count",
+                "observed": 10,
+                "reference": null
+              }
+            ],
+            "note": "One or more planner attempts failed; the underlying cause is not inferred."
+          },
+          {
+            "taxonomy_version": "1",
+            "task_id": "python_creator",
+            "status": "observed",
+            "layer": "tool_execution",
+            "subtype": "tool_action_failure",
+            "detector": "aggregate-rule-v1",
+            "terminal": false,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "failed_action_count",
+                "observed": 4,
+                "reference": null
+              }
+            ],
+            "note": "The tool result directly reported one or more failed actions."
+          },
+          {
+            "taxonomy_version": "1",
+            "task_id": "python_tutorial",
+            "status": "observed",
+            "layer": "planning",
+            "subtype": "planner_attempt_failure",
+            "detector": "aggregate-rule-v1",
+            "terminal": false,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "planner_failure_count",
+                "observed": 1,
+                "reference": null
+              }
+            ],
+            "note": "One or more planner attempts failed; the underlying cause is not inferred."
+          },
+          {
+            "taxonomy_version": "1",
+            "task_id": "python_asyncio",
+            "status": "observed",
+            "layer": "planning",
+            "subtype": "planner_attempt_failure",
+            "detector": "aggregate-rule-v1",
+            "terminal": false,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "planner_failure_count",
+                "observed": 1,
+                "reference": null
+              }
+            ],
+            "note": "One or more planner attempts failed; the underlying cause is not inferred."
+          },
+          {
+            "taxonomy_version": "1",
+            "task_id": "authenticated_account",
+            "status": "observed",
+            "layer": "planning",
+            "subtype": "planner_attempt_failure",
+            "detector": "aggregate-rule-v1",
+            "terminal": false,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "planner_failure_count",
+                "observed": 1,
+                "reference": null
+              }
+            ],
+            "note": "One or more planner attempts failed; the underlying cause is not inferred."
+          },
+          {
+            "taxonomy_version": "1",
+            "task_id": "authenticated_account",
+            "status": "observed",
+            "layer": "tool_execution",
+            "subtype": "tool_action_failure",
+            "detector": "aggregate-rule-v1",
+            "terminal": false,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "failed_action_count",
+                "observed": 1,
+                "reference": null
+              }
+            ],
+            "note": "The tool result directly reported one or more failed actions."
+          },
+          {
+            "taxonomy_version": "1",
+            "task_id": "sandbox_checkout",
+            "status": "observed",
+            "layer": "tool_execution",
+            "subtype": "tool_action_failure",
+            "detector": "aggregate-rule-v1",
+            "terminal": false,
+            "onset_step": null,
+            "recovery_step": null,
+            "evidence": [
+              {
+                "source": "task_metric",
+                "key": "failed_action_count",
+                "observed": 1,
+                "reference": null
+              }
+            ],
+            "note": "The tool result directly reported one or more failed actions."
+          }
+        ],
+        "causal_boundary": "Automatic findings identify observable symptoms only; reasoning and memory causes are never assigned automatically. Adjudicated causal labels require a referenced controlled intervention or both referenced trace evidence and human adjudication."
+      },
+      "calibration": {
+        "schema_version": 2,
+        "status": "available",
+        "reason": null,
+        "task_count": 36,
+        "confidence_count": 36,
+        "confidence_coverage": 1.0,
+        "brier_score": 0.0013638888888888895,
+        "log_loss": 0.029880658178229887,
+        "expected_calibration_error": 0.029166666666666563,
+        "bins": [
+          {
+            "lower": 0.0,
+            "upper": 0.1,
+            "count": 0,
+            "mean_confidence": null,
+            "empirical_success_rate": null
+          },
+          {
+            "lower": 0.1,
+            "upper": 0.2,
+            "count": 0,
+            "mean_confidence": null,
+            "empirical_success_rate": null
+          },
+          {
+            "lower": 0.2,
+            "upper": 0.3,
+            "count": 0,
+            "mean_confidence": null,
+            "empirical_success_rate": null
+          },
+          {
+            "lower": 0.3,
+            "upper": 0.4,
+            "count": 0,
+            "mean_confidence": null,
+            "empirical_success_rate": null
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.5,
+            "count": 0,
+            "mean_confidence": null,
+            "empirical_success_rate": null
+          },
+          {
+            "lower": 0.5,
+            "upper": 0.6,
+            "count": 0,
+            "mean_confidence": null,
+            "empirical_success_rate": null
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.7,
+            "count": 0,
+            "mean_confidence": null,
+            "empirical_success_rate": null
+          },
+          {
+            "lower": 0.7,
+            "upper": 0.8,
+            "count": 0,
+            "mean_confidence": null,
+            "empirical_success_rate": null
+          },
+          {
+            "lower": 0.8,
+            "upper": 0.9,
+            "count": 0,
+            "mean_confidence": null,
+            "empirical_success_rate": null
+          },
+          {
+            "lower": 0.9,
+            "upper": 1.0,
+            "count": 36,
+            "mean_confidence": 0.9708333333333334,
+            "empirical_success_rate": 1.0
+          }
+        ],
+        "risk_coverage_curve": [
+          {
+            "coverage": 0.027777777777777776,
+            "selective_risk": 0.0,
+            "minimum_confidence": 1.0
+          },
+          {
+            "coverage": 0.05555555555555555,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.99
+          },
+          {
+            "coverage": 0.08333333333333333,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.99
+          },
+          {
+            "coverage": 0.1111111111111111,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.99
+          },
+          {
+            "coverage": 0.1388888888888889,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.99
+          },
+          {
+            "coverage": 0.16666666666666666,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.99
+          },
+          {
+            "coverage": 0.19444444444444445,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.99
+          },
+          {
+            "coverage": 0.2222222222222222,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.99
+          },
+          {
+            "coverage": 0.25,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.98
+          },
+          {
+            "coverage": 0.2777777777777778,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.98
+          },
+          {
+            "coverage": 0.3055555555555556,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.98
+          },
+          {
+            "coverage": 0.3333333333333333,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.98
+          },
+          {
+            "coverage": 0.3611111111111111,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.98
+          },
+          {
+            "coverage": 0.3888888888888889,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.98
+          },
+          {
+            "coverage": 0.4166666666666667,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.98
+          },
+          {
+            "coverage": 0.4444444444444444,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.98
+          },
+          {
+            "coverage": 0.4722222222222222,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.98
+          },
+          {
+            "coverage": 0.5,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.98
+          },
+          {
+            "coverage": 0.5277777777777778,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.98
+          },
+          {
+            "coverage": 0.5555555555555556,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.98
+          },
+          {
+            "coverage": 0.5833333333333334,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.98
+          },
+          {
+            "coverage": 0.6111111111111112,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.98
+          },
+          {
+            "coverage": 0.6388888888888888,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.97
+          },
+          {
+            "coverage": 0.6666666666666666,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.97
+          },
+          {
+            "coverage": 0.6944444444444444,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.97
+          },
+          {
+            "coverage": 0.7222222222222222,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.97
+          },
+          {
+            "coverage": 0.75,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.97
+          },
+          {
+            "coverage": 0.7777777777777778,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.97
+          },
+          {
+            "coverage": 0.8055555555555556,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.95
+          },
+          {
+            "coverage": 0.8333333333333334,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.95
+          },
+          {
+            "coverage": 0.8611111111111112,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.95
+          },
+          {
+            "coverage": 0.8888888888888888,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.95
+          },
+          {
+            "coverage": 0.9166666666666666,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.95
+          },
+          {
+            "coverage": 0.9444444444444444,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.93
+          },
+          {
+            "coverage": 0.9722222222222222,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.9
+          },
+          {
+            "coverage": 1.0,
+            "selective_risk": 0.0,
+            "minimum_confidence": 0.9
+          }
+        ],
+        "area_under_risk_coverage_curve": 0.0,
+        "interpretation_notice": "Metrics cover only tasks with a self-reported success_probability recorded before external judging; missing values are reported, not imputed."
+      },
+      "transfer": {
+        "schema_version": 1,
+        "status": "available",
+        "reason": null,
+        "splits": {
+          "development": {
+            "status": "available",
+            "reason": null,
+            "task_count": 23,
+            "success_rate": 1.0,
+            "mean_score": 1.0
+          },
+          "validation": {
+            "status": "unavailable",
+            "reason": "validation split is empty",
+            "task_count": 0,
+            "success_rate": null,
+            "mean_score": null
+          },
+          "held_out_task": {
+            "status": "available",
+            "reason": null,
+            "task_count": 6,
+            "success_rate": 1.0,
+            "mean_score": 1.0
+          },
+          "held_out_setting": {
+            "status": "available",
+            "reason": null,
+            "task_count": 7,
+            "success_rate": 1.0,
+            "mean_score": 1.0
+          }
+        },
+        "held_out_task_success_delta": 0.0,
+        "held_out_setting_success_delta": 0.0,
+        "pooled_held_out_success_delta": 0.0,
+        "leakage_groups": [],
+        "interpretation_notice": "Deltas are descriptive held-out minus development success rates for one condition. They do not establish that an intervention transfers without a paired baseline."
+      },
+      "generality": {
+        "schema_version": 1,
+        "status": "ready",
+        "task_count": 36,
+        "category_count": 17,
+        "source_origin_count": 10,
+        "discovery_task_count": 10,
+        "scenario_counts": {
+          "authenticated_session": 1,
+          "cross_origin_form": 1,
+          "document_read": 20,
+          "file_workflow": 1,
+          "recovery": 1,
+          "sandbox_transaction": 1,
+          "search_discovery": 10,
+          "spa_interaction": 1
+        },
+        "environment_counts": {
+          "public_web": 30,
+          "sandbox": 6
+        },
+        "split_counts": {
+          "development": 23,
+          "held_out_setting": 7,
+          "held_out_task": 6
+        },
+        "source_origins": [
+          "https://developer.mozilla.org",
+          "https://docs.github.com",
+          "https://docs.python.org",
+          "https://fastapi.tiangolo.com",
+          "https://git-scm.com",
+          "https://go.dev",
+          "https://numpy.org",
+          "https://pandas.pydata.org",
+          "https://playwright.dev",
+          "https://www.iana.org"
+        ],
+        "missing_requirements": [],
+        "interpretation_notice": "Readiness means the retained task set crosses a preregistered coverage floor. It does not by itself prove performance, robustness, or transfer across the covered settings."
+      },
+      "long_horizon": {
+        "schema_version": 2,
+        "status": "available",
+        "reason": null,
+        "task_count": 36,
+        "long_task_count": 1,
+        "resumed_task_count": 1,
+        "buckets": {
+          "short": {
+            "task_count": 35,
+            "success_rate": 1.0,
+            "mean_score": 1.0
+          },
+          "medium": {
+            "task_count": 0,
+            "success_rate": null,
+            "mean_score": null
+          },
+          "long": {
+            "task_count": 1,
+            "success_rate": 1.0,
+            "mean_score": 1.0
+          }
+        },
+        "long_success_rate": 1.0,
+        "long_mean_score": 1.0,
+        "reliability_degradation": 0.0,
+        "collapse_incidence": 0.0,
+        "stagnation_incidence": 0.0,
+        "mean_recovery_count": 1.0,
+        "mean_replan_count": 2.0,
+        "mean_strategy_switch_count": 2.0,
+        "interpretation_notice": "Reliability degradation is short success rate minus long success rate. Collapse onset tracks repeated actions; stagnation onset tracks extended unchanged page state even when tools vary. Neither signal is a causal diagnosis of reasoning or memory."
+      },
+      "ready": true,
+      "reasons": []
+    }
+  ],
+  "overall_success_rate": 0.9861111111111112,
+  "scenario_success_rate": {
+    "authenticated_session": 1.0,
+    "cross_origin_form": 1.0,
+    "document_read": 1.0,
+    "file_workflow": 1.0,
+    "recovery": 1.0,
+    "sandbox_transaction": 0.5,
+    "search_discovery": 1.0,
+    "spa_interaction": 1.0
+  },
+  "missing_requirements": [
+    "requires 3 common dates with complete generality and long-horizon cells"
+  ],
+  "evidence_notice": "Inputs are schema-validated and content-hashed local reports. Local timestamps are not independent wall-clock attestation, and coverage readiness is not a performance claim."
+}

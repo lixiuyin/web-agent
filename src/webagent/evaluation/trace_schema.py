@@ -70,6 +70,8 @@ class TraceStepV8(_StrictModel):
     policy: dict[str, Any] = Field(default_factory=dict)
     duration_seconds: float | None = Field(default=None, ge=0.0)
     tool_duration_seconds: float | None = Field(default=None, ge=0.0)
+    observations: dict[str, str] = Field(default_factory=dict)
+    result_ref: dict[str, str] = Field(default_factory=dict)
 
 
 class RunTraceV8(_StrictModel):

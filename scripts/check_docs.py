@@ -110,17 +110,10 @@ def _check_file(path: Path) -> list[str]:
     table_width: int | None = None
 
     for line_number, line in enumerate(lines, start=1):
-        if line.endswith((" ", "\t")):
-            problems.append(f"{relative}:{line_number}: trailing whitespace")
-        if "\t" in line:
-            problems.append(f"{relative}:{line_number}: tab character")
-
-        if not line:
-            blank_run += 1
-            if blank_run > 2:
-                problems.append(f"{relative}:{line_number}: more than two blank lines")
-        else:
-            blank_run = 0
+        blank_run, whitespace_problems = _check_line_whitespace(
+            relative, line_number, line, blank_run
+        )
+        problems.extend(whitespace_problems)
 
         fence = FENCE_RE.match(line)
         if fence:
@@ -146,45 +139,68 @@ def _check_file(path: Path) -> list[str]:
         if heading:
             headings.append((line_number, len(heading.group(1))))
 
-        for alt, raw_target in IMAGE_RE.findall(line):
-            if not alt.strip():
-                problems.append(f"{relative}:{line_number}: image has empty alt text")
-            target = _link_target(raw_target)
-            if target and not target.startswith("#") and not _is_external(target):
-                local_part = unquote(target.split("#", 1)[0].split("?", 1)[0])
-                resolved = (path.parent / local_part).resolve()
-                if local_part and not _exists_or_tracked(resolved):
-                    problems.append(
-                        f"{relative}:{line_number}: missing local image target {local_part!r}"
-                    )
+        problems.extend(_check_line_links(path, relative, line_number, line))
 
-        for _label, raw_target in LINK_RE.findall(line):
-            target = _link_target(raw_target)
-            if not target or target.startswith("#") or _is_external(target):
-                continue
-            local_part = unquote(target.split("#", 1)[0].split("?", 1)[0])
-            if not local_part:
-                continue
-            resolved = (path.parent / local_part).resolve()
-            if not _exists_or_tracked(resolved):
-                problems.append(
-                    f"{relative}:{line_number}: missing local link target {local_part!r}"
-                )
-
-        if line.lstrip().startswith("|"):
-            width = _table_width(line)
-            if table_width is None:
-                table_width = width
-            elif width != table_width:
-                problems.append(
-                    f"{relative}:{line_number}: table has {width} columns; expected {table_width}"
-                )
-        else:
-            table_width = None
+        table_width, table_problems = _check_table_row(relative, line_number, line, table_width)
+        problems.extend(table_problems)
 
     if in_fence:
         problems.append(f"{relative}: unterminated code fence")
 
+    problems.extend(_check_heading_structure(relative, headings))
+
+    return problems
+
+
+def _check_line_whitespace(
+    relative: Path, line_number: int, line: str, blank_run: int
+) -> tuple[int, list[str]]:
+    problems: list[str] = []
+    if line.endswith((" ", "\t")):
+        problems.append(f"{relative}:{line_number}: trailing whitespace")
+    if "\t" in line:
+        problems.append(f"{relative}:{line_number}: tab character")
+
+    if not line:
+        blank_run += 1
+        if blank_run > 2:
+            problems.append(f"{relative}:{line_number}: more than two blank lines")
+    else:
+        blank_run = 0
+
+    return blank_run, problems
+
+
+def _check_line_links(path: Path, relative: Path, line_number: int, line: str) -> list[str]:
+    problems: list[str] = []
+    for alt, raw_target in IMAGE_RE.findall(line):
+        if not alt.strip():
+            problems.append(f"{relative}:{line_number}: image has empty alt text")
+        target = _link_target(raw_target)
+        if target and not target.startswith("#") and not _is_external(target):
+            local_part = unquote(target.split("#", 1)[0].split("?", 1)[0])
+            resolved = (path.parent / local_part).resolve()
+            if local_part and not _exists_or_tracked(resolved):
+                problems.append(
+                    f"{relative}:{line_number}: missing local image target {local_part!r}"
+                )
+
+    for _label, raw_target in LINK_RE.findall(line):
+        target = _link_target(raw_target)
+        if not target or target.startswith("#") or _is_external(target):
+            continue
+        local_part = unquote(target.split("#", 1)[0].split("?", 1)[0])
+        if not local_part:
+            continue
+        resolved = (path.parent / local_part).resolve()
+        if not _exists_or_tracked(resolved):
+            problems.append(f"{relative}:{line_number}: missing local link target {local_part!r}")
+
+    return problems
+
+
+def _check_heading_structure(relative: Path, headings: list[tuple[int, int]]) -> list[str]:
+    problems: list[str] = []
     h1_count = sum(level == 1 for _line, level in headings)
     if h1_count != 1:
         problems.append(f"{relative}: expected exactly one H1; found {h1_count}")
@@ -198,6 +214,24 @@ def _check_file(path: Path) -> list[str]:
         previous_level = level
 
     return problems
+
+
+def _check_table_row(
+    relative: Path, line_number: int, line: str, table_width: int | None
+) -> tuple[int | None, list[str]]:
+    problems: list[str] = []
+    if line.lstrip().startswith("|"):
+        width = _table_width(line)
+        if table_width is None:
+            table_width = width
+        elif width != table_width:
+            problems.append(
+                f"{relative}:{line_number}: table has {width} columns; expected {table_width}"
+            )
+    else:
+        table_width = None
+
+    return table_width, problems
 
 
 def main() -> int:

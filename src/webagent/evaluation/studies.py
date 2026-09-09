@@ -249,20 +249,7 @@ def verify_study_record(
 
     study = StudyLayout.from_root(study_root)
     contract = manifest or read_study_manifest(study.manifest_path)
-    if contract.study_id != record.study_id:
-        raise ValueError("study record id does not match the retained study manifest")
-    if (record.provider, record.model) not in {
-        (item.provider, item.model) for item in contract.models
-    }:
-        raise ValueError("study record provider/model is not preregistered")
-    if record.condition_id not in {item.id for item in contract.conditions}:
-        raise ValueError("study record condition is not preregistered")
-    if record.repetition > contract.repetitions:
-        raise ValueError("study record repetition exceeds the preregistered count")
-    if contract.collection_dates and record.collection_date not in contract.collection_dates:
-        raise ValueError("study record collection date is not preregistered")
-    if record.failure_taxonomy_version != contract.failure_taxonomy_version:
-        raise ValueError("study record failure taxonomy differs from the study manifest")
+    _validate_record_registration(record, contract)
 
     registered_tasks = _retained_study_tasks(study, contract)
     registered_by_id = {task.id: task for task in registered_tasks}
@@ -699,6 +686,23 @@ def _sha256(payload: bytes) -> str:
 
 def _encoded(value: Any) -> bytes:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2).encode("utf-8") + b"\n"
+
+
+def _validate_record_registration(record: StudyRunRecord, contract: StudyManifest) -> None:
+    if contract.study_id != record.study_id:
+        raise ValueError("study record id does not match the retained study manifest")
+    if (record.provider, record.model) not in {
+        (item.provider, item.model) for item in contract.models
+    }:
+        raise ValueError("study record provider/model is not preregistered")
+    if record.condition_id not in {item.id for item in contract.conditions}:
+        raise ValueError("study record condition is not preregistered")
+    if record.repetition > contract.repetitions:
+        raise ValueError("study record repetition exceeds the preregistered count")
+    if contract.collection_dates and record.collection_date not in contract.collection_dates:
+        raise ValueError("study record collection date is not preregistered")
+    if record.failure_taxonomy_version != contract.failure_taxonomy_version:
+        raise ValueError("study record failure taxonomy differs from the study manifest")
 
 
 __all__ = [

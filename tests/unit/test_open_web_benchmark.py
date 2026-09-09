@@ -10,15 +10,15 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 import pytest
-from benchmarks.studies.open_web_longitudinal import load_slices
-from benchmarks.suites.open_web.runner import (
+
+from webagent.benchmarks.studies.open_web_longitudinal import load_slices
+from webagent.benchmarks.suites.open_web.runner import (
     append_time_slice,
     benchmark_config_evidence,
     canonical_sha256,
     load_manifest,
     require_free_space,
 )
-
 from webagent.core.config import AgentConfig
 
 _RESEARCH_FIELDS = {
@@ -33,12 +33,12 @@ _RESEARCH_FIELDS = {
 
 
 def _raw_manifest(name: str) -> dict[str, object]:
-    return json.loads(Path(f"benchmarks/manifests/{name}").read_text(encoding="utf-8"))
+    return json.loads(Path(f"src/webagent/benchmarks/manifests/{name}").read_text(encoding="utf-8"))
 
 
 def test_repository_open_web_manifest_is_current_and_source_grounded() -> None:
     suite, tasks, digest = load_manifest(
-        Path("benchmarks/manifests/open_web_smoke.json"),
+        Path("src/webagent/benchmarks/manifests/open_web_smoke.json"),
         today=date(2026, 8, 29),
     )
 
@@ -64,7 +64,7 @@ def test_smoke_manifest_predeclares_validation_research_metadata() -> None:
 
 def test_general_manifest_has_thirty_tasks_across_ten_domains() -> None:
     suite, tasks, _digest = load_manifest(
-        Path("benchmarks/manifests/open_web_general.json"),
+        Path("src/webagent/benchmarks/manifests/open_web_general.json"),
         today=date(2026, 8, 29),
     )
     domains = {task.source_urls[0].split("/", 3)[2] for task in tasks}
@@ -97,13 +97,37 @@ def test_general_manifest_has_thirty_tasks_across_ten_domains() -> None:
     assert "What kind of data does pandas handle?" in pandas_task.goal
     python_task = next(task for task in tasks if task.id == "python_creator")
     assert "General Python FAQ" in python_task.goal
+    playwright_task = next(task for task in tasks if task.id == "playwright_python_intro")
+    assert "package installation command" in playwright_task.goal
+    assert "required browser installation command" in playwright_task.goal
+    assert {
+        assertion.expected
+        for assertion in playwright_task.assertions
+        if assertion.kind == "answer_contains"
+    } >= {"pip install pytest-playwright", "playwright install"}
+    github_task = next(task for task in tasks if task.id == "github_git_difference")
+    accepted_github_urls = set(github_task.source_urls)
+    assert accepted_github_urls == {
+        "https://docs.github.com/en/get-started/start-your-journey/what-is-github",
+        "https://docs.github.com/en/get-started/using-git/about-git",
+        "https://docs.github.com/en/get-started/start-your-journey/git-and-github-learning-resources",
+    }
+    assert any(
+        assertion.kind == "answer_contains_any" and set(assertion.expected) == accepted_github_urls
+        for assertion in github_task.assertions
+    )
+    assert any(
+        assertion.kind == "history_url_observed_any"
+        and set(assertion.expected) == accepted_github_urls
+        for assertion in github_task.assertions
+    )
 
 
 def test_general_manifest_predeclares_leakage_safe_transfer_splits() -> None:
     raw = _raw_manifest("open_web_general.json")
     raw_tasks = raw["tasks"]
     _suite, tasks, _digest = load_manifest(
-        Path("benchmarks/manifests/open_web_general.json"),
+        Path("src/webagent/benchmarks/manifests/open_web_general.json"),
         today=date(2026, 8, 29),
     )
 
@@ -139,7 +163,7 @@ def test_general_manifest_predeclares_leakage_safe_transfer_splits() -> None:
 
 def test_v6_targeted_manifest_contains_only_adjudicated_failure_tasks() -> None:
     suite, tasks, _digest = load_manifest(
-        Path("benchmarks/manifests/open_web_v6_targeted.json"),
+        Path("src/webagent/benchmarks/manifests/open_web_v6_targeted.json"),
         today=date(2026, 8, 31),
     )
 
@@ -155,7 +179,7 @@ def test_v6_targeted_manifest_contains_only_adjudicated_failure_tasks() -> None:
 
 def test_qwen_strict_manifest_targets_long_held_out_document_workflow() -> None:
     suite, tasks, _digest = load_manifest(
-        Path("benchmarks/manifests/qwen_strict_search.json"),
+        Path("src/webagent/benchmarks/manifests/qwen_strict_search.json"),
         today=date(2026, 8, 30),
     )
 
@@ -172,6 +196,8 @@ def test_qwen_strict_manifest_targets_long_held_out_document_workflow() -> None:
         "figure_detection",
         "figure_interpretation",
     } <= set(task.target_failure_modes)
+    assert any(assertion.kind == "answer_document_url" for assertion in task.assertions)
+    assert any(assertion.kind == "history_document_url_observed" for assertion in task.assertions)
 
     raw_task = _raw_manifest("qwen_strict_search.json")["tasks"][0]
     assert raw_task.keys() >= _RESEARCH_FIELDS
@@ -298,6 +324,8 @@ def test_benchmark_config_hash_input_uses_final_effective_agent_config(tmp_path:
     assert stealth_evidence["api_transient_retries"] == 3
     assert stealth_evidence["api_retry_base_seconds"] == 10
     assert stealth_evidence["api_retry_max_seconds"] == 60
+    assert stealth_evidence["direct_task_timeout"] == 600
+    assert stealth_evidence["discovery_task_timeout"] == 2400
     assert plain_evidence["provider"] == "openrouter"
     assert plain_evidence["study_manifest_sha256"] == "s" * 64
     assert canonical_sha256(stealth_evidence) != canonical_sha256(plain_evidence)
@@ -308,7 +336,7 @@ def test_free_space_preflight_fails_before_browser_start(tmp_path: Path, monkeyp
         free = 100
 
     monkeypatch.setattr(
-        "benchmarks.suites.open_web.runner.shutil.disk_usage", lambda _path: _Usage()
+        "webagent.benchmarks.suites.open_web.runner.shutil.disk_usage", lambda _path: _Usage()
     )
 
     with pytest.raises(RuntimeError, match="insufficient free space"):

@@ -51,7 +51,7 @@ class ListFramesTool(BrowserToolBase):
     "frame_interact",
     "Interact inside a listed frame. Use list_frames first; frame 0 is the main document, where "
     "the ordinary extract_text tool is usually simpler. params: frame_index (int), "
-    "action=click|type|extract_text, selector={type:'text'|'css',value:string}, text?",
+    "action=click|type|extract_text, selector={type:'ref'|'text'|'css',value:string}, text?",
 )
 class FrameInteractTool(BrowserToolBase):
     def validate_params(self, params: dict[str, Any]) -> None:
@@ -275,12 +275,12 @@ class DownloadFileTool:
 @tool(
     "shadow_dom",
     "Interact with an element inside open Shadow DOM (Playwright CSS piercing). "
-    "params: action=click|type|extract_text, selector={type:'css',value:string}, text?",
+    "params: action=click|type|extract_text, selector={type:'ref'|'css',value:string}, text?",
 )
 class ShadowDomTool(BrowserToolBase):
     def validate_params(self, params: dict[str, Any]) -> None:
         _validate_selector(params.get("selector"))
-        if params["selector"].get("type") != "css":
+        if params["selector"].get("type") not in {"css", "ref"}:
             raise ValueError("Shadow DOM interaction requires a CSS selector")
         if params.get("action") not in {"click", "type", "extract_text"}:
             raise ValueError("'action' must be click, type, or extract_text")

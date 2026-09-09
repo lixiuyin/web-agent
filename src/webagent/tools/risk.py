@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from typing import Any, Literal, Protocol
 from urllib.parse import urlsplit
 
+from webagent.browser.references import resolve_reference
 from webagent.core.models import ToolCall
 
 RiskLevel = Literal["low", "medium", "high"]
@@ -193,6 +194,8 @@ class BrowserRiskContext:
         value = selector.get("value")
         if not isinstance(value, str) or not value:
             return ""
+        if selector.get("ref") is not None or selector.get("type") == "ref":
+            return await self._describe_observed_action(tool_call.parameters)
         try:
             if selector.get("type") == "css":
                 locator = self._browser.page.locator(value).first
@@ -218,6 +221,22 @@ class BrowserRiskContext:
         except Exception:
             return ""
         return str(metadata) if isinstance(metadata, dict) else ""
+
+    async def _describe_observed_action(self, params: dict[str, Any]) -> str:
+        target = await resolve_reference(self._browser.page, params, require_viewport=False)
+        try:
+            metadata = await target.evaluate(r"""el => ({
+                tag:el.tagName, text:(el.innerText || '').slice(0,200),
+                aria:el.getAttribute('aria-label'), type:el.type, name:el.name,
+                href:el.href, formMethod:el.form?.method, formAction:el.form?.action,
+                formActionRaw:el.form?.getAttribute('action'),
+                labels:[...(el.labels || [])].map(label=>label.textContent),
+                labelledBy:(el.getAttribute('aria-labelledby')||'').split(/\s+/)
+                    .map(id=>el.getRootNode().getElementById?.(id)?.textContent)
+            })""")
+            return str(metadata)
+        finally:
+            await target.dispose()
 
 
 def _normalized_origin(value: str) -> str | None:

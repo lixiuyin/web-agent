@@ -7,10 +7,10 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from benchmarks.environments.controlled_web.general_site import benchmark_site
 from PIL import Image
 
 from webagent.agent.loop import WebAgent
+from webagent.benchmarks.environments.controlled_web.general_site import benchmark_site
 from webagent.browser.controller import BrowserController
 from webagent.core.config import AgentConfig
 from webagent.core.models import BrowserState, ToolCall, ToolResult

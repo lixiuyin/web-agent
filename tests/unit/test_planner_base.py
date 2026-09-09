@@ -8,6 +8,7 @@ from webagent.core.models import BrowserState
 from webagent.planner.base import (
     STRUCTURED_SYSTEM_PROMPT,
     SYSTEM_PROMPT,
+    TRANSPORT_AGNOSTIC_PLANNING_RULES,
     build_prompt,
     parse_llm_response,
 )
@@ -24,6 +25,13 @@ def test_build_prompt():
     assert "TASK: click button" in prompt
     assert "URL: https://example.com" in prompt
     assert b64 is None  # no screenshot
+
+
+def test_all_transports_require_proportional_grounded_completion():
+    for prompt in (SYSTEM_PROMPT, STRUCTURED_SYSTEM_PROMPT, TRANSPORT_AGNOSTIC_PLANNING_RULES):
+        assert "ordinary factual lookup" in prompt
+        assert "not a search-by-search audit narrative" in prompt
+        assert "absolute guarantee" in prompt
 
 
 def test_system_prompts_require_selected_winner_date_for_dated_latest_tasks():

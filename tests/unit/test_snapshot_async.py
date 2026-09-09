@@ -48,6 +48,41 @@ class FakePage:
 
 
 class TestTakeSnapshot:
+    async def test_rejects_scroll_during_capture(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        async def fake_extract(page):
+            return []
+
+        class ScrollingPage(FakePage):
+            def __init__(self) -> None:
+                super().__init__()
+                self.scroll_y = 0
+
+            async def evaluate(self, script, arg=None):
+                return {
+                    "viewport": self.viewport_size,
+                    "scroll": {"x": 0, "y": self.scroll_y},
+                    "document": {"width": 1000, "height": 3000},
+                }
+
+            async def screenshot(self, full_page=False, type="png"):
+                self.scroll_y = 1000
+                return b"PNGDATA"
+
+        monkeypatch.setattr(snap, "extract_interactive_elements", fake_extract)
+        with pytest.raises(RuntimeError, match="geometry changed"):
+            await take_snapshot(ScrollingPage(), use_cdp=False, wait_after_load=0)
+
+    async def test_geometry_failure_is_recorded_as_unknown(self, monkeypatch) -> None:
+        async def fake_extract(page):
+            return []
+
+        monkeypatch.setattr(snap, "extract_interactive_elements", fake_extract)
+        page = FakePage()
+        page.eval_raises = True
+        result = await take_snapshot(page, use_cdp=False, wait_after_load=0)
+        assert result["meta"]["scroll"] is None
+        assert result["meta"]["document"] is None
+
     async def test_basic_path(self, monkeypatch: pytest.MonkeyPatch) -> None:
         async def fake_extract(page):
             return [{"tag": "button", "text": "Go", "attrs": {}, "css_path": "#go"}]

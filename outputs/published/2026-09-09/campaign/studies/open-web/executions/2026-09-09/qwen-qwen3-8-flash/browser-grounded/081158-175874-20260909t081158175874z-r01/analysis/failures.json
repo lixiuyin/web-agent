@@ -1,0 +1,223 @@
+{
+  "schema_version": 2,
+  "failure_taxonomy_version": "1",
+  "task_count": 30,
+  "affected_task_count": 9,
+  "finding_count": 10,
+  "observed_count": 10,
+  "candidate_count": 0,
+  "adjudicated_count": 0,
+  "observed_by_layer": {
+    "planning": 1,
+    "tool_execution": 9
+  },
+  "candidate_by_layer": {},
+  "adjudicated_by_layer": {},
+  "recurrence_by_signature": {
+    "planning:planner_attempt_failure": 1,
+    "tool_execution:tool_action_failure": 9
+  },
+  "findings": [
+    {
+      "taxonomy_version": "1",
+      "task_id": "python_creator",
+      "status": "observed",
+      "layer": "tool_execution",
+      "subtype": "tool_action_failure",
+      "detector": "aggregate-rule-v1",
+      "terminal": false,
+      "onset_step": null,
+      "recovery_step": null,
+      "evidence": [
+        {
+          "source": "task_metric",
+          "key": "failed_action_count",
+          "observed": 2,
+          "reference": null
+        }
+      ],
+      "note": "The tool result directly reported one or more failed actions."
+    },
+    {
+      "taxonomy_version": "1",
+      "task_id": "git_clone",
+      "status": "observed",
+      "layer": "tool_execution",
+      "subtype": "tool_action_failure",
+      "detector": "aggregate-rule-v1",
+      "terminal": false,
+      "onset_step": null,
+      "recovery_step": null,
+      "evidence": [
+        {
+          "source": "task_metric",
+          "key": "failed_action_count",
+          "observed": 1,
+          "reference": null
+        }
+      ],
+      "note": "The tool result directly reported one or more failed actions."
+    },
+    {
+      "taxonomy_version": "1",
+      "task_id": "github_authentication",
+      "status": "observed",
+      "layer": "tool_execution",
+      "subtype": "tool_action_failure",
+      "detector": "aggregate-rule-v1",
+      "terminal": false,
+      "onset_step": null,
+      "recovery_step": null,
+      "evidence": [
+        {
+          "source": "task_metric",
+          "key": "failed_action_count",
+          "observed": 1,
+          "reference": null
+        }
+      ],
+      "note": "The tool result directly reported one or more failed actions."
+    },
+    {
+      "taxonomy_version": "1",
+      "task_id": "numpy_beginners",
+      "status": "observed",
+      "layer": "tool_execution",
+      "subtype": "tool_action_failure",
+      "detector": "aggregate-rule-v1",
+      "terminal": false,
+      "onset_step": null,
+      "recovery_step": null,
+      "evidence": [
+        {
+          "source": "task_metric",
+          "key": "failed_action_count",
+          "observed": 1,
+          "reference": null
+        }
+      ],
+      "note": "The tool result directly reported one or more failed actions."
+    },
+    {
+      "taxonomy_version": "1",
+      "task_id": "pandas_table",
+      "status": "observed",
+      "layer": "tool_execution",
+      "subtype": "tool_action_failure",
+      "detector": "aggregate-rule-v1",
+      "terminal": false,
+      "onset_step": null,
+      "recovery_step": null,
+      "evidence": [
+        {
+          "source": "task_metric",
+          "key": "failed_action_count",
+          "observed": 2,
+          "reference": null
+        }
+      ],
+      "note": "The tool result directly reported one or more failed actions."
+    },
+    {
+      "taxonomy_version": "1",
+      "task_id": "pandas_dataframe",
+      "status": "observed",
+      "layer": "tool_execution",
+      "subtype": "tool_action_failure",
+      "detector": "aggregate-rule-v1",
+      "terminal": false,
+      "onset_step": null,
+      "recovery_step": null,
+      "evidence": [
+        {
+          "source": "task_metric",
+          "key": "failed_action_count",
+          "observed": 1,
+          "reference": null
+        }
+      ],
+      "note": "The tool result directly reported one or more failed actions."
+    },
+    {
+      "taxonomy_version": "1",
+      "task_id": "pandas_read_csv",
+      "status": "observed",
+      "layer": "tool_execution",
+      "subtype": "tool_action_failure",
+      "detector": "aggregate-rule-v1",
+      "terminal": false,
+      "onset_step": null,
+      "recovery_step": null,
+      "evidence": [
+        {
+          "source": "task_metric",
+          "key": "failed_action_count",
+          "observed": 2,
+          "reference": null
+        }
+      ],
+      "note": "The tool result directly reported one or more failed actions."
+    },
+    {
+      "taxonomy_version": "1",
+      "task_id": "go_getting_started",
+      "status": "observed",
+      "layer": "planning",
+      "subtype": "planner_attempt_failure",
+      "detector": "aggregate-rule-v1",
+      "terminal": false,
+      "onset_step": null,
+      "recovery_step": null,
+      "evidence": [
+        {
+          "source": "task_metric",
+          "key": "planner_failure_count",
+          "observed": 1,
+          "reference": null
+        }
+      ],
+      "note": "One or more planner attempts failed; the underlying cause is not inferred."
+    },
+    {
+      "taxonomy_version": "1",
+      "task_id": "go_getting_started",
+      "status": "observed",
+      "layer": "tool_execution",
+      "subtype": "tool_action_failure",
+      "detector": "aggregate-rule-v1",
+      "terminal": false,
+      "onset_step": null,
+      "recovery_step": null,
+      "evidence": [
+        {
+          "source": "task_metric",
+          "key": "failed_action_count",
+          "observed": 1,
+          "reference": null
+        }
+      ],
+      "note": "The tool result directly reported one or more failed actions."
+    },
+    {
+      "taxonomy_version": "1",
+      "task_id": "go_effective",
+      "status": "observed",
+      "layer": "tool_execution",
+      "subtype": "tool_action_failure",
+      "detector": "aggregate-rule-v1",
+      "terminal": false,
+      "onset_step": null,
+      "recovery_step": null,
+      "evidence": [
+        {
+          "source": "task_metric",
+          "key": "failed_action_count",
+          "observed": 3,
+          "reference": null
+        }
+      ],
+      "note": "The tool result directly reported one or more failed actions."
+    }
+  ],
+  "causal_boundary": "Automatic findings identify observable symptoms only; reasoning and memory causes are never assigned automatically. Adjudicated causal labels require a referenced controlled intervention or both referenced trace evidence and human adjudication."
+}

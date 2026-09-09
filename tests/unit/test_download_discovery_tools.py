@@ -52,6 +52,25 @@ async def test_reports_dom_and_declared_metadata_urls_explicitly() -> None:
     assert result.data["candidates"][1]["url"] == metadata_url
 
 
+async def test_accepts_extensionless_arxiv_pdf_resource() -> None:
+    page = _Page(
+        [
+            {
+                "value": "https://arxiv.org/pdf/2505.09388",
+                "element": "a",
+                "text": "View PDF",
+            }
+        ],
+        "<html></html>",
+    )
+    page.url = "https://arxiv.org/abs/2505.09388"
+
+    result = await InspectDownloadLinksTool(browser=_Browser(page)).execute({})
+
+    assert result.success is True
+    assert result.data["candidates"][0]["url"] == "https://arxiv.org/pdf/2505.09388"
+
+
 async def test_rejects_viewer_wrapper_and_reads_html_escaped_raw_blob_url() -> None:
     metadata_url = "https://github.com/org/repo/raw/refs/heads/main/report.pdf"
     page = _Page(
@@ -112,6 +131,87 @@ async def test_reports_visible_datetime_and_file_history_links() -> None:
         {"url": "https://github.com/org/repo/commits/main/report.pdf", "text": "History"}
     ]
     assert result.data["date_evidence"][0]["datetime"].startswith("2026-08-26")
+
+
+async def test_reports_urlless_download_button_as_grounded_control() -> None:
+    page = _Page(
+        [
+            {
+                "value": "",
+                "element": "button",
+                "text": "",
+                "testid": "download-raw-button",
+                "aria_label": "Download raw file",
+            },
+            {
+                "value": "",
+                "element": "button",
+                "text": "Copy raw file",
+                "testid": "copy-raw-button",
+            },
+            {
+                "value": "/org/repo/commits/main/report.pdf",
+                "element": "a",
+                "text": "History",
+            },
+        ],
+        "<html></html>",
+    )
+
+    result = await InspectDownloadLinksTool(browser=_Browser(page)).execute({})
+
+    assert result.success is True
+    assert result.data["candidate_count"] == 0
+    assert result.data["download_controls"] == [
+        {
+            "selector": {"type": "css", "value": "[data-testid='download-raw-button']"},
+            "element": "button",
+            "text": "Download raw file",
+            "evidence_type": "dom_control",
+        }
+    ]
+    assert "download_file" in result.data["hint"]
+    assert result.data["history_links"][0]["text"] == "History"
+
+
+async def test_download_control_falls_back_to_id_and_text_selectors() -> None:
+    page = _Page(
+        [
+            {"value": "", "element": "a", "text": "Download PDF", "id": "dl"},
+            {"value": "", "element": "div", "role": "button", "text": "下载全文"},
+            {"value": "", "element": "div", "text": "Download"},
+        ],
+        "<html></html>",
+    )
+
+    result = await InspectDownloadLinksTool(browser=_Browser(page)).execute({})
+
+    assert result.success is True
+    assert [item["selector"] for item in result.data["download_controls"]] == [
+        {"type": "css", "value": "#dl"},
+        {"type": "text", "value": "下载全文"},
+    ]
+
+
+async def test_bare_download_button_counts_only_on_document_pages() -> None:
+    controls = [
+        {"value": "", "element": "button", "text": "Download"},
+        {"value": "", "element": "button", "text": "Download raw file"},
+    ]
+
+    html_page = _Page(controls, "<html></html>")
+    html_page.url = "https://vendor.example/blog?id=release"
+    html_result = await InspectDownloadLinksTool(browser=_Browser(html_page)).execute({})
+
+    pdf_page = _Page(controls, "<html></html>")
+    pdf_page.url = "https://github.com/org/repo/blob/main/report.pdf"
+    pdf_result = await InspectDownloadLinksTool(browser=_Browser(pdf_page)).execute({})
+
+    assert [item["text"] for item in html_result.data["download_controls"]] == ["Download raw file"]
+    assert [item["text"] for item in pdf_result.data["download_controls"]] == [
+        "Download",
+        "Download raw file",
+    ]
 
 
 async def test_rejects_empty_page_and_bounds_parameters() -> None:

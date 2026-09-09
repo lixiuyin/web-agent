@@ -24,29 +24,26 @@ from webagent.utils.logging import configure_logging
 logger = logging.getLogger(__name__)
 
 
-def parse_args() -> argparse.Namespace:
-    """Parse command line arguments.
-
-    Note: Default values for --output and other settings come from config
-    (AgentConfig), which reads from environment variables and .env file.
-    Use CLI arguments to override config defaults.
-    """
+def _new_parser() -> argparse.ArgumentParser:
     import webagent
 
-    p = argparse.ArgumentParser(
+    return argparse.ArgumentParser(
         description="webagent - autonomous web agent CLI",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=f"Version: {webagent.__version__}\n"
         f"Config: Use environment variables (AGENT_*) or .env file",
     )
-    p.add_argument("--task", type=str, help="Natural-language task to execute")
-    p.add_argument(
+
+
+def _add_general_arguments(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--task", type=str, help="Natural-language task to execute")
+    parser.add_argument(
         "--resume",
         type=str,
         help="Resume a normal-mode run from an atomic checkpoint (not allowed in strict-eval)",
     )
-    p.add_argument("--interactive", action="store_true", help="Interactive mode")
-    p.add_argument(
+    parser.add_argument("--interactive", action="store_true", help="Interactive mode")
+    parser.add_argument(
         "--output",
         type=str,
         default=None,
@@ -55,15 +52,18 @@ def parse_args() -> argparse.Namespace:
             "root and the CLI allocates runs/YYYY-MM-DD/model/task-id."
         ),
     )
-    p.add_argument("--model", type=str, help="Override model name (default: from config)")
-    p.add_argument("--api-url", type=str, help="Override API URL (default: from config)")
-    p.add_argument("--api-key", type=str, help="Override API key (default: from config)")
-    p.add_argument(
+    parser.add_argument("--model", type=str, help="Override model name (default: from config)")
+    parser.add_argument("--api-url", type=str, help="Override API URL (default: from config)")
+    parser.add_argument("--api-key", type=str, help="Override API key (default: from config)")
+
+
+def _add_planner_arguments(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
         "--planner-output-mode",
         choices=("auto", "native-tools", "json-schema", "prompt-json"),
-        help=("Planner action transport (default: auto provider-native tools with safe fallback)"),
+        help="Planner action transport (default: auto provider-native tools with safe fallback)",
     )
-    vllm_group = p.add_mutually_exclusive_group()
+    vllm_group = parser.add_mutually_exclusive_group()
     vllm_group.add_argument(
         "--use-vllm",
         action="store_true",
@@ -77,73 +77,42 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="Disable local vLLM fallback and use the stub planner when no API is configured",
     )
-    p.add_argument(
+    parser.add_argument(
         "--vllm-model-name",
         type=str,
         help="Override local vLLM model name (default: from config)",
     )
-    p.add_argument(
+    parser.add_argument(
         "--vllm-api-url",
         type=str,
         help="Override local vLLM OpenAI-compatible API URL (default: from config)",
     )
-    p.add_argument(
+    parser.add_argument(
         "--vllm-api-key",
         type=str,
         help="Override local vLLM API key/token (default: from config)",
     )
-    p.add_argument("--headless", action="store_true", help="Force headless")
-    p.add_argument("--headed", action="store_true", help="Force headed")
-    p.add_argument(
-        "--strict-eval",
-        action="store_true",
-        help=(
-            "Run an isolated, search-engine-only auditable evaluation (fresh profile/output, "
-            "no direct source APIs or persistent PDF cache)"
-        ),
-    )
-    p.add_argument(
-        "--search-engine-only",
-        action="store_true",
-        help=(
-            "Strict discovery evaluation: require browser search, disable direct source APIs, "
-            "and reject guessed goto/download URLs"
-        ),
-    )
-    p.add_argument(
-        "--discovery-mode",
-        choices=("browser-grounded", "hybrid"),
-        help=(
-            "Discovery tool exposure (default: browser-grounded; hybrid explicitly enables "
-            "direct arXiv/GitHub API tools)"
-        ),
-    )
-    p.add_argument(
-        "--high-risk-actions",
-        choices=("deny", "prompt", "allow"),
-        help=(
-            "Authorization for purchases, submissions, publishing, deletion, and similar "
-            "external actions (default: deny)"
-        ),
-    )
-    p.add_argument(
+
+
+def _add_browser_arguments(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--headless", action="store_true", help="Force headless")
+    parser.add_argument("--headed", action="store_true", help="Force headed")
+    parser.add_argument(
         "--browser-profile-mode",
         choices=("persistent", "temporary"),
         help="Override browser profile isolation mode",
     )
-    p.add_argument(
+    parser.add_argument(
         "--browser-channel",
         choices=("bundled", "chrome"),
         help="Use Playwright's bundled Chromium or the locally installed stable Chrome",
     )
-    p.add_argument(
+    parser.add_argument(
         "--browser-proxy-server",
         type=str,
-        help=(
-            "Explicit browser proxy URL without embedded credentials; unset keeps the direct route"
-        ),
+        help="Explicit browser proxy URL without embedded credentials; unset keeps the direct route",
     )
-    p.add_argument(
+    parser.add_argument(
         "--captcha-handling",
         choices=("report", "fail", "wait_for_human"),
         help=(
@@ -151,18 +120,64 @@ def parse_args() -> argparse.Namespace:
             "for manual challenge resolution; headless runs fail closed"
         ),
     )
-    p.add_argument(
+    parser.add_argument(
         "--captcha-wait-timeout",
         type=float,
         help="Seconds to wait for manual CAPTCHA clearance in report/wait_for_human mode",
     )
-    p.add_argument(
+
+
+def _add_evaluation_arguments(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--strict-eval",
+        action="store_true",
+        help=(
+            "Run an isolated, search-engine-only auditable evaluation (fresh profile/output, "
+            "no direct source APIs or persistent PDF cache)"
+        ),
+    )
+    parser.add_argument(
+        "--search-engine-only",
+        action="store_true",
+        help=(
+            "Strict discovery evaluation: require browser search, disable direct source APIs, "
+            "and reject guessed goto/download URLs"
+        ),
+    )
+    parser.add_argument(
+        "--discovery-mode",
+        choices=("browser-grounded", "hybrid"),
+        help=(
+            "Discovery tool exposure (default: browser-grounded; hybrid explicitly enables "
+            "direct arXiv/GitHub API tools)"
+        ),
+    )
+    parser.add_argument(
+        "--high-risk-actions",
+        choices=("deny", "prompt", "allow"),
+        help=(
+            "Authorization for purchases, submissions, publishing, deletion, and similar "
+            "external actions (default: deny)"
+        ),
+    )
+    import webagent
+
+    parser.add_argument(
         "--version",
         action="version",
         version=f"%(prog)s {webagent.__version__}",
         help="Show version information",
     )
-    return p.parse_args()
+
+
+def parse_args() -> argparse.Namespace:
+    """Parse command line arguments, leaving defaults to ``AgentConfig``."""
+    parser = _new_parser()
+    _add_general_arguments(parser)
+    _add_planner_arguments(parser)
+    _add_browser_arguments(parser)
+    _add_evaluation_arguments(parser)
+    return parser.parse_args()
 
 
 def _build_planner(cfg: AgentConfig) -> Planner:

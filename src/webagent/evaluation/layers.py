@@ -103,61 +103,12 @@ def analyze_two_layer_portfolio(
             "external reports contain endpoints absent from diagnostic evidence: "
             + ", ".join(f"{provider}::{model}" for provider, model in unexpected)
         )
-    for benchmark in ("webarena_verified", "visualwebarena"):
-        comparable = [
-            report
-            for _evidence, report in external_reports
-            if report.benchmark == benchmark and (report.provider, report.model) in endpoints
-        ]
-        if len({report.backend_configuration_sha256 for report in comparable}) > 1:
-            global_missing.append(f"{benchmark} reports use different backend configurations")
-        package_sets = {tuple(sorted(report.package_versions.items())) for report in comparable}
-        if len(package_sets) > 1:
-            global_missing.append(f"{benchmark} reports use different package versions")
+    global_missing.extend(_external_comparability_reasons(external_reports, endpoints))
 
     model_results: list[LayeredModelResult] = []
-    required = {"webarena_verified": "hard", "visualwebarena": "full"}
     for provider, model in endpoints:
-        reports = grouped[(provider, model)]
-        reasons: list[str] = []
-        rates: dict[str, float | None] = {}
-        for benchmark, profile in required.items():
-            candidate = reports.get(benchmark)
-            if candidate is None:
-                reasons.append(f"missing {benchmark}:{profile} report")
-                rates[benchmark] = None
-                continue
-            rates[benchmark] = candidate.summary.success_rate
-            if candidate.profile != profile or candidate.protocol_status != "official":
-                reasons.append(f"{benchmark} is not a complete official {profile} run")
-            if candidate.summary.scored_tasks != candidate.summary.expected_tasks:
-                reasons.append(f"{benchmark} contains unscored system-error tasks")
-            if diagnostic.agent_source_sha256s != [candidate.agent_source_sha256]:
-                reasons.append(f"{benchmark} agent source differs from diagnostic layer")
-            if diagnostic.benchmark_source_sha256s != [candidate.adapter_source_sha256]:
-                reasons.append(f"{benchmark} adapter source differs from diagnostic layer")
-        diagnostic_cells = [
-            cell
-            for cell in diagnostic.cells
-            if (cell.provider, cell.model) == (provider, model)
-            and cell.endpoint_status == "available"
-            and cell.success_rate is not None
-        ]
-        diagnostic_rates = [
-            rate for cell in diagnostic_cells if (rate := cell.success_rate) is not None
-        ]
-        diagnostic_rate = (
-            sum(diagnostic_rates) / len(diagnostic_rates) if diagnostic_rates else None
-        )
         model_results.append(
-            LayeredModelResult(
-                provider=provider,
-                model=model,
-                diagnostic_success_rate=diagnostic_rate,
-                external_success_rate=rates,
-                ready=not reasons,
-                reasons=reasons,
-            )
+            _analyze_external_endpoint(diagnostic, provider, model, grouped[(provider, model)])
         )
     if not endpoints:
         global_missing.append("diagnostic portfolio has no available endpoints")
@@ -171,6 +122,71 @@ def analyze_two_layer_portfolio(
         models=model_results,
         missing_requirements=global_missing,
     )
+
+
+def _analyze_external_endpoint(
+    diagnostic: EmpiricalPortfolio,
+    provider: str,
+    model: str,
+    reports: dict[str, ExternalBenchmarkReport],
+) -> LayeredModelResult:
+    required = {"webarena_verified": "hard", "visualwebarena": "full"}
+    reasons: list[str] = []
+    rates: dict[str, float | None] = {}
+    for benchmark, profile in required.items():
+        candidate = reports.get(benchmark)
+        if candidate is None:
+            reasons.append(f"missing {benchmark}:{profile} report")
+            rates[benchmark] = None
+            continue
+        rates[benchmark] = candidate.summary.success_rate
+        if candidate.profile != profile or candidate.protocol_status != "official":
+            reasons.append(f"{benchmark} is not a complete official {profile} run")
+        if candidate.summary.scored_tasks != candidate.summary.expected_tasks:
+            reasons.append(f"{benchmark} contains unscored system-error tasks")
+        if diagnostic.agent_source_sha256s != [candidate.agent_source_sha256]:
+            reasons.append(f"{benchmark} agent source differs from diagnostic layer")
+        if diagnostic.benchmark_source_sha256s != [candidate.adapter_source_sha256]:
+            reasons.append(f"{benchmark} adapter source differs from diagnostic layer")
+    diagnostic_cells = [
+        cell
+        for cell in diagnostic.cells
+        if (cell.provider, cell.model) == (provider, model)
+        and cell.endpoint_status == "available"
+        and cell.success_rate is not None
+    ]
+    diagnostic_rates = [
+        rate for cell in diagnostic_cells if (rate := cell.success_rate) is not None
+    ]
+    diagnostic_rate = sum(diagnostic_rates) / len(diagnostic_rates) if diagnostic_rates else None
+    return LayeredModelResult(
+        provider=provider,
+        model=model,
+        diagnostic_success_rate=diagnostic_rate,
+        external_success_rate=rates,
+        ready=not reasons,
+        reasons=reasons,
+    )
+
+
+def _external_comparability_reasons(
+    external_reports: Sequence[tuple[LayerEvidence, ExternalBenchmarkReport]],
+    endpoints: list[tuple[str, str]],
+) -> list[str]:
+    global_missing: list[str] = []
+    for benchmark in ("webarena_verified", "visualwebarena"):
+        comparable = [
+            report
+            for _evidence, report in external_reports
+            if report.benchmark == benchmark and (report.provider, report.model) in endpoints
+        ]
+        if len({report.backend_configuration_sha256 for report in comparable}) > 1:
+            global_missing.append(f"{benchmark} reports use different backend configurations")
+        package_sets = {tuple(sorted(report.package_versions.items())) for report in comparable}
+        if len(package_sets) > 1:
+            global_missing.append(f"{benchmark} reports use different package versions")
+
+    return global_missing
 
 
 __all__ = [

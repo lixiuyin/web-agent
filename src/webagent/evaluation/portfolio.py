@@ -173,47 +173,13 @@ def analyze_empirical_portfolio(
         if status == "available":
             available_endpoints.add((key[0], key[1]))
 
-    for (provider, model, day), cell_runs in sorted(by_cell.items()):
-        tasks = _unique_tasks([task for _evidence, values in cell_runs for task in values])
-        endpoint_status = cell_endpoint_status[(provider, model, day)]
-        if endpoint_status == "available":
+    for key, cell_runs in sorted(by_cell.items()):
+        cell, tasks = _analyze_portfolio_cell(key, cell_runs, cell_endpoint_status[key])
+        if cell.endpoint_status == "available":
             all_tasks.extend(tasks)
-        generality = analyze_generality(tasks)
-        long_horizon = analyze_long_horizon(tasks)
-        reasons: list[str] = []
-        if endpoint_status == "unavailable":
-            reasons.append(
-                "planner endpoint unavailable: every planner attempt failed before any action"
-            )
-        elif generality.status != "ready":
-            reasons.extend(generality.missing_requirements)
-        if endpoint_status == "available" and long_horizon.status != "available":
-            reasons.append(long_horizon.reason or "long-horizon evidence is unavailable")
-        suites = {evidence.suite for evidence, _values in cell_runs}
-        if endpoint_status == "available" and len(suites) < 3:
-            reasons.append("requires at least 3 complementary suites per model/date cell")
-        ready = not reasons
-        if ready:
-            complete_dates[(provider, model)].add(day)
-        cells.append(
-            PortfolioCell(
-                provider=provider,
-                model=model,
-                date=day,
-                report_count=len(cell_runs),
-                suite_count=len(suites),
-                task_count=len(tasks),
-                success_rate=_success_rate(tasks) if endpoint_status == "available" else None,
-                endpoint_status=endpoint_status,
-                failures=analyze_failures(tasks),
-                calibration=analyze_calibration(tasks),
-                transfer=analyze_transfer(tasks) if endpoint_status == "available" else None,
-                generality=generality,
-                long_horizon=long_horizon,
-                ready=ready,
-                reasons=reasons,
-            )
-        )
+        if cell.ready:
+            complete_dates[(cell.provider, cell.model)].add(cell.date)
+        cells.append(cell)
     missing: list[str] = []
     endpoints = sorted(available_endpoints)
     comparable_inputs = [
@@ -224,16 +190,11 @@ def analyze_empirical_portfolio(
     ]
     agent_source_sha256s = sorted({item.agent_source_sha256 for item in comparable_inputs})
     benchmark_source_sha256s = sorted({item.benchmark_source_sha256 for item in comparable_inputs})
-    if len(endpoints) < minimum_models:
-        missing.append(f"requires at least {minimum_models} provider/model endpoints")
-    if len(requested) > 3:
-        missing.append("allows at most 3 provider/model endpoints")
-    if len(agent_source_sha256s) != 1:
-        missing.append("requires one immutable agent source fingerprint across comparable cells")
-    if len(benchmark_source_sha256s) != 1:
-        missing.append(
-            "requires one immutable benchmark source fingerprint across comparable cells"
+    missing.extend(
+        _portfolio_comparability_reasons(
+            endpoints, requested, minimum_models, agent_source_sha256s, benchmark_source_sha256s
         )
+    )
     common_dates = (
         sorted(set.intersection(*(complete_dates[endpoint] for endpoint in endpoints)))
         if endpoints and all(endpoint in complete_dates for endpoint in endpoints)
@@ -333,3 +294,66 @@ __all__ = [
     "load_empirical_portfolio",
     "write_empirical_portfolio",
 ]
+
+
+def _analyze_portfolio_cell(
+    key: tuple[str, str, str],
+    cell_runs: Sequence[tuple[PortfolioInput, Sequence[TaskEvaluation]]],
+    endpoint_status: Literal["available", "unavailable"],
+) -> tuple[PortfolioCell, list[TaskEvaluation]]:
+    provider, model, day = key
+    tasks = _unique_tasks([task for _evidence, values in cell_runs for task in values])
+    generality = analyze_generality(tasks)
+    long_horizon = analyze_long_horizon(tasks)
+    reasons: list[str] = []
+    if endpoint_status == "unavailable":
+        reasons.append(
+            "planner endpoint unavailable: every planner attempt failed before any action"
+        )
+    elif generality.status != "ready":
+        reasons.extend(generality.missing_requirements)
+    if endpoint_status == "available" and long_horizon.status != "available":
+        reasons.append(long_horizon.reason or "long-horizon evidence is unavailable")
+    suites = {evidence.suite for evidence, _values in cell_runs}
+    if endpoint_status == "available" and len(suites) < 3:
+        reasons.append("requires at least 3 complementary suites per model/date cell")
+    ready = not reasons
+    cell = PortfolioCell(
+        provider=provider,
+        model=model,
+        date=day,
+        report_count=len(cell_runs),
+        suite_count=len(suites),
+        task_count=len(tasks),
+        success_rate=_success_rate(tasks) if endpoint_status == "available" else None,
+        endpoint_status=endpoint_status,
+        failures=analyze_failures(tasks),
+        calibration=analyze_calibration(tasks),
+        transfer=analyze_transfer(tasks) if endpoint_status == "available" else None,
+        generality=generality,
+        long_horizon=long_horizon,
+        ready=ready,
+        reasons=reasons,
+    )
+    return cell, tasks
+
+
+def _portfolio_comparability_reasons(
+    endpoints: list[tuple[str, str]],
+    requested: list[tuple[str, str]],
+    minimum_models: int,
+    agent_source_sha256s: list[str],
+    benchmark_source_sha256s: list[str],
+) -> list[str]:
+    missing: list[str] = []
+    if len(endpoints) < minimum_models:
+        missing.append(f"requires at least {minimum_models} provider/model endpoints")
+    if len(requested) > 3:
+        missing.append("allows at most 3 provider/model endpoints")
+    if len(agent_source_sha256s) != 1:
+        missing.append("requires one immutable agent source fingerprint across comparable cells")
+    if len(benchmark_source_sha256s) != 1:
+        missing.append(
+            "requires one immutable benchmark source fingerprint across comparable cells"
+        )
+    return missing

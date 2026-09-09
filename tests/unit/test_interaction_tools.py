@@ -426,6 +426,33 @@ async def test_get_search_results_show_all(tool_executor):
     assert len(result.data["results"]) == 2
 
 
+async def test_get_search_results_rejects_residual_split_version_pdf_results(
+    tool_executor, mock_browser
+):
+    mock_browser.get_search_results = AsyncMock(
+        return_value={
+            "success": True,
+            "engine": "bing",
+            "query": "Qwen3.8 technical report PDF",
+            "count": 2,
+            "results": [
+                {"title": "Qwen3.8", "url": "https://github.com/QwenLM/Qwen3.8"},
+                {
+                    "title": "Qwen3 Technical Report",
+                    "url": "https://arxiv.org/pdf/2505.09388",
+                },
+            ],
+        }
+    )
+
+    result = await tool_executor.execute(
+        ToolCall(tool_name="get_search_results", parameters={}, reasoning="Inspect results")
+    )
+
+    assert result.success is False
+    assert "irrelevant residual results" in (result.error or "")
+
+
 @pytest.mark.asyncio
 async def test_get_search_results_invalid_max_results(tool_executor):
     """Test invalid max_results parameter."""

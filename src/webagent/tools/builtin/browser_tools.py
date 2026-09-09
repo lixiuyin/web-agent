@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from webagent.browser.reference_selectors import is_observed_selector, reference_parts
 from webagent.core.models import ToolResult
 from webagent.tools.builtin._base import BrowserToolBase
 from webagent.tools.registry import tool
@@ -31,6 +32,10 @@ def _resolve_selector(selector: dict[str, str]) -> str:
     - {"type": "text", "value": "Submit"} -> text="Submit"
     - {"type": "css", "value": "#submit-btn"} -> #submit-btn
     """
+    if is_observed_selector(selector):
+        raise ValueError(
+            "Observation references require registry dispatch; refusing an unbound selector"
+        )
     sel_type = selector["type"]
     sel_value = selector["value"]
     if sel_type == "css":
@@ -45,6 +50,9 @@ def _resolve_selector(selector: dict[str, str]) -> str:
 def _validate_selector(selector: Any) -> None:
     if not isinstance(selector, dict):
         raise ValueError("selector must be {type, value}")
+    if is_observed_selector(selector):
+        reference_parts(selector)
+        return
     if selector.get("type") not in ("text", "css"):
         raise ValueError("selector.type must be 'text' or 'css'")
     if not isinstance(selector.get("value"), str):
@@ -83,11 +91,15 @@ class GotoTool(BrowserToolBase):
         )
 
 
-@tool("click", "Click element. params: selector={type:'text'|'css', value:(string)}, force=false")
+@tool(
+    "click",
+    "Click element. params: selector={type:'ref'|'text'|'css', value:(string)}, force=false",
+)
 class ClickTool(BrowserToolBase):
-    """Click on an element using text or CSS selector.
+    """Click an observed element reference or a legacy text/CSS selector.
 
     Examples:
+    - Click by observed ref: {"selector": {"type": "ref", "value": "obs/f0:e0"}}
     - Click by text: {"selector": {"type": "text", "value": "Submit Button"}}
     - Click by CSS: {"selector": {"type": "css", "value": "#submit-btn"}}
     - Click with force: {"selector": {"type": "text", "value": "Link"}, "force": true}
@@ -163,12 +175,13 @@ class ClickLinkTool(BrowserToolBase):
 
 @tool(
     "type",
-    "Type text into element. params: selector={type:'text'|'css', value:(string)}, text (string), delay_ms=50",
+    "Type text into element. params: selector={type:'ref'|'text'|'css', value:(string)}, text (string), delay_ms=50",
 )
 class TypeTool(BrowserToolBase):
-    """Type text into an input field or textarea.
+    """Type into an observed element reference or legacy text/CSS target.
 
     Examples:
+    - Type by observed ref: {"selector": {"type": "ref", "value": "obs/f0:e0"}, "text": "query"}
     - Type by text selector: {"selector": {"type": "text", "value": "Search"}, "text": "query"}
     - Type by CSS selector: {"selector": {"type": "css", "value": "#search-box"}, "text": "hello"}
     - With custom delay: {"selector": {"type": "text", "value": "Input"}, "text": "text", "delay_ms": 100}
@@ -194,7 +207,7 @@ class TypeTool(BrowserToolBase):
 
 @tool(
     "press",
-    "Press keyboard key. params: key (string), selector={type:'text'|'css', value:(string)}?",
+    "Press keyboard key. params: key (string), selector={type:'ref'|'text'|'css', value:(string)}?",
 )
 class PressTool(BrowserToolBase):
     """Press a keyboard key, optionally on a specific element.
@@ -222,7 +235,10 @@ class PressTool(BrowserToolBase):
         return ToolResult(success=False, tool_name="press", error=resp.get("error", "Press failed"))
 
 
-@tool("scroll", "Scroll page. params: direction='up'|'down', amount_px=500")
+@tool(
+    "scroll",
+    "Scroll page or a listed frame. params: direction='up'|'down', amount_px=500, frame_index?",
+)
 class ScrollTool(BrowserToolBase):
     def validate_params(self, params: dict[str, Any]) -> None:
         if params.get("direction") and params["direction"] not in ("up", "down"):
@@ -231,6 +247,14 @@ class ScrollTool(BrowserToolBase):
     async def execute(self, params: dict[str, Any]) -> ToolResult:
         direction = str(params.get("direction", "down"))
         amount = int(params.get("amount_px", 500))
+        if "frame_index" in params:
+            frame = self.browser.page.frames[params["frame_index"]]
+            await frame.evaluate(
+                "dy => window.scrollBy(0, dy)", amount if direction == "down" else -amount
+            )
+            return ToolResult(
+                success=True, tool_name="scroll", data={**params, "reobserve_required": True}
+            )
         resp = await self.browser.scroll(direction=direction, amount=amount)
         if resp.get("success"):
             return ToolResult(success=True, tool_name="scroll", data=resp)

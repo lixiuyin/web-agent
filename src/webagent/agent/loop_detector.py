@@ -7,6 +7,7 @@ providing nudges to help break the loop and continue progress.
 from __future__ import annotations
 
 import hashlib
+import json
 import logging
 from collections import Counter
 from itertools import pairwise
@@ -97,6 +98,7 @@ class LoopDetector:
         page_url: str,
         page_hash: str | None = None,
         parameters: dict[str, Any] | None = None,
+        observation_id: str | None = None,
     ) -> None:
         """Record an action and check for loops.
 
@@ -105,16 +107,16 @@ class LoopDetector:
             page_url: Current page URL
             page_hash: Hash of page content for detecting stagnation
             parameters: Optional tool parameters for finer fingerprinting
+            observation_id: Capture nonce to exclude from reference fingerprints
         """
         # Create action signature
         if parameters:
-            # Include key parameters in signature
-            param_str = ",".join(
-                f"{k}={v}"
-                for k, v in sorted(parameters.items())
-                if isinstance(v, (str, int, float))
-            )
-            action_sig = f"{tool_name}:{param_str}"
+            # Nested selectors matter; omit only the current capture nonce.
+            # Hash values rather than retaining form data in detector state.
+            param_str = json.dumps(parameters, sort_keys=True, ensure_ascii=False)
+            if observation_id:
+                param_str = param_str.replace(observation_id, "<observation>")
+            action_sig = f"{tool_name}:{hashlib.sha256(param_str.encode()).hexdigest()}"
         else:
             action_sig = tool_name
 
@@ -277,13 +279,20 @@ class LoopDetector:
         if len(set(recent_hashes)) != 1:
             return False
 
-        if self._recently_all_non_navigation():
+        if self._recently_all_non_navigation() or self._distinct_form_entries():
             logger.debug(
                 "Skipping page_stagnation: all recent actions are non-navigation tools (%s)",
                 [a.split(":")[0] for a in self.recent_actions],
             )
             return False
         return True
+
+    def _distinct_form_entries(self) -> bool:
+        """Different form fields can progress without changing the page text."""
+        actions = self.recent_actions[-self.threshold :]
+        return len(set(actions)) == len(actions) and all(
+            action.split(":", 1)[0] in {"type", "select_dropdown"} for action in actions
+        )
 
     def _is_url_oscillation(self) -> bool:
         """Priority 3: bouncing between exactly 2 URLs.
@@ -302,6 +311,8 @@ class LoopDetector:
 
     def _is_action_variety_no_progress(self) -> bool:
         """Priority 4: many different actions but still only ≤2 distinct pages."""
+        if self._distinct_form_entries():
+            return False
         if len(self.recent_actions) < self.window_size:
             return False
         if len(set(self.recent_actions)) < self.threshold:
@@ -328,21 +339,23 @@ class LoopDetector:
         if self._loop_type == "search_churn":
             return (
                 "You have rewritten the same discovery search for several consecutive actions "
-                "without opening evidence. Stop paraphrasing the query. Inspect the current "
-                "structured results with get_search_results, then open a grounded relevant "
-                "official candidate. Use one materially different engine or site-scoped query "
-                "only if no relevant candidate is visible. For latest tasks, continue only the "
-                "distinct searches still required by the explicit policy checklist."
+                "without opening evidence. Stop paraphrasing the query. Use get_search_results "
+                "only when the immediately preceding search succeeded; a failed search page may "
+                "contain residual results that are not evidence. Otherwise open an already "
+                "grounded official page, follow its visible publisher or repository-owner "
+                "navigation, and inspect that index. Use one materially different engine or "
+                "site-scoped query only if required by the explicit policy checklist."
             )
 
         # If mostly research/extraction tools, guide toward completion
         if self._is_research_loop():
             return (
                 "IMPORTANT: You have been extracting information for many steps. "
-                "You likely already have enough data to answer the task. "
-                "STOP searching and call the 'done' tool NOW with a comprehensive "
-                "summary of everything you have found so far. Include the figure "
-                "caption, textual descriptions, and any key findings from the PDF."
+                "Review the facts already returned against the actual task. If they answer "
+                "the requested fields and applicable evidence gates are satisfied, call 'done' "
+                "with a concise, grounded answer now. Otherwise identify the specific missing "
+                "fact and take one materially different action to obtain it. Do not repeat "
+                "the same extraction or introduce an unrequested document-analysis workflow."
             )
 
         if self._loop_type == "scroll_churn":

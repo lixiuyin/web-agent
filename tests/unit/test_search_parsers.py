@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
+import pytest
+
 from webagent.browser.search_parsers import (
     detect_search_engine,
     extract_keyword_words,
@@ -346,3 +348,19 @@ class TestExtractKeywordWords:
             "transformer",
             "architecture",
         ]
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "https://example.test/?next=https://google.com/search",
+        "https://bing.com.example.test/search",
+        "https://notbing.com/search",
+        "https://google.evil.test/",
+        "https://duckduckgo.com@evil.test/",
+        "https://[invalid",
+        "file://google.com/search",
+    ],
+)
+def test_engine_detection_rejects_non_provider_authorities(url):
+    assert detect_search_engine(url) is None

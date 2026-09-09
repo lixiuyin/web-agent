@@ -5,8 +5,11 @@ from __future__ import annotations
 from pathlib import Path
 
 import fitz  # type: ignore[import-untyped]
-from benchmarks.suites.document_figures.fast_path import build_benchmark_corpus, run_benchmark
 
+from webagent.benchmarks.suites.document_figures.fast_path import (
+    build_benchmark_corpus,
+    run_benchmark,
+)
 from webagent.utils.pdf_figures import (
     detect_and_render_local_figure,
     detect_local_figure_regions,

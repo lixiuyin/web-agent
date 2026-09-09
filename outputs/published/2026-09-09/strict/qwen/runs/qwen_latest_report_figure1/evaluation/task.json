@@ -1,0 +1,256 @@
+{
+  "task_id": "qwen_latest_report_figure1",
+  "category": "strict_search_pdf_figure",
+  "goal": "Find the most recent official Qwen technical report PDF as of today using browser search only. Compare candidates and dates, explicitly state the selected report's exact publication or file date from first-party page/file-history evidence on a separate line labeled 'Selected report date:', cite the exact official PDF page URL, download the PDF, then interpret Figure 1 by explaining its purpose and key architectural findings.",
+  "passed": true,
+  "score": 1.0,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 269.55342531204224,
+  "steps": 21,
+  "action_count": 20,
+  "failed_action_count": 3,
+  "planner_attempt_count": 21,
+  "planner_failure_count": 0,
+  "planner_tokens": 394929,
+  "answer_assertion_count": 9,
+  "answer_assertion_passed": 9,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "held_out_setting",
+  "task_family": "latest_official_report_figure_interpretation",
+  "setting_id": "search_to_first_party_pdf",
+  "leakage_group": "qwen_official_report_landscape_2026_08",
+  "target_failure_modes": [
+    "search_recency",
+    "source_grounding",
+    "document_download",
+    "figure_detection",
+    "figure_interpretation",
+    "false_completion"
+  ],
+  "feedback": {
+    "kind": "verifiable",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "long",
+  "scenario": "search_discovery",
+  "environment": "public_web",
+  "entry_mode": "search",
+  "risk_scope": "read_only",
+  "source_origins": [
+    "https://github.com"
+  ],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 20,
+    "distinct_tool_count": 7,
+    "tool_entropy_bits": 2.5464393446710156,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 1,
+    "recovery_count": 3,
+    "minimum_window_entropy_bits": 0.7219280948873623,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 3,
+    "stagnation_onset_step": null,
+    "replan_count": 0,
+    "strategy_switch_count": 0,
+    "replan_rate": 0.0,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 0.9,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 21,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "Qwen3.8-Flash-Next",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "**Selected report: \"Qwen3.8-Flash-Next\" technical report (Qwen Team, Alibaba Group) — the most recent official Qwen technical report PDF found as of 2026-09-09.**\n\nSelected report date: 2026-08-26 (2026-08-26T12:29:38Z UTC) — kind: report-file last-commit/update date for `tech_report.pdf` itself, read from first-party GitHub file-history evidence on the PDF's own blob page (`relative-time` datetime on https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf and its \"History\"/\"View commit history for this file\" links). Note: the repository root listing showed a later date, Aug 27, 2026 (2026-08-27T07:29:26Z), but that belongs to other repository files/the root listing, not to `tech_report.pdf`, so it is not cited as the report date.\n\n**Official PDF page URL (cited primary source):** https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf\n**Raw PDF URL actually downloaded:** https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf\n**Local file:** /Users/lixiuyin/Materials/Selected/web-agent/outputs/validation/2026-09-09-qwen-paired-r5/qwen/runs/qwen_latest_report_figure1/artifacts/downloads/qwen3.8-flash-next_tech_report.pdf\n\n**Candidate comparison (from browser-search evidence only):**\n- `QwenLM/Qwen3.8-Flash-Next` (official Qwen Team / Alibaba Group org repo; description: \"Qwen3.8-Flash-Next is the foundation model developed by Qwen Team, Alibaba Group\") — contains `tech_report.pdf`, dated 2026-08-26. Highest dotted subject version observed (3.8‑Flash‑Next), and it is the only candidate with an attached technical-report PDF in the official repo.\n- `QwenLM/Qwen3.8` (official repo, 4.1k stars) — README links only to qwen.ai release blogs (ids: qwen3.6-27b, qwen3.6-35b-a3b, qwen3.5, qwen3-next) and qwen.ai/chat.qwen.ai pages; no newer report PDF was enumerated there.\n- qwen.ai / chat.qwen.ai (official site) and HF org `Qwen` (incl. `Qwen/Qwen3.8-27B`) appeared in search results without report dates; none supplied a report PDF newer than the 2026-08-26 file. Wikipedia's \"last edited 31 August 2026\" is a third-party page-edit date, not a report publication date, so it was not used for ranking.\n- Selection rationale: the Qwen3.8-Flash-Next `tech_report.pdf` is first-party (official Qwen Team repository), matches the current top subject version, and has the latest explicit file-history date among observed official report artifacts.\n\n**Figure 1 interpretation (from pdf_analyze_figure on page 2 of the downloaded PDF):**\n\nCaption (verbatim source statement): \"Figure 1: Qwen3.8-Flash-Next architecture. Token mixing alternates three GDN layers with one QSA layer per block of four. Every sublayer reads and writes through GR, which widens the residual stream and gates the read elementwise. An n-gram embedding layer at Layer 2 scales capacity off the accelerator via host-memory prefetching. The MTP module reuses QSA indices across speculative decoding steps.\"\n\n- **Purpose:** Figure 1 is the whole-model architecture overview: it shows how input tokens flow through vocabulary embedding, the n-gram embedding layer, the repeated token-mixing/feed-forward blocks, and finally the prediction head plus MTP heads, making the four main design choices of Qwen3.8-Flash-Next legible at a glance.\n- **Labels directly read in the diagram:** Input Tokens; Vocabulary Embedding; N-gram Embedding Layer (Layer 2 only); Hidden States; Expanded Residual; GR Read; GR Write; MoE; QSA Layer (Qwen Sparse Attn); GDN Layer (Gated DeltaNet); Prediction Head; MTP Modules.\n- **Key architectural findings / design choices (caption-supported):**\n  1. **Hybrid token mixing (3:1):** each block of four layers alternates three Gated DeltaNet (GDN) layers with one Qwen Sparse Attention (QSA) layer — a linear-recurrent/attention mix rather than uniform attention.\n  2. **Gated Residual (GR) on every sublayer:** all sublayers read from and write to the residual stream through GR, which widens the residual stream (four branches) and applies an elementwise gate on the read, giving per-sublayer control of residual contributions.\n  3. **Off-accelerator capacity scaling:** a single n-gram embedding layer placed at Layer 2 adds capacity held outside accelerator memory, brought in via host-memory prefetching — capacity grows without adding backbone compute.\n  4. **Speculative decoding reuse:** the MTP (Multi-Token Prediction) module reuses the QSA indices across speculative decoding steps, so draft/verify steps share the sparse-attention index work.\n  5. **MoE feed-forward blocks** appear as the sublayer paired with token mixing in each block.\n- **Efficiency figures stated in the report text (not readable from the diagram's visual proportions):** 125B total parameters with ~6B activated per token, the Layer-2 n-gram table contributing ~51B parameters kept off the accelerator, QSA compressing the key sequence to reduce indexer cost from O(n²) to O(n²/r), GDN keeping a fixed-size recurrent state to limit decode-time memory traffic, and a reported ~1/9 training-FLOPs figure.\n- **Caveats:** Figure 1 contains no plots, curves or unlabeled data points, so no quantitative trend can be estimated from it; the component labels above are what is visibly painted, the four design claims come from the caption/body text, and adjacency of blocks in the diagram should not be read as a strict serial arrow chain beyond the embedding → blocks → head flow the figure depicts.",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_labeled_date",
+        "expected": {
+          "label": "Selected report date",
+          "date": "2026-08-26"
+        },
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "**Selected report: \"Qwen3.8-Flash-Next\" technical report (Qwen Team, Alibaba Group) — the most recent official Qwen technical report PDF found as of 2026-09-09.**\n\nSelected report date: 2026-08-26 (2026-08-26T12:29:38Z UTC) — kind: report-file last-commit/update date for `tech_report.pdf` itself, read from first-party GitHub file-history evidence on the PDF's own blob page (`relative-time` datetime on https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf and its \"History\"/\"View commit history for this file\" links). Note: the repository root listing showed a later date, Aug 27, 2026 (2026-08-27T07:29:26Z), but that belongs to other repository files/the root listing, not to `tech_report.pdf`, so it is not cited as the report date.\n\n**Official PDF page URL (cited primary source):** https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf\n**Raw PDF URL actually downloaded:** https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf\n**Local file:** /Users/lixiuyin/Materials/Selected/web-agent/outputs/validation/2026-09-09-qwen-paired-r5/qwen/runs/qwen_latest_report_figure1/artifacts/downloads/qwen3.8-flash-next_tech_report.pdf\n\n**Candidate comparison (from browser-search evidence only):**\n- `QwenLM/Qwen3.8-Flash-Next` (official Qwen Team / Alibaba Group org repo; description: \"Qwen3.8-Flash-Next is the foundation model developed by Qwen Team, Alibaba Group\") — contains `tech_report.pdf`, dated 2026-08-26. Highest dotted subject version observed (3.8‑Flash‑Next), and it is the only candidate with an attached technical-report PDF in the official repo.\n- `QwenLM/Qwen3.8` (official repo, 4.1k stars) — README links only to qwen.ai release blogs (ids: qwen3.6-27b, qwen3.6-35b-a3b, qwen3.5, qwen3-next) and qwen.ai/chat.qwen.ai pages; no newer report PDF was enumerated there.\n- qwen.ai / chat.qwen.ai (official site) and HF org `Qwen` (incl. `Qwen/Qwen3.8-27B`) appeared in search results without report dates; none supplied a report PDF newer than the 2026-08-26 file. Wikipedia's \"last edited 31 August 2026\" is a third-party page-edit date, not a report publication date, so it was not used for ranking.\n- Selection rationale: the Qwen3.8-Flash-Next `tech_report.pdf` is first-party (official Qwen Team repository), matches the current top subject version, and has the latest explicit file-history date among observed official report artifacts.\n\n**Figure 1 interpretation (from pdf_analyze_figure on page 2 of the downloaded PDF):**\n\nCaption (verbatim source statement): \"Figure 1: Qwen3.8-Flash-Next architecture. Token mixing alternates three GDN layers with one QSA layer per block of four. Every sublayer reads and writes through GR, which widens the residual stream and gates the read elementwise. An n-gram embedding layer at Layer 2 scales capacity off the accelerator via host-memory prefetching. The MTP module reuses QSA indices across speculative decoding steps.\"\n\n- **Purpose:** Figure 1 is the whole-model architecture overview: it shows how input tokens flow through vocabulary embedding, the n-gram embedding layer, the repeated token-mixing/feed-forward blocks, and finally the prediction head plus MTP heads, making the four main design choices of Qwen3.8-Flash-Next legible at a glance.\n- **Labels directly read in the diagram:** Input Tokens; Vocabulary Embedding; N-gram Embedding Layer (Layer 2 only); Hidden States; Expanded Residual; GR Read; GR Write; MoE; QSA Layer (Qwen Sparse Attn); GDN Layer (Gated DeltaNet); Prediction Head; MTP Modules.\n- **Key architectural findings / design choices (caption-supported):**\n  1. **Hybrid token mixing (3:1):** each block of four layers alternates three Gated DeltaNet (GDN) layers with one Qwen Sparse Attention (QSA) layer — a linear-recurrent/attention mix rather than uniform attention.\n  2. **Gated Residual (GR) on every sublayer:** all sublayers read from and write to the residual stream through GR, which widens the residual stream (four branches) and applies an elementwise gate on the read, giving per-sublayer control of residual contributions.\n  3. **Off-accelerator capacity scaling:** a single n-gram embedding layer placed at Layer 2 adds capacity held outside accelerator memory, brought in via host-memory prefetching — capacity grows without adding backbone compute.\n  4. **Speculative decoding reuse:** the MTP (Multi-Token Prediction) module reuses the QSA indices across speculative decoding steps, so draft/verify steps share the sparse-attention index work.\n  5. **MoE feed-forward blocks** appear as the sublayer paired with token mixing in each block.\n- **Efficiency figures stated in the report text (not readable from the diagram's visual proportions):** 125B total parameters with ~6B activated per token, the Layer-2 n-gram table contributing ~51B parameters kept off the accelerator, QSA compressing the key sequence to reduce indexer cost from O(n²) to O(n²/r), GDN keeping a fixed-size recurrent state to limit decode-time memory traffic, and a reported ~1/9 training-FLOPs figure.\n- **Caveats:** Figure 1 contains no plots, curves or unlabeled data points, so no quantitative trend can be estimated from it; the component labels above are what is visibly painted, the four design claims come from the caption/body text, and adjacency of blocks in the diagram should not be read as a strict serial arrow chain beyond the embedding → blocks → head flow the figure depicts.",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_document_url",
+        "expected": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "**Selected report: \"Qwen3.8-Flash-Next\" technical report (Qwen Team, Alibaba Group) — the most recent official Qwen technical report PDF found as of 2026-09-09.**\n\nSelected report date: 2026-08-26 (2026-08-26T12:29:38Z UTC) — kind: report-file last-commit/update date for `tech_report.pdf` itself, read from first-party GitHub file-history evidence on the PDF's own blob page (`relative-time` datetime on https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf and its \"History\"/\"View commit history for this file\" links). Note: the repository root listing showed a later date, Aug 27, 2026 (2026-08-27T07:29:26Z), but that belongs to other repository files/the root listing, not to `tech_report.pdf`, so it is not cited as the report date.\n\n**Official PDF page URL (cited primary source):** https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf\n**Raw PDF URL actually downloaded:** https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf\n**Local file:** /Users/lixiuyin/Materials/Selected/web-agent/outputs/validation/2026-09-09-qwen-paired-r5/qwen/runs/qwen_latest_report_figure1/artifacts/downloads/qwen3.8-flash-next_tech_report.pdf\n\n**Candidate comparison (from browser-search evidence only):**\n- `QwenLM/Qwen3.8-Flash-Next` (official Qwen Team / Alibaba Group org repo; description: \"Qwen3.8-Flash-Next is the foundation model developed by Qwen Team, Alibaba Group\") — contains `tech_report.pdf`, dated 2026-08-26. Highest dotted subject version observed (3.8‑Flash‑Next), and it is the only candidate with an attached technical-report PDF in the official repo.\n- `QwenLM/Qwen3.8` (official repo, 4.1k stars) — README links only to qwen.ai release blogs (ids: qwen3.6-27b, qwen3.6-35b-a3b, qwen3.5, qwen3-next) and qwen.ai/chat.qwen.ai pages; no newer report PDF was enumerated there.\n- qwen.ai / chat.qwen.ai (official site) and HF org `Qwen` (incl. `Qwen/Qwen3.8-27B`) appeared in search results without report dates; none supplied a report PDF newer than the 2026-08-26 file. Wikipedia's \"last edited 31 August 2026\" is a third-party page-edit date, not a report publication date, so it was not used for ranking.\n- Selection rationale: the Qwen3.8-Flash-Next `tech_report.pdf` is first-party (official Qwen Team repository), matches the current top subject version, and has the latest explicit file-history date among observed official report artifacts.\n\n**Figure 1 interpretation (from pdf_analyze_figure on page 2 of the downloaded PDF):**\n\nCaption (verbatim source statement): \"Figure 1: Qwen3.8-Flash-Next architecture. Token mixing alternates three GDN layers with one QSA layer per block of four. Every sublayer reads and writes through GR, which widens the residual stream and gates the read elementwise. An n-gram embedding layer at Layer 2 scales capacity off the accelerator via host-memory prefetching. The MTP module reuses QSA indices across speculative decoding steps.\"\n\n- **Purpose:** Figure 1 is the whole-model architecture overview: it shows how input tokens flow through vocabulary embedding, the n-gram embedding layer, the repeated token-mixing/feed-forward blocks, and finally the prediction head plus MTP heads, making the four main design choices of Qwen3.8-Flash-Next legible at a glance.\n- **Labels directly read in the diagram:** Input Tokens; Vocabulary Embedding; N-gram Embedding Layer (Layer 2 only); Hidden States; Expanded Residual; GR Read; GR Write; MoE; QSA Layer (Qwen Sparse Attn); GDN Layer (Gated DeltaNet); Prediction Head; MTP Modules.\n- **Key architectural findings / design choices (caption-supported):**\n  1. **Hybrid token mixing (3:1):** each block of four layers alternates three Gated DeltaNet (GDN) layers with one Qwen Sparse Attention (QSA) layer — a linear-recurrent/attention mix rather than uniform attention.\n  2. **Gated Residual (GR) on every sublayer:** all sublayers read from and write to the residual stream through GR, which widens the residual stream (four branches) and applies an elementwise gate on the read, giving per-sublayer control of residual contributions.\n  3. **Off-accelerator capacity scaling:** a single n-gram embedding layer placed at Layer 2 adds capacity held outside accelerator memory, brought in via host-memory prefetching — capacity grows without adding backbone compute.\n  4. **Speculative decoding reuse:** the MTP (Multi-Token Prediction) module reuses the QSA indices across speculative decoding steps, so draft/verify steps share the sparse-attention index work.\n  5. **MoE feed-forward blocks** appear as the sublayer paired with token mixing in each block.\n- **Efficiency figures stated in the report text (not readable from the diagram's visual proportions):** 125B total parameters with ~6B activated per token, the Layer-2 n-gram table contributing ~51B parameters kept off the accelerator, QSA compressing the key sequence to reduce indexer cost from O(n²) to O(n²/r), GDN keeping a fixed-size recurrent state to limit decode-time memory traffic, and a reported ~1/9 training-FLOPs figure.\n- **Caveats:** Figure 1 contains no plots, curves or unlabeled data points, so no quantitative trend can be estimated from it; the component labels above are what is visibly painted, the four design claims come from the caption/body text, and adjacency of blocks in the diagram should not be read as a strict serial arrow chain beyond the embedding → blocks → head flow the figure depicts.",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "GDN",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "**Selected report: \"Qwen3.8-Flash-Next\" technical report (Qwen Team, Alibaba Group) — the most recent official Qwen technical report PDF found as of 2026-09-09.**\n\nSelected report date: 2026-08-26 (2026-08-26T12:29:38Z UTC) — kind: report-file last-commit/update date for `tech_report.pdf` itself, read from first-party GitHub file-history evidence on the PDF's own blob page (`relative-time` datetime on https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf and its \"History\"/\"View commit history for this file\" links). Note: the repository root listing showed a later date, Aug 27, 2026 (2026-08-27T07:29:26Z), but that belongs to other repository files/the root listing, not to `tech_report.pdf`, so it is not cited as the report date.\n\n**Official PDF page URL (cited primary source):** https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf\n**Raw PDF URL actually downloaded:** https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf\n**Local file:** /Users/lixiuyin/Materials/Selected/web-agent/outputs/validation/2026-09-09-qwen-paired-r5/qwen/runs/qwen_latest_report_figure1/artifacts/downloads/qwen3.8-flash-next_tech_report.pdf\n\n**Candidate comparison (from browser-search evidence only):**\n- `QwenLM/Qwen3.8-Flash-Next` (official Qwen Team / Alibaba Group org repo; description: \"Qwen3.8-Flash-Next is the foundation model developed by Qwen Team, Alibaba Group\") — contains `tech_report.pdf`, dated 2026-08-26. Highest dotted subject version observed (3.8‑Flash‑Next), and it is the only candidate with an attached technical-report PDF in the official repo.\n- `QwenLM/Qwen3.8` (official repo, 4.1k stars) — README links only to qwen.ai release blogs (ids: qwen3.6-27b, qwen3.6-35b-a3b, qwen3.5, qwen3-next) and qwen.ai/chat.qwen.ai pages; no newer report PDF was enumerated there.\n- qwen.ai / chat.qwen.ai (official site) and HF org `Qwen` (incl. `Qwen/Qwen3.8-27B`) appeared in search results without report dates; none supplied a report PDF newer than the 2026-08-26 file. Wikipedia's \"last edited 31 August 2026\" is a third-party page-edit date, not a report publication date, so it was not used for ranking.\n- Selection rationale: the Qwen3.8-Flash-Next `tech_report.pdf` is first-party (official Qwen Team repository), matches the current top subject version, and has the latest explicit file-history date among observed official report artifacts.\n\n**Figure 1 interpretation (from pdf_analyze_figure on page 2 of the downloaded PDF):**\n\nCaption (verbatim source statement): \"Figure 1: Qwen3.8-Flash-Next architecture. Token mixing alternates three GDN layers with one QSA layer per block of four. Every sublayer reads and writes through GR, which widens the residual stream and gates the read elementwise. An n-gram embedding layer at Layer 2 scales capacity off the accelerator via host-memory prefetching. The MTP module reuses QSA indices across speculative decoding steps.\"\n\n- **Purpose:** Figure 1 is the whole-model architecture overview: it shows how input tokens flow through vocabulary embedding, the n-gram embedding layer, the repeated token-mixing/feed-forward blocks, and finally the prediction head plus MTP heads, making the four main design choices of Qwen3.8-Flash-Next legible at a glance.\n- **Labels directly read in the diagram:** Input Tokens; Vocabulary Embedding; N-gram Embedding Layer (Layer 2 only); Hidden States; Expanded Residual; GR Read; GR Write; MoE; QSA Layer (Qwen Sparse Attn); GDN Layer (Gated DeltaNet); Prediction Head; MTP Modules.\n- **Key architectural findings / design choices (caption-supported):**\n  1. **Hybrid token mixing (3:1):** each block of four layers alternates three Gated DeltaNet (GDN) layers with one Qwen Sparse Attention (QSA) layer — a linear-recurrent/attention mix rather than uniform attention.\n  2. **Gated Residual (GR) on every sublayer:** all sublayers read from and write to the residual stream through GR, which widens the residual stream (four branches) and applies an elementwise gate on the read, giving per-sublayer control of residual contributions.\n  3. **Off-accelerator capacity scaling:** a single n-gram embedding layer placed at Layer 2 adds capacity held outside accelerator memory, brought in via host-memory prefetching — capacity grows without adding backbone compute.\n  4. **Speculative decoding reuse:** the MTP (Multi-Token Prediction) module reuses the QSA indices across speculative decoding steps, so draft/verify steps share the sparse-attention index work.\n  5. **MoE feed-forward blocks** appear as the sublayer paired with token mixing in each block.\n- **Efficiency figures stated in the report text (not readable from the diagram's visual proportions):** 125B total parameters with ~6B activated per token, the Layer-2 n-gram table contributing ~51B parameters kept off the accelerator, QSA compressing the key sequence to reduce indexer cost from O(n²) to O(n²/r), GDN keeping a fixed-size recurrent state to limit decode-time memory traffic, and a reported ~1/9 training-FLOPs figure.\n- **Caveats:** Figure 1 contains no plots, curves or unlabeled data points, so no quantitative trend can be estimated from it; the component labels above are what is visibly painted, the four design claims come from the caption/body text, and adjacency of blocks in the diagram should not be read as a strict serial arrow chain beyond the embedding → blocks → head flow the figure depicts.",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "QSA",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "**Selected report: \"Qwen3.8-Flash-Next\" technical report (Qwen Team, Alibaba Group) — the most recent official Qwen technical report PDF found as of 2026-09-09.**\n\nSelected report date: 2026-08-26 (2026-08-26T12:29:38Z UTC) — kind: report-file last-commit/update date for `tech_report.pdf` itself, read from first-party GitHub file-history evidence on the PDF's own blob page (`relative-time` datetime on https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf and its \"History\"/\"View commit history for this file\" links). Note: the repository root listing showed a later date, Aug 27, 2026 (2026-08-27T07:29:26Z), but that belongs to other repository files/the root listing, not to `tech_report.pdf`, so it is not cited as the report date.\n\n**Official PDF page URL (cited primary source):** https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf\n**Raw PDF URL actually downloaded:** https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf\n**Local file:** /Users/lixiuyin/Materials/Selected/web-agent/outputs/validation/2026-09-09-qwen-paired-r5/qwen/runs/qwen_latest_report_figure1/artifacts/downloads/qwen3.8-flash-next_tech_report.pdf\n\n**Candidate comparison (from browser-search evidence only):**\n- `QwenLM/Qwen3.8-Flash-Next` (official Qwen Team / Alibaba Group org repo; description: \"Qwen3.8-Flash-Next is the foundation model developed by Qwen Team, Alibaba Group\") — contains `tech_report.pdf`, dated 2026-08-26. Highest dotted subject version observed (3.8‑Flash‑Next), and it is the only candidate with an attached technical-report PDF in the official repo.\n- `QwenLM/Qwen3.8` (official repo, 4.1k stars) — README links only to qwen.ai release blogs (ids: qwen3.6-27b, qwen3.6-35b-a3b, qwen3.5, qwen3-next) and qwen.ai/chat.qwen.ai pages; no newer report PDF was enumerated there.\n- qwen.ai / chat.qwen.ai (official site) and HF org `Qwen` (incl. `Qwen/Qwen3.8-27B`) appeared in search results without report dates; none supplied a report PDF newer than the 2026-08-26 file. Wikipedia's \"last edited 31 August 2026\" is a third-party page-edit date, not a report publication date, so it was not used for ranking.\n- Selection rationale: the Qwen3.8-Flash-Next `tech_report.pdf` is first-party (official Qwen Team repository), matches the current top subject version, and has the latest explicit file-history date among observed official report artifacts.\n\n**Figure 1 interpretation (from pdf_analyze_figure on page 2 of the downloaded PDF):**\n\nCaption (verbatim source statement): \"Figure 1: Qwen3.8-Flash-Next architecture. Token mixing alternates three GDN layers with one QSA layer per block of four. Every sublayer reads and writes through GR, which widens the residual stream and gates the read elementwise. An n-gram embedding layer at Layer 2 scales capacity off the accelerator via host-memory prefetching. The MTP module reuses QSA indices across speculative decoding steps.\"\n\n- **Purpose:** Figure 1 is the whole-model architecture overview: it shows how input tokens flow through vocabulary embedding, the n-gram embedding layer, the repeated token-mixing/feed-forward blocks, and finally the prediction head plus MTP heads, making the four main design choices of Qwen3.8-Flash-Next legible at a glance.\n- **Labels directly read in the diagram:** Input Tokens; Vocabulary Embedding; N-gram Embedding Layer (Layer 2 only); Hidden States; Expanded Residual; GR Read; GR Write; MoE; QSA Layer (Qwen Sparse Attn); GDN Layer (Gated DeltaNet); Prediction Head; MTP Modules.\n- **Key architectural findings / design choices (caption-supported):**\n  1. **Hybrid token mixing (3:1):** each block of four layers alternates three Gated DeltaNet (GDN) layers with one Qwen Sparse Attention (QSA) layer — a linear-recurrent/attention mix rather than uniform attention.\n  2. **Gated Residual (GR) on every sublayer:** all sublayers read from and write to the residual stream through GR, which widens the residual stream (four branches) and applies an elementwise gate on the read, giving per-sublayer control of residual contributions.\n  3. **Off-accelerator capacity scaling:** a single n-gram embedding layer placed at Layer 2 adds capacity held outside accelerator memory, brought in via host-memory prefetching — capacity grows without adding backbone compute.\n  4. **Speculative decoding reuse:** the MTP (Multi-Token Prediction) module reuses the QSA indices across speculative decoding steps, so draft/verify steps share the sparse-attention index work.\n  5. **MoE feed-forward blocks** appear as the sublayer paired with token mixing in each block.\n- **Efficiency figures stated in the report text (not readable from the diagram's visual proportions):** 125B total parameters with ~6B activated per token, the Layer-2 n-gram table contributing ~51B parameters kept off the accelerator, QSA compressing the key sequence to reduce indexer cost from O(n²) to O(n²/r), GDN keeping a fixed-size recurrent state to limit decode-time memory traffic, and a reported ~1/9 training-FLOPs figure.\n- **Caveats:** Figure 1 contains no plots, curves or unlabeled data points, so no quantitative trend can be estimated from it; the component labels above are what is visibly painted, the four design claims come from the caption/body text, and adjacency of blocks in the diagram should not be read as a strict serial arrow chain beyond the embedding → blocks → head flow the figure depicts.",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "Gated Residual",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "**Selected report: \"Qwen3.8-Flash-Next\" technical report (Qwen Team, Alibaba Group) — the most recent official Qwen technical report PDF found as of 2026-09-09.**\n\nSelected report date: 2026-08-26 (2026-08-26T12:29:38Z UTC) — kind: report-file last-commit/update date for `tech_report.pdf` itself, read from first-party GitHub file-history evidence on the PDF's own blob page (`relative-time` datetime on https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf and its \"History\"/\"View commit history for this file\" links). Note: the repository root listing showed a later date, Aug 27, 2026 (2026-08-27T07:29:26Z), but that belongs to other repository files/the root listing, not to `tech_report.pdf`, so it is not cited as the report date.\n\n**Official PDF page URL (cited primary source):** https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf\n**Raw PDF URL actually downloaded:** https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf\n**Local file:** /Users/lixiuyin/Materials/Selected/web-agent/outputs/validation/2026-09-09-qwen-paired-r5/qwen/runs/qwen_latest_report_figure1/artifacts/downloads/qwen3.8-flash-next_tech_report.pdf\n\n**Candidate comparison (from browser-search evidence only):**\n- `QwenLM/Qwen3.8-Flash-Next` (official Qwen Team / Alibaba Group org repo; description: \"Qwen3.8-Flash-Next is the foundation model developed by Qwen Team, Alibaba Group\") — contains `tech_report.pdf`, dated 2026-08-26. Highest dotted subject version observed (3.8‑Flash‑Next), and it is the only candidate with an attached technical-report PDF in the official repo.\n- `QwenLM/Qwen3.8` (official repo, 4.1k stars) — README links only to qwen.ai release blogs (ids: qwen3.6-27b, qwen3.6-35b-a3b, qwen3.5, qwen3-next) and qwen.ai/chat.qwen.ai pages; no newer report PDF was enumerated there.\n- qwen.ai / chat.qwen.ai (official site) and HF org `Qwen` (incl. `Qwen/Qwen3.8-27B`) appeared in search results without report dates; none supplied a report PDF newer than the 2026-08-26 file. Wikipedia's \"last edited 31 August 2026\" is a third-party page-edit date, not a report publication date, so it was not used for ranking.\n- Selection rationale: the Qwen3.8-Flash-Next `tech_report.pdf` is first-party (official Qwen Team repository), matches the current top subject version, and has the latest explicit file-history date among observed official report artifacts.\n\n**Figure 1 interpretation (from pdf_analyze_figure on page 2 of the downloaded PDF):**\n\nCaption (verbatim source statement): \"Figure 1: Qwen3.8-Flash-Next architecture. Token mixing alternates three GDN layers with one QSA layer per block of four. Every sublayer reads and writes through GR, which widens the residual stream and gates the read elementwise. An n-gram embedding layer at Layer 2 scales capacity off the accelerator via host-memory prefetching. The MTP module reuses QSA indices across speculative decoding steps.\"\n\n- **Purpose:** Figure 1 is the whole-model architecture overview: it shows how input tokens flow through vocabulary embedding, the n-gram embedding layer, the repeated token-mixing/feed-forward blocks, and finally the prediction head plus MTP heads, making the four main design choices of Qwen3.8-Flash-Next legible at a glance.\n- **Labels directly read in the diagram:** Input Tokens; Vocabulary Embedding; N-gram Embedding Layer (Layer 2 only); Hidden States; Expanded Residual; GR Read; GR Write; MoE; QSA Layer (Qwen Sparse Attn); GDN Layer (Gated DeltaNet); Prediction Head; MTP Modules.\n- **Key architectural findings / design choices (caption-supported):**\n  1. **Hybrid token mixing (3:1):** each block of four layers alternates three Gated DeltaNet (GDN) layers with one Qwen Sparse Attention (QSA) layer — a linear-recurrent/attention mix rather than uniform attention.\n  2. **Gated Residual (GR) on every sublayer:** all sublayers read from and write to the residual stream through GR, which widens the residual stream (four branches) and applies an elementwise gate on the read, giving per-sublayer control of residual contributions.\n  3. **Off-accelerator capacity scaling:** a single n-gram embedding layer placed at Layer 2 adds capacity held outside accelerator memory, brought in via host-memory prefetching — capacity grows without adding backbone compute.\n  4. **Speculative decoding reuse:** the MTP (Multi-Token Prediction) module reuses the QSA indices across speculative decoding steps, so draft/verify steps share the sparse-attention index work.\n  5. **MoE feed-forward blocks** appear as the sublayer paired with token mixing in each block.\n- **Efficiency figures stated in the report text (not readable from the diagram's visual proportions):** 125B total parameters with ~6B activated per token, the Layer-2 n-gram table contributing ~51B parameters kept off the accelerator, QSA compressing the key sequence to reduce indexer cost from O(n²) to O(n²/r), GDN keeping a fixed-size recurrent state to limit decode-time memory traffic, and a reported ~1/9 training-FLOPs figure.\n- **Caveats:** Figure 1 contains no plots, curves or unlabeled data points, so no quantitative trend can be estimated from it; the component labels above are what is visibly painted, the four design claims come from the caption/body text, and adjacency of blocks in the diagram should not be read as a strict serial arrow chain beyond the embedding → blocks → head flow the figure depicts.",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "n-gram",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "**Selected report: \"Qwen3.8-Flash-Next\" technical report (Qwen Team, Alibaba Group) — the most recent official Qwen technical report PDF found as of 2026-09-09.**\n\nSelected report date: 2026-08-26 (2026-08-26T12:29:38Z UTC) — kind: report-file last-commit/update date for `tech_report.pdf` itself, read from first-party GitHub file-history evidence on the PDF's own blob page (`relative-time` datetime on https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf and its \"History\"/\"View commit history for this file\" links). Note: the repository root listing showed a later date, Aug 27, 2026 (2026-08-27T07:29:26Z), but that belongs to other repository files/the root listing, not to `tech_report.pdf`, so it is not cited as the report date.\n\n**Official PDF page URL (cited primary source):** https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf\n**Raw PDF URL actually downloaded:** https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf\n**Local file:** /Users/lixiuyin/Materials/Selected/web-agent/outputs/validation/2026-09-09-qwen-paired-r5/qwen/runs/qwen_latest_report_figure1/artifacts/downloads/qwen3.8-flash-next_tech_report.pdf\n\n**Candidate comparison (from browser-search evidence only):**\n- `QwenLM/Qwen3.8-Flash-Next` (official Qwen Team / Alibaba Group org repo; description: \"Qwen3.8-Flash-Next is the foundation model developed by Qwen Team, Alibaba Group\") — contains `tech_report.pdf`, dated 2026-08-26. Highest dotted subject version observed (3.8‑Flash‑Next), and it is the only candidate with an attached technical-report PDF in the official repo.\n- `QwenLM/Qwen3.8` (official repo, 4.1k stars) — README links only to qwen.ai release blogs (ids: qwen3.6-27b, qwen3.6-35b-a3b, qwen3.5, qwen3-next) and qwen.ai/chat.qwen.ai pages; no newer report PDF was enumerated there.\n- qwen.ai / chat.qwen.ai (official site) and HF org `Qwen` (incl. `Qwen/Qwen3.8-27B`) appeared in search results without report dates; none supplied a report PDF newer than the 2026-08-26 file. Wikipedia's \"last edited 31 August 2026\" is a third-party page-edit date, not a report publication date, so it was not used for ranking.\n- Selection rationale: the Qwen3.8-Flash-Next `tech_report.pdf` is first-party (official Qwen Team repository), matches the current top subject version, and has the latest explicit file-history date among observed official report artifacts.\n\n**Figure 1 interpretation (from pdf_analyze_figure on page 2 of the downloaded PDF):**\n\nCaption (verbatim source statement): \"Figure 1: Qwen3.8-Flash-Next architecture. Token mixing alternates three GDN layers with one QSA layer per block of four. Every sublayer reads and writes through GR, which widens the residual stream and gates the read elementwise. An n-gram embedding layer at Layer 2 scales capacity off the accelerator via host-memory prefetching. The MTP module reuses QSA indices across speculative decoding steps.\"\n\n- **Purpose:** Figure 1 is the whole-model architecture overview: it shows how input tokens flow through vocabulary embedding, the n-gram embedding layer, the repeated token-mixing/feed-forward blocks, and finally the prediction head plus MTP heads, making the four main design choices of Qwen3.8-Flash-Next legible at a glance.\n- **Labels directly read in the diagram:** Input Tokens; Vocabulary Embedding; N-gram Embedding Layer (Layer 2 only); Hidden States; Expanded Residual; GR Read; GR Write; MoE; QSA Layer (Qwen Sparse Attn); GDN Layer (Gated DeltaNet); Prediction Head; MTP Modules.\n- **Key architectural findings / design choices (caption-supported):**\n  1. **Hybrid token mixing (3:1):** each block of four layers alternates three Gated DeltaNet (GDN) layers with one Qwen Sparse Attention (QSA) layer — a linear-recurrent/attention mix rather than uniform attention.\n  2. **Gated Residual (GR) on every sublayer:** all sublayers read from and write to the residual stream through GR, which widens the residual stream (four branches) and applies an elementwise gate on the read, giving per-sublayer control of residual contributions.\n  3. **Off-accelerator capacity scaling:** a single n-gram embedding layer placed at Layer 2 adds capacity held outside accelerator memory, brought in via host-memory prefetching — capacity grows without adding backbone compute.\n  4. **Speculative decoding reuse:** the MTP (Multi-Token Prediction) module reuses the QSA indices across speculative decoding steps, so draft/verify steps share the sparse-attention index work.\n  5. **MoE feed-forward blocks** appear as the sublayer paired with token mixing in each block.\n- **Efficiency figures stated in the report text (not readable from the diagram's visual proportions):** 125B total parameters with ~6B activated per token, the Layer-2 n-gram table contributing ~51B parameters kept off the accelerator, QSA compressing the key sequence to reduce indexer cost from O(n²) to O(n²/r), GDN keeping a fixed-size recurrent state to limit decode-time memory traffic, and a reported ~1/9 training-FLOPs figure.\n- **Caveats:** Figure 1 contains no plots, curves or unlabeled data points, so no quantitative trend can be estimated from it; the component labels above are what is visibly painted, the four design claims come from the caption/body text, and adjacency of blocks in the diagram should not be read as a strict serial arrow chain beyond the embedding → blocks → head flow the figure depicts.",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "answer_contains",
+        "expected": "MTP",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": "**Selected report: \"Qwen3.8-Flash-Next\" technical report (Qwen Team, Alibaba Group) — the most recent official Qwen technical report PDF found as of 2026-09-09.**\n\nSelected report date: 2026-08-26 (2026-08-26T12:29:38Z UTC) — kind: report-file last-commit/update date for `tech_report.pdf` itself, read from first-party GitHub file-history evidence on the PDF's own blob page (`relative-time` datetime on https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf and its \"History\"/\"View commit history for this file\" links). Note: the repository root listing showed a later date, Aug 27, 2026 (2026-08-27T07:29:26Z), but that belongs to other repository files/the root listing, not to `tech_report.pdf`, so it is not cited as the report date.\n\n**Official PDF page URL (cited primary source):** https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf\n**Raw PDF URL actually downloaded:** https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf\n**Local file:** /Users/lixiuyin/Materials/Selected/web-agent/outputs/validation/2026-09-09-qwen-paired-r5/qwen/runs/qwen_latest_report_figure1/artifacts/downloads/qwen3.8-flash-next_tech_report.pdf\n\n**Candidate comparison (from browser-search evidence only):**\n- `QwenLM/Qwen3.8-Flash-Next` (official Qwen Team / Alibaba Group org repo; description: \"Qwen3.8-Flash-Next is the foundation model developed by Qwen Team, Alibaba Group\") — contains `tech_report.pdf`, dated 2026-08-26. Highest dotted subject version observed (3.8‑Flash‑Next), and it is the only candidate with an attached technical-report PDF in the official repo.\n- `QwenLM/Qwen3.8` (official repo, 4.1k stars) — README links only to qwen.ai release blogs (ids: qwen3.6-27b, qwen3.6-35b-a3b, qwen3.5, qwen3-next) and qwen.ai/chat.qwen.ai pages; no newer report PDF was enumerated there.\n- qwen.ai / chat.qwen.ai (official site) and HF org `Qwen` (incl. `Qwen/Qwen3.8-27B`) appeared in search results without report dates; none supplied a report PDF newer than the 2026-08-26 file. Wikipedia's \"last edited 31 August 2026\" is a third-party page-edit date, not a report publication date, so it was not used for ranking.\n- Selection rationale: the Qwen3.8-Flash-Next `tech_report.pdf` is first-party (official Qwen Team repository), matches the current top subject version, and has the latest explicit file-history date among observed official report artifacts.\n\n**Figure 1 interpretation (from pdf_analyze_figure on page 2 of the downloaded PDF):**\n\nCaption (verbatim source statement): \"Figure 1: Qwen3.8-Flash-Next architecture. Token mixing alternates three GDN layers with one QSA layer per block of four. Every sublayer reads and writes through GR, which widens the residual stream and gates the read elementwise. An n-gram embedding layer at Layer 2 scales capacity off the accelerator via host-memory prefetching. The MTP module reuses QSA indices across speculative decoding steps.\"\n\n- **Purpose:** Figure 1 is the whole-model architecture overview: it shows how input tokens flow through vocabulary embedding, the n-gram embedding layer, the repeated token-mixing/feed-forward blocks, and finally the prediction head plus MTP heads, making the four main design choices of Qwen3.8-Flash-Next legible at a glance.\n- **Labels directly read in the diagram:** Input Tokens; Vocabulary Embedding; N-gram Embedding Layer (Layer 2 only); Hidden States; Expanded Residual; GR Read; GR Write; MoE; QSA Layer (Qwen Sparse Attn); GDN Layer (Gated DeltaNet); Prediction Head; MTP Modules.\n- **Key architectural findings / design choices (caption-supported):**\n  1. **Hybrid token mixing (3:1):** each block of four layers alternates three Gated DeltaNet (GDN) layers with one Qwen Sparse Attention (QSA) layer — a linear-recurrent/attention mix rather than uniform attention.\n  2. **Gated Residual (GR) on every sublayer:** all sublayers read from and write to the residual stream through GR, which widens the residual stream (four branches) and applies an elementwise gate on the read, giving per-sublayer control of residual contributions.\n  3. **Off-accelerator capacity scaling:** a single n-gram embedding layer placed at Layer 2 adds capacity held outside accelerator memory, brought in via host-memory prefetching — capacity grows without adding backbone compute.\n  4. **Speculative decoding reuse:** the MTP (Multi-Token Prediction) module reuses the QSA indices across speculative decoding steps, so draft/verify steps share the sparse-attention index work.\n  5. **MoE feed-forward blocks** appear as the sublayer paired with token mixing in each block.\n- **Efficiency figures stated in the report text (not readable from the diagram's visual proportions):** 125B total parameters with ~6B activated per token, the Layer-2 n-gram table contributing ~51B parameters kept off the accelerator, QSA compressing the key sequence to reduce indexer cost from O(n²) to O(n²/r), GDN keeping a fixed-size recurrent state to limit decode-time memory traffic, and a reported ~1/9 training-FLOPs figure.\n- **Caveats:** Figure 1 contains no plots, curves or unlabeled data points, so no quantitative trend can be estimated from it; the component labels above are what is visibly painted, the four design claims come from the caption/body text, and adjacency of blocks in the diagram should not be read as a strict serial arrow chain beyond the embedding → blocks → head flow the figure depicts.",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_document_url_observed",
+        "expected": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "certificate_valid",
+        "expected": true,
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

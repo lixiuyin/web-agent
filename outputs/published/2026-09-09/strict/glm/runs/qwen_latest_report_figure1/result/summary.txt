@@ -1,0 +1,24 @@
+Selected report: "Qwen3.8-Flash-Next" technical report (tech_report.pdf), published by the official Qwen Team repository (github.com/QwenLM, described on the repo as "the foundation model developed by Qwen Team, Alibaba Group").
+
+Candidate comparison (from browser search and the rendered QwenLM organization repository index at github.com/orgs/QwenLM/repositories): the org listing showed Qwen3.8-Flash-Next as the top/most recently updated repository (repo last activity Aug 27, 2026; 341 stars, 16 forks), ahead of Qwen3.8 and other repositories. Searches for the current 2026 release landscape ("Qwen technical report PDF", "qwen model version release lineup 2026") surfaced Qwen3.8-Flash-Next as the newest release line, with no higher version appearing. The report file's own GitHub blob page (first-party file-history evidence) shows the PDF's last commit/file update on Aug 26, 2026 (relative-time 2026-08-26T12:29:38Z), which is more recent than any other Qwen technical report candidate observed.
+
+Selected report date: 2026-08-26 (tech_report.pdf file last-updated/commit date, from the file's own first-party GitHub blob page file history)
+
+Official PDF page URL: https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf (raw file: https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf) — downloaded and validated.
+
+Figure 1 interpretation ("Figure 1: Qwen3.8-Flash-Next architecture", page 2):
+
+Purpose: Figure 1 is the paper's reference architecture diagram, tying together the four core design choices evaluated in the report — hybrid token mixing, a gated/widened residual stream, off-accelerator capacity scaling, and speculative decoding — in a single picture of the model.
+
+What it depicts (from visible labels and the caption):
+- Left column, bottom to top: Input Tokens → Vocabulary Embedding; an N-gram Embedding Layer labeled "Layer 2 only" feeding the stack from Layer 2 onward; a repeating stack where one dashed block groups 3× GDN Layers + 1× QSA Layer (a block of four); MTP Modules at the top plus a separate Prediction Head path.
+- Right panel zooms into one dashed block. The GDN sub-block (×3) routes Hidden States through a GR Read gate → Gated DeltaNet token mixer → elementwise product (⊙) → GR Write into an "Expanded Residual" drawn as a wide multi-branch stream (four circles); a parallel GR Read path feeds a MoE block that writes back to the same stream. The QSA sub-block (×1) shares the same GR Read → ⊙ → GR Write skeleton but uses Qwen Sparse Attention as the mixer, again with a parallel MoE branch. The top block's output flows through GR Read and ⊙ into the Prediction Head.
+- Acronyms per the source: GDN = Gated DeltaNet; QSA = Qwen Sparse Attention; GR = Gated Residual; MoE = mixture-of-experts; MTP = multi-token prediction.
+
+Key architectural findings/takeaways the paper draws from it:
+1. Hybrid token mixing: three GDN layers (fixed-size recurrent state, cheap decoding) alternate with one QSA global-attention layer per four-layer block; QSA's compressed indexer reduces prefill attention cost (~O(n²/r)).
+2. Every sublayer reads and writes through Gated Residual (GR): GR widens the residual stream (the four circles correspond to the caption's four-branch stream) and gates the read elementwise; the paper reports that predicting GR's read/write weights gave a small loss change but clear benchmark gains.
+3. Capacity is scaled off the accelerator: an n-gram embedding layer at Layer 2 uses host-memory prefetching to add capacity without accelerator memory.
+4. Speculative decoding efficiency: the MTP module reuses QSA's sparse-attention indices across speculative decoding steps, avoiding repeated indexer work.
+
+Caveat per the vision analysis: the parallel/branch structure of GR Read/Write and MoE paths is directly labeled; the reading of the four residual circles as the four-branch stream and the independently gated MoE path are stated as inference from the caption/labels, and adjacency of components in the diagram should not be read as a strict serial arrow chain.

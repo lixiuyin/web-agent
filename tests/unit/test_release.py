@@ -60,9 +60,9 @@ def _write_valid_release_artifacts(
     wheel = directory / "lixiuyin_webagent-1.2.3-py3-none-any.whl"
     with zipfile.ZipFile(wheel, mode="w") as archive:
         archive.writestr("webagent/py.typed", "")
-        archive.writestr("benchmarks/README.md", "benchmark docs")
+        archive.writestr("webagent/benchmarks/README.md", "benchmark docs")
         for filename in _BENCHMARK_MANIFESTS:
-            archive.writestr(f"benchmarks/manifests/{filename}", "{}")
+            archive.writestr(f"webagent/benchmarks/manifests/{filename}", "{}")
         for filename in _SCHEMA_FILENAMES:
             archive.writestr(
                 f"webagent/schemas/{filename}",
@@ -83,9 +83,9 @@ def _write_valid_release_artifacts(
             "lixiuyin_webagent-1.2.3/README.md": b"content",
             "lixiuyin_webagent-1.2.3/pyproject.toml": b"content",
             "lixiuyin_webagent-1.2.3/src/webagent/py.typed": b"content",
-            "lixiuyin_webagent-1.2.3/benchmarks/README.md": b"content",
+            "lixiuyin_webagent-1.2.3/src/webagent/benchmarks/README.md": b"content",
             **{
-                f"lixiuyin_webagent-1.2.3/benchmarks/manifests/{filename}": b"{}"
+                f"lixiuyin_webagent-1.2.3/src/webagent/benchmarks/manifests/{filename}": b"{}"
                 for filename in _BENCHMARK_MANIFESTS
             },
             **{

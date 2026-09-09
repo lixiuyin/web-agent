@@ -1,10 +1,10 @@
-"""Enhanced DOM snapshot with CDP integration and intelligent filtering.
+"""Rendered browser observation with bounded legacy extraction fallbacks.
 
 This module provides browser state capture optimized for LLM consumption:
-- AX Tree integration for semantic understanding
-- Interactive element detection with ad filtering
-- Priority-based element ranking
-- Optimized markdown output with top N elements only
+- screenshot-aligned viewport text plus an explicitly separate document supplement
+- observation-bound control references across open shadow roots and supported frames
+- consistency checks across sequential DOM, geometry, and screenshot reads
+- ranked, filtered controls with CDP/AX and JavaScript fallbacks
 
 Inspired by browser-use's approach to page content understanding.
 """
@@ -17,16 +17,21 @@ import re
 import time
 from datetime import UTC, datetime
 from typing import Any
+from uuid import uuid4
 
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 from playwright.async_api import Page
 
+from webagent.browser.capture_failure import InconsistentCapture
 from webagent.browser.cdp_service import CDPService
+from webagent.browser.context_projection import is_viewport_control, pack_blocks, project_context
 from webagent.browser.interactive_detector import (
     extract_interactive_elements,
 )
+from webagent.browser.observation import capture_geometry, observation_scope_text
 from webagent.browser.priority import sort_elements_by_priority
+from webagent.browser.rendered import assert_rendered_current, capture_rendered
 
 logger = logging.getLogger("webagent")
 
@@ -104,14 +109,24 @@ async def take_snapshot(
     max_elements: int = 50,
     use_cdp: bool = True,
     filter_ads: bool = True,
+    supplemental_full_page: bool = False,
+    viewport_chars: int = 5000,
+    document_chars: int = 2500,
+    max_dom_nodes: int = 5000,
+    max_text_chars: int = 80000,
+    text_share: float = 0.5,
+    text_block_chars: int = 400,
 ) -> dict[str, Any]:
-    """Capture enhanced DOM + screenshot from an existing Playwright page.
+    """Capture a scoped rendered projection and screenshot from a Playwright page.
 
-    This enhanced snapshot:
-    1. Uses CDP to get semantic understanding via AX Tree
-    2. Detects interactive elements with intelligent filtering
-    3. Prioritizes elements based on position, type, and task relevance
-    4. Generates optimized markdown showing only top N elements
+    The primary path:
+    1. Separates rendered viewport evidence from off-screen document context.
+    2. Binds controls to one observation and their original DOM nodes.
+    3. Captures the viewport image and rejects relevant mid-capture changes.
+    4. Filters and ranks controls under explicit collection/context budgets.
+
+    CDP/AX and JavaScript extraction are used only when the rendered projection
+    cannot be collected.
 
     Args:
         page: Playwright page object
@@ -119,7 +134,7 @@ async def take_snapshot(
         wait_after_load: Milliseconds to wait after page load
         task: User's task for relevance matching
         max_elements: Maximum number of elements to include in output
-        use_cdp: Whether to use CDP for enhanced detection
+        use_cdp: Whether to permit the CDP/AX fallback path
         filter_ads: Whether to remove ad-like elements and containers
 
     Returns:
@@ -135,46 +150,154 @@ async def take_snapshot(
     # during capture, discard this mixed HTML/screenshot pair and let the agent's
     # bounded observation retry take a fresh snapshot.
     initial_url = page.url
+    started_at = datetime.now(UTC).isoformat()
+    geometry = await capture_geometry(page)
     html = await page.content()
+    observation_id = uuid4().hex
+    projection = await capture_rendered(
+        page,
+        observation_id,
+        geometry["viewport"],
+        max_nodes=max_dom_nodes,
+        max_chars=max_text_chars,
+    )
     screenshot_bytes = await page.screenshot(full_page=full_page, type="png")
+    full_page_bytes = (
+        await page.screenshot(full_page=True, type="png") if supplemental_full_page else None
+    )
     title = await page.title()
     url = page.url
 
     # Extract interactive elements
-    if use_cdp:
+    if projection is not None:
+        elements = projection["controls"]
+        try:
+            await assert_rendered_current(page, observation_id, projection)
+        except Exception as exc:
+            raise InconsistentCapture(str(exc), screenshot_bytes, initial_url) from exc
+    elif use_cdp:
         elements = await _extract_elements_enhanced(page)
     else:
         elements = await _extract_elements_basic(page)
 
     if page.url != initial_url:
-        raise RuntimeError(f"page navigated during snapshot: {initial_url!r} -> {page.url!r}")
+        raise InconsistentCapture("page navigated during snapshot", screenshot_bytes, initial_url)
+    if await capture_geometry(page) != geometry:
+        raise InconsistentCapture(
+            "page geometry changed during snapshot", screenshot_bytes, initial_url
+        )
 
     # Filter and prioritize
     elements = _filter_and_dedupe(elements, filter_ads=filter_ads)
-    elements = sort_elements_by_priority(elements, task=task, max_elements=max_elements)
+    candidate_count = len(elements)
+    elements = _rank_snapshot_elements(elements, task, max_elements, geometry["viewport"])
 
     # Generate optimized markdown
     sanitized = _sanitize_html(html, filter_ads=filter_ads)
     markdown = _generate_llm_markdown(sanitized, elements, max_elements)
+    contexts = _snapshot_contexts(
+        projection,
+        elements,
+        markdown,
+        viewport_chars,
+        document_chars,
+        text_share=text_share,
+        text_block_chars=text_block_chars,
+    )
 
-    # Get viewport info for priority calculation
-    viewport = page.viewport_size or {"width": 1280, "height": 720}
+    meta = {
+        "status": "complete",
+        "dom_status": "captured",
+        "screenshot_status": "captured",
+        "pair_consistent": True,
+        "url": url,
+        "title": title,
+        "timestamp": datetime.now(UTC).isoformat(),
+        "capture_started_at": started_at,
+        **geometry,
+        "element_count": len(elements),
+        "screenshot_scope": "full_page" if full_page else "viewport",
+        "dom_scope": "viewport_and_document_separate",
+        "observation_id": observation_id,
+        "dom_content_chars": len(contexts["viewport_context"]),
+        "context_omissions": contexts["context_omissions"],
+        "context_budget_usage": contexts.get("context_budget_usage", {}),
+        "element_omissions": candidate_count - len(elements),
+        "rendered_projection": projection is not None,
+        "frames": projection["frames"] if projection else [],
+        "unavailable_frames": projection["unavailable_frames"] if projection else [],
+        "bbox_coordinate_space": "frame_document",
+        "viewport_bbox_coordinate_space": "viewport",
+        "consistency_check": "url_geometry_and_rendered_revision; not an atomic DOM freeze",
+    }
 
     return {
-        "meta": {
-            "url": url,
-            "title": title,
-            "timestamp": datetime.now(UTC).isoformat(),
-            "viewport": viewport,
-            "element_count": len(elements),
-        },
-        "markdown": markdown,
+        "meta": meta,
+        "markdown": observation_scope_text(meta) + _context_markdown(contexts),
+        **contexts,
         "elements": elements,
         "screenshot_bytes": screenshot_bytes,
+        "full_page_screenshot_bytes": full_page_bytes,
         "html": html,
         "title": title,
         "url": url,
     }
+
+
+def _snapshot_contexts(
+    projection: dict[str, Any] | None,
+    elements: list[dict[str, Any]],
+    markdown: str,
+    viewport_chars: int,
+    document_chars: int,
+    *,
+    text_share: float = 0.5,
+    text_block_chars: int = 400,
+) -> dict[str, Any]:
+    if projection is not None:
+        return project_context(
+            projection,
+            elements,
+            viewport_budget=viewport_chars,
+            document_budget=document_chars,
+            text_share=text_share,
+            text_block_chars=text_block_chars,
+        )
+    document, omitted = pack_blocks(markdown.split("\n\n"), document_chars)
+    return {
+        "viewport_context": "",
+        "document_context": document,
+        "viewport_blocks": [],
+        "document_blocks": markdown.split("\n\n"),
+        "context_omissions": {"viewport": 0, "document": omitted},
+    }
+
+
+def _rank_snapshot_elements(
+    elements: list[dict[str, Any]], task: str, limit: int, viewport: dict[str, int]
+) -> list[dict[str, Any]]:
+    ranked: list[dict[str, Any]] = []
+    for in_viewport in (True, False):
+        group = [e for e in elements if is_viewport_control(e) == in_viewport]
+        ranked.extend(
+            sort_elements_by_priority(
+                group,
+                task=task,
+                max_elements=limit,
+                viewport_width=viewport["width"],
+                viewport_height=viewport["height"],
+            )
+        )
+    return ranked
+
+
+def _context_markdown(contexts: dict[str, Any]) -> str:
+    return (
+        "## VIEWPORT CONTENT (screenshot region)\n"
+        + str(contexts["viewport_context"])
+        + "\n\n## DOCUMENT SUPPLEMENT (not evidence of screenshot visibility)\n"
+        + str(contexts["document_context"])
+    )
 
 
 async def _extract_elements_enhanced(page: Page) -> list[dict[str, Any]]:
@@ -311,6 +434,7 @@ def _filter_and_dedupe(
         sig = "|".join(
             [
                 str(e.get("tag", "")),
+                str(e.get("frame_index", 0)),
                 str(attrs.get("id", "")),
                 str(attrs.get("name", "")),
                 txt[:80],
@@ -428,9 +552,14 @@ def _interactive_controls_lines(elements: list[dict[str, Any]], max_elements: in
         label = _extract_element_label(e)
         priority = e.get("_priority", 0)
         css_path = e.get("css_path", "unknown")
+        visibility = {
+            True: "in viewport",
+            False: "outside viewport",
+            None: "viewport position unknown",
+        }.get(e.get("in_viewport"), "viewport position unknown")
 
         parts.append(
-            f"- {label} (control {shown_count}, priority: {priority:.0f}; "
+            f"- {label} (control {shown_count}, {visibility}, priority: {priority:.0f}; "
             "use the CSS selector below)  \n"
             f"  selector: `{css_path}`\n"
         )

@@ -46,6 +46,11 @@ The evaluator inspects browser/server terminal state, answer content, tool histo
 artifact hashes, and strict certificates independently from the agent's `done` text.
 Agent completion and empirical success remain separate so false completion is measurable.
 
+For one strict task, a pass requires every required task assertion and a valid certificate.
+Failed tool/planner attempts remain separate diagnostics: a small bounded external failure
+may be recovered, while a wrong candidate, missing artifact, invalid observation pair,
+certificate failure, or exhausted recovery remains a failed run.
+
 `success_probability` refers to whole-task success and is elicited before external
 judgment. Missing probabilities remain missing. CAPTCHA confidence, Figure-detector
 confidence, and parser quality are different quantities and are never reused as task
@@ -78,8 +83,8 @@ registered identities, rejects duplicate cells or escaped paths, and only then c
 paired effects.
 
 Study commands and resume semantics belong to
-[running benchmark studies](../../benchmarks/docs/running-studies.md). Report fields and
-readiness belong to [benchmark report contracts](../../benchmarks/docs/report-contracts.md).
+[running benchmark studies](../../src/webagent/benchmarks/docs/running-studies.md). Report fields and
+readiness belong to [benchmark report contracts](../../src/webagent/benchmarks/docs/report-contracts.md).
 
 ## 6. Coordinate a campaign
 

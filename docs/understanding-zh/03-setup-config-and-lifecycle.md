@@ -5,22 +5,24 @@
 `pyproject.toml` 要求 Python `>=3.13`，构建后端是 Hatchling，CLI entry point 为 `webagent.cli:main`。
 
 ```bash
-pip install -e ".[dev]"
-playwright install chromium
+uv sync
+uv run playwright install chromium
 ```
 
-四个本地质量门：
+完整本地质量门：
 
 ```bash
-ruff check src/ benchmarks/ scripts/ tests/
-ruff format --check src/ benchmarks/ scripts/ tests/
-mypy src/ benchmarks/ scripts/
+ruff check src/ scripts/ tests/
+ruff format --check src/ scripts/ tests/
+mypy src/ scripts/
 pytest tests/unit/ -v
-python scripts/check_docs.py
+pytest tests/integration/ -v --no-cov
+uv run python scripts/check_docs.py
 ```
 
-integration test 会启动真实 Chromium。两条生命周期用例使用 StubPlanner；另有一条严格评测
-流程用确定性虚构证据覆盖多源发现→下载→Figure 1→done，都不需要真实模型 API。
+integration test 会启动真实 Chromium，并按 `--no-cov` 与单元测试的覆盖率门分开运行。生命周期
+用例使用 StubPlanner；严格评测流程用确定性虚构证据覆盖多源发现→下载→Figure 1→done，
+都不需要真实模型 API。
 
 ## 配置读取优先级
 
@@ -133,7 +135,26 @@ turn 当成独立 run。strict/search-only 为保持单次连续证书，直接�
 下载完成后还会检查前 1024 bytes 内的 `%PDF-` 文件头；后缀为 `.pdf` 的 HTML 预览页会
 被删除，下载器本身不会解析或返回 raw/download URL。planner 必须先导航到预览页并调用
 `inspect_download_links`；只有该独立浏览器步骤明确返回给 planner 的 DOM 属性或页面声明
-元数据 URL 才能成为后续下载的 provenance。
+元数据 URL 才能成为后续下载的 provenance。若页面只暴露没有 `href` 的下载按钮（例如
+GitHub PDF blob 页在站内点击导航后只剩 `Download raw file` 按钮），该工具会以
+`download_controls` 报告控件选择器而不会拼造 URL；planner 用 `download_file` 点击后，
+保存的 PDF 会被策略登记为有据下载，`pdf_*` 工具可直接使用其路径，`done` 与 trace
+校验器也将其视为满足 PDF 交付。latest 任务下 `download_file` 与 `download_pdf` 受同一
+证据清单门控，前者绑定到承载控件的当前页面、后者绑定到目标 URL；非 PDF 下载不会被登记。
+普通 HTML 页上仅写着 “Download” 的按钮不会被列为下载控件（通常是应用/数据集下载），
+只有标签指明文件产物（raw/file/PDF/paper/report 等）或页面本身就是 PDF 渲染页时才算。
+官方身份证据来自三类信号：结果文本自称 official、结果域名品牌标签与任务主题词完全一致
+（如 Qwen 任务的 `qwen.ai`）、以及带 official 的查询中点名的主机；三者皆无时才退回整组结果。
+同一被拒调用在证据未变化前重复发出会在预检阶段被拦回，不消耗动作步。
+官方页面同样会链接到与主题无关的论文（例如博客引用其模型复现过的某篇数据筛选论文），
+因此链接上下文只能背书来源，不能证明文档主题。策略会保留 planner 在每个 URL 旁看到的可见
+文本（搜索结果标题、锚文本、下载候选标签、`goto` 返回的页面 title），并在 latest 任务中要求
+托管在官方 host 之外的文档（arXiv 渲染或第三方 PDF）至少有一条标签或文件名包含任务主题词，
+否则 `download_pdf`/`download_file`/`done` 会被拒绝并列出已观察到的标题。锚文本为空的徽章链接
+可通过打开论文自身页面取得 title 证据；官方 host 自己托管的 PDF 不受此检查。打开 arXiv `/abs/`
+页即选定该论文为候选，逐步的 `CANDIDATE EVIDENCE INCOMPLETE` 提示会在下载前指出缺失的主题
+绑定；arXiv 拒绝指引中与文档标题共享名称 token 的官方页面（如 `QwenLM/Qwen3`）会排在前面。
+标签随 checkpoint 一并保存在 `observed_labels`。
 
 `--strict-eval` 与 search-engine-only 采用同一无捷径策略，同时关闭持久 PDF 缓存；未显式传
 `--output` 时生成独立 run。每次 Agent 运行都会写 `trajectory/trace.json`，严格运行还在同目录写

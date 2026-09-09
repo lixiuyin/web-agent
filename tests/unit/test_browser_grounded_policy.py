@@ -6,8 +6,10 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+import pytest
+
 from webagent.agent.context import planner_result_preview
-from webagent.core.models import ToolCall, ToolResult
+from webagent.core.models import BrowserState, ToolCall, ToolResult
 from webagent.tools.policy import BrowserGroundedPolicy
 
 
@@ -27,8 +29,120 @@ class _LoadedBrowser:
     page = _LoadedPage()
 
 
+@pytest.mark.parametrize(
+    "text",
+    [
+        "[obs/f0:e1] input label='Search' value='https://guessed.test/report'",
+        "Frame 0 editable text: https://guessed.test/report",
+    ],
+)
+async def test_editable_and_control_echoes_are_not_discovery_evidence(tmp_path, text):
+    policy = BrowserGroundedPolicy(_LoadedBrowser(), artifacts_dir=tmp_path, allowed_tools={"goto"})
+    policy.reset("Find the report")
+    policy.record_observation(
+        BrowserState(
+            url=_LoadedPage.url,
+            title="Page",
+            timestamp="now",
+            dom_summary=text,
+            viewport_context=text,
+            observation_metadata={"status": "complete"},
+        )
+    )
+    decision = await policy.authorize(
+        ToolCall(tool_name="goto", parameters={"url": "https://guessed.test/report"})
+    )
+    assert not decision.allowed
+
+
 class _BrowserWithoutPage:
     pass
+
+
+@pytest.mark.parametrize("scope", ["viewport_context", "document_context"])
+async def test_inline_url_in_actual_planner_projection_is_grounded(tmp_path, scope):
+    policy = BrowserGroundedPolicy(
+        _LoadedBrowser(), artifacts_dir=tmp_path, allowed_tools={"done", "goto"}
+    )
+    policy.reset("Summarize the current page")
+    url = "https://source.example.test/project"
+    state = BrowserState(
+        url=_LoadedPage.url,
+        title="Page",
+        timestamp="now",
+        dom_summary="unused raw DOM",
+        viewport_context="Visible page",
+        document_context="Supplement",
+        observation_metadata={"status": "complete"},
+    ).model_copy(update={scope: f"Source Code: {url}"})
+    policy.record_observation(state)
+    done = ToolCall(tool_name="done", parameters={"summary": f"Source: {url}"})
+    assert policy.validate_planner_call(done) is None
+    assert (await policy.authorize(done)).allowed
+    decision = await policy.authorize(ToolCall(tool_name="goto", parameters={"url": url}))
+    assert decision.allowed
+    assert decision.provenance["source"] == "planner_observation_text"
+    assert url not in policy.export_state()["visited_urls"]
+
+
+@pytest.mark.parametrize("legacy", [True, False])
+async def test_raw_but_omitted_observation_urls_cannot_authorize_navigation(tmp_path, legacy):
+    policy = BrowserGroundedPolicy(_LoadedBrowser(), artifacts_dir=tmp_path, allowed_tools={"goto"})
+    policy.reset("Read the page")
+    hidden = "https://unseen.example.test/report"
+    policy.record_observation(
+        BrowserState(
+            url=_LoadedPage.url,
+            title="Page",
+            timestamp="now",
+            dom_summary="x" * 6001 + hidden,
+            viewport_context=None if legacy else "Visible content only",
+            document_blocks=[hidden],
+            observation_metadata={"status": "complete"},
+        )
+    )
+    assert not (
+        await policy.authorize(ToolCall(tool_name="goto", parameters={"url": hidden}))
+    ).allowed
+
+
+async def test_failed_capture_does_not_register_inline_urls(tmp_path):
+    policy = BrowserGroundedPolicy(_LoadedBrowser(), artifacts_dir=tmp_path, allowed_tools={"goto"})
+    policy.reset("Read the page")
+    url = "https://source.example.test/project"
+    policy.record_observation(
+        BrowserState(
+            url=_LoadedPage.url,
+            title="Page",
+            timestamp="now",
+            dom_summary=url,
+            viewport_context=url,
+            observation_metadata={"status": "inconsistent"},
+        )
+    )
+    assert not (await policy.authorize(ToolCall(tool_name="goto", parameters={"url": url}))).allowed
+
+
+@pytest.mark.parametrize("status", ["complete", "partial", "failed", "inconsistent"])
+async def test_initial_observation_registers_only_complete_page_evidence(tmp_path, status):
+    policy = BrowserGroundedPolicy(_LoadedBrowser(), artifacts_dir=tmp_path, allowed_tools={"done"})
+    policy.reset("Summarize the current page")
+    captured = "https://docs.example.test/features/"
+    policy.record_observation(
+        BrowserState(
+            url=captured,
+            title="Features",
+            timestamp="now",
+            dom_summary="Features",
+            observation_metadata={"status": status},
+        )
+    )
+    call = ToolCall(tool_name="done", parameters={"summary": f"Features: {captured}"})
+    assert (policy.validate_planner_call(call) is None) is (status == "complete")
+    decision = await policy.authorize(call)
+    assert decision.allowed is (status == "complete")
+    # Do not silently count a newer live URL as a captured visit.
+    assert (_LoadedPage.url in policy.export_state()["visited_urls"]) is False
 
 
 async def _record(

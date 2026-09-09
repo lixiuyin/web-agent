@@ -21,13 +21,13 @@ Build directories must remain outside the source distribution. The configured `b
 and `dist-*` exclusions prevent a second build from recursively packaging the first.
 
 ```bash
-python -m webagent.release state --root . --tag v0.2.0 --require-clean
+uv run python -m webagent.release state --root . --tag v0.2.0 --require-clean
 export SOURCE_DATE_EPOCH="$(git log -1 --format=%ct)"
-python -m build --outdir build-one
-python -m build --outdir build-two
-python -m webagent.release repro build-one build-two
-python -m webagent.release artifacts build-one
-twine check build-one/*
+uv run python -m build --outdir build-one
+uv run python -m build --outdir build-two
+uv run python -m webagent.release repro build-one build-two
+uv run python -m webagent.release artifacts build-one
+uv run twine check build-one/*
 ```
 
 `repro` compares wheel and source-distribution digests across the two builds. `artifacts`
@@ -39,7 +39,7 @@ Install both the wheel and source distribution into clean environments. At minim
 verify:
 
 - `import webagent` and the package version;
-- `python -m webagent --help`;
+- `uv run python -m webagent --help`;
 - an offline benchmark or stub lifecycle path;
 - packaged JSON schemas and non-Python resources;
 - absence of repository outputs, credentials, browser profiles, and build directories.

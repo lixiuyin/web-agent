@@ -46,8 +46,10 @@ checkpoint 恢复 (resume_from=...)
   -> hooks.on_task_start
   -> _run_steps
        -> _execute_step: observe -> captcha -> think -> checkpoint -> act
-                        -> observe -> record -> strategy/checkpoint -> terminal check
-  -> finally: hooks.on_task_end -> checkpoint -> turn result -> trace
+                        -> post-state（非 done 再观察；done 复用 pre）
+                        -> paired post -> record -> strategy/checkpoint -> terminal check
+  -> finally: preserve unfinished output -> terminal confidence -> hooks.on_task_end
+              -> AgentResult -> final checkpoint -> turn result -> trace
   -> AgentResult
 ```
 
@@ -76,15 +78,17 @@ snapshot 和 trace 尝试之后继续抛出，调用方不保证拿到 `AgentRes
 
 `_execute_step()` 是长程行为的最小可验证单元：
 
-1. 在观察前检查总超时，随后 `_observe()` 获取 DOM、URL、title 和截图。
+1. 在观察前检查总超时，随后 `_observe()` 获取分域 context、observation-bound 元素、URL、title、
+   覆盖元数据和 viewport 截图。
 2. 若启用 CAPTCHA 检测，`_handle_captcha()` 只报告/等待人工/失败关闭，不求解或绕过挑战。
 3. `_think()` 汇入最近历史、controller plan state、strategy hint、剩余动作预算和 loop nudge；每次
    provider 尝试都写入 `PlannerAttempt`。
 4. 工具执行前先写 pending-action checkpoint。这样进程在外部副作用期间崩溃时，不会盲目重放
    非安全动作。
 5. `_act()` 调用 `ToolExecutor`；除 `done` 外，先执行 `post_action_wait_ms`，再等待页面进入有界
-   稳定窗口并观察动作后的页面。截图写入
-   `RunLayout.screenshots_dir/step_NNN.jpg`。
+   稳定窗口并观察动作后的页面。动作前后成对 JSON/PNG 写入 `observations/step_NNN/`；
+   `observations/screenshots/step_NNN.jpg` 只是 legacy post-action preview。无浏览器副作用的 `done`
+   明确复用 pre observation，并在元数据中标为 `reused`，不是一次伪造的新采集。
 6. `_record_step()` 将动作前的 `BrowserState`、ToolCall、ToolResult、总耗时和工具耗时加入历史，
    再通知 `on_step_complete`。
 7. 结果会更新证据、failure counter、planning state 与 strategy。动作结果和 pending-action 清除后
@@ -94,28 +98,46 @@ snapshot 和 trace 尝试之后继续抛出，调用方不保证拿到 `AgentRes
 planner 多次尝试后仍没有可执行 ToolCall 时，该 logical step 不写 `AgentStep`，但失败 attempt、
 连续失败计数、策略重规划事件和 checkpoint 均保留。
 
+因此单个失败动作不等于整项评测失败。最终判定由独立 evaluator 与 strict certificate 决定；
+少量公开搜索质量失败或 provider 能力协商失败在被有界恢复、原样保留且不影响交付物时可以与
+任务通过并存。错误候选、缺失 PDF/Figure、虚假 `done`、不一致 observation 或耗尽预算的恢复
+循环不能按此豁免。
+
 ## Observe 与 Think
 
 ### `_observe()`
 
-`take_snapshot()` 接收当前 task、CDP 开关、元素上限与广告过滤设置。成功时生成：
+`take_snapshot()` 接收当前 task、CDP fallback 开关、元素/采集上限、分域 context 预算与广告过滤
+设置。成功时生成：
 
-- `dom_summary`: 面向 planner 的 Markdown DOM；
-- `screenshot`: 可选 PIL image；
-- `url`、`title` 和 UTC timestamp。
+- `viewport_context`：与 viewport screenshot 同范围的完整 text/control blocks；
+- `document_context`：屏幕外文档补充，明确不是截图可见性证据；
+- `observation_id`、可执行元素 refs、frame/geometry/省略元数据；
+- `dom_summary`：将范围说明与上述两个 context 组合后的 planner 文本；
+- `screenshot`、可选 supplemental full-page screenshot、URL、title 和 UTC timestamp。
 
 它最多尝试三次；每次先尽力等待 `domcontentloaded`，再用 URL、`readyState`、DOM 节点数、文本
-长度和页面高度判断连续稳定窗口。`take_snapshot()` 还校验采集开始和结束时 URL 一致；导航跨越
-截图边界会使本次尝试失败并重试。三次失败后返回
+长度和页面高度判断连续稳定窗口。`take_snapshot()` 还校验 URL、geometry 与 rendered
+fingerprint；导航、滚动或相关渲染变化跨越 DOM/截图读取会使本次尝试失败并重试。三次失败后返回
 `dom_summary="(page loading)"` 的降级状态，而不是伪造页面内容。
 
 ### `_think()`
+
+`WebAgent._think()` 委托 [planning.py](../../src/webagent/agent/planning.py) 的
+`PlanningCoordinator.plan_action()`。`_planning_history()` 构造当前状态与
+证据提示，`_with_action_budget()` 添加末步约束，`_loop_recovery_hint()` 处理循环信号并更新
+策略。`_plan_validated_action()` 请求并校验单个动作；`plan_action()` 保留尝试计数、失败修复、
+超时终止与审计记录的顺序。
 
 planner 输入由当前 task、`BrowserState`、tool descriptions 和 `SessionHistory.format_for_llm()`
 组成。controller 还会添加里程碑/证据状态、当前策略、loop 信号与最后两步的动作预算提醒。
 每次 provider 调用都记录耗时、错误、token usage、requested/effective structured-output mode 和
 fallback 轨迹。成功 ToolCall 才写入 loop detector；失败会给下一次尝试加入修复提示，达到重试
 上限后返回 `None` 并触发策略层的 planner-failure 观察。
+
+每轮共享状态定义在 [loop_state.py](../../src/webagent/agent/loop_state.py)。规划协调器引用 Agent 的
+单一会话状态，不复制 history、planner attempts 或策略状态；任务生命周期、执行与 checkpoint
+编排仍由 [loop.py](../../src/webagent/agent/loop.py) 负责。
 
 ## 历史、规划与恢复
 
@@ -144,13 +166,18 @@ nudge 并向 StrategyManager 报告信号；是否切换策略或最终停止由
 
 ## 完成与产物
 
+`loop.py` 负责执行顺序与状态协调；`checkpoint_redaction.py` 负责 checkpoint 字段脱敏、
+配置指纹和 artifact 收集；`run_outputs.py` 负责截图、Figure 附件、result snapshot 与 trace
+持久化。测试这些内部函数时直接从所属模块导入，避免依赖 loop 的间接导出。
+
 `RunLayout` 是唯一的 run 级命名空间。新任务通过 ownership manifest 准备目录，不再递归清空
 任意已有输出。主要产物为：
 
 ```text
 <run>/
   artifacts/                 工具下载、解析和派生文件
-  observations/screenshots/  step_NNN.jpg
+  observations/step_NNN/      pre/post JSON + viewport PNG；可选 full-page PNG
+  observations/screenshots/  legacy post-action JPEG preview
   control/checkpoints/       可恢复状态（普通模式）
   result/summary.txt          最新 turn 的兼容视图
   result/attachments/         最新 turn 的选中附件

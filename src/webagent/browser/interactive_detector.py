@@ -23,7 +23,7 @@ INTERACTIVE_ELEMENTS_JS = r"""
             if (s.display === 'none' || s.visibility === 'hidden') {
                 return false;
             }
-            const opacity = parseFloat(s.opacity) || 1;
+            const opacity = parseFloat(s.opacity);
             if (opacity < 0.1) {
                 return false;
             }
@@ -139,6 +139,12 @@ INTERACTIVE_ELEMENTS_JS = r"""
                         width: Math.round(rect.width),
                         height: Math.round(rect.height)
                     },
+                    viewport_bbox: {
+                        x: rect.left, y: rect.top,
+                        width: rect.width, height: rect.height
+                    },
+                    in_viewport: rect.bottom > 0 && rect.right > 0 &&
+                        rect.top < window.innerHeight && rect.left < window.innerWidth,
                     is_visible: true
                 });
             }

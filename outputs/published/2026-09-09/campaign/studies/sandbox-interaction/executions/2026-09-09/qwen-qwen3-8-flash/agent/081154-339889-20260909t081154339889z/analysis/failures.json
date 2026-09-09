@@ -1,0 +1,189 @@
+{
+  "schema_version": 2,
+  "failure_taxonomy_version": "1",
+  "task_count": 5,
+  "affected_task_count": 4,
+  "finding_count": 8,
+  "observed_count": 7,
+  "candidate_count": 1,
+  "adjudicated_count": 0,
+  "observed_by_layer": {
+    "execution_control": 2,
+    "planning": 3,
+    "tool_execution": 2
+  },
+  "candidate_by_layer": {
+    "unknown": 1
+  },
+  "adjudicated_by_layer": {},
+  "recurrence_by_signature": {
+    "execution_control:false_completion": 1,
+    "execution_control:terminal_state_assertion_failure": 1,
+    "planning:planner_attempt_failure": 3,
+    "tool_execution:tool_action_failure": 2,
+    "unknown:grounding_selection_or_page_state_candidate": 1
+  },
+  "findings": [
+    {
+      "taxonomy_version": "1",
+      "task_id": "spa_hydration_route",
+      "status": "observed",
+      "layer": "planning",
+      "subtype": "planner_attempt_failure",
+      "detector": "aggregate-rule-v1",
+      "terminal": false,
+      "onset_step": null,
+      "recovery_step": null,
+      "evidence": [
+        {
+          "source": "task_metric",
+          "key": "planner_failure_count",
+          "observed": 1,
+          "reference": null
+        }
+      ],
+      "note": "One or more planner attempts failed; the underlying cause is not inferred."
+    },
+    {
+      "taxonomy_version": "1",
+      "task_id": "authenticated_account",
+      "status": "observed",
+      "layer": "tool_execution",
+      "subtype": "tool_action_failure",
+      "detector": "aggregate-rule-v1",
+      "terminal": false,
+      "onset_step": null,
+      "recovery_step": null,
+      "evidence": [
+        {
+          "source": "task_metric",
+          "key": "failed_action_count",
+          "observed": 1,
+          "reference": null
+        }
+      ],
+      "note": "The tool result directly reported one or more failed actions."
+    },
+    {
+      "taxonomy_version": "1",
+      "task_id": "cross_origin_intake",
+      "status": "observed",
+      "layer": "planning",
+      "subtype": "planner_attempt_failure",
+      "detector": "aggregate-rule-v1",
+      "terminal": false,
+      "onset_step": null,
+      "recovery_step": null,
+      "evidence": [
+        {
+          "source": "task_metric",
+          "key": "planner_failure_count",
+          "observed": 1,
+          "reference": null
+        }
+      ],
+      "note": "One or more planner attempts failed; the underlying cause is not inferred."
+    },
+    {
+      "taxonomy_version": "1",
+      "task_id": "sandbox_checkout",
+      "status": "observed",
+      "layer": "planning",
+      "subtype": "planner_attempt_failure",
+      "detector": "aggregate-rule-v1",
+      "terminal": false,
+      "onset_step": null,
+      "recovery_step": null,
+      "evidence": [
+        {
+          "source": "task_metric",
+          "key": "planner_failure_count",
+          "observed": 1,
+          "reference": null
+        }
+      ],
+      "note": "One or more planner attempts failed; the underlying cause is not inferred."
+    },
+    {
+      "taxonomy_version": "1",
+      "task_id": "sandbox_checkout",
+      "status": "observed",
+      "layer": "tool_execution",
+      "subtype": "tool_action_failure",
+      "detector": "aggregate-rule-v1",
+      "terminal": false,
+      "onset_step": null,
+      "recovery_step": null,
+      "evidence": [
+        {
+          "source": "task_metric",
+          "key": "failed_action_count",
+          "observed": 2,
+          "reference": null
+        }
+      ],
+      "note": "The tool result directly reported one or more failed actions."
+    },
+    {
+      "taxonomy_version": "1",
+      "task_id": "sandbox_checkout",
+      "status": "observed",
+      "layer": "execution_control",
+      "subtype": "terminal_state_assertion_failure",
+      "detector": "aggregate-rule-v1",
+      "terminal": true,
+      "onset_step": null,
+      "recovery_step": null,
+      "evidence": [
+        {
+          "source": "assertion",
+          "key": "failed_state_assertion_count",
+          "observed": 5,
+          "reference": null
+        }
+      ],
+      "note": "The external judge rejected trajectory, artifact, browser, or server state; this symptom alone does not establish a reasoning cause."
+    },
+    {
+      "taxonomy_version": "1",
+      "task_id": "sandbox_checkout",
+      "status": "observed",
+      "layer": "execution_control",
+      "subtype": "false_completion",
+      "detector": "aggregate-rule-v1",
+      "terminal": true,
+      "onset_step": null,
+      "recovery_step": null,
+      "evidence": [
+        {
+          "source": "task_metric",
+          "key": "agent_reported_success",
+          "observed": true,
+          "reference": null
+        }
+      ],
+      "note": "The agent declared completion while the external judge rejected the result."
+    },
+    {
+      "taxonomy_version": "1",
+      "task_id": "sandbox_checkout",
+      "status": "candidate",
+      "layer": "unknown",
+      "subtype": "grounding_selection_or_page_state_candidate",
+      "detector": "aggregate-rule-v1",
+      "terminal": false,
+      "onset_step": null,
+      "recovery_step": null,
+      "evidence": [
+        {
+          "source": "task_metric",
+          "key": "failed_action_count",
+          "observed": 2,
+          "reference": null
+        }
+      ],
+      "note": "Failed actions warrant trace inspection for grounding, tool selection, parameters, or page-state drift; none is established here."
+    }
+  ],
+  "causal_boundary": "Automatic findings identify observable symptoms only; reasoning and memory causes are never assigned automatically. Adjudicated causal labels require a referenced controlled intervention or both referenced trace evidence and human adjudication."
+}

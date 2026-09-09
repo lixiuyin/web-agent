@@ -190,6 +190,14 @@ def _finding(
 
 
 def _observed_findings(evaluation: TaskEvaluation) -> list[FailureFinding]:
+    return [
+        *_runtime_findings(evaluation),
+        *_assertion_findings(evaluation),
+        *_completion_findings(evaluation),
+    ]
+
+
+def _runtime_findings(evaluation: TaskEvaluation) -> list[FailureFinding]:
     findings: list[FailureFinding] = []
     if evaluation.planner_failure_count:
         findings.append(
@@ -272,6 +280,11 @@ def _observed_findings(evaluation: TaskEvaluation) -> list[FailureFinding]:
                 note="A challenge was observed, whether or not the task later recovered.",
             )
         )
+    return findings
+
+
+def _assertion_findings(evaluation: TaskEvaluation) -> list[FailureFinding]:
+    findings: list[FailureFinding] = []
     failed_answer_assertions = sum(
         not outcome.passed
         for outcome in evaluation.assertions
@@ -313,8 +326,12 @@ def _observed_findings(evaluation: TaskEvaluation) -> list[FailureFinding]:
                 terminal=not evaluation.passed,
             )
         )
+    return findings
+
+
+def _completion_findings(evaluation: TaskEvaluation) -> list[FailureFinding]:
     if evaluation.agent_reported_success and not evaluation.passed:
-        findings.append(
+        return [
             _finding(
                 evaluation,
                 status="observed",
@@ -326,8 +343,8 @@ def _observed_findings(evaluation: TaskEvaluation) -> list[FailureFinding]:
                 note="The agent declared completion while the external judge rejected the result.",
                 terminal=True,
             )
-        )
-    return findings
+        ]
+    return []
 
 
 def _candidate_findings(evaluation: TaskEvaluation) -> list[FailureFinding]:

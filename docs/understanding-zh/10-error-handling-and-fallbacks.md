@@ -23,7 +23,7 @@
 | Agent browser disconnect | 关键字匹配 | 标记 failed，不重抛 | AgentResult |
 | Agent 其他异常 | 标记 failed 后重抛 | finally 通知 hook | 调用方异常，无 AgentResult |
 
-## 五个独立时间预算
+## 六个独立时间预算
 
 | 配置 | 作用域 | 单位 | 是否真正硬上限 |
 |---|---|---|---|
@@ -40,7 +40,8 @@
 
 Parser provider 对 retryable failure 最多重试两次；认证失败、未配置、限流和质量失败通常不重试。BrowserController 的动作本身不重试，只有 Agent 重新规划才可能再次选择同工具。Planner 对空/畸形响应与非超时异常默认总计尝试两次；hard timeout 不重试。
 
-Observe 会固定重试三次，每次等待一秒；元素提取内部先 CDP/AX，再 JS，再空结果。Search 工具有独立的搜索引擎 cascade。
+Observe 会固定重试三次，每次等待一秒；主路径先采集 rendered projection，只有该投影不可用时
+才按 CDP/AX→JS→空结果降级。Search 工具有独立的搜索引擎 cascade。
 
 ## Loop detector 不是恢复器
 
@@ -52,12 +53,16 @@ Loop detector 仅把提示追加给 planner。它不回滚动作、不恢复页�
 
 ## 静默吞异常的影响
 
-Controller、CDP 和 snapshot 多处宽泛 `except Exception`，提高了长任务不中断的概率，却降低诊断性。例如 CDP bbox 获取失败后默认为零，planner 看到的 selector 质量下降但没有显式错误。浏览器 context/Playwright 关闭异常现已显式记录 warning，但其他降级路径仍应统计次数，而不是只看最终 success。
+Controller、CDP 和 snapshot 多处宽泛 `except Exception`，提高了长任务不中断的概率，却降低
+诊断性。例如 fallback AX bbox 获取失败后会归零；不过当前 rendered 主路径不会依赖该 bbox 来
+执行 compact ref。浏览器 context/Playwright 关闭异常现已显式记录 warning，其他降级路径仍应
+统计次数，而不是只看最终 success。
 
 ## 建议记录的可靠性指标
 
 - planner parse failure rate；unknown tool/validation/execution failure rate；
-- snapshot retry rate、CDP→JS fallback rate、unknown selector rate；
+- snapshot retry/rendered-projection availability rate、rendered→CDP/AX→JS fallback rate、
+  stale/obscured/off-screen ref rejection rate；
 - 每类 loop signal 的 precision/recall；
 - provider retry、quality rejection、fallback 与最终 backend 分布；
 - task success、steps、wall time、tokens、API cost；

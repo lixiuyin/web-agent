@@ -37,3 +37,9 @@ def test_browser_state():
     )
     assert bs.screenshot is None
     assert bs.url == "https://example.com"
+
+
+def test_tool_call_normalizes_names_from_json_and_constructor():
+    for name in ("done", "Done", " DONE "):
+        assert ToolCall(tool_name=name).tool_name == "done"
+        assert ToolCall.model_validate({"tool_name": name}).tool_name == "done"

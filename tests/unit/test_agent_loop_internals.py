@@ -9,6 +9,7 @@ failure tracking, captcha, timeouts) are actually executed.
 from __future__ import annotations
 
 import asyncio
+import json
 from io import BytesIO
 from pathlib import Path
 from types import SimpleNamespace
@@ -18,7 +19,8 @@ import pytest
 from PIL import Image
 
 from webagent.agent import loop as loop_mod
-from webagent.agent.loop import WebAgent, _LoopState, _persist_final_outputs, _save_step_screenshot
+from webagent.agent.loop import WebAgent, _LoopState
+from webagent.agent.run_outputs import _persist_final_outputs, _save_step_screenshot
 from webagent.core.config import AgentConfig
 from webagent.core.models import BrowserState, TaskStatus, ToolCall, ToolResult
 from webagent.evaluation.artifacts import RunLayout
@@ -85,6 +87,41 @@ class FakeExecutor:
         return "EXACT URL EVIDENCE REQUIRED: https://example.test/missing"
 
 
+def test_partial_done_preserves_answer_but_is_not_completed(tmp_path):
+    import time
+
+    agent = _agent(tmp_path, FakePlanner(), FakeBrowser())
+    agent._session_turn_index = 1
+    state = _LoopState(start_time=time.time())
+    result = ToolResult(
+        success=True,
+        tool_name="done",
+        data={"summary": "Partial findings", "completion_status": "partial"},
+    )
+    assert not agent._finish_tool_step(state, ToolCall(tool_name="done"), result)
+    assert agent._task_status == TaskStatus.BLOCKED
+    assert state.final_result["summary"] == "Partial findings"
+
+
+def test_blocked_run_preserves_challenge_handoff_without_success(tmp_path):
+    import time
+
+    agent = _agent(tmp_path, FakePlanner(), FakeBrowser())
+    agent._session_turn_index = 1
+    agent._task_status = TaskStatus.BLOCKED
+    agent._runtime_events = [
+        {"type": "captcha_detected", "reason": "Blocked by challenge", "outcome": "blocked"}
+    ]
+    state = _LoopState(start_time=time.time())
+    agent._preserve_unfinished_result(state)
+    assert state.final_result["stop_reason"] == "Blocked by challenge"
+    assert "Task not completed" in agent.run_layout.summary_path.read_text()
+    before = state.final_result.copy()
+    agent._preserve_unfinished_result(state)
+    assert state.final_result == before
+    assert agent._task_status == TaskStatus.BLOCKED
+
+
 def _agent(tmp_path: Path, planner: FakePlanner, browser: FakeBrowser, **cfg: Any) -> WebAgent:
     cfg.setdefault("enable_loop_detection", False)
     captcha_pause = cfg.pop("captcha_pause", False)
@@ -104,6 +141,23 @@ def _agent(tmp_path: Path, planner: FakePlanner, browser: FakeBrowser, **cfg: An
 
 
 class TestObserve:
+    async def test_entire_capture_has_a_deadline(self, tmp_path, monkeypatch):
+        async def never_finishes(*args, **kwargs):
+            await asyncio.Event().wait()
+
+        async def instant_sleep(_seconds):
+            return None
+
+        monkeypatch.setattr(loop_mod, "wait_for_page_stability", never_finishes)
+        monkeypatch.setattr(loop_mod.asyncio, "sleep", instant_sleep)
+        agent = _agent(
+            tmp_path, FakePlanner(), FakeBrowser(), observation_capture_timeout_seconds=0.01
+        )
+        state = await asyncio.wait_for(agent._observe(), timeout=1)
+        attempts = state.observation_metadata["capture_attempts"]
+        assert [item["error_type"] for item in attempts[:3]] == ["TimeoutError"] * 3
+        assert state.observation_metadata["status"] == "failed"
+
     async def test_success_builds_state_with_screenshot(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -134,7 +188,9 @@ class TestObserve:
         monkeypatch.setattr(loop_mod.asyncio, "sleep", instant_sleep)
         agent = _agent(tmp_path, FakePlanner(), FakeBrowser())
         state = await agent._observe()
-        assert state.dom_summary == "(page loading)"
+        assert "observation incomplete" in state.dom_summary
+        assert state.observation_metadata["pair_consistent"] is False
+        assert len(state.observation_metadata["capture_attempts"]) >= 3
         assert state.url == "https://example.com"
 
 
@@ -617,6 +673,13 @@ class TestExecuteStepBranches:
         assert await agent._execute_step(2, state) is False
         assert agent._task_status == TaskStatus.FAILED
 
+        evidence = agent.run_layout.observations_dir
+        assert (evidence / "step_001" / "pre.json").is_file()
+        post = json.loads((evidence / "step_001" / "post.json").read_text())
+        assert post["metadata"]["status"] == "not_attempted"
+        assert post["screenshot"] is None and post["viewport_context"] is None
+        assert agent._planner_attempts[0].observation_path == "observations/step_001/pre.json"
+
     async def test_post_action_wait_precedes_post_action_observation(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -627,8 +690,8 @@ class TestExecuteStepBranches:
         async def observe() -> BrowserState:
             events.append("observe")
             return BrowserState(
-                screenshot=None,
-                dom_summary="page",
+                screenshot=Image.new("RGB", (16, 16), "blue" if len(events) == 1 else "red"),
+                dom_summary="before action" if len(events) == 1 else "after action",
                 url="https://example.com",
                 title="Example",
                 timestamp="now",
@@ -649,6 +712,15 @@ class TestExecuteStepBranches:
 
         assert await agent._execute_step(1, state) is True
         assert events == ["observe", "act", "sleep:0.125", "observe"]
+        evidence = agent.run_layout.observations_dir / "step_001"
+        pre = json.loads((evidence / "pre.json").read_text())
+        post = json.loads((evidence / "post.json").read_text())
+        assert pre["phase"] == "pre"
+        assert post["phase"] == "post"
+        assert pre["dom_summary"] == "before action"
+        assert post["dom_summary"] == "after action"
+        assert pre["screenshot"]["sha256"] != post["screenshot"]["sha256"]
+        assert agent._planner_attempts[0].observation_path == "observations/step_001/pre.json"
 
     async def test_denied_done_does_not_complete_task(self, tmp_path: Path) -> None:
         planner = FakePlanner(ToolCall(tool_name="done", parameters={"summary": "too early"}))
@@ -768,3 +840,64 @@ class TestPersistHelpers:
 
         assert first.read_bytes() == second.read_bytes()
         assert first.stat().st_ino == second.stat().st_ino
+
+
+@pytest.mark.parametrize("name", ["done", "Done", " DONE "])
+async def test_canonical_tool_name_reaches_policy_executor_and_task_completion(
+    tmp_path, monkeypatch, name
+):
+    from unittest.mock import AsyncMock
+
+    from webagent.tools.builtin.browser_tools import GotoTool
+    from webagent.tools.builtin.task_tools import DoneTool
+    from webagent.tools.executor import ToolExecutor
+    from webagent.tools.policies.grounded import BrowserGroundedPolicy
+    from webagent.tools.registry import ToolRegistry
+
+    browser = FakeBrowser()
+    browser.page.url = "about:blank"
+    planner = FakePlanner(ToolCall(tool_name="goto", parameters={"url": "https://example.com"}))
+
+    async def goto(url, **kwargs):
+        browser.page.url = url
+        planner._tool_call = ToolCall(
+            tool_name=name, parameters={"summary": "The requested answer is 42"}
+        )
+        return {"success": True, "url": url}
+
+    browser.goto = goto
+    agent = _agent(
+        tmp_path, planner, browser, max_steps=2, post_action_wait_ms=0, checkpoint_enabled=False
+    )
+    registry = ToolRegistry()
+    registry.register(GotoTool(browser=browser))
+    registry.register(DoneTool())
+    policy = BrowserGroundedPolicy(
+        browser, artifacts_dir=tmp_path / "artifacts", allowed_tools={"goto", "done"}
+    )
+    authorize = AsyncMock(wraps=policy.authorize)
+    monkeypatch.setattr(policy, "authorize", authorize)
+    agent._tool_executor = ToolExecutor(registry, policy=policy)
+    monkeypatch.setattr(
+        agent,
+        "_observe",
+        AsyncMock(
+            return_value=BrowserState(
+                dom_summary="Answer available",
+                url=browser.page.url,
+                title="Example",
+                timestamp="now",
+            )
+        ),
+    )
+
+    result = await agent.run(
+        "Visit https://example.com and return the requested answer", max_steps=2
+    )
+
+    assert result.success is True
+    assert result.status == "completed"
+    assert result.steps_taken == 2
+    assert result.history[-1].tool_call.tool_name == "done"
+    assert result.history[-1].tool_result.tool_name == "done"
+    assert authorize.call_args.args[0].tool_name == "done"

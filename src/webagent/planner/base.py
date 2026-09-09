@@ -3,12 +3,32 @@
 from __future__ import annotations
 
 import json
+from datetime import UTC, datetime
 from typing import Any
 
+from webagent.browser.context_projection import planner_dom_context as planner_dom_context
 from webagent.core.models import BrowserState, ToolCall
 from webagent.utils.images import image_to_jpeg_b64, is_blank_image
 
 TRANSPORT_AGNOSTIC_PLANNING_RULES = """Task and evidence rules:
+- For latest reports, keep release variants distinct. Searching a version is not verifying it.
+  Explore an observed official site's blog/release index and its organization's repositories;
+  finding no PDF on one blog post is not evidence that the release has no report. Use
+  get_all_links(contains=..., offset=...) and next_offset to reach remaining links.
+  Before done, inspect the selected PDF's own preview for file-specific dates, compare
+  newer candidates, and distinguish publication dates from file updates and repository dates.
+- VIEWPORT CONTENT describes the screenshot region; DOCUMENT SUPPLEMENT and tool results may
+  include off-screen information. Do not treat document text as visual evidence. Control labels
+  are semantic metadata and may differ from painted text. A control [ID] is addressed with
+  selector={"type":"ref","value":"ID"}; copy the entire ID including observation prefix.
+  Legacy observation_id/ref selectors remain valid. For off-screen interaction, scroll_to_element
+  first, then use the new observation. Read-only get_attribute/extract_text can read an
+  already observed off-screen node without scrolling; that is document, not visual evidence.
+  Frame controls require frame_interact with their frame_index; use scroll with the declared
+  frame_index to reveal off-screen iframe content. After scrolling, navigation, a new observation,
+  or a stale-target error, use a fresh reference. Unrelated text updates need not invalidate targets.
+  For wait_for_element/upload_file/download_file, use their plain selector schema (type/value)
+  and existing tool workflow; they do not accept observation references.
 - Use only listed tools and call `done` when the task is complete. Its summary must contain the
   actual comprehensive answer, not merely a completion notice.
 - After analyze_image or pdf_analyze_figure returns the requested analysis, call `done` next and
@@ -121,6 +141,24 @@ Example:
 """
 
 
+ANSWER_COMPLETION_RULES = """
+Completion scope and answer fidelity:
+- For an ordinary factual lookup, once the requested facts are visible on the requested primary
+  page and applicable policy gates are satisfied, call done. Do not repeat searches or reopen the
+  same page merely to reconfirm unchanged evidence. Latest-report comparison rules apply only
+  when the task actually asks for latestness; do not expand a simple lookup into that workflow.
+- Answer every requested field, but keep the summary proportional to the task. A simple lookup
+  usually needs a short paragraph and the exact source URL, not a search-by-search audit narrative.
+  Give detailed methodology only when requested. Preserve source qualifications and limitations.
+- Do not add unobserved examples or strengthen a source statement into an absolute guarantee.
+  Separate directly supported facts from inference; omit unsupported elaboration even if plausible.
+"""
+
+TRANSPORT_AGNOSTIC_PLANNING_RULES += ANSWER_COMPLETION_RULES
+SYSTEM_PROMPT += ANSWER_COMPLETION_RULES
+STRUCTURED_SYSTEM_PROMPT += ANSWER_COMPLETION_RULES
+
+
 def build_prompt(
     task: str,
     browser_state: BrowserState,
@@ -134,11 +172,7 @@ def build_prompt(
         screenshot_b64 = image_to_jpeg_b64(browser_state.screenshot, quality=70)
 
     # Truncate DOM if too long
-    dom_context = (
-        browser_state.dom_summary[:6000]
-        if len(browser_state.dom_summary) > 6000
-        else browser_state.dom_summary
-    )
+    dom_context = planner_dom_context(browser_state)
 
     # Build history summary
     history_summary = history_text if history_text else "No previous actions."
@@ -148,6 +182,7 @@ def build_prompt(
     # duplicate ~300 tokens every step.
     prompt = (
         f"TASK: {task.strip()}\n\n"
+        f"CURRENT UTC DATE: {datetime.now(UTC).date().isoformat()}\n"
         f"URL: {browser_state.url}\n"
         f"TITLE: {browser_state.title}\n\n"
         f"PAGE:\n{dom_context}\n\n"

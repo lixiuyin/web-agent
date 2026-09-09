@@ -72,13 +72,29 @@ async def test_dom_summary_applies_snapshot_config(monkeypatch):
         use_cdp=False,
         max_snapshot_elements=7,
         enable_ad_filtering=False,
+        observation_viewport_chars=1200,
+        observation_document_chars=800,
+        observation_max_dom_nodes=600,
+        observation_max_text_chars=3000,
+        observation_text_share=0.6,
+        observation_text_block_chars=250,
     )
     tool = DomSummaryTool(browser=SimpleNamespace(page=object()), config=config)
 
     result = await tool.execute({})
 
     assert result.data == {"dom_summary": "summary"}
-    assert captured == {"use_cdp": False, "max_elements": 7, "filter_ads": False}
+    assert captured == {
+        "use_cdp": False,
+        "max_elements": 7,
+        "filter_ads": False,
+        "viewport_chars": 1200,
+        "document_chars": 800,
+        "max_dom_nodes": 600,
+        "max_text_chars": 3000,
+        "text_share": 0.6,
+        "text_block_chars": 250,
+    }
 
 
 class TestScreenshotPath:

@@ -132,6 +132,8 @@
         "error": {"type": ["string", "null"]},
         "result": {},
         "planner_visible_result": {"type": "string", "default": ""},
+        "observations": {"type": "object", "additionalProperties": {"type": "string"}, "default": {}},
+        "result_ref": {"type": "object", "additionalProperties": {"type": "string"}, "default": {}},
         "policy": {"type": "object", "default": {}},
         "duration_seconds": {"type": ["number", "null"], "minimum": 0},
         "tool_duration_seconds": {"type": ["number", "null"], "minimum": 0}

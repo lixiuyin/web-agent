@@ -6,16 +6,17 @@ from datetime import date
 from pathlib import Path
 
 import pytest
-from benchmarks.environments.controlled_web.long_horizon_site import (
+
+from webagent.agent.checkpoint_redaction import _checkpoint_planning_state
+from webagent.agent.state import PlanningState
+from webagent.benchmarks.environments.controlled_web.long_horizon_site import (
     CUE_SOURCE_STAGES,
     CUES,
     RECALLS,
     _stage_page,
 )
-from benchmarks.suites.controlled_web.long_horizon_tasks import build_long_horizon_tasks
-
-from webagent.agent.loop import _checkpoint_planning_state
-from webagent.agent.state import PlanningState
+from webagent.benchmarks.suites.controlled_web.long_horizon import parse_args
+from webagent.benchmarks.suites.controlled_web.long_horizon_tasks import build_long_horizon_tasks
 from webagent.core.models import AgentResult, AgentStep, BrowserState, ToolCall, ToolResult
 from webagent.evaluation import (
     AssertionOutcome,
@@ -39,6 +40,11 @@ _SCENARIOS = (
     "sandbox_transaction",
     "recovery",
 )
+
+
+def test_long_horizon_timeout_has_a_realistic_configurable_default() -> None:
+    assert parse_args([]).task_timeout_seconds == 2400
+    assert parse_args(["--task-timeout-seconds", "3600"]).task_timeout_seconds == 3600
 
 
 def test_long_horizon_recall_instructions_name_the_actual_cue_source_stage() -> None:

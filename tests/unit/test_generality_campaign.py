@@ -5,7 +5,8 @@ from __future__ import annotations
 import json
 
 import pytest
-from benchmarks.studies.generality_campaign import (
+
+from webagent.benchmarks.studies.generality_campaign import (
     _ensure_campaign_contract,
     _preflight_models,
     _run_component,
@@ -22,6 +23,9 @@ def test_campaign_preflight_is_enabled_by_default() -> None:
     assert args.model_order == "rotate-by-date"
     assert args.require_new_date is True
     assert args.open_study_name == "open-web"
+    assert args.open_direct_task_timeout_seconds == 600
+    assert args.open_discovery_task_timeout_seconds == 2400
+    assert args.long_task_timeout_seconds == 2400
     assert args.output.as_posix() == "outputs/campaigns/generality-campaign-v2"
 
 
@@ -80,7 +84,7 @@ def test_campaign_component_records_operator_abort(tmp_path, monkeypatch) -> Non
         del args, kwargs
         raise KeyboardInterrupt
 
-    monkeypatch.setattr("benchmarks.studies.generality_campaign._run", interrupt)
+    monkeypatch.setattr("webagent.benchmarks.studies.generality_campaign._run", interrupt)
     with pytest.raises(KeyboardInterrupt):
         _run_component(
             ["ignored"],

@@ -6,12 +6,12 @@ import hashlib
 import json
 from pathlib import Path
 
-from benchmarks.studies.open_web_longitudinal import (
+from webagent.benchmarks.studies.open_web_longitudinal import (
     evidence_record_from_report,
     load_slices,
     summarize_slices,
 )
-from benchmarks.suites.open_web.runner import canonical_sha256
+from webagent.benchmarks.suites.open_web.runner import canonical_sha256
 
 
 def _record(model: str, day: str, *, run: int = 1, **overrides: object) -> dict[str, object]:

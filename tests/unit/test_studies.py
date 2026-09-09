@@ -10,10 +10,10 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-from benchmarks.core import initialize_matrix_study, study_context_from_args
 from jsonschema import Draft202012Validator
 from pydantic import ValidationError
 
+from webagent.benchmarks.core import initialize_matrix_study, study_context_from_args
 from webagent.evaluation import (
     AssertionOutcome,
     BenchmarkAssertion,

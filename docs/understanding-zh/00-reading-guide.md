@@ -4,17 +4,29 @@
 
 本项目把自然语言任务变成重复的状态转换：浏览器页面被编码成 `BrowserState`，Planner 把状态解码为 `ToolCall`，工具执行得到 `ToolResult`，历史再影响下一轮规划。浏览器、模型、工具和 PDF parser 都只是这个循环中的可替换组件。
 
-```text
-Task + stable BrowserState + History + exposed ToolSpec + controller hints
-                               │
-                               ▼
-                            Planner
-                               │ validated ToolCall
-                               ▼
-ToolResult ◀── exposure/evidence/risk/timeout gates ◀── ToolExecutor/Registry
-    │                                                   │
-    │                                                   ▼
-    └──── history + post-action stable observation ─ Browser/PDF/File/Search
+```mermaid
+flowchart TB
+    INPUT["Task + Config + current BrowserState<br/>+ History + exposed ToolSpecs + controller hints"]
+    INPUT --> PLAN["Planner<br/>choose one action"]
+    PLAN --> CALL["validated ToolCall"]
+    CALL --> GATES["exposure → evidence → risk → timeout"]
+    GATES --> ENV["Browser / PDF / File / Search"]
+    ENV --> RESULT["ToolResult + audit"]
+    RESULT --> RECORD["Record<br/>paired evidence + history + checkpoint"]
+    RECORD --> TERMINAL{done / terminal?}
+    TERMINAL -->|否| NEXT["Re-observe stable page<br/>and build the next input"]
+    NEXT --> PLAN
+    TERMINAL -->|是| FINAL["AgentResult + persisted outputs"]
+
+    classDef input fill:#E0F2FE,stroke:#0369A1,color:#0C4A6E;
+    classDef core fill:#EEF2FF,stroke:#4F46E5,color:#312E81;
+    classDef guard fill:#FFF7ED,stroke:#D97706,color:#7C2D12;
+    classDef evidence fill:#ECFDF5,stroke:#15803D,color:#14532D;
+    class INPUT,ENV,NEXT input;
+    class PLAN,CALL core;
+    class GATES guard;
+    class TERMINAL guard;
+    class RESULT,RECORD,FINAL evidence;
 ```
 
 ## 三轮阅读法
@@ -38,7 +50,7 @@ ToolResult ◀── exposure/evidence/risk/timeout gates ◀── ToolExecutor
 9. `src/webagent/parser/cascade.py`、`_router.py`、`_quality.py`
 10. 三个 cloud provider 与 local fallback
 11. `tools/builtin` 中 PDF、搜索和文件工具
-12. `benchmarks/suites/`、`benchmarks/studies/` 与对应单元测试；最后才回头审视 README 的架构声明。
+12. `src/webagent/benchmarks/suites/`、`src/webagent/benchmarks/studies/` 与对应单元测试；最后才回头审视 README 的架构声明。
 
 ## 自测标准
 

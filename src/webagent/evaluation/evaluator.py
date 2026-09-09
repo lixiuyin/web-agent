@@ -24,6 +24,9 @@ from webagent.evaluation.models import (
     BenchmarkTask,
     TaskEvaluation,
 )
+from webagent.utils.urls import document_key
+
+_URL_RE = re.compile(r"https?://[^\s<>\"']+")
 
 
 def _json_path(payload: Any, path: str) -> Any:
@@ -80,35 +83,38 @@ def _matches_answer_assertion(assertion: BenchmarkAssertion, observed: Any) -> b
             _normalized_match_text(expected) in _normalized_match_text(observed)
             for expected in assertion.expected
         )
+    if kind == "answer_document_url":
+        expected = document_key(str(assertion.expected))
+        return any(
+            document_key(url.rstrip(".,;:!?)]}")) == expected
+            for url in _URL_RE.findall(str(observed))
+        )
     if kind == "answer_date":
         return _answer_contains_date(str(assertion.expected), str(observed))
     if kind == "answer_labeled_date":
-        expected = assertion.expected
-        if not isinstance(expected, dict):
-            return False
-        label = re.escape(str(expected.get("label", "")))
-        match = re.search(rf"(?im)^\s*{label}\s*:\s*", str(observed))
-        if match is None:
-            return False
-        field_value = str(observed)[match.end() :].splitlines()[0]
-        return _answer_starts_with_date(str(expected.get("date", "")), field_value)
+        return _matches_labeled_date(assertion.expected, observed)
     if kind == "answer_not_contains":
         return _normalized_match_text(assertion.expected) not in _normalized_match_text(observed)
     if kind == "answer_regex":
         return re.search(str(assertion.expected), str(observed), flags=re.IGNORECASE) is not None
     if kind == "answer_in_order":
-        if not isinstance(assertion.expected, list):
-            return False
-        text = _normalized_match_text(observed)
-        cursor = 0
-        for expected in assertion.expected:
-            normalized_expected = _normalized_match_text(expected)
-            position = text.find(normalized_expected, cursor)
-            if position < 0:
-                return False
-            cursor = position + len(normalized_expected)
-        return True
+        return _matches_answer_sequence(assertion.expected, observed)
     return False
+
+
+def _matches_labeled_date(expected: Any, observed: Any) -> bool:
+    if not isinstance(expected, dict):
+        return False
+    label = re.escape(str(expected.get("label", "")))
+    emphasis = r"(?:\*\*|__)"
+    match = re.search(
+        rf"(?im)^\s*{emphasis}?{label}\s*(?::{emphasis}?|{emphasis}:)\s*",
+        str(observed),
+    )
+    if match is None:
+        return False
+    field_value = str(observed)[match.end() :].splitlines()[0]
+    return _answer_starts_with_date(str(expected.get("date", "")), field_value)
 
 
 def _normalized_match_text(value: Any) -> str:
@@ -148,7 +154,12 @@ class TerminalStateEvaluator:
             for item in outcomes
             if item.assertion.kind.startswith("answer_")
             or item.assertion.kind
-            in {"history_url_observed", "history_url_observed_any", "history_origin_observed"}
+            in {
+                "history_url_observed",
+                "history_url_observed_any",
+                "history_document_url_observed",
+                "history_origin_observed",
+            }
         ]
         status = result.status.casefold()
         success_probability = _success_probability(result.final_result)
@@ -235,7 +246,12 @@ class TerminalStateEvaluator:
             passed = self._matches(assertion, observed)
             candidate = not passed and (
                 assertion.kind.startswith("answer_")
-                or assertion.kind in {"history_url_observed", "history_url_observed_any"}
+                or assertion.kind
+                in {
+                    "history_url_observed",
+                    "history_url_observed_any",
+                    "history_document_url_observed",
+                }
             )
             return AssertionOutcome(
                 assertion=assertion,
@@ -273,18 +289,12 @@ class TerminalStateEvaluator:
             return _json_path(response.json(), assertion.json_path or "")
         if assertion.kind.startswith("answer_"):
             return str(result.final_result.get("summary", ""))
-        if assertion.kind in {"history_url_observed", "history_url_observed_any"}:
-            expected_values = (
-                assertion.expected
-                if assertion.kind == "history_url_observed_any"
-                else [str(assertion.expected)]
-            )
-            observed_urls = [step.browser_state.url for step in result.history]
-            return any(
-                url.startswith(str(expected))
-                for expected in expected_values
-                for url in observed_urls
-            )
+        if assertion.kind in {
+            "history_url_observed",
+            "history_url_observed_any",
+            "history_document_url_observed",
+        }:
+            return self._history_url_observed(assertion, result)
         if assertion.kind == "history_origin_observed":
             expected = str(assertion.expected).rstrip("/")
             observed_origins = {
@@ -308,6 +318,28 @@ class TerminalStateEvaluator:
             return all(
                 any(observed == expected for observed in cursor) for expected in expected_tools
             )
+        if assertion.kind in {"artifact_exists", "artifact_sha256", "certificate_valid"}:
+            return self._observe_persisted_evidence(task, assertion)
+        return await self._observe_element(assertion)
+
+    @staticmethod
+    def _history_url_observed(assertion: BenchmarkAssertion, result: AgentResult) -> bool:
+        observed_urls = [step.browser_state.url for step in result.history]
+        if assertion.kind == "history_document_url_observed":
+            expected = document_key(str(assertion.expected))
+            return any(document_key(url) == expected for url in observed_urls)
+        expected_values = (
+            assertion.expected
+            if assertion.kind == "history_url_observed_any"
+            else [str(assertion.expected)]
+        )
+        return any(
+            url.startswith(str(expected)) for expected in expected_values for url in observed_urls
+        )
+
+    def _observe_persisted_evidence(
+        self, task: BenchmarkTask, assertion: BenchmarkAssertion
+    ) -> Any:
         if assertion.kind in {"artifact_exists", "artifact_sha256"}:
             path, digest = self._artifact_expectation(task, assertion)
             if not path.is_file():
@@ -319,21 +351,22 @@ class TerminalStateEvaluator:
                 "sha256": actual_digest,
                 "expected_sha256": digest,
             }
-        if assertion.kind == "certificate_valid":
-            if self._output_dir is None:
-                return False
-            layout = self._task_run_layout(task)
-            trace_path = layout.trace_path_for_read()
-            certificate_path = layout.verification_path_for_read()
-            if not trace_path.is_file() or not certificate_path.is_file():
-                return False
-            raw = trace_path.read_bytes()
-            certificate = json.loads(certificate_path.read_text(encoding="utf-8"))
-            return bool(
-                certificate.get("valid") is True
-                and certificate.get("trace_sha256") == hashlib.sha256(raw).hexdigest()
-            )
-        return await self._observe_element(assertion)
+        return self._observe_certificate(task)
+
+    def _observe_certificate(self, task: BenchmarkTask) -> bool:
+        if self._output_dir is None:
+            return False
+        layout = self._task_run_layout(task)
+        trace_path = layout.trace_path_for_read()
+        certificate_path = layout.verification_path_for_read()
+        if not trace_path.is_file() or not certificate_path.is_file():
+            return False
+        raw = trace_path.read_bytes()
+        certificate = json.loads(certificate_path.read_text(encoding="utf-8"))
+        return bool(
+            certificate.get("valid") is True
+            and certificate.get("trace_sha256") == hashlib.sha256(raw).hexdigest()
+        )
 
     def _artifact_expectation(
         self, task: BenchmarkTask, assertion: BenchmarkAssertion
@@ -387,7 +420,11 @@ class TerminalStateEvaluator:
             return str(assertion.expected) in str(observed)
         if assertion.kind.startswith("answer_"):
             return _matches_answer_assertion(assertion, observed)
-        if assertion.kind in {"history_url_observed", "history_url_observed_any"}:
+        if assertion.kind in {
+            "history_url_observed",
+            "history_url_observed_any",
+            "history_document_url_observed",
+        }:
             return observed is True
         if assertion.kind in {
             "history_origin_observed",
@@ -417,3 +454,17 @@ def _success_probability(final_result: dict[str, Any]) -> float | None:
     if not math.isfinite(probability) or not 0.0 <= probability <= 1.0:
         return None
     return probability
+
+
+def _matches_answer_sequence(expected_values: Any, observed: Any) -> bool:
+    if not isinstance(expected_values, list):
+        return False
+    text = _normalized_match_text(observed)
+    cursor = 0
+    for expected in expected_values:
+        normalized_expected = _normalized_match_text(expected)
+        position = text.find(normalized_expected, cursor)
+        if position < 0:
+            return False
+        cursor = position + len(normalized_expected)
+    return True

@@ -5,10 +5,11 @@ from pathlib import Path
 from types import ModuleType
 
 import pytest
-from benchmarks import open_web as legacy_open_web
-from benchmarks import sandbox_interaction as legacy_sandbox
-from benchmarks import web_interaction as legacy_general
-from benchmarks.core import (
+
+from webagent.benchmarks import open_web as legacy_open_web
+from webagent.benchmarks import sandbox_interaction as legacy_sandbox
+from webagent.benchmarks import web_interaction as legacy_general
+from webagent.benchmarks.core import (
     allocate_execution_dir,
     default_campaign_dir,
     default_study_dir,
@@ -16,10 +17,9 @@ from benchmarks.core import (
     packaged_manifest_path,
     task_run_dir,
 )
-from benchmarks.studies import open_web_matrix
-from benchmarks.suites.controlled_web import general, sandbox
-from benchmarks.suites.open_web import parallel, runner
-
+from webagent.benchmarks.studies import open_web_matrix
+from webagent.benchmarks.suites.controlled_web import general, sandbox
+from webagent.benchmarks.suites.open_web import parallel, runner
 from webagent.core.config import AgentConfig
 
 

@@ -1,0 +1,643 @@
+{
+  "schema_version": 4,
+  "suite": "qwen-strict-search-v1",
+  "created_at": "2026-09-09T02:16:42.980229+00:00",
+  "metadata": {
+    "mode": "strict-search-engine-agent",
+    "manifest": "evidence/manifests/18c7cd8a6edf19a55d2f4908b088c67cf000a3fc38b58acf304dba2e93836cc5.json",
+    "manifest_sha256": "18c7cd8a6edf19a55d2f4908b088c67cf000a3fc38b58acf304dba2e93836cc5",
+    "benchmark_config": {
+      "schema_version": 3,
+      "manifest_sha256": "18c7cd8a6edf19a55d2f4908b088c67cf000a3fc38b58acf304dba2e93836cc5",
+      "provider": "unknown",
+      "declared_endpoint_access_mode": "byok",
+      "study_manifest_sha256": "unknown",
+      "max_steps_per_task": 25,
+      "discovery_max_steps_per_task": 25,
+      "discovery_task_count": 1,
+      "browser_profile_mode": "temporary",
+      "browser_headless": true,
+      "browser_timeout": 30000,
+      "viewport_width": 1280,
+      "viewport_height": 720,
+      "stealth_mode": false,
+      "browser_humanize_delays": false,
+      "browser_ignore_https_errors": false,
+      "browser_locale": null,
+      "browser_timezone_id": null,
+      "captcha_pause": true,
+      "captcha_handling": "fail",
+      "captcha_wait_timeout_seconds": 180.0,
+      "captcha_poll_interval_seconds": 2.0,
+      "discovery_mode": "browser-grounded",
+      "high_risk_action_policy": "deny",
+      "persistent_pdf_cache": false,
+      "task_timeout": 2400,
+      "direct_task_timeout": 300,
+      "discovery_task_timeout": 2400,
+      "tool_timeout": 600,
+      "api_timeout": 60,
+      "api_hard_timeout": 300,
+      "api_transient_retries": 2,
+      "api_retry_base_seconds": 10.0,
+      "api_retry_max_seconds": 60.0,
+      "use_vllm": false,
+      "allow_google_search": false,
+      "search_default_engine": "bing",
+      "search_bing_market": "en-US",
+      "strict_search_default_engine": "bing",
+      "strict_search_bing_market": "en-US",
+      "planner_output_mode": "auto",
+      "use_structured_output": true,
+      "planner_max_tokens": 6000,
+      "planner_reasoning_effort": "low",
+      "planner_max_attempts": 2,
+      "max_consecutive_failures": 5,
+      "max_steps": 30,
+      "post_action_wait_ms": 500,
+      "history_context_length": 10,
+      "history_full_result_steps": 2,
+      "enable_loop_detection": true,
+      "loop_window_size": 10,
+      "loop_threshold": 5,
+      "checkpoint_enabled": true,
+      "strategy_enabled": true,
+      "strategy_failure_threshold": 2,
+      "strategy_no_progress_threshold": 3,
+      "strategy_max_switches": 6,
+      "use_cdp": true,
+      "max_snapshot_elements": 50,
+      "enable_ad_filtering": true
+    },
+    "benchmark_config_sha256": "c6ba8ef9e16bfdb34f8e0900c1c28226a5884cda4c475e337ffe4d99d84130e4",
+    "task_ids_sha256": "739ed231f55885b6d6103cea2c8cd20133f65e0a2ad81de1ef700ab569bc429f",
+    "run_id": "299a06f8-a482-49cc-8f2e-0ab27b4e0536",
+    "browser_profile_mode": "temporary",
+    "captcha_handling": "fail",
+    "model": "z-ai/glm-5.3-flash",
+    "provider": "unknown",
+    "declared_endpoint_access_mode": "byok",
+    "study_id": null,
+    "study_manifest": null,
+    "study_manifest_sha256": "unknown",
+    "max_steps_per_task": 25,
+    "discovery_max_steps_per_task": 25,
+    "discovery_mode": "browser-grounded",
+    "high_risk_action_policy": "deny",
+    "stealth_mode": false,
+    "agent_source_sha256": "6c1b3109711ca0a3450a0b8ee5ca286a91fee74a673fe9db437bb33ec94601a0",
+    "benchmark_source_sha256": "8a7f1ff9f38cc14ca9acd80049831dcc989da05e2c690d38de1bb57fdb2406e3",
+    "shard_count": 1,
+    "shard_index": 0,
+    "full_task_count": 1,
+    "discovery_task_count": 1,
+    "shard_discovery_task_count": 1,
+    "anti_shortcut_contract": "search_engine_only_v8"
+  },
+  "summary": {
+    "task_count": 1,
+    "passed_tasks": 1,
+    "success_rate": 1.0,
+    "mean_score": 1.0,
+    "agent_completion_rate": 1.0,
+    "false_completion_rate": 0.0,
+    "action_validity_rate": 0.8571428571428571,
+    "mean_steps": 16.0,
+    "mean_duration_seconds": 1479.3332030773163,
+    "total_planner_tokens": 277169,
+    "mean_planner_tokens": 277169.0,
+    "answer_grounding_rate": 1.0,
+    "timeout_rate": 0.0,
+    "captcha_rate": 0.0,
+    "blocked_rate": 0.0,
+    "max_steps_rate": 0.0,
+    "p95_duration_seconds": 1479.3332030773163,
+    "p95_steps": 16.0,
+    "p95_planner_tokens": 277169.0,
+    "termination_reason_counts": {
+      "completed": 1
+    },
+    "category_success_rate": {
+      "strict_search_pdf_figure": 1.0
+    }
+  },
+  "tasks": [
+    {
+      "task_id": "qwen_latest_report_figure1",
+      "category": "strict_search_pdf_figure",
+      "goal": "Find the most recent official Qwen technical report PDF as of today using browser search only. Compare candidates and dates, explicitly state the selected report's exact publication or file date from first-party page/file-history evidence on a separate line labeled 'Selected report date:', cite the exact official PDF page URL, download the PDF, then interpret Figure 1 by explaining its purpose and key architectural findings.",
+      "passed": true,
+      "score": 1.0,
+      "agent_reported_success": true,
+      "agent_status": "completed",
+      "error": null,
+      "duration_seconds": 1479.3332030773163,
+      "steps": 16,
+      "action_count": 14,
+      "failed_action_count": 2,
+      "planner_attempt_count": 16,
+      "planner_failure_count": 1,
+      "planner_tokens": 277169,
+      "answer_assertion_count": 9,
+      "answer_assertion_passed": 9,
+      "termination_reason": "completed",
+      "timed_out": false,
+      "captcha_encountered": false,
+      "blocked": false,
+      "max_steps_reached": false,
+      "split": "held_out_setting",
+      "task_family": "latest_official_report_figure_interpretation",
+      "setting_id": "search_to_first_party_pdf",
+      "leakage_group": "qwen_official_report_landscape_2026_08",
+      "target_failure_modes": [
+        "search_recency",
+        "source_grounding",
+        "document_download",
+        "figure_detection",
+        "figure_interpretation",
+        "false_completion"
+      ],
+      "feedback": {
+        "kind": "verifiable",
+        "delay_steps": 0,
+        "noise_rate": null
+      },
+      "expected_horizon": "long",
+      "scenario": "search_discovery",
+      "environment": "public_web",
+      "entry_mode": "search",
+      "risk_scope": "read_only",
+      "source_origins": [
+        "https://github.com"
+      ],
+      "trajectory": {
+        "schema_version": 2,
+        "action_count": 14,
+        "distinct_tool_count": 7,
+        "tool_entropy_bits": 2.610577243331642,
+        "repeated_action_rate": 0.0,
+        "longest_identical_action_streak": 1,
+        "longest_failure_streak": 2,
+        "recovery_count": 1,
+        "minimum_window_entropy_bits": 1.3709505944546687,
+        "collapse_onset_step": null,
+        "longest_same_state_streak": 2,
+        "stagnation_onset_step": null,
+        "replan_count": 2,
+        "strategy_switch_count": 2,
+        "replan_rate": 0.14285714285714285,
+        "resume_count": 0,
+        "resumed_from_checkpoint": false
+      },
+      "success_probability": 0.9,
+      "confidence_source": "self_reported",
+      "confidence_elicited_at_step": 16,
+      "assertions": [
+        {
+          "assertion": {
+            "kind": "answer_contains",
+            "expected": "Qwen3.8-Flash-Next",
+            "selector": null,
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": "Selected report: \"Qwen3.8-Flash-Next\" technical report (tech_report.pdf), published by the official Qwen Team repository (github.com/QwenLM, described on the repo as \"the foundation model developed by Qwen Team, Alibaba Group\").\n\nCandidate comparison (from browser search and the rendered QwenLM organization repository index at github.com/orgs/QwenLM/repositories): the org listing showed Qwen3.8-Flash-Next as the top/most recently updated repository (repo last activity Aug 27, 2026; 341 stars, 16 forks), ahead of Qwen3.8 and other repositories. Searches for the current 2026 release landscape (\"Qwen technical report PDF\", \"qwen model version release lineup 2026\") surfaced Qwen3.8-Flash-Next as the newest release line, with no higher version appearing. The report file's own GitHub blob page (first-party file-history evidence) shows the PDF's last commit/file update on Aug 26, 2026 (relative-time 2026-08-26T12:29:38Z), which is more recent than any other Qwen technical report candidate observed.\n\nSelected report date: 2026-08-26 (tech_report.pdf file last-updated/commit date, from the file's own first-party GitHub blob page file history)\n\nOfficial PDF page URL: https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf (raw file: https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf) — downloaded and validated.\n\nFigure 1 interpretation (\"Figure 1: Qwen3.8-Flash-Next architecture\", page 2):\n\nPurpose: Figure 1 is the paper's reference architecture diagram, tying together the four core design choices evaluated in the report — hybrid token mixing, a gated/widened residual stream, off-accelerator capacity scaling, and speculative decoding — in a single picture of the model.\n\nWhat it depicts (from visible labels and the caption):\n- Left column, bottom to top: Input Tokens → Vocabulary Embedding; an N-gram Embedding Layer labeled \"Layer 2 only\" feeding the stack from Layer 2 onward; a repeating stack where one dashed block groups 3× GDN Layers + 1× QSA Layer (a block of four); MTP Modules at the top plus a separate Prediction Head path.\n- Right panel zooms into one dashed block. The GDN sub-block (×3) routes Hidden States through a GR Read gate → Gated DeltaNet token mixer → elementwise product (⊙) → GR Write into an \"Expanded Residual\" drawn as a wide multi-branch stream (four circles); a parallel GR Read path feeds a MoE block that writes back to the same stream. The QSA sub-block (×1) shares the same GR Read → ⊙ → GR Write skeleton but uses Qwen Sparse Attention as the mixer, again with a parallel MoE branch. The top block's output flows through GR Read and ⊙ into the Prediction Head.\n- Acronyms per the source: GDN = Gated DeltaNet; QSA = Qwen Sparse Attention; GR = Gated Residual; MoE = mixture-of-experts; MTP = multi-token prediction.\n\nKey architectural findings/takeaways the paper draws from it:\n1. Hybrid token mixing: three GDN layers (fixed-size recurrent state, cheap decoding) alternate with one QSA global-attention layer per four-layer block; QSA's compressed indexer reduces prefill attention cost (~O(n²/r)).\n2. Every sublayer reads and writes through Gated Residual (GR): GR widens the residual stream (the four circles correspond to the caption's four-branch stream) and gates the read elementwise; the paper reports that predicting GR's read/write weights gave a small loss change but clear benchmark gains.\n3. Capacity is scaled off the accelerator: an n-gram embedding layer at Layer 2 uses host-memory prefetching to add capacity without accelerator memory.\n4. Speculative decoding efficiency: the MTP module reuses QSA's sparse-attention indices across speculative decoding steps, avoiding repeated indexer work.\n\nCaveat per the vision analysis: the parallel/branch structure of GR Read/Write and MoE paths is directly labeled; the reading of the four residual circles as the four-branch stream and the independently gated MoE path are stated as inference from the caption/labels, and adjacency of components in the diagram should not be read as a strict serial arrow chain.",
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "answer_labeled_date",
+            "expected": {
+              "label": "Selected report date",
+              "date": "2026-08-26"
+            },
+            "selector": null,
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": "Selected report: \"Qwen3.8-Flash-Next\" technical report (tech_report.pdf), published by the official Qwen Team repository (github.com/QwenLM, described on the repo as \"the foundation model developed by Qwen Team, Alibaba Group\").\n\nCandidate comparison (from browser search and the rendered QwenLM organization repository index at github.com/orgs/QwenLM/repositories): the org listing showed Qwen3.8-Flash-Next as the top/most recently updated repository (repo last activity Aug 27, 2026; 341 stars, 16 forks), ahead of Qwen3.8 and other repositories. Searches for the current 2026 release landscape (\"Qwen technical report PDF\", \"qwen model version release lineup 2026\") surfaced Qwen3.8-Flash-Next as the newest release line, with no higher version appearing. The report file's own GitHub blob page (first-party file-history evidence) shows the PDF's last commit/file update on Aug 26, 2026 (relative-time 2026-08-26T12:29:38Z), which is more recent than any other Qwen technical report candidate observed.\n\nSelected report date: 2026-08-26 (tech_report.pdf file last-updated/commit date, from the file's own first-party GitHub blob page file history)\n\nOfficial PDF page URL: https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf (raw file: https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf) — downloaded and validated.\n\nFigure 1 interpretation (\"Figure 1: Qwen3.8-Flash-Next architecture\", page 2):\n\nPurpose: Figure 1 is the paper's reference architecture diagram, tying together the four core design choices evaluated in the report — hybrid token mixing, a gated/widened residual stream, off-accelerator capacity scaling, and speculative decoding — in a single picture of the model.\n\nWhat it depicts (from visible labels and the caption):\n- Left column, bottom to top: Input Tokens → Vocabulary Embedding; an N-gram Embedding Layer labeled \"Layer 2 only\" feeding the stack from Layer 2 onward; a repeating stack where one dashed block groups 3× GDN Layers + 1× QSA Layer (a block of four); MTP Modules at the top plus a separate Prediction Head path.\n- Right panel zooms into one dashed block. The GDN sub-block (×3) routes Hidden States through a GR Read gate → Gated DeltaNet token mixer → elementwise product (⊙) → GR Write into an \"Expanded Residual\" drawn as a wide multi-branch stream (four circles); a parallel GR Read path feeds a MoE block that writes back to the same stream. The QSA sub-block (×1) shares the same GR Read → ⊙ → GR Write skeleton but uses Qwen Sparse Attention as the mixer, again with a parallel MoE branch. The top block's output flows through GR Read and ⊙ into the Prediction Head.\n- Acronyms per the source: GDN = Gated DeltaNet; QSA = Qwen Sparse Attention; GR = Gated Residual; MoE = mixture-of-experts; MTP = multi-token prediction.\n\nKey architectural findings/takeaways the paper draws from it:\n1. Hybrid token mixing: three GDN layers (fixed-size recurrent state, cheap decoding) alternate with one QSA global-attention layer per four-layer block; QSA's compressed indexer reduces prefill attention cost (~O(n²/r)).\n2. Every sublayer reads and writes through Gated Residual (GR): GR widens the residual stream (the four circles correspond to the caption's four-branch stream) and gates the read elementwise; the paper reports that predicting GR's read/write weights gave a small loss change but clear benchmark gains.\n3. Capacity is scaled off the accelerator: an n-gram embedding layer at Layer 2 uses host-memory prefetching to add capacity without accelerator memory.\n4. Speculative decoding efficiency: the MTP module reuses QSA's sparse-attention indices across speculative decoding steps, avoiding repeated indexer work.\n\nCaveat per the vision analysis: the parallel/branch structure of GR Read/Write and MoE paths is directly labeled; the reading of the four residual circles as the four-branch stream and the independently gated MoE path are stated as inference from the caption/labels, and adjacency of components in the diagram should not be read as a strict serial arrow chain.",
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "answer_document_url",
+            "expected": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+            "selector": null,
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": "Selected report: \"Qwen3.8-Flash-Next\" technical report (tech_report.pdf), published by the official Qwen Team repository (github.com/QwenLM, described on the repo as \"the foundation model developed by Qwen Team, Alibaba Group\").\n\nCandidate comparison (from browser search and the rendered QwenLM organization repository index at github.com/orgs/QwenLM/repositories): the org listing showed Qwen3.8-Flash-Next as the top/most recently updated repository (repo last activity Aug 27, 2026; 341 stars, 16 forks), ahead of Qwen3.8 and other repositories. Searches for the current 2026 release landscape (\"Qwen technical report PDF\", \"qwen model version release lineup 2026\") surfaced Qwen3.8-Flash-Next as the newest release line, with no higher version appearing. The report file's own GitHub blob page (first-party file-history evidence) shows the PDF's last commit/file update on Aug 26, 2026 (relative-time 2026-08-26T12:29:38Z), which is more recent than any other Qwen technical report candidate observed.\n\nSelected report date: 2026-08-26 (tech_report.pdf file last-updated/commit date, from the file's own first-party GitHub blob page file history)\n\nOfficial PDF page URL: https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf (raw file: https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf) — downloaded and validated.\n\nFigure 1 interpretation (\"Figure 1: Qwen3.8-Flash-Next architecture\", page 2):\n\nPurpose: Figure 1 is the paper's reference architecture diagram, tying together the four core design choices evaluated in the report — hybrid token mixing, a gated/widened residual stream, off-accelerator capacity scaling, and speculative decoding — in a single picture of the model.\n\nWhat it depicts (from visible labels and the caption):\n- Left column, bottom to top: Input Tokens → Vocabulary Embedding; an N-gram Embedding Layer labeled \"Layer 2 only\" feeding the stack from Layer 2 onward; a repeating stack where one dashed block groups 3× GDN Layers + 1× QSA Layer (a block of four); MTP Modules at the top plus a separate Prediction Head path.\n- Right panel zooms into one dashed block. The GDN sub-block (×3) routes Hidden States through a GR Read gate → Gated DeltaNet token mixer → elementwise product (⊙) → GR Write into an \"Expanded Residual\" drawn as a wide multi-branch stream (four circles); a parallel GR Read path feeds a MoE block that writes back to the same stream. The QSA sub-block (×1) shares the same GR Read → ⊙ → GR Write skeleton but uses Qwen Sparse Attention as the mixer, again with a parallel MoE branch. The top block's output flows through GR Read and ⊙ into the Prediction Head.\n- Acronyms per the source: GDN = Gated DeltaNet; QSA = Qwen Sparse Attention; GR = Gated Residual; MoE = mixture-of-experts; MTP = multi-token prediction.\n\nKey architectural findings/takeaways the paper draws from it:\n1. Hybrid token mixing: three GDN layers (fixed-size recurrent state, cheap decoding) alternate with one QSA global-attention layer per four-layer block; QSA's compressed indexer reduces prefill attention cost (~O(n²/r)).\n2. Every sublayer reads and writes through Gated Residual (GR): GR widens the residual stream (the four circles correspond to the caption's four-branch stream) and gates the read elementwise; the paper reports that predicting GR's read/write weights gave a small loss change but clear benchmark gains.\n3. Capacity is scaled off the accelerator: an n-gram embedding layer at Layer 2 uses host-memory prefetching to add capacity without accelerator memory.\n4. Speculative decoding efficiency: the MTP module reuses QSA's sparse-attention indices across speculative decoding steps, avoiding repeated indexer work.\n\nCaveat per the vision analysis: the parallel/branch structure of GR Read/Write and MoE paths is directly labeled; the reading of the four residual circles as the four-branch stream and the independently gated MoE path are stated as inference from the caption/labels, and adjacency of components in the diagram should not be read as a strict serial arrow chain.",
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "answer_contains",
+            "expected": "GDN",
+            "selector": null,
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": "Selected report: \"Qwen3.8-Flash-Next\" technical report (tech_report.pdf), published by the official Qwen Team repository (github.com/QwenLM, described on the repo as \"the foundation model developed by Qwen Team, Alibaba Group\").\n\nCandidate comparison (from browser search and the rendered QwenLM organization repository index at github.com/orgs/QwenLM/repositories): the org listing showed Qwen3.8-Flash-Next as the top/most recently updated repository (repo last activity Aug 27, 2026; 341 stars, 16 forks), ahead of Qwen3.8 and other repositories. Searches for the current 2026 release landscape (\"Qwen technical report PDF\", \"qwen model version release lineup 2026\") surfaced Qwen3.8-Flash-Next as the newest release line, with no higher version appearing. The report file's own GitHub blob page (first-party file-history evidence) shows the PDF's last commit/file update on Aug 26, 2026 (relative-time 2026-08-26T12:29:38Z), which is more recent than any other Qwen technical report candidate observed.\n\nSelected report date: 2026-08-26 (tech_report.pdf file last-updated/commit date, from the file's own first-party GitHub blob page file history)\n\nOfficial PDF page URL: https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf (raw file: https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf) — downloaded and validated.\n\nFigure 1 interpretation (\"Figure 1: Qwen3.8-Flash-Next architecture\", page 2):\n\nPurpose: Figure 1 is the paper's reference architecture diagram, tying together the four core design choices evaluated in the report — hybrid token mixing, a gated/widened residual stream, off-accelerator capacity scaling, and speculative decoding — in a single picture of the model.\n\nWhat it depicts (from visible labels and the caption):\n- Left column, bottom to top: Input Tokens → Vocabulary Embedding; an N-gram Embedding Layer labeled \"Layer 2 only\" feeding the stack from Layer 2 onward; a repeating stack where one dashed block groups 3× GDN Layers + 1× QSA Layer (a block of four); MTP Modules at the top plus a separate Prediction Head path.\n- Right panel zooms into one dashed block. The GDN sub-block (×3) routes Hidden States through a GR Read gate → Gated DeltaNet token mixer → elementwise product (⊙) → GR Write into an \"Expanded Residual\" drawn as a wide multi-branch stream (four circles); a parallel GR Read path feeds a MoE block that writes back to the same stream. The QSA sub-block (×1) shares the same GR Read → ⊙ → GR Write skeleton but uses Qwen Sparse Attention as the mixer, again with a parallel MoE branch. The top block's output flows through GR Read and ⊙ into the Prediction Head.\n- Acronyms per the source: GDN = Gated DeltaNet; QSA = Qwen Sparse Attention; GR = Gated Residual; MoE = mixture-of-experts; MTP = multi-token prediction.\n\nKey architectural findings/takeaways the paper draws from it:\n1. Hybrid token mixing: three GDN layers (fixed-size recurrent state, cheap decoding) alternate with one QSA global-attention layer per four-layer block; QSA's compressed indexer reduces prefill attention cost (~O(n²/r)).\n2. Every sublayer reads and writes through Gated Residual (GR): GR widens the residual stream (the four circles correspond to the caption's four-branch stream) and gates the read elementwise; the paper reports that predicting GR's read/write weights gave a small loss change but clear benchmark gains.\n3. Capacity is scaled off the accelerator: an n-gram embedding layer at Layer 2 uses host-memory prefetching to add capacity without accelerator memory.\n4. Speculative decoding efficiency: the MTP module reuses QSA's sparse-attention indices across speculative decoding steps, avoiding repeated indexer work.\n\nCaveat per the vision analysis: the parallel/branch structure of GR Read/Write and MoE paths is directly labeled; the reading of the four residual circles as the four-branch stream and the independently gated MoE path are stated as inference from the caption/labels, and adjacency of components in the diagram should not be read as a strict serial arrow chain.",
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "answer_contains",
+            "expected": "QSA",
+            "selector": null,
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": "Selected report: \"Qwen3.8-Flash-Next\" technical report (tech_report.pdf), published by the official Qwen Team repository (github.com/QwenLM, described on the repo as \"the foundation model developed by Qwen Team, Alibaba Group\").\n\nCandidate comparison (from browser search and the rendered QwenLM organization repository index at github.com/orgs/QwenLM/repositories): the org listing showed Qwen3.8-Flash-Next as the top/most recently updated repository (repo last activity Aug 27, 2026; 341 stars, 16 forks), ahead of Qwen3.8 and other repositories. Searches for the current 2026 release landscape (\"Qwen technical report PDF\", \"qwen model version release lineup 2026\") surfaced Qwen3.8-Flash-Next as the newest release line, with no higher version appearing. The report file's own GitHub blob page (first-party file-history evidence) shows the PDF's last commit/file update on Aug 26, 2026 (relative-time 2026-08-26T12:29:38Z), which is more recent than any other Qwen technical report candidate observed.\n\nSelected report date: 2026-08-26 (tech_report.pdf file last-updated/commit date, from the file's own first-party GitHub blob page file history)\n\nOfficial PDF page URL: https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf (raw file: https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf) — downloaded and validated.\n\nFigure 1 interpretation (\"Figure 1: Qwen3.8-Flash-Next architecture\", page 2):\n\nPurpose: Figure 1 is the paper's reference architecture diagram, tying together the four core design choices evaluated in the report — hybrid token mixing, a gated/widened residual stream, off-accelerator capacity scaling, and speculative decoding — in a single picture of the model.\n\nWhat it depicts (from visible labels and the caption):\n- Left column, bottom to top: Input Tokens → Vocabulary Embedding; an N-gram Embedding Layer labeled \"Layer 2 only\" feeding the stack from Layer 2 onward; a repeating stack where one dashed block groups 3× GDN Layers + 1× QSA Layer (a block of four); MTP Modules at the top plus a separate Prediction Head path.\n- Right panel zooms into one dashed block. The GDN sub-block (×3) routes Hidden States through a GR Read gate → Gated DeltaNet token mixer → elementwise product (⊙) → GR Write into an \"Expanded Residual\" drawn as a wide multi-branch stream (four circles); a parallel GR Read path feeds a MoE block that writes back to the same stream. The QSA sub-block (×1) shares the same GR Read → ⊙ → GR Write skeleton but uses Qwen Sparse Attention as the mixer, again with a parallel MoE branch. The top block's output flows through GR Read and ⊙ into the Prediction Head.\n- Acronyms per the source: GDN = Gated DeltaNet; QSA = Qwen Sparse Attention; GR = Gated Residual; MoE = mixture-of-experts; MTP = multi-token prediction.\n\nKey architectural findings/takeaways the paper draws from it:\n1. Hybrid token mixing: three GDN layers (fixed-size recurrent state, cheap decoding) alternate with one QSA global-attention layer per four-layer block; QSA's compressed indexer reduces prefill attention cost (~O(n²/r)).\n2. Every sublayer reads and writes through Gated Residual (GR): GR widens the residual stream (the four circles correspond to the caption's four-branch stream) and gates the read elementwise; the paper reports that predicting GR's read/write weights gave a small loss change but clear benchmark gains.\n3. Capacity is scaled off the accelerator: an n-gram embedding layer at Layer 2 uses host-memory prefetching to add capacity without accelerator memory.\n4. Speculative decoding efficiency: the MTP module reuses QSA's sparse-attention indices across speculative decoding steps, avoiding repeated indexer work.\n\nCaveat per the vision analysis: the parallel/branch structure of GR Read/Write and MoE paths is directly labeled; the reading of the four residual circles as the four-branch stream and the independently gated MoE path are stated as inference from the caption/labels, and adjacency of components in the diagram should not be read as a strict serial arrow chain.",
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "answer_contains",
+            "expected": "Gated Residual",
+            "selector": null,
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": "Selected report: \"Qwen3.8-Flash-Next\" technical report (tech_report.pdf), published by the official Qwen Team repository (github.com/QwenLM, described on the repo as \"the foundation model developed by Qwen Team, Alibaba Group\").\n\nCandidate comparison (from browser search and the rendered QwenLM organization repository index at github.com/orgs/QwenLM/repositories): the org listing showed Qwen3.8-Flash-Next as the top/most recently updated repository (repo last activity Aug 27, 2026; 341 stars, 16 forks), ahead of Qwen3.8 and other repositories. Searches for the current 2026 release landscape (\"Qwen technical report PDF\", \"qwen model version release lineup 2026\") surfaced Qwen3.8-Flash-Next as the newest release line, with no higher version appearing. The report file's own GitHub blob page (first-party file-history evidence) shows the PDF's last commit/file update on Aug 26, 2026 (relative-time 2026-08-26T12:29:38Z), which is more recent than any other Qwen technical report candidate observed.\n\nSelected report date: 2026-08-26 (tech_report.pdf file last-updated/commit date, from the file's own first-party GitHub blob page file history)\n\nOfficial PDF page URL: https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf (raw file: https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf) — downloaded and validated.\n\nFigure 1 interpretation (\"Figure 1: Qwen3.8-Flash-Next architecture\", page 2):\n\nPurpose: Figure 1 is the paper's reference architecture diagram, tying together the four core design choices evaluated in the report — hybrid token mixing, a gated/widened residual stream, off-accelerator capacity scaling, and speculative decoding — in a single picture of the model.\n\nWhat it depicts (from visible labels and the caption):\n- Left column, bottom to top: Input Tokens → Vocabulary Embedding; an N-gram Embedding Layer labeled \"Layer 2 only\" feeding the stack from Layer 2 onward; a repeating stack where one dashed block groups 3× GDN Layers + 1× QSA Layer (a block of four); MTP Modules at the top plus a separate Prediction Head path.\n- Right panel zooms into one dashed block. The GDN sub-block (×3) routes Hidden States through a GR Read gate → Gated DeltaNet token mixer → elementwise product (⊙) → GR Write into an \"Expanded Residual\" drawn as a wide multi-branch stream (four circles); a parallel GR Read path feeds a MoE block that writes back to the same stream. The QSA sub-block (×1) shares the same GR Read → ⊙ → GR Write skeleton but uses Qwen Sparse Attention as the mixer, again with a parallel MoE branch. The top block's output flows through GR Read and ⊙ into the Prediction Head.\n- Acronyms per the source: GDN = Gated DeltaNet; QSA = Qwen Sparse Attention; GR = Gated Residual; MoE = mixture-of-experts; MTP = multi-token prediction.\n\nKey architectural findings/takeaways the paper draws from it:\n1. Hybrid token mixing: three GDN layers (fixed-size recurrent state, cheap decoding) alternate with one QSA global-attention layer per four-layer block; QSA's compressed indexer reduces prefill attention cost (~O(n²/r)).\n2. Every sublayer reads and writes through Gated Residual (GR): GR widens the residual stream (the four circles correspond to the caption's four-branch stream) and gates the read elementwise; the paper reports that predicting GR's read/write weights gave a small loss change but clear benchmark gains.\n3. Capacity is scaled off the accelerator: an n-gram embedding layer at Layer 2 uses host-memory prefetching to add capacity without accelerator memory.\n4. Speculative decoding efficiency: the MTP module reuses QSA's sparse-attention indices across speculative decoding steps, avoiding repeated indexer work.\n\nCaveat per the vision analysis: the parallel/branch structure of GR Read/Write and MoE paths is directly labeled; the reading of the four residual circles as the four-branch stream and the independently gated MoE path are stated as inference from the caption/labels, and adjacency of components in the diagram should not be read as a strict serial arrow chain.",
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "answer_contains",
+            "expected": "n-gram",
+            "selector": null,
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": "Selected report: \"Qwen3.8-Flash-Next\" technical report (tech_report.pdf), published by the official Qwen Team repository (github.com/QwenLM, described on the repo as \"the foundation model developed by Qwen Team, Alibaba Group\").\n\nCandidate comparison (from browser search and the rendered QwenLM organization repository index at github.com/orgs/QwenLM/repositories): the org listing showed Qwen3.8-Flash-Next as the top/most recently updated repository (repo last activity Aug 27, 2026; 341 stars, 16 forks), ahead of Qwen3.8 and other repositories. Searches for the current 2026 release landscape (\"Qwen technical report PDF\", \"qwen model version release lineup 2026\") surfaced Qwen3.8-Flash-Next as the newest release line, with no higher version appearing. The report file's own GitHub blob page (first-party file-history evidence) shows the PDF's last commit/file update on Aug 26, 2026 (relative-time 2026-08-26T12:29:38Z), which is more recent than any other Qwen technical report candidate observed.\n\nSelected report date: 2026-08-26 (tech_report.pdf file last-updated/commit date, from the file's own first-party GitHub blob page file history)\n\nOfficial PDF page URL: https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf (raw file: https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf) — downloaded and validated.\n\nFigure 1 interpretation (\"Figure 1: Qwen3.8-Flash-Next architecture\", page 2):\n\nPurpose: Figure 1 is the paper's reference architecture diagram, tying together the four core design choices evaluated in the report — hybrid token mixing, a gated/widened residual stream, off-accelerator capacity scaling, and speculative decoding — in a single picture of the model.\n\nWhat it depicts (from visible labels and the caption):\n- Left column, bottom to top: Input Tokens → Vocabulary Embedding; an N-gram Embedding Layer labeled \"Layer 2 only\" feeding the stack from Layer 2 onward; a repeating stack where one dashed block groups 3× GDN Layers + 1× QSA Layer (a block of four); MTP Modules at the top plus a separate Prediction Head path.\n- Right panel zooms into one dashed block. The GDN sub-block (×3) routes Hidden States through a GR Read gate → Gated DeltaNet token mixer → elementwise product (⊙) → GR Write into an \"Expanded Residual\" drawn as a wide multi-branch stream (four circles); a parallel GR Read path feeds a MoE block that writes back to the same stream. The QSA sub-block (×1) shares the same GR Read → ⊙ → GR Write skeleton but uses Qwen Sparse Attention as the mixer, again with a parallel MoE branch. The top block's output flows through GR Read and ⊙ into the Prediction Head.\n- Acronyms per the source: GDN = Gated DeltaNet; QSA = Qwen Sparse Attention; GR = Gated Residual; MoE = mixture-of-experts; MTP = multi-token prediction.\n\nKey architectural findings/takeaways the paper draws from it:\n1. Hybrid token mixing: three GDN layers (fixed-size recurrent state, cheap decoding) alternate with one QSA global-attention layer per four-layer block; QSA's compressed indexer reduces prefill attention cost (~O(n²/r)).\n2. Every sublayer reads and writes through Gated Residual (GR): GR widens the residual stream (the four circles correspond to the caption's four-branch stream) and gates the read elementwise; the paper reports that predicting GR's read/write weights gave a small loss change but clear benchmark gains.\n3. Capacity is scaled off the accelerator: an n-gram embedding layer at Layer 2 uses host-memory prefetching to add capacity without accelerator memory.\n4. Speculative decoding efficiency: the MTP module reuses QSA's sparse-attention indices across speculative decoding steps, avoiding repeated indexer work.\n\nCaveat per the vision analysis: the parallel/branch structure of GR Read/Write and MoE paths is directly labeled; the reading of the four residual circles as the four-branch stream and the independently gated MoE path are stated as inference from the caption/labels, and adjacency of components in the diagram should not be read as a strict serial arrow chain.",
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "answer_contains",
+            "expected": "MTP",
+            "selector": null,
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": "Selected report: \"Qwen3.8-Flash-Next\" technical report (tech_report.pdf), published by the official Qwen Team repository (github.com/QwenLM, described on the repo as \"the foundation model developed by Qwen Team, Alibaba Group\").\n\nCandidate comparison (from browser search and the rendered QwenLM organization repository index at github.com/orgs/QwenLM/repositories): the org listing showed Qwen3.8-Flash-Next as the top/most recently updated repository (repo last activity Aug 27, 2026; 341 stars, 16 forks), ahead of Qwen3.8 and other repositories. Searches for the current 2026 release landscape (\"Qwen technical report PDF\", \"qwen model version release lineup 2026\") surfaced Qwen3.8-Flash-Next as the newest release line, with no higher version appearing. The report file's own GitHub blob page (first-party file-history evidence) shows the PDF's last commit/file update on Aug 26, 2026 (relative-time 2026-08-26T12:29:38Z), which is more recent than any other Qwen technical report candidate observed.\n\nSelected report date: 2026-08-26 (tech_report.pdf file last-updated/commit date, from the file's own first-party GitHub blob page file history)\n\nOfficial PDF page URL: https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf (raw file: https://github.com/QwenLM/Qwen3.8-Flash-Next/raw/refs/heads/main/tech_report.pdf) — downloaded and validated.\n\nFigure 1 interpretation (\"Figure 1: Qwen3.8-Flash-Next architecture\", page 2):\n\nPurpose: Figure 1 is the paper's reference architecture diagram, tying together the four core design choices evaluated in the report — hybrid token mixing, a gated/widened residual stream, off-accelerator capacity scaling, and speculative decoding — in a single picture of the model.\n\nWhat it depicts (from visible labels and the caption):\n- Left column, bottom to top: Input Tokens → Vocabulary Embedding; an N-gram Embedding Layer labeled \"Layer 2 only\" feeding the stack from Layer 2 onward; a repeating stack where one dashed block groups 3× GDN Layers + 1× QSA Layer (a block of four); MTP Modules at the top plus a separate Prediction Head path.\n- Right panel zooms into one dashed block. The GDN sub-block (×3) routes Hidden States through a GR Read gate → Gated DeltaNet token mixer → elementwise product (⊙) → GR Write into an \"Expanded Residual\" drawn as a wide multi-branch stream (four circles); a parallel GR Read path feeds a MoE block that writes back to the same stream. The QSA sub-block (×1) shares the same GR Read → ⊙ → GR Write skeleton but uses Qwen Sparse Attention as the mixer, again with a parallel MoE branch. The top block's output flows through GR Read and ⊙ into the Prediction Head.\n- Acronyms per the source: GDN = Gated DeltaNet; QSA = Qwen Sparse Attention; GR = Gated Residual; MoE = mixture-of-experts; MTP = multi-token prediction.\n\nKey architectural findings/takeaways the paper draws from it:\n1. Hybrid token mixing: three GDN layers (fixed-size recurrent state, cheap decoding) alternate with one QSA global-attention layer per four-layer block; QSA's compressed indexer reduces prefill attention cost (~O(n²/r)).\n2. Every sublayer reads and writes through Gated Residual (GR): GR widens the residual stream (the four circles correspond to the caption's four-branch stream) and gates the read elementwise; the paper reports that predicting GR's read/write weights gave a small loss change but clear benchmark gains.\n3. Capacity is scaled off the accelerator: an n-gram embedding layer at Layer 2 uses host-memory prefetching to add capacity without accelerator memory.\n4. Speculative decoding efficiency: the MTP module reuses QSA's sparse-attention indices across speculative decoding steps, avoiding repeated indexer work.\n\nCaveat per the vision analysis: the parallel/branch structure of GR Read/Write and MoE paths is directly labeled; the reading of the four residual circles as the four-branch stream and the independently gated MoE path are stated as inference from the caption/labels, and adjacency of components in the diagram should not be read as a strict serial arrow chain.",
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "history_document_url_observed",
+            "expected": "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+            "selector": null,
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": true,
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        },
+        {
+          "assertion": {
+            "kind": "certificate_valid",
+            "expected": true,
+            "selector": null,
+            "attribute": null,
+            "endpoint": null,
+            "json_path": null,
+            "required": true,
+            "weight": 1.0,
+            "description": ""
+          },
+          "passed": true,
+          "observed": true,
+          "error": null,
+          "adjudication_candidate": false,
+          "adjudication_reason": null
+        }
+      ]
+    }
+  ],
+  "research": {
+    "failures": {
+      "schema_version": 2,
+      "failure_taxonomy_version": "1",
+      "task_count": 1,
+      "affected_task_count": 1,
+      "finding_count": 2,
+      "observed_count": 2,
+      "candidate_count": 0,
+      "adjudicated_count": 0,
+      "observed_by_layer": {
+        "planning": 1,
+        "tool_execution": 1
+      },
+      "candidate_by_layer": {},
+      "adjudicated_by_layer": {},
+      "recurrence_by_signature": {
+        "planning:planner_attempt_failure": 1,
+        "tool_execution:tool_action_failure": 1
+      },
+      "findings": [
+        {
+          "taxonomy_version": "1",
+          "task_id": "qwen_latest_report_figure1",
+          "status": "observed",
+          "layer": "planning",
+          "subtype": "planner_attempt_failure",
+          "detector": "aggregate-rule-v1",
+          "terminal": false,
+          "onset_step": null,
+          "recovery_step": null,
+          "evidence": [
+            {
+              "source": "task_metric",
+              "key": "planner_failure_count",
+              "observed": 1,
+              "reference": null
+            }
+          ],
+          "note": "One or more planner attempts failed; the underlying cause is not inferred."
+        },
+        {
+          "taxonomy_version": "1",
+          "task_id": "qwen_latest_report_figure1",
+          "status": "observed",
+          "layer": "tool_execution",
+          "subtype": "tool_action_failure",
+          "detector": "aggregate-rule-v1",
+          "terminal": false,
+          "onset_step": null,
+          "recovery_step": null,
+          "evidence": [
+            {
+              "source": "task_metric",
+              "key": "failed_action_count",
+              "observed": 2,
+              "reference": null
+            }
+          ],
+          "note": "The tool result directly reported one or more failed actions."
+        }
+      ],
+      "causal_boundary": "Automatic findings identify observable symptoms only; reasoning and memory causes are never assigned automatically. Adjudicated causal labels require a referenced controlled intervention or both referenced trace evidence and human adjudication."
+    },
+    "calibration": {
+      "schema_version": 2,
+      "status": "available",
+      "reason": null,
+      "task_count": 1,
+      "confidence_count": 1,
+      "confidence_coverage": 1.0,
+      "brier_score": 0.009999999999999995,
+      "log_loss": 0.10536051565782628,
+      "expected_calibration_error": 0.09999999999999998,
+      "bins": [
+        {
+          "lower": 0.0,
+          "upper": 0.1,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.1,
+          "upper": 0.2,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.2,
+          "upper": 0.3,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.3,
+          "upper": 0.4,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.4,
+          "upper": 0.5,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.5,
+          "upper": 0.6,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.6,
+          "upper": 0.7,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.7,
+          "upper": 0.8,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.8,
+          "upper": 0.9,
+          "count": 0,
+          "mean_confidence": null,
+          "empirical_success_rate": null
+        },
+        {
+          "lower": 0.9,
+          "upper": 1.0,
+          "count": 1,
+          "mean_confidence": 0.9,
+          "empirical_success_rate": 1.0
+        }
+      ],
+      "risk_coverage_curve": [
+        {
+          "coverage": 1.0,
+          "selective_risk": 0.0,
+          "minimum_confidence": 0.9
+        }
+      ],
+      "area_under_risk_coverage_curve": 0.0,
+      "interpretation_notice": "Metrics cover only tasks with a self-reported success_probability recorded before external judging; missing values are reported, not imputed."
+    },
+    "transfer": {
+      "schema_version": 1,
+      "status": "unavailable",
+      "reason": "development split is empty",
+      "splits": {
+        "development": {
+          "status": "unavailable",
+          "reason": "development split is empty",
+          "task_count": 0,
+          "success_rate": null,
+          "mean_score": null
+        },
+        "validation": {
+          "status": "unavailable",
+          "reason": "validation split is empty",
+          "task_count": 0,
+          "success_rate": null,
+          "mean_score": null
+        },
+        "held_out_task": {
+          "status": "unavailable",
+          "reason": "held_out_task split is empty",
+          "task_count": 0,
+          "success_rate": null,
+          "mean_score": null
+        },
+        "held_out_setting": {
+          "status": "available",
+          "reason": null,
+          "task_count": 1,
+          "success_rate": 1.0,
+          "mean_score": 1.0
+        }
+      },
+      "held_out_task_success_delta": null,
+      "held_out_setting_success_delta": null,
+      "pooled_held_out_success_delta": null,
+      "leakage_groups": [],
+      "interpretation_notice": "Deltas are descriptive held-out minus development success rates for one condition. They do not establish that an intervention transfers without a paired baseline."
+    },
+    "generality": {
+      "schema_version": 1,
+      "status": "insufficient",
+      "task_count": 1,
+      "category_count": 1,
+      "source_origin_count": 1,
+      "discovery_task_count": 1,
+      "scenario_counts": {
+        "search_discovery": 1
+      },
+      "environment_counts": {
+        "public_web": 1
+      },
+      "split_counts": {
+        "held_out_setting": 1
+      },
+      "source_origins": [
+        "https://github.com"
+      ],
+      "missing_requirements": [
+        "requires at least 30 evaluated tasks",
+        "requires at least 8 task categories",
+        "requires at least 8 distinct public source origins",
+        "missing scenario coverage: authenticated_session, cross_origin_form, file_workflow, recovery, sandbox_transaction, spa_interaction",
+        "missing research splits: development, held_out_task",
+        "requires both public_web and sandbox evidence",
+        "requires at least 5 genuine search-discovery tasks"
+      ],
+      "interpretation_notice": "Readiness means the retained task set crosses a preregistered coverage floor. It does not by itself prove performance, robustness, or transfer across the covered settings."
+    },
+    "long_horizon": {
+      "schema_version": 2,
+      "status": "unavailable",
+      "reason": "no trajectory reached 50 observable actions",
+      "task_count": 1,
+      "long_task_count": 0,
+      "resumed_task_count": 0,
+      "buckets": {
+        "short": {
+          "task_count": 1,
+          "success_rate": 1.0,
+          "mean_score": 1.0
+        },
+        "medium": {
+          "task_count": 0,
+          "success_rate": null,
+          "mean_score": null
+        },
+        "long": {
+          "task_count": 0,
+          "success_rate": null,
+          "mean_score": null
+        }
+      },
+      "long_success_rate": null,
+      "long_mean_score": null,
+      "reliability_degradation": null,
+      "collapse_incidence": null,
+      "stagnation_incidence": null,
+      "mean_recovery_count": null,
+      "mean_replan_count": null,
+      "mean_strategy_switch_count": null,
+      "interpretation_notice": "Reliability degradation is short success rate minus long success rate. Collapse onset tracks repeated actions; stagnation onset tracks extended unchanged page state even when tools vary. Neither signal is a causal diagnosis of reasoning or memory."
+    }
+  }
+}

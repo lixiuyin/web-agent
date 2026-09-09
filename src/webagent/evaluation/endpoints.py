@@ -65,44 +65,16 @@ def probe_chat_endpoint(
     started = time.monotonic()
     checked_at = datetime.now(UTC).isoformat()
     endpoint_host = urlsplit(api_url).netloc
-    payload = {
-        "model": model,
-        "messages": [{"role": "user", "content": "Reply with exactly READY."}],
-        "temperature": 0.0,
-        "max_tokens": 16,
-    }
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json",
-    }
-    retry_delays: list[float] = []
-    attempt_count = 0
-    response: httpx.Response | None = None
-    last_error: httpx.HTTPError | None = None
     with httpx.Client(timeout=timeout_seconds, transport=transport) as client:
-        for attempt in range(transient_retries + 1):
-            attempt_count = attempt + 1
-            try:
-                response = client.post(api_url, headers=headers, json=payload)
-                last_error = None
-            except httpx.HTTPError as exc:
-                response = None
-                last_error = exc
-            transient_response = response is not None and (
-                response.status_code == 429 or 500 <= response.status_code < 600
-            )
-            if not transient_response and last_error is None:
-                break
-            if attempt >= transient_retries:
-                break
-            delay = _retry_delay_seconds(
-                response=response,
-                attempt=attempt,
-                base_seconds=retry_base_seconds,
-                max_seconds=retry_max_seconds,
-            )
-            retry_delays.append(delay)
-            time.sleep(delay)
+        response, last_error, retry_delays, attempt_count = _request_with_retries(
+            client,
+            api_url=api_url,
+            api_key=api_key,
+            model=model,
+            transient_retries=transient_retries,
+            retry_base_seconds=retry_base_seconds,
+            retry_max_seconds=retry_max_seconds,
+        )
 
     common: _ProbeFields = {
         "provider": provider,
@@ -148,6 +120,56 @@ def probe_chat_endpoint(
         error_code=code,
         error_message=message,
     )
+
+
+def _request_with_retries(
+    client: httpx.Client,
+    *,
+    api_url: str,
+    api_key: str,
+    model: str,
+    transient_retries: int,
+    retry_base_seconds: float,
+    retry_max_seconds: float,
+) -> tuple[httpx.Response | None, httpx.HTTPError | None, list[float], int]:
+    payload = {
+        "model": model,
+        "messages": [{"role": "user", "content": "Reply with exactly READY."}],
+        "temperature": 0.0,
+        "max_tokens": 16,
+    }
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+    }
+    retry_delays: list[float] = []
+    response: httpx.Response | None = None
+    last_error: httpx.HTTPError | None = None
+    attempt_count = 0
+    for attempt in range(transient_retries + 1):
+        attempt_count = attempt + 1
+        try:
+            response = client.post(api_url, headers=headers, json=payload)
+            last_error = None
+        except httpx.HTTPError as exc:
+            response = None
+            last_error = exc
+        transient_response = response is not None and (
+            response.status_code == 429 or 500 <= response.status_code < 600
+        )
+        if not transient_response and last_error is None:
+            break
+        if attempt >= transient_retries:
+            break
+        delay = _retry_delay_seconds(
+            response=response,
+            attempt=attempt,
+            base_seconds=retry_base_seconds,
+            max_seconds=retry_max_seconds,
+        )
+        retry_delays.append(delay)
+        time.sleep(delay)
+    return response, last_error, retry_delays, attempt_count
 
 
 def _retry_delay_seconds(

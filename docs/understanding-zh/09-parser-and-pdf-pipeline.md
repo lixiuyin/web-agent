@@ -39,146 +39,25 @@ raster image bbox 聚类，再按上下位置、间距、横向重叠、面积�
 
 同步 wrapper `parse_pdf()` 在没有 event loop 时直接 `asyncio.run`；已有 loop 时新建单线程 executor，在另一个线程中启动新 event loop。工具通常通过 `asyncio.to_thread(parse_pdf, ...)` 调用。
 
-## 异步入口完整原代码
+## 异步入口调用链与边界
 
-来源：`src/webagent/parser/cascade.py::parse_structured_async`。输入如上；输出总是 `PDFParseResult`，预期失败不抛异常。
+来源：`src/webagent/parser/cascade.py::parse_structured_async`。输入如上；预期成功和已处理的失败均返回 `PDFParseResult`；未处理异常仍会传播。
 
-```python
-async def parse_structured_async(
-    pdf_path: str | Path,
-    output_dir: str | Path | None = None,
-    *,
-    config: AgentConfig | None = None,
-) -> PDFParseResult:
-    """Async cascade entry — see module docstring."""
-    if config is None:
-        from webagent.core.config import AgentConfig
+实现：[cascade.py](../../src/webagent/parser/cascade.py) 的 `parse_structured_async()`。
 
-        config = AgentConfig()
-
-    pdf_path = Path(pdf_path)
-    out_dir = Path(output_dir) if output_dir else pdf_path.parent
-    images_dir = out_dir / IMAGES_SUBDIR
-
-    if not pdf_path.exists():
-        return _error_result(out_dir, images_dir, f"file not found: {pdf_path}")
-
-    profile = profile_document(pdf_path)
-    if profile.page_count and profile.page_count > config.max_parse_pages:
-        return _error_result(
-            out_dir,
-            images_dir,
-            f"document has {profile.page_count} pages, exceeding max_parse_pages={config.max_parse_pages}",
-        )
-
-    order = select_parsers(profile, user_hint=config.ocr_provider)
-    logger.info(
-        "Parser routing for %s: %s (pages=%d avg_chars=%.0f scanned=%s)",
-        pdf_path.name,
-        order,
-        profile.page_count,
-        profile.avg_chars_per_page,
-        profile.is_likely_scanned,
-    )
-
-    timeout = float(config.parser_http_timeout_seconds)
-    async with build_client(timeout, config.parser_proxy or None) as client:
-        result = await _run_cascade(client, order, pdf_path, profile, out_dir, images_dir, config)
-        if result is not None:
-            return result
-        # All cloud providers failed — last-resort local extraction.
-        req = ParseRequest(pdf_path, profile, out_dir, images_dir, config)
-        try:
-            logger.warning(
-                "All cloud parsers failed for %s — falling back to local PyMuPDF", pdf_path.name
-            )
-            return await _LOCAL.parse(client, req)
-        except Exception as exc:
-            logger.error("Local fallback failed for %s: %s", pdf_path.name, exc)
-            return _error_result(out_dir, images_dir, f"all parsers failed: {exc}")
-```
+入口准备输出目录并检查文件与页数，构造文档画像、provider 顺序和 HTTP client，再进入
+`_run_cascade()`。cloud 无可用结果时才运行 Local PyMuPDF；预期失败通过 `PDFParseResult.error`
+返回，未被入口捕获的编程错误仍可能传播。
 
 缺文件、页数超限、所有 parser 失败都通过 `result.error` 表达。外部 API 凭证缺失不是全局失败：相应 provider 返回 non-retryable `NOT_CONFIGURED`，cascade 继续。
 
-## Cascade 核心完整原代码
+## Cascade 核心调用链与边界
 
-```python
-async def _run_cascade(
-    client,
-    order: tuple[str, ...],
-    pdf_path: Path,
-    profile: DocumentProfile,
-    out_dir: Path,
-    images_dir: Path,
-    config: AgentConfig,
-) -> PDFParseResult | None:
-    """Try cloud providers in order. Returns a result, or None if all failed."""
-    deadline = time.monotonic() + config.parse_timeout_seconds
-    errors: list[ParserProviderError] = []
-    req = ParseRequest(pdf_path, profile, out_dir, images_dir, config)
+实现：[cascade.py](../../src/webagent/parser/cascade.py) 的 `_run_cascade()`。
 
-    for name in order:
-        provider = _PROVIDERS[name]
-        retries = MAX_RETRIES
-        while retries >= 0:
-            if time.monotonic() > deadline:
-                logger.warning("Parse timeout budget exhausted for %s", pdf_path.name)
-                return None
-            try:
-                # Bound the provider to the remaining cascade budget so a single
-                # hung provider (e.g. a stuck MinerU poll) can't outlive it.
-                remaining = max(1.0, deadline - time.monotonic())
-                result = await asyncio.wait_for(provider.parse(client, req), timeout=remaining)
-                quality = assess_quality(result, profile)
-                if not quality.is_satisfactory:
-                    logger.warning(
-                        "parser=%s file=%s quality_failed score=%.1f reasons=%s",
-                        name,
-                        pdf_path.name,
-                        quality.score,
-                        ";".join(quality.reasons),
-                    )
-                    errors.append(ParserProviderError(provider=name, retryable=False))
-                    break
-                logger.info(
-                    "parser=%s file=%s parse_ok score=%.2f", name, pdf_path.name, quality.score
-                )
-                return result
-            except TimeoutError:
-                logger.warning("parser=%s file=%s timed out (cascade budget)", name, pdf_path.name)
-                errors.append(
-                    ParserProviderError(
-                        provider=name, retryable=False, reason=FailureReason.NETWORK_TIMEOUT
-                    )
-                )
-                break
-            except ParserProviderError as ppe:
-                if ppe.retryable and retries > 0:
-                    retries -= 1
-                    # Exponential backoff — a transient ConnectError/5xx often
-                    # clears within a couple of seconds (e.g. a proxy hiccup).
-                    backoff = min(
-                        _RETRY_BASE_DELAY * 2 ** (MAX_RETRIES - retries - 1), _RETRY_MAX_DELAY
-                    )
-                    logger.warning(
-                        "parser=%s retryable failure (%s); retrying in %.1fs (%d left)",
-                        name,
-                        ppe,
-                        backoff,
-                        retries,
-                    )
-                    await asyncio.sleep(backoff)
-                    continue
-                errors.append(ppe)
-                logger.warning("parser=%s file=%s failed: %s", name, pdf_path.name, ppe)
-                break
-
-    if errors:
-        logger.info(
-            "Cloud cascade exhausted for %s: %s", pdf_path.name, AllParsersFailedError(errors)
-        )
-    return None
-```
+每次 provider 调用受剩余 cascade 时间预算约束；返回后先执行 `assess_quality()`。
+质量达标才返回该结果。质量失败、不可重试错误或超时转向下一 provider；可重试错误
+在剩余重试次数内退避后再次调用。所有候选耗尽返回 `None`，由入口决定本地降级。
 
 每个 provider 最多 1 次初始尝试 + 2 次 retry；retryable failure 指数退避约 1.5s、3s，上限 8s。整体 deadline 由 `parse_timeout_seconds` 约束，并把剩余时间传给 `asyncio.wait_for`。
 
@@ -195,67 +74,14 @@ Quality failure 不重试同 provider，而是记录 non-retryable error 并切�
 
 `ocr_provider` 只能把候选中同名 provider 提到第一位，不会禁止 fallback，也不会把 MinerU 加入单图候选。
 
-## Quality Gate 完整原代码
+## Quality Gate 调用链与边界
 
 来源：`src/webagent/parser/_quality.py::assess_quality`。
 
-```python
-class QualityResult:
-    """Quality assessment outcome."""
+实现：[_quality.py](../../src/webagent/parser/_quality.py) 的 `assess_quality()`。
 
-    is_satisfactory: bool
-    score: float  # 0.0–1.0
-    reasons: tuple[str, ...]
-
-def result_text(result: PDFParseResult) -> str:
-    """Concatenate all extracted text from a parse result."""
-    return "\n".join(b.text for b in result.text_blocks if b.text)
-
-def assess_quality(result: PDFParseResult, profile: DocumentProfile) -> QualityResult:
-    """Check whether a parsed document meets minimum quality thresholds.
-
-    Designed to catch extraction *failures*, not to grade content.  Scanned /
-    image-heavy documents are exempt from volume-based checks.
-    """
-    if result.error:
-        return _fail(f"provider_error:{result.error}", 0.0)
-
-    stripped = result_text(result).strip()
-
-    # A result that produced structured assets (tables/images) but little text
-    # is still useful for image/scanned PDFs.
-    has_assets = bool(result.tables or result.images)
-
-    if not stripped and not profile.is_likely_scanned and not has_assets:
-        return _fail("empty_text", 0.0)
-
-    if profile.is_likely_scanned:
-        chars_per_page = len(stripped) / max(1, profile.page_count)
-        if chars_per_page < MIN_SCANNED_CHARS_PER_PAGE and not has_assets:
-            return _fail(f"scanned_text_too_short({chars_per_page:.1f}/pg)", 0.2)
-        return QualityResult(is_satisfactory=True, score=0.8, reasons=())
-
-    reasons: list[str] = []
-    score = 0.9
-
-    expected = profile.avg_chars_per_page * profile.page_count
-    if expected > 100 and len(stripped) < expected * MIN_TEXT_RATIO:
-        reasons.append(f"text_too_short(ratio={len(stripped) / expected:.2f})")
-        score -= 0.3
-
-    ctrl = sum(1 for c in stripped if ord(c) < 0x20 and c not in "\n\r\t")
-    if len(stripped) > 50 and ctrl / len(stripped) > MAX_CONTROL_CHAR_RATIO:
-        reasons.append(f"high_control_chars(ratio={ctrl / len(stripped):.3f})")
-        score -= 0.2
-
-    score = max(0.0, score)
-    if reasons:
-        return QualityResult(is_satisfactory=False, score=score, reasons=tuple(reasons))
-    return QualityResult(is_satisfactory=True, score=score, reasons=())
-
-def _fail(reason: str, score: float) -> QualityResult:
-    return QualityResult(is_satisfactory=False, score=score, reasons=(reason,))
-```
+检查 provider error、空文本、扫描文档的文字或图表资产、文本量相对原始画像的比例，
+以及控制字符比例。返回值决定 cloud cascade 是否接纳本次结果，不是对解析正确率的测量。
 
 输出 `QualityResult(is_satisfactory: bool, score: float, reasons: tuple[str,...])`。这里的 score 只是手工规则分数，不是模型置信度，也未校准。
 
@@ -263,21 +89,9 @@ def _fail(reason: str, score: float) -> QualityResult:
 
 ## 统一输出 Schema
 
-```python
-PDFParseResult(
-    markdown_path: str | None,
-    json_path: str | None,
-    images_dir: str,
-    output_dir: str,
-    method: str = "cascade",
-    backend: str | None = None,
-    error: str | None = None,
-    images: list[ImageInfo],
-    tables: list[TableInfo],
-    text_blocks: list[TextBlock],
-    sections: dict[str, list[TextBlock]],
-)
-```
+完整字段定义见 [models.py](../../src/webagent/parser/models.py) 的 `PDFParseResult`、
+`ImageInfo`、`TableInfo` 和 `TextBlock`。统一结构保存原始/Markdown 路径、文本块、图片、表格、
+章节索引及 error。下游通过这套结构检索内容，不依赖某个 cloud provider 的原始 JSON。
 
 `ImageInfo/TableInfo/TextBlock` 均使用 0-based `page_idx` 和 `(x0,y0,x1,y1)` bbox。多数 cloud 映射目前把 bbox 设为 `(0,0,0,0)`；位置查询能力因此只有 provider 真正提供坐标时才有意义。
 
@@ -324,6 +138,10 @@ dataclass 本身不提供 JSON serializer；`write_outputs()` 只在 provider �
 ## 图表与章节构造
 
 `_build.py` 解析 Markdown heading、paragraph 和 pipe table。标题形成 key `level:title`，正文附到当前 section。Markdown table 转 HTML，因为下游结构表工具使用 HTML parser。Figure caption 规则先找同编号的独立 caption（重复时取最后一个源 caption），否则才采用 alt 中的 figure mention或同页最近 caption。`pdf_analyze_figure` 的视觉调用若抛异常、返回空值、缺少 planner 或图片打不开，会返回失败并提供 caption/页码文本兜底指引，不再以 `vision_analysis=null` 报成功。
+
+本地 Figure 快路径调用视觉模型时，把 Figure 所在页的文本放在前面，并追加前一页文本作为
+有界相邻上下文，总长度最多 6000 字符。这样可补足跨页引言和缩写定义，又不会把整份 PDF
+塞进视觉请求；图片、caption、当前页文本和相邻页文本仍是不同证据来源。
 
 ## 缓存和工具层
 

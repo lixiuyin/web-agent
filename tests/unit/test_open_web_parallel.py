@@ -1,16 +1,18 @@
 """Tests for exact parallel-shard report merging."""
 
+import errno
 import hashlib
 import json
 from pathlib import Path
 
 import pytest
-from benchmarks.suites.open_web.parallel import (
+
+from webagent.benchmarks.suites.open_web.parallel import (
+    _link_or_copy,
     bind_study_identity,
     merge_shard_reports,
     publish_shard_task_runs,
 )
-
 from webagent.evaluation import (
     AssertionOutcome,
     BenchmarkAssertion,
@@ -143,7 +145,7 @@ def test_merged_report_binds_provider_and_retained_study_manifest(tmp_path: Path
     assert bound.metadata["benchmark_config"]["study_manifest_sha256"] == digest
 
 
-def test_publish_shard_runs_copies_complete_evidence_and_refuses_conflicts(
+def test_publish_shard_runs_shares_immutable_evidence_and_refuses_conflicts(
     tmp_path: Path,
 ) -> None:
     layout = StudyExecutionLayout.from_root(tmp_path / "execution")
@@ -163,5 +165,22 @@ def test_publish_shard_runs_copies_complete_evidence_and_refuses_conflicts(
 
     assert (layout.task_run("a").trace_path).is_file()
     assert (layout.task_run("b").evaluation_dir / "task.json").is_file()
+    source_trace = layout.shards_dir / "shard-00/runs/a/trajectory/trace.json"
+    assert source_trace.stat().st_ino == layout.task_run("a").trace_path.stat().st_ino
     with pytest.raises(FileExistsError, match="canonical task run already exists"):
         publish_shard_task_runs(layout, reports)
+
+
+def test_link_or_copy_falls_back_when_hardlinks_are_unavailable(tmp_path, monkeypatch) -> None:
+    source = tmp_path / "source"
+    target = tmp_path / "target"
+    source.write_text("immutable evidence", encoding="utf-8")
+
+    def unsupported(*_args) -> None:
+        raise OSError(errno.EXDEV, "different filesystem")
+
+    monkeypatch.setattr("webagent.benchmarks.suites.open_web.parallel.os.link", unsupported)
+
+    assert _link_or_copy(str(source), str(target)) == str(target)
+    assert target.read_bytes() == source.read_bytes()
+    assert target.stat().st_ino != source.stat().st_ino

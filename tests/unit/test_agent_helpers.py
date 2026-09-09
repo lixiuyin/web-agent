@@ -7,7 +7,8 @@ from pathlib import Path
 
 from PIL import Image
 
-from webagent.agent.loop import _attach_figure, _is_browser_disconnect, _select_figure
+from webagent.agent.loop import _is_browser_disconnect
+from webagent.agent.run_outputs import _attach_figure, _select_figure
 from webagent.cli import _apply_cli_overrides
 from webagent.core.config import AgentConfig
 from webagent.tools.builtin.file_tools import _detect_vision_failure, _resize_for_api

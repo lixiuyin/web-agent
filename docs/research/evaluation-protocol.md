@@ -3,7 +3,7 @@
 This document owns the stable methodology for repository diagnostics and external
 BrowserGym evaluation. Dated scores and observed failures belong in
 [research results](results/README.md); executable commands belong in the
-[benchmark guides](../../benchmarks/README.md).
+[benchmark guides](../../src/webagent/benchmarks/README.md).
 
 ## Two evidence layers
 
@@ -29,8 +29,8 @@ sandbox covers SPA hydration, authentication, cross-origin forms, file handoff, 
 no-payment checkout. The long task delays four cues, injects a transient failure, and
 forces a browser-session restart.
 
-Task definitions are versioned under `benchmarks/manifests/` and
-`benchmarks/suites/controlled_web/`.
+Task definitions are versioned under `src/webagent/benchmarks/manifests/` and
+`src/webagent/benchmarks/suites/controlled_web/`.
 
 ## Frozen comparison variables
 
@@ -72,6 +72,23 @@ forbidden outcomes.
 Failure taxonomy records observable symptoms. A tool failure, planner failure, or false
 completion is not automatically labeled as a reasoning, memory, browser, or upstream
 provider cause.
+
+## Individual strict-task acceptance
+
+A single strict public-web task is accepted only when independent task judgment passes
+all required assertions and the anti-shortcut certificate plus artifact-integrity check
+are valid. Required source, date, download, figure, and final-answer artifacts must be
+present. `failed_action_count == 0` and `planner_failure_count == 0` are not additional
+hard gates: public search and provider capability negotiation are observable, non-static
+parts of the environment.
+
+A nonzero failure count is acceptable only when it is small relative to the trajectory,
+bounded by the configured recovery policy, preserved in the trace, classified from
+observable evidence, and followed by a passing outcome without false completion. Wrong
+candidate selection, missing evidence, unresolved challenge, invalid pre/post pairing,
+certificate failure, or a loop that exhausts the budget is not accepted. Dated result
+records report both the pass and the residual failures; they must not remove failed
+attempts or loosen semantic assertions after seeing the answer.
 
 ## Longitudinal readiness
 

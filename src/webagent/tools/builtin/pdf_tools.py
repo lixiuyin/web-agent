@@ -208,27 +208,29 @@ class PdfParseTool(PdfToolBase):
         if path_error:
             return path_error
         assert path is not None
-
         try:
             output_dir = _resolve_parse_output_dir(
                 params.get("output_dir"), self.artifacts_dir, path
             )
-        except ValueError as e:
-            return ToolResult(success=False, tool_name="pdf_parse", error=str(e))
+        except ValueError as exc:
+            return ToolResult(success=False, tool_name="pdf_parse", error=str(exc))
+        result, error = await self._parse(path, output_dir)
+        if error:
+            return ToolResult(success=False, tool_name="pdf_parse", error=error)
+        assert result is not None
+        return ToolResult(success=True, tool_name="pdf_parse", data=self._result_data(result))
 
+    async def _parse(
+        self, path: Path, output_dir: Path
+    ) -> tuple[PDFParseResult | None, str | None]:
         try:
             result: PDFParseResult = await asyncio.to_thread(
                 parse_pdf, path, output_dir, config=self.config
             )
-        except Exception as e:
-            return ToolResult(success=False, tool_name="pdf_parse", error=str(e))
-
+        except Exception as exc:
+            return None, str(exc)
         if result.error:
-            return ToolResult(success=False, tool_name="pdf_parse", error=result.error)
-
-        # Make the explicit parse reusable by downstream PDF tools.  Without
-        # this, the common ``pdf_parse -> pdf_analyze_figure`` workflow submits
-        # the same document to the cloud parser twice.
+            return None, result.error
         await asyncio.to_thread(
             persist_pdf_result,
             path,
@@ -236,27 +238,20 @@ class PdfParseTool(PdfToolBase):
             self.config,
             self.artifacts_dir,
         )
+        return result, None
 
-        # Read markdown content (truncated to avoid context overflow)
-        markdown_content = ""
-        md_path = result.markdown_path
-        if md_path and Path(md_path).exists():
-            raw = Path(md_path).read_text(encoding="utf-8", errors="replace")
-            markdown_content = raw[:8000] + ("\n\n...[truncated]" if len(raw) > 8000 else "")
-
-        # Build structured image info (convert to absolute paths)
+    def _result_data(self, result: PDFParseResult) -> dict[str, Any]:
+        markdown_content = self._read_markdown(result.markdown_path)
         images_data = [
             {
                 "path": str(Path(img.path).resolve()) if img.path else None,
-                "page": img.page_idx + 1,  # Convert to 1-indexed
+                "page": img.page_idx + 1,
                 "caption": img.caption,
                 "figure_number": img.figure_number,
                 "bbox": img.bbox,
             }
             for img in result.images
         ]
-
-        # Build structured table info (convert to absolute paths)
         tables_data = [
             {
                 "path": str(Path(table.path).resolve()) if table.path else None,
@@ -270,39 +265,39 @@ class PdfParseTool(PdfToolBase):
             }
             for table in result.tables
         ]
+        sections_data = self._top_level_sections(result)
+        return {
+            "markdown": markdown_content,
+            "markdown_path": result.markdown_path,
+            "json_path": result.json_path,
+            "images": images_data,
+            "image_count": len(images_data),
+            "tables": tables_data,
+            "table_count": len(tables_data),
+            "sections": sections_data,
+            "section_count": len(sections_data),
+            "output_dir": result.output_dir,
+            "method": result.method,
+            "backend": result.backend,
+        }
 
-        # Build sections info (top-level sections only)
-        sections_data = []
+    @staticmethod
+    def _read_markdown(md_path: str | None) -> str:
+        if not md_path or not Path(md_path).exists():
+            return ""
+        raw = Path(md_path).read_text(encoding="utf-8", errors="replace")
+        return raw[:8000] + ("\n\n...[truncated]" if len(raw) > 8000 else "")
+
+    @staticmethod
+    def _top_level_sections(result: PDFParseResult) -> list[dict[str, Any]]:
+        sections: list[dict[str, Any]] = []
         for section_key, blocks in result.sections.items():
-            if ":" in section_key:
-                level, title = section_key.split(":", 1)
-                if level.isdigit() and int(level) <= 2:  # Only H1 and H2
-                    sections_data.append(
-                        {
-                            "level": int(level),
-                            "title": title,
-                            "block_count": len(blocks),
-                        }
-                    )
-
-        return ToolResult(
-            success=True,
-            tool_name="pdf_parse",
-            data={
-                "markdown": markdown_content,
-                "markdown_path": md_path,
-                "json_path": result.json_path,
-                "images": images_data,
-                "image_count": len(result.images),
-                "tables": tables_data,
-                "table_count": len(result.tables),
-                "sections": sections_data,
-                "section_count": len(sections_data),
-                "output_dir": result.output_dir,
-                "method": result.method,
-                "backend": result.backend,
-            },
-        )
+            if ":" not in section_key:
+                continue
+            level, title = section_key.split(":", 1)
+            if level.isdigit() and int(level) <= 2:
+                sections.append({"level": int(level), "title": title, "block_count": len(blocks)})
+        return sections
 
 
 @tool(

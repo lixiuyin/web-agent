@@ -182,6 +182,11 @@ class ToolRegistry:
         impl = self._tools[name]
 
         try:
+            observed = getattr(impl, "execute_observed", None)
+            if callable(observed):
+                result = await observed(name, params)
+                if isinstance(result, ToolResult):
+                    return result
             return await impl.execute(params)
         except Exception as exc:
             return ToolResult(success=False, tool_name=name, error=f"Execution: {exc}")

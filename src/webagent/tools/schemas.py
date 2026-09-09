@@ -68,14 +68,34 @@ def _array(items: JsonSchema) -> JsonSchema:
 
 _SELECTOR = _object(
     {
-        "type": _string(enum=("text", "css")),
-        "value": _string(description="Visible text or a CSS selector"),
+        "type": _string(enum=("text", "css", "ref")),
+        "value": _string(description="Text, CSS, or observed observation_id/fN:eN for type=ref"),
+        "observation_id": _string(
+            description=(
+                "Legacy CSS-bound form only; omit for type=ref. Copy from the observed "
+                "selector; expires after page changes"
+            )
+        ),
+        "ref": _string(
+            description=(
+                "Legacy CSS-bound form only; omit for type=ref. Copy the element reference "
+                "from the same observation"
+            )
+        ),
     },
     required=("type", "value"),
 )
 _CSS_SELECTOR = _object(
-    {"type": {"type": "string", "const": "css"}, "value": _string()},
+    {
+        "type": _string(enum=("css", "ref")),
+        "value": _string(),
+        "observation_id": _string(),
+        "ref": _string(),
+    },
     required=("type", "value"),
+)
+_PLAIN_SELECTOR = _object(
+    {"type": _string(enum=("text", "css")), "value": _string()}, required=("type", "value")
 )
 _PATH = _string(description="Local path returned by a prior allowed tool")
 _URL = _string(description="HTTP(S) URL observed in browser-grounded evidence")
@@ -110,6 +130,7 @@ TOOL_PARAMETER_SCHEMAS: dict[str, JsonSchema] = {
         {
             "direction": _string(enum=("up", "down")),
             "amount_px": _integer(minimum=1, default=500),
+            "frame_index": _integer(minimum=0),
         }
     ),
     "wait": _object({"ms": _integer(minimum=0, maximum=60_000, default=1000)}),
@@ -128,7 +149,7 @@ TOOL_PARAMETER_SCHEMAS: dict[str, JsonSchema] = {
     ),
     "wait_for_element": _object(
         {
-            "selector": _SELECTOR,
+            "selector": _PLAIN_SELECTOR,
             "state": _string(enum=("visible", "hidden", "attached", "detached")),
             "timeout_ms": _integer(minimum=0, maximum=120_000, default=30_000),
         },
@@ -140,16 +161,20 @@ TOOL_PARAMETER_SCHEMAS: dict[str, JsonSchema] = {
     ),
     "get_all_links": _object(
         {
+            "offset": _integer(minimum=0, default=0),
+            "contains": _string(description="Filter link label or URL before pagination"),
             "skip_anchors": _boolean(default=False),
             "skip_javascript": _boolean(default=False),
             "filter_external_only": _boolean(default=False),
-            "max_results": _integer(minimum=0, maximum=1000, default=100),
+            "max_results": _integer(minimum=0, maximum=1000, default=20),
         }
     ),
     "get_url": _EMPTY,
     "get_title": _EMPTY,
     "refresh": _EMPTY,
-    "scroll_to_element": _object({"selector": _SELECTOR}, required=("selector",)),
+    "scroll_to_element": _object(
+        {"selector": _SELECTOR, "frame_index": _integer(minimum=0)}, required=("selector",)
+    ),
     "get_search_results": _object(
         {
             "max_results": _integer(minimum=1, maximum=100, default=10),
@@ -174,9 +199,11 @@ TOOL_PARAMETER_SCHEMAS: dict[str, JsonSchema] = {
     "switch_tab": _object({"index": _integer(minimum=0)}, required=("index",)),
     "open_tab": _object({"url": _URL}),
     "close_tab": _object({"index": _integer(minimum=0)}),
-    "upload_file": _object({"selector": _SELECTOR, "path": _PATH}, required=("selector", "path")),
+    "upload_file": _object(
+        {"selector": _PLAIN_SELECTOR, "path": _PATH}, required=("selector", "path")
+    ),
     "download_file": _object(
-        {"selector": _SELECTOR, "filename": _string()}, required=("selector",)
+        {"selector": _PLAIN_SELECTOR, "filename": _string()}, required=("selector",)
     ),
     "shadow_dom": _object(
         {

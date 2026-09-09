@@ -10,10 +10,11 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+import fitz  # type: ignore[import-untyped]
 import pytest
-from benchmarks.suites.document_figures.fast_path import build_benchmark_corpus
 from PIL import Image
 
+from webagent.benchmarks.suites.document_figures.fast_path import build_benchmark_corpus
 from webagent.core.config import AgentConfig
 from webagent.parser.models import ImageInfo, PDFParseResult, TableInfo, TextBlock
 from webagent.tools.builtin._pdf_common import pdf_cache_key, pdf_result_cache
@@ -24,6 +25,7 @@ from webagent.tools.builtin.pdf_qa_tools import (
     PdfQATool,
     PdfSearchTool,
     _open_image,
+    _page_text_context,
     _pick_higher_res_image,
     _resolve_figure,
 )
@@ -155,7 +157,26 @@ class TestLocalFigureFastPath:
         assert result.data["local_figure_fast_path"]["confidence"] >= 0.9
         assert result.data["local_figure_fast_path"]["visual_kind"] == "vector"
         assert result.data["related_tables"] == []
+        assert result.data["page_text_context"]
         assert Path(result.data["image_path"]).is_file()
+
+    def test_local_page_text_context_preserves_acronym_definition(
+        self, artifacts_dir: Path
+    ) -> None:
+        document = fitz.open()
+        page = document.new_page()
+        page.insert_text((72, 72), "Gated Residual (GR) widens the residual stream.")
+        figure_page = document.new_page()
+        figure_page.insert_text((72, 72), "Figure 1: Model architecture.")
+        source = artifacts_dir / "definition.pdf"
+        document.save(source)
+        document.close()
+
+        context = _page_text_context(source, 1)
+
+        assert "Gated Residual (GR)" in context
+        assert "Figure 1: Model architecture" in context
+        assert context.index("[PDF page 2]") < context.index("[PDF page 1]")
 
     async def test_low_confidence_layout_falls_back_to_cached_structured_parse(
         self,
@@ -264,8 +285,7 @@ class TestPdfAnalyzeFigure:
         pdf = self._fig_result(artifacts_dir, (20, 20))
         tool = PdfAnalyzeFigureTool(artifacts_dir=artifacts_dir, planner=_VisionPlanner())
         r = await tool.execute({"path": str(pdf), "figure_number_or_caption": "1"})
-        assert r.success
-        assert "resolution too low" in r.data["vision_analysis"]
+        assert not r.success
 
     async def test_vision_unavailable(self, artifacts_dir: Path) -> None:
         pdf = self._fig_result(artifacts_dir, (150, 150))
@@ -282,6 +302,31 @@ class TestPdfAnalyzeFigure:
         tool = PdfAnalyzeFigureTool(artifacts_dir=artifacts_dir, planner=planner)
         r = await tool.execute({"path": str(pdf), "figure_number_or_caption": "1"})
         assert not r.success
+
+    @pytest.mark.parametrize(
+        "answer",
+        [
+            "Vision API could not read the image this time.",
+            "VLM returned empty response.",
+            "I cannot see the image.",
+        ],
+    )
+    async def test_unavailable_analysis_is_not_a_success(self, artifacts_dir, answer):
+        pdf = self._fig_result(artifacts_dir, (150, 150))
+        tool = PdfAnalyzeFigureTool(
+            artifacts_dir=artifacts_dir, planner=_VisionPlanner(analysis=answer)
+        )
+        result = await tool.execute({"path": str(pdf), "figure_number_or_caption": "1"})
+        assert not result.success
+
+    async def test_length_finish_is_not_a_success(self, artifacts_dir):
+        pdf = self._fig_result(artifacts_dir, (150, 150))
+        planner = _VisionPlanner()
+        planner.last_call_metadata = {"finish_reason": "length"}
+        tool = PdfAnalyzeFigureTool(artifacts_dir=artifacts_dir, planner=planner)
+        result = await tool.execute({"path": str(pdf), "figure_number_or_caption": "1"})
+        assert not result.success
+        assert result.data["vision_metadata"]["finish_reason"] == "length"
 
     async def test_analyze_image_raises(self, artifacts_dir: Path) -> None:
         pdf = self._fig_result(artifacts_dir, (150, 150))

@@ -13,6 +13,8 @@ from typing import Any
 
 from playwright.async_api import ElementHandle, Page
 
+from webagent.browser.url_identity import search_engine_for_url
+
 # Google snippet containers seen across layout generations.
 _GOOGLE_SNIPPET_SELECTORS = "[style*='-webkit-line-clamp'], .VwiC3b, .IsZvec"
 # Common English words ignored when keyword-matching links against link text.
@@ -40,18 +42,7 @@ _KEYWORD_STOP_WORDS = frozenset(
 
 def detect_search_engine(url: str) -> str | None:
     """Return the engine id for a search results URL, or None if unrecognized."""
-    lower = url.lower()
-    if "google.com" in lower or "google." in lower:
-        return "google"
-    if "bing.com" in lower:
-        return "bing"
-    if "duckduckgo.com" in lower:
-        return "duckduckgo"
-    if "search.yahoo.co.jp" in lower:
-        return "yahoo_japan"
-    if "search.seznam.cz" in lower:
-        return "seznam"
-    return None
+    return search_engine_for_url(url)
 
 
 async def parse_google_results(page: Page, max_results: int) -> list[dict[str, Any]]:

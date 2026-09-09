@@ -1,5 +1,10 @@
 # 输入输出 Schema 附录
 
+以下代码块是便于阅读的输入输出示例，不是完整 JSON Schema；占位字符串与省略字段不代表
+实际类型或完整字段集合。模型字段、默认值与校验规则以
+[core/models.py](../../src/webagent/core/models.py) 为准，CLI 参数以
+[cli.py](../../src/webagent/cli.py) 和 `webagent --help` 为准。
+
 ## CLI
 
 | 参数 | 格式 | 说明 |
@@ -10,7 +15,7 @@
 | `--model/api-url/api-key` | string | 远程模型覆盖 |
 | `--use-vllm/--no-vllm` | mutually exclusive flag | local compatible endpoint |
 | `--vllm-*` | string | local endpoint/model/token |
-| `--headless/--headed` | flag | 后者可能被 DISPLAY 检查覆盖 |
+| `--headless/--headed` | flag | 仅 Linux 缺少 DISPLAY/WAYLAND_DISPLAY 时可能回退 headless |
 | `--browser-profile-mode` | `persistent\|temporary` | profile 复用或隔离 |
 | `--strict-eval` | flag | 临时 profile、新输出、搜索引擎唯一发现路径、无持久 PDF cache、写 trace 与 verification certificate |
 | `--search-engine-only` | flag | 与 strict discovery contract 相同；禁止 GitHub/arXiv/official-report 直连发现与未见 URL |
@@ -20,7 +25,13 @@
 ```json
 {
   "screenshot": "PIL.Image.Image or null（不可直接 JSON）",
+  "full_page_screenshot": "PIL.Image.Image or null（仅审计，不发给 planner）",
   "dom_summary": "Markdown string",
+  "viewport_context": "screenshot-aligned complete blocks",
+  "document_context": "off-screen supplement; not visual evidence",
+  "observation_id": "opaque-id",
+  "elements": ["Snapshot element", "..."],
+  "observation_metadata": {"pair_consistent": true, "context_omissions": {}},
   "url": "https://...",
   "title": "page title",
   "timestamp": "ISO-8601 string"
@@ -42,14 +53,23 @@
     "class": "primary"
   },
   "css_path": "html > body > form > button#submit",
+  "ref": "f0:e0",
+  "observation_id": "opaque-id",
+  "frame_index": 0,
   "bbox": {"x":100,"y":200,"width":120,"height":40},
+  "viewport_bbox": {"x":100,"y":200,"width":120,"height":40},
+  "visible_bbox": {"x":100,"y":200,"width":120,"height":40},
+  "in_viewport": true,
+  "receives_events": true,
+  "enabled": true,
   "is_visible": true,
-  "_priority": 78.5,
-  "_index": "i_deadbeef"
+  "_priority": 78.5
 }
 ```
 
-AX 路径可能没有 `css_path`；字段都是开放 dict，不是 Pydantic model。
+这是 rendered 主路径示例；compact selector 使用
+`{"type":"ref","value":"opaque-id/f0:e0"}`。Fallback AX 路径可能没有可执行 `css_path`，
+此时会继续退到 JS extractor。元素字段仍是开放 dict，不是 Pydantic model。
 
 ## ToolCall / ToolResult
 
@@ -80,7 +100,8 @@ AX 路径可能没有 `css_path`；字段都是开放 dict，不是 Pydantic mod
   "browser_state": "BrowserState before action",
   "tool_call": "ToolCall",
   "tool_result": "ToolResult",
-  "duration_seconds": 2.41
+  "duration_seconds": 2.41,
+  "tool_duration_seconds": 0.83
 }
 ```
 
@@ -92,7 +113,8 @@ AX 路径可能没有 `css_path`；字段都是开放 dict，不是 Pydantic mod
   "total_duration": 31.2,
   "final_result": {"summary":"answer","attachments":["path"]},
   "history": ["AgentStep", "..."],
-  "planner_attempts": ["PlannerAttempt", "..."]
+  "planner_attempts": ["PlannerAttempt", "..."],
+  "events": [{"type": "example_event", "timestamp": "ISO string"}]
 }
 ```
 
@@ -102,10 +124,15 @@ AX 路径可能没有 `css_path`；字段都是开放 dict，不是 Pydantic mod
 planner data 的 `policy` 审计字段。Figure 分析结果还可包含
 `vision_duration_seconds` 和不含密钥的视觉 usage metadata。
 
-运行级文件契约还包括：`observations/screenshots/` 保存观察截图，
+运行级文件契约还包括：`observations/step_NNN/pre|post.{json,png}` 保存成对观察；
+`observations/screenshots/` 只保存 legacy post-action preview，
 `control/checkpoints/latest.json` 保存可恢复控制状态，`result/summary.txt` 保存 Agent 最新声明，
 `evaluation/` 留给独立判分。旧版 trace/certificate/checkpoint 在 run 的 `artifacts/` 下只保留读取兼容，
 新 writer 不再使用这些位置。
+
+strict run 的语义通过必须读取 `evaluation/task.json`，反捷径与产物完整性必须读取
+`trajectory/verification.json`；两者不能互相替代。失败 action/planner attempt 仍原样留在 trace，
+少量被恢复的外部失败不要求改写成 success。
 
 普通 interactive session 还写不可变的 `trajectory/turns/turn-NNN.json` 与
 `result/turns/turn-NNN/{summary.txt,attachments/}`；顶层 canonical 文件可以随最新 turn 更新，历史
@@ -114,6 +141,31 @@ turn 快照不覆盖。strict/search-only 不允许一个 run 含多个 turn。
 trace 内指向当前 run 的文件路径统一写成 run-relative POSIX 路径；运行时返回值仍可使用绝对路径。
 这使冻结后的 run 可以整体移动，同时不改变证据指向。latest trace 与 turn trace 字节完全一致时，
 两条规范路径通过硬链接共享内容，但逻辑语义仍分别是“最新视图”和“不可变 turn 快照”。
+
+## PlannerAttempt 示例
+
+```json
+{
+  "step_number": 1,
+  "attempt_number": 1,
+  "timestamp": "ISO string",
+  "duration_seconds": 0.9,
+  "success": true,
+  "error": null,
+  "transport_retries": 1,
+  "response_length": 80,
+  "finish_reason": "tool_calls",
+  "prompt_tokens": 100,
+  "completion_tokens": 20,
+  "total_tokens": 120,
+  "requested_output_mode": "auto",
+  "effective_output_mode": "native-tools",
+  "structured_fallbacks": []
+}
+```
+
+`transport_retries` 是传输重试次数，`attempt_number` 是 Agent 规划尝试序号，
+`structured_fallbacks` 记录输出格式降级；三者不可混为同一种重试。
 
 ## BrowserGym 外部报告
 
@@ -215,7 +267,8 @@ config: AgentConfig
 
 | 模式 | JSON |
 |---|---|
-| selector | `{"selector":{"type":"css\|text","value":"..."}}` |
+| observed selector（首选） | `{"selector":{"type":"ref","value":"observation_id/fN:eN"}}` |
+| legacy selector | `{"selector":{"type":"css\|text","value":"..."}}` |
 | URL | `{"url":"https://..."}` |
 | path | `{"path":"relative/to/artifacts"}` |
 | search | `{"query":"...","engine":"google\|bing\|duckduckgo","recency":"..."}` |

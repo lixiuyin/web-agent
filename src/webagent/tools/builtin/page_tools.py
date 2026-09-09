@@ -97,6 +97,12 @@ class DomSummaryTool:
                 "use_cdp": self.config.use_cdp,
                 "max_elements": self.config.max_snapshot_elements,
                 "filter_ads": self.config.enable_ad_filtering,
+                "viewport_chars": self.config.observation_viewport_chars,
+                "document_chars": self.config.observation_document_chars,
+                "max_dom_nodes": self.config.observation_max_dom_nodes,
+                "max_text_chars": self.config.observation_max_text_chars,
+                "text_share": self.config.observation_text_share,
+                "text_block_chars": self.config.observation_text_block_chars,
             }
         snap = await take_snapshot(self.browser.page, **kwargs)
         return ToolResult(

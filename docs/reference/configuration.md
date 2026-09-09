@@ -4,8 +4,9 @@ Runtime configuration is centralized in `src/webagent/core/config.py` through
 `pydantic-settings`. Environment variables use the `AGENT_` prefix and can be loaded
 from `.env`; command-line arguments override the corresponding runtime values.
 
-This page explains stable user-facing groups. `.env.example` remains the complete
-copyable template, and `webagent --help` remains the command-line authority.
+This page explains stable user-facing groups. `.env.example` is the copyable operational
+template; `AgentConfig` remains the complete field/default authority, and `webagent --help`
+remains the command-line authority.
 
 ## Planner and endpoint
 
@@ -20,7 +21,7 @@ copyable template, and `webagent --help` remains the command-line authority.
 | `api_retry_base_seconds` | `0.5` | Initial transient retry backoff |
 | `api_retry_max_seconds` | `10` | Maximum transient retry backoff |
 | `planner_max_tokens` | `4096` | Planner output budget |
-| `vision_max_tokens` | `2000` | Detailed figure-analysis budget |
+| `vision_max_tokens` | `8192` | Detailed figure-analysis budget; truncated responses do not count as completed analysis |
 | `planner_reasoning_effort` | unset | Optional provider reasoning level from `none` to `max` |
 | `planner_max_attempts` | `2` | Repair attempts for empty or malformed output |
 | `planner_output_mode` | `auto` | Native tools first, then supported structured fallbacks |
@@ -59,7 +60,17 @@ runs. See [run artifacts](run-artifacts.md).
 | `post_action_wait_ms` | `500` | Minimum delay before the post-action observation |
 | `observation_stability_timeout_ms` | `3000` | Maximum bounded page-stability wait |
 | `observation_stable_ms` | `400` | Required stable interval |
-| `use_cdp` | `True` | CDP-enhanced element detection with fallback |
+| `use_cdp` | `True` | Permit CDP/AX fallback when the rendered projection is unavailable |
+| `max_snapshot_elements` | `50` | Maximum ranked controls retained per observation |
+| `observation_capture_timeout_seconds` | `20` | Hard cap for each complete paired capture attempt |
+| `observation_fallback_timeout_seconds` | `5` | Cap for the last-resort diagnostic viewport capture |
+| `observation_full_page_screenshot` | `False` | Save a supplemental audit PNG; planner still uses viewport image |
+| `observation_viewport_chars` | `5000` | Screenshot-aligned text/control context budget |
+| `observation_document_chars` | `2500` | Off-screen supplement budget; never pixel evidence |
+| `observation_max_dom_nodes` | `5000` | Per-frame rendered collection node cap |
+| `observation_max_text_chars` | `80000` | Per-frame rendered text collection cap |
+| `observation_text_share` | `0.5` | Initial context reservation for text versus controls |
+| `observation_text_block_chars` | `400` | Maximum complete text-block size |
 | `stealth_mode` | `False` | Compatibility opt-in; forced off in strict evaluation |
 | `browser_slow_mo_ms` | `0` | Fixed operation delay |
 | `browser_humanize_delays` | `False` | Explicit randomized delay compatibility option |

@@ -1,0 +1,37 @@
+{
+  "schema_version": 2,
+  "batch_id": "20260909T081154339889Z",
+  "notice": "A minimal real inference request checked transport/provider availability. Unavailable endpoints are excluded from performance metrics, not scored as failures.",
+  "probes": [
+    {
+      "schema_version": 2,
+      "provider": "openrouter",
+      "model": "z-ai/glm-5.3-flash",
+      "endpoint_host": "openrouter.ai",
+      "status": "available",
+      "checked_at": "2026-09-09T08:11:54.382844+00:00",
+      "duration_seconds": 1.6966626250068657,
+      "attempt_count": 1,
+      "transient_retry_count": 0,
+      "retry_delays_seconds": [],
+      "status_code": 200,
+      "error_code": null,
+      "error_message": null
+    },
+    {
+      "schema_version": 2,
+      "provider": "openrouter",
+      "model": "qwen/qwen3.8-flash",
+      "endpoint_host": "openrouter.ai",
+      "status": "available",
+      "checked_at": "2026-09-09T08:11:56.084902+00:00",
+      "duration_seconds": 1.755364082986489,
+      "attempt_count": 1,
+      "transient_retry_count": 0,
+      "retry_delays_seconds": [],
+      "status_code": 200,
+      "error_code": null,
+      "error_message": null
+    }
+  ]
+}

@@ -2,7 +2,9 @@ import base64
 import io
 
 import pytest
-from benchmarks.suites.browsergym.adapter import (
+from PIL import Image
+
+from webagent.benchmarks.suites.browsergym.adapter import (
     browser_state_from_observation,
     browsergym_tool_specs,
     goal_images,
@@ -11,8 +13,6 @@ from benchmarks.suites.browsergym.adapter import (
     task_id_from_name,
     task_set_sha256,
 )
-from PIL import Image
-
 from webagent.core.models import ToolCall
 
 

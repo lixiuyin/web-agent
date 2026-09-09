@@ -40,3 +40,35 @@ def test_python_source_fingerprint_tracks_code_but_not_other_files(tmp_path: Pat
 
     source.write_text("VALUE = 2\n", encoding="utf-8")
     assert _python_source_fingerprint(tmp_path) != original
+
+
+def test_agent_and_benchmark_fingerprints_have_independent_scopes(tmp_path, monkeypatch):
+    from webagent.utils import runtime
+
+    package = tmp_path / "webagent"
+    (package / "utils").mkdir(parents=True)
+    (package / "benchmarks").mkdir()
+    runtime_source = package / "utils" / "runtime.py"
+    benchmark_source = package / "benchmarks" / "__init__.py"
+    runtime_source.write_text("VERSION = 1\n")
+    benchmark_source.write_text("VERSION = 1\n")
+    monkeypatch.setattr(runtime, "__file__", str(runtime_source))
+
+    def fresh():
+        runtime.agent_source_fingerprint.cache_clear()
+        runtime.benchmark_source_fingerprint.cache_clear()
+        return runtime.agent_source_fingerprint(), runtime.benchmark_source_fingerprint()
+
+    try:
+        original_agent, original_benchmark = fresh()
+        benchmark_source.write_text("VERSION = 2\n")
+        changed_agent, changed_benchmark = fresh()
+        assert changed_agent == original_agent
+        assert changed_benchmark != original_benchmark
+        runtime_source.write_text("VERSION = 2\n")
+        final_agent, final_benchmark = fresh()
+        assert final_agent != changed_agent
+        assert final_benchmark == changed_benchmark
+    finally:
+        runtime.agent_source_fingerprint.cache_clear()
+        runtime.benchmark_source_fingerprint.cache_clear()

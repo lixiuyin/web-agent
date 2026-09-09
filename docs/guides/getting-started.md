@@ -14,8 +14,16 @@ For all configuration fields, see the [configuration reference](../reference/con
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -e ".[dev]"
+pip install -e .
+pip install pytest pytest-asyncio pytest-cov mypy ruff build twine
 playwright install chromium
+```
+
+Or, with [uv](https://docs.astral.sh/uv/) (the workflow used by CI):
+
+```bash
+uv sync
+uv run playwright install chromium
 ```
 
 The distribution is named `lixiuyin-webagent`; the import package and command remain
@@ -100,19 +108,26 @@ Inspect at least:
 
 - `result/summary.txt` for the agent's claim;
 - `trajectory/trace.json` for observed actions and tool results;
-- `observations/screenshots/` for browser evidence;
+- `observations/step_NNN/pre|post.{json,png}` for paired browser evidence (the
+  `observations/screenshots/` JPEGs are compatibility previews);
 - `artifacts/` for acquired or derived files;
+- `evaluation/task.json` for independent semantic judgment when a benchmark runner was
+  used;
 - `trajectory/verification.json` for a strict run's certificate.
 
 Verify a completed strict trace with:
 
 ```bash
-python -m webagent.evaluation.trace_verifier \
+uv run python -m webagent.evaluation.trace_verifier \
   outputs/runs/<run>/trajectory/trace.json
 ```
 
 The certificate validates the execution contract, not the scientific correctness of
-the final interpretation. Retain and inspect the source PDF and extracted figure.
+the final interpretation. Require both a passing task evaluation and a valid certificate.
+A few bounded, recovered public-search/provider failures may remain in the trace; they
+must be classified and retained rather than treated as automatic failure or deleted.
+Retain and inspect the source PDF and extracted figure. A concrete example is the
+[2026-09-09 Qwen strict validation](../research/results/qwen-strict-search-2026-09-09.zh-CN.md).
 
 ## Next steps
 
@@ -120,4 +135,4 @@ the final interpretation. Retain and inspect the source PDF and extracted figure
   [troubleshooting guide](troubleshooting.md).
 - For profiles, proxies, CAPTCHA, and action authorization, use the
   [browser and security reference](../reference/browser-and-security.md).
-- For repeatable evaluation, start from the [benchmark guide](../../benchmarks/README.md).
+- For repeatable evaluation, start from the [benchmark guide](../../src/webagent/benchmarks/README.md).

@@ -18,8 +18,11 @@ import time
 from pathlib import Path
 from typing import Any
 
+import fitz  # type: ignore[import-untyped]
+
 from webagent.core.models import ToolResult
 from webagent.parser import ImageInfo, PDFParseResult, find_images_by_keyword
+from webagent.planner._vision_heuristics import indicates_no_vision
 from webagent.tools.builtin._pdf_analysis import parse_table_html
 from webagent.tools.builtin._pdf_common import PdfToolBase, load_pdf_result
 from webagent.tools.builtin._pdf_retrieval import (
@@ -34,6 +37,21 @@ from webagent.utils.paths import resolve_pdf_path as _resolve_pdf_path
 from webagent.utils.pdf_figures import detect_and_render_local_figure
 
 logger = logging.getLogger("webagent.pdf_qa")
+
+
+def _page_text_context(path: Path, page_idx: int, *, max_chars: int = 6000) -> str:
+    """Read the figure page and preceding-page context without a cloud parser."""
+    try:
+        with fitz.open(path) as document:
+            if page_idx < 0 or page_idx >= len(document):
+                return ""
+            indices = [page_idx, *([page_idx - 1] if page_idx else [])]
+            text = "\n\n".join(
+                f"[PDF page {index + 1}]\n{document[index].get_text('text')}" for index in indices
+            )
+    except (OSError, RuntimeError, ValueError):
+        return ""
+    return " ".join(text.split())[:max_chars]
 
 
 @tool(
@@ -436,43 +454,62 @@ class PdfAnalyzeFigureTool(PdfToolBase):
     async def execute(self, params: dict[str, Any]) -> ToolResult:
         figure_ref = params["figure_number_or_caption"].strip()
         question = params.get("question", "Describe this figure in detail.").strip()
-
         path, error = self._resolve_pdf(params, "pdf_analyze_figure")
         if error:
             return error
         assert path is not None
-
-        result: PDFParseResult | None = None
-        target_figure, local_metadata = await self._try_local_figure(path, figure_ref)
-
+        result, target_figure, local_metadata, error = await self._resolve_target(path, figure_ref)
+        if error:
+            return error
         if target_figure is None:
-            result, error = await load_pdf_result(
-                path,
-                self.artifacts_dir,
-                "pdf_analyze_figure",
-                config=self.config,
-            )
-            if error:
-                return error
-            assert result is not None
+            return self._not_found(figure_ref, result, local_metadata)
+        return await self._analyze_target(path, target_figure, result, local_metadata, question)
 
-            # Find the figure — resolve "Figure 1", "fig 1", "1", "1a" to a number
-            # and match it against parsed figure numbers (NOT extraction order).
-            target_figure = _resolve_figure(result, figure_ref)
+    async def _resolve_target(
+        self, path: Path, figure_ref: str
+    ) -> tuple[PDFParseResult | None, ImageInfo | None, dict[str, Any], ToolResult | None]:
+        target_figure, local_metadata = await self._try_local_figure(path, figure_ref)
+        if target_figure is not None:
+            return None, target_figure, local_metadata, None
+        result, error = await load_pdf_result(
+            path,
+            self.artifacts_dir,
+            "pdf_analyze_figure",
+            config=self.config,
+        )
+        if error:
+            return None, None, local_metadata, error
+        assert result is not None
+        return result, _resolve_figure(result, figure_ref), local_metadata, None
 
-        if not target_figure:
-            return ToolResult(
-                success=True,
-                tool_name="pdf_analyze_figure",
-                data={
-                    "found": False,
-                    "message": f"Figure '{figure_ref}' not found. Use pdf_list_figures to see available figures.",
-                    "available_figures": len(result.images) if result is not None else 0,
-                    "local_figure_fast_path": local_metadata,
-                },
-            )
+    @staticmethod
+    def _not_found(
+        figure_ref: str,
+        result: PDFParseResult | None,
+        local_metadata: dict[str, Any],
+    ) -> ToolResult:
+        return ToolResult(
+            success=True,
+            tool_name="pdf_analyze_figure",
+            data={
+                "found": False,
+                "message": (
+                    f"Figure '{figure_ref}' not found. Use pdf_list_figures "
+                    "to see available figures."
+                ),
+                "available_figures": len(result.images) if result is not None else 0,
+                "local_figure_fast_path": local_metadata,
+            },
+        )
 
-        # Check if image file exists
+    async def _analyze_target(
+        self,
+        path: Path,
+        target_figure: ImageInfo,
+        result: PDFParseResult | None,
+        local_metadata: dict[str, Any],
+        question: str,
+    ) -> ToolResult:
         img_path = _pick_higher_res_image(Path(target_figure.path))
         if not img_path.exists():
             return ToolResult(
@@ -480,49 +517,40 @@ class PdfAnalyzeFigureTool(PdfToolBase):
                 tool_name="pdf_analyze_figure",
                 error=f"Image file not found: {img_path}",
             )
-
-        # Open the image locally (best effort) for vision analysis
         pil_img = _open_image(img_path)
-
-        # Use browser to view the image
-        browser_url = None
-        if self.browser:
-            open_result = await self.browser.open_local_file(str(img_path))
-            if open_result.get("success"):
-                browser_url = open_result.get("url")
-
+        browser_url = await self._open_figure_in_browser(img_path)
         caption = target_figure.caption or "(no source caption extracted)"
-        vision_question = f"Source figure caption:\n{caption}\n\nRequested analysis:\n{question}"
+        page_text = await asyncio.to_thread(_page_text_context, path, target_figure.page_idx)
+        vision_question = (
+            f"Source figure caption:\n{caption}\n\n"
+            f"Bounded text from the figure page and preceding page:\n"
+            f"{page_text or '(none extracted)'}\n\n"
+            f"Requested analysis:\n{question}\n\n"
+            "Separate directly read labels, approximate plot estimates, and inference. "
+            "Expand architectural acronyms when, and only when, the supplied source caption or "
+            "page text explicitly defines them. "
+            "Give ranges rather than false precision for unlabeled points. Check each "
+            "claimed ranking against your own numeric estimates. Total/active parameters "
+            "are not measured FLOPs, latency, or cost; do not infer cost ratios from size alone."
+        )
         vision_started = time.monotonic()
         vision_unavailable, vision_analysis, vision_metadata = await self._analyze_with_vision(
             pil_img, vision_question
         )
         vision_duration = time.monotonic() - vision_started
-
-        fig_page = target_figure.page_idx + 1
-
         if vision_unavailable:
-            return ToolResult(
-                success=False,
-                tool_name="pdf_analyze_figure",
-                error=(
-                    f"Vision analysis failed or is not available for Figure "
-                    f"{target_figure.figure_number}. "
-                    f"The figure is on page {fig_page} with caption: '{target_figure.caption}'. "
-                    f"Use 'pdf_extract_text' with pages={fig_page}-{fig_page + 1} "
-                    f"to read the surrounding text and interpret the figure from its textual description. "
-                    f"Then use 'done' to report your findings."
-                ),
+            return self._vision_unavailable(target_figure).model_copy(
+                update={"data": {"found": True, "vision_metadata": vision_metadata}}
             )
-
         return ToolResult(
             success=True,
             tool_name="pdf_analyze_figure",
             data={
                 "found": True,
                 "figure_number": target_figure.figure_number,
-                "page": fig_page,
+                "page": target_figure.page_idx + 1,
                 "caption": target_figure.caption,
+                "page_text_context": page_text,
                 "image_path": str(img_path),
                 "browser_url": browser_url,
                 "vision_analysis": vision_analysis,
@@ -533,6 +561,28 @@ class PdfAnalyzeFigureTool(PdfToolBase):
                     _tables_on_page(result, target_figure.page_idx) if result is not None else []
                 ),
             },
+        )
+
+    async def _open_figure_in_browser(self, img_path: Path) -> str | None:
+        if not self.browser:
+            return None
+        open_result = await self.browser.open_local_file(str(img_path))
+        return str(open_result.get("url")) if open_result.get("success") else None
+
+    @staticmethod
+    def _vision_unavailable(target_figure: ImageInfo) -> ToolResult:
+        page = target_figure.page_idx + 1
+        return ToolResult(
+            success=False,
+            tool_name="pdf_analyze_figure",
+            error=(
+                f"Vision analysis failed or is not available for Figure "
+                f"{target_figure.figure_number}. The figure is on page {page} "
+                f"with caption: '{target_figure.caption}'. Use 'pdf_extract_text' "
+                f"with pages={page}-{page + 1} to read the surrounding text and "
+                "interpret the figure from its textual description. Then use 'done' "
+                "to report your findings."
+            ),
         )
 
     async def _analyze_with_vision(
@@ -563,6 +613,7 @@ class PdfAnalyzeFigureTool(PdfToolBase):
             # Check if image is too small for meaningful analysis
             if pil_img.width < 100 or pil_img.height < 100:
                 logger.warning("Image too small for analysis: %dx%d", pil_img.width, pil_img.height)
+                vision_unavailable = True
                 vision_analysis = (
                     f"Image resolution too low for detailed analysis. "
                     f"The extracted figure is only {pil_img.width}x{pil_img.height} pixels."
@@ -576,15 +627,30 @@ class PdfAnalyzeFigureTool(PdfToolBase):
                 except Exception as e:
                     logger.warning("Vision analysis failed: %s", e)
                     vision_unavailable = True
+                    vision_metadata = {"error_type": type(e).__name__}
 
             # Check if the vision analysis indicates failure
-            if vision_analysis and "vision api is not functioning" in vision_analysis.lower():
+            if vision_analysis and _unavailable_analysis(vision_analysis):
                 vision_unavailable = True
                 vision_analysis = None
-            elif not vision_analysis:
+            elif not vision_analysis or vision_metadata.get("finish_reason") == "length":
                 vision_unavailable = True
 
         return vision_unavailable, vision_analysis, vision_metadata
+
+
+def _unavailable_analysis(answer: str) -> bool:
+    return indicates_no_vision(answer) or any(
+        marker in answer.casefold()
+        for marker in (
+            "vision api is not functioning",
+            "vision api is not available",
+            "vision api could not read",
+            "vlm api returned error",
+            "vlm api error:",
+            "vlm returned empty response",
+        )
+    )
 
 
 def _exact_figure_number(figure_ref: str) -> str:

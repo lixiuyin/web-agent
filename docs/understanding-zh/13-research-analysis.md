@@ -12,7 +12,7 @@
 |---|---|---|
 | screenshot + DOM Markdown | 给 planner 两种观测 | 两种模态何时互补、何时冲突？ |
 | heuristic Top-N | 限制 token | 在固定预算下如何最大化 action recall？ |
-| AX Tree | 语义元素 | 如何得到稳定、可执行的 grounding？ |
+| rendered projection + compact refs | 绑定当前 DOM node、语义与 viewport 几何 | 在动态页面和跨 frame 场景下如何量化/提高 grounding？ |
 | history + nudge | 减少重复 | 什么 loop signal 能预测失败且不过早干预？ |
 | parser cascade | 服务降级 | 如何在质量、延迟、成本间动态路由？ |
 | caption-aware figures | 避免 logo 误配 | 如何评估跨 provider 的 figure grounding？ |
@@ -23,8 +23,8 @@
 ### 1. 可执行元素 Grounding
 
 - 研究问题：AX/DOM/视觉元素如何映射成跨页面变化仍可执行的 locator？
-- 假设：融合 accessible name、role、DOM path 和坐标，比当前 CSS-only 输出提高 action execution rate。
-- Baseline：当前 AX path；当前 JS CSS path；text selector。
+- 假设：在当前 node-bound ref 上加入视觉/OCR 或更强 role/name 表征，可提高遮挡、canvas 或复杂组件中的 target recall，同时不降低执行安全性。
+- Baseline：当前 rendered compact ref；legacy JS CSS path；text selector；fallback AX projection。
 - 数据：本地可控页面 + Mind2Web 子集；记录目标元素。
 - 指标：candidate recall@K、selector execution success、跨 DOM perturbation 稳定率、token 数。
 - Ablation：去掉 screenshot/role/text/geometry/历史。
@@ -32,7 +32,7 @@
 
 ### 2. Snapshot Token Budget 分配
 
-- 研究问题：固定 6k 字符/50 元素是否最优？
+- 研究问题：默认 viewport 5000 + document 2500 字符、50 元素及 0.5 text share 是否最优？
 - 假设：任务条件化选择正文与控件，比固定 Top-N 提高成功且降低 token。
 - Baseline：当前 heuristic；DOM first-N；仅 screenshot。
 - 指标：target recall、任务成功率、输入 token、延迟、cost-normalized success。
@@ -69,8 +69,8 @@
 
 报告均值之外给 bootstrap confidence interval 或多次运行方差。真实网站具有非平稳性，应将 self-hosted 可重复环境作为主实验，live-web 作为外部有效性补充。
 
-实现与实验入口应保持分工：受控站点放 `benchmarks/environments/controlled_web/`，单次套件放
-`benchmarks/suites/`，重复矩阵/纵向聚合放 `benchmarks/studies/`，协议与失败证据规则见
+实现与实验入口应保持分工：受控站点放 `src/webagent/benchmarks/environments/controlled_web/`，单次套件放
+`src/webagent/benchmarks/suites/`，重复矩阵/纵向聚合放 `src/webagent/benchmarks/studies/`，协议与失败证据规则见
 [`docs/research/`](../research/README.md)。脚本条件统一称 `scripted-harness-baseline`，只能证明
 harness 可执行，不应作为竞争性 Agent baseline 或模型校准结果。
 

@@ -124,9 +124,62 @@ def test_latest_pdf_figure_trace_requires_complete_same_run_workflow() -> None:
     report = verify_trace(trace)
 
     assert report["valid"] is False
-    assert "PDF task has no successful download_pdf" in report["failures"]
+    assert (
+        "PDF task has no successful download_pdf or download_file PDF download"
+        in report["failures"]
+    )
     assert "figure task has no successful figure analysis" in report["failures"]
     assert any("official_identity_search_completed" in item for item in report["failures"])
+
+
+def test_failed_run_keeps_achieved_search_evidence_without_done():
+    trace = _trace()
+    trace.update(task="latest report", status="blocked", success=False)
+    trace["steps"] = trace["steps"][:2]
+    trace["steps"][-1]["policy"].update(
+        search_completed=True,
+        broad_current_year_search_completed=True,
+        release_landscape_search_completed=True,
+        official_identity_search_completed=True,
+        official_scope_search_completed=False,
+        newer_version_leads_resolved=True,
+    )
+    failures = verify_trace(trace)["failures"]
+    assert "run did not complete" in failures
+    assert "latest-task evidence missing: official_scope_search_completed" in failures
+    assert not any(
+        "missing: broad_current_year" in text or "missing: official_identity" in text
+        for text in failures
+    )
+
+
+def test_grounded_download_file_pdf_satisfies_pdf_deliverable() -> None:
+    trace = _trace()
+    trace["task"] = "Find the report PDF"
+    steps = trace["steps"]
+    assert isinstance(steps, list)
+    steps.insert(
+        2,
+        {
+            "run_id": "run-1",
+            "step_number": 3,
+            "tool": "download_file",
+            "success": True,
+            "policy": {"decision": "allow"},
+            "result": {"path": "artifacts/downloads/2505.09388v1.pdf"},
+            "planner_visible_result": '{"path": "artifacts/downloads/2505.09388v1.pdf"}',
+        },
+    )
+    steps[3]["step_number"] = 4
+
+    report = verify_trace(trace)
+
+    assert not any("PDF task has no successful" in item for item in report["failures"])
+
+    steps[2]["result"] = {"path": "artifacts/downloads/archive.zip"}
+    report = verify_trace(trace)
+
+    assert any("PDF task has no successful" in item for item in report["failures"])
 
 
 def test_unresolved_captcha_invalidates_otherwise_successful_trace() -> None:

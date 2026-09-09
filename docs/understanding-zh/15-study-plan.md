@@ -42,9 +42,9 @@ trajectory/control/observations/artifacts/result/evaluation 的边界。产物�
 
 ### Day 9：Baseline runner
 
-先用 `scripted-harness-baseline` 校准环境/工具/判分链，再自动运行 JS CSS path、text selector、
-AX-only 三种可比较 baseline；记录 candidate recall@K 和 execution rate，不把 scripted harness 成绩
-当模型 baseline。
+先用 `scripted-harness-baseline` 校准环境/工具/判分链，再自动比较当前 rendered compact ref、
+legacy JS CSS path、text selector 和 fallback AX projection；记录 candidate recall@K、stale rejection
+与 execution rate，不把 scripted harness 成绩当模型 baseline。
 
 ### Day 10：故障注入
 
@@ -52,7 +52,8 @@ AX-only 三种可比较 baseline；记录 candidate recall@K 和 execution rate�
 
 ### Day 11：一个最小改进
 
-只改一个变量，例如 AX node 解析后通过 backend node resolve 得到 locator，或为 selector 增加 role+accessible-name 表达。
+只改一个变量，例如为 compact ref 的候选表征增加 role+accessible-name/OCR，或改进复杂 frame
+transform 的映射；保留原节点绑定与执行时 fail-closed 复验。
 
 ### Day 12：Ablation 与重复
 

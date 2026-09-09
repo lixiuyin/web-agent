@@ -1,0 +1,37 @@
+{
+  "format": "webagent-generality-campaign",
+  "schema_version": 1,
+  "campaign_id": "generality-2026-09-09-rerun-r7",
+  "provider": "openrouter",
+  "models": [
+    "qwen/qwen3.8-flash",
+    "z-ai/glm-5.3-flash"
+  ],
+  "source_sha256": "f745c00301d5b37f5dc4329c04e8d74ab1bb326f76b0985843568d52f4f72f66",
+  "model_order_policy": "rotate-by-date",
+  "endpoint_preflight_required": true,
+  "captcha_handling": "fail",
+  "components": {
+    "open_web": {
+      "study_id": "open-web",
+      "task_manifest_sha256": "df96bea42bea63bf6d44e228e4aa6ff0460a24d41d48feb1d182e141f99f0c93",
+      "shards": 1,
+      "default_max_steps": 8,
+      "discovery_max_steps": 12,
+      "direct_task_timeout_seconds": 600,
+      "discovery_task_timeout_seconds": 2400
+    },
+    "sandbox": {
+      "study_id": "sandbox-interaction",
+      "max_steps": 18
+    },
+    "long_horizon": {
+      "study_id": "long-horizon",
+      "max_steps": 100,
+      "task_timeout_seconds": 2400,
+      "resume_at_step": 35,
+      "planner_max_tokens": 1024,
+      "planner_reasoning_effort": "low"
+    }
+  }
+}

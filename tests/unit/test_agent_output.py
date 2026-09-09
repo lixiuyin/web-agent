@@ -9,11 +9,10 @@ from unittest.mock import AsyncMock
 import pytest
 from PIL import Image
 
-from webagent.agent.loop import (
+from webagent.agent.loop import WebAgent, _is_blank_screenshot
+from webagent.agent.run_outputs import (
     TracePersistenceError,
-    WebAgent,
     _as_image_path,
-    _is_blank_screenshot,
     _persist_run_trace,
     _select_figure,
     _trace_parameters,
@@ -244,7 +243,10 @@ async def test_agent_run_reports_async_cancellation_as_interrupted(tmp_path):
     assert result.status == "interrupted"
     assert result.success is False
     layout = RunLayout.from_root(tmp_path / "outputs")
-    assert layout.turn_summary_path(1).read_text(encoding="utf-8") == ""
+    assert "Task not completed (interrupted)" in layout.turn_summary_path(1).read_text(
+        encoding="utf-8"
+    )
+    assert result.final_result["completion_status"] == "incomplete"
     assert layout.turn_trace_path(1).is_file()
 
 

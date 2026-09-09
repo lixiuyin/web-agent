@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 import math
 import time
@@ -171,22 +172,7 @@ class BenchmarkRunner:
             )
         elif self._layout.study_binding() is not None:
             raise ValueError("a study-bound execution requires an explicit StudyRunContext")
-        evaluations: list[TaskEvaluation] = []
-        for task in tasks:
-            if self._reset_task is not None:
-                await self._reset_task(task)
-            started_at = time.monotonic()
-            try:
-                result = await self._execute_task(task)
-            except Exception as exc:
-                result = AgentResult(
-                    success=False,
-                    status="runner_error",
-                    steps_taken=0,
-                    total_duration=time.monotonic() - started_at,
-                    final_result={"error": f"{type(exc).__name__}: {exc}"},
-                )
-            evaluations.append(await self._evaluator.evaluate(task, result))
+        evaluations = await self._evaluate_tasks(suite, tasks)
 
         report_metadata = dict(metadata or {})
         if self._study_context is not None:
@@ -222,7 +208,86 @@ class BenchmarkRunner:
                 created_at=report.created_at,
                 evaluations=report.tasks,
             )
+        self._write_progress(suite, tasks, evaluations, status="completed")
         return report
+
+    async def _evaluate_tasks(
+        self, suite: str, tasks: Sequence[BenchmarkTask]
+    ) -> list[TaskEvaluation]:
+        evaluations: list[TaskEvaluation] = []
+        active: str | None = None
+        self._write_progress(suite, tasks, evaluations, status="running")
+        try:
+            for task in tasks:
+                active = task.id
+                self._write_progress(suite, tasks, evaluations, status="running", active=active)
+                evaluation = await self._evaluate_task(task)
+                target = self._layout.task_run(task.id).evaluation_dir / "task.json"
+                self._write_json(target, evaluation.model_dump(mode="json"))
+                evaluations.append(evaluation)
+                active = None
+                self._write_progress(suite, tasks, evaluations, status="running")
+        except BaseException as exc:
+            status = (
+                "interrupted"
+                if isinstance(exc, (asyncio.CancelledError, KeyboardInterrupt))
+                else "failed"
+            )
+            self._write_progress(suite, tasks, evaluations, status=status, active=active)
+            raise
+        return evaluations
+
+    async def _evaluate_task(self, task: BenchmarkTask) -> TaskEvaluation:
+        if self._reset_task is not None:
+            await self._reset_task(task)
+        started_at = time.monotonic()
+        try:
+            result = await self._execute_task(task)
+        except Exception as exc:
+            result = AgentResult(
+                success=False,
+                status="runner_error",
+                steps_taken=0,
+                total_duration=time.monotonic() - started_at,
+                final_result={"error": f"{type(exc).__name__}: {exc}"},
+            )
+        # WebAgent preserves interrupted evidence and may return normally after
+        # catching CancelledError. Do not silently start the next benchmark task.
+        current = asyncio.current_task()
+        if current is not None and current.cancelling():
+            raise asyncio.CancelledError()
+        return await self._evaluator.evaluate(task, result)
+
+    def _write_progress(
+        self,
+        suite: str,
+        tasks: Sequence[BenchmarkTask],
+        evaluations: Sequence[TaskEvaluation],
+        *,
+        status: str,
+        active: str | None = None,
+    ) -> None:
+        evaluated = {item.task_id for item in evaluations}
+        self._write_json(
+            self._layout.analysis_dir / "progress.json",
+            {
+                "schema_version": 1,
+                "format": "webagent-benchmark-progress",
+                "suite": suite,
+                "status": status,
+                "updated_at": datetime.now(UTC).isoformat(),
+                "planned_count": len(tasks),
+                "evaluated_count": len(evaluations),
+                "remaining_task_ids": [task.id for task in tasks if task.id not in evaluated],
+                "active_task_id": active,
+                "evaluated_summary": (
+                    aggregate_evaluations(evaluations).model_dump(mode="json")
+                    if evaluations
+                    else None
+                ),
+                "notice": "Partial progress is not a completed suite. Unevaluated tasks are not scored; study records are published only after the full suite finishes.",
+            },
+        )
 
     def _write_report(self, report: BenchmarkReport) -> None:
         self._write_json(self._layout.report_path, report.model_dump(mode="json"))

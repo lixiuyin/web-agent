@@ -31,19 +31,19 @@ _NEGATIVE_INDICATORS = ("footer", "header", "nav", "sidebar", "cookie")
 
 def _position_score(element: dict[str, Any], viewport_height: int, viewport_width: int) -> float:
     """Vertical position dominates; left edge is slightly more prominent."""
-    bbox = element.get("bbox", {})
+    bbox = element.get("viewport_bbox", element.get("bbox", {}))
     x_pos = bbox.get("x", 99999)
     y_pos = bbox.get("y", 99999)
     score = 0.0
 
-    if y_pos < viewport_height:
+    if 0 <= y_pos < viewport_height:
         # In viewport: higher score for elements near top
         score += max(0, 25 - (y_pos / viewport_height) * 25)
     else:
         # Below fold: lower base score
         score += 3
 
-    if x_pos < viewport_width:
+    if 0 <= x_pos < viewport_width:
         score += max(0, 10 - (x_pos / viewport_width) * 10)
     return score
 

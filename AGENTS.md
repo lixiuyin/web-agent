@@ -6,20 +6,23 @@ overview, see [README.md](README.md).
 ## Commands
 
 ```bash
-pip install -e ".[dev]" && playwright install chromium   # setup
-ruff check src/ benchmarks/ scripts/ tests/               # lint
-ruff format src/ benchmarks/ scripts/ tests/              # format
-mypy src/ benchmarks/ scripts/                            # type-check
+uv sync && uv run playwright install chromium             # setup
+ruff check src/ scripts/ tests/               # lint
+ruff format src/ scripts/ tests/              # format
+mypy src/ scripts/                            # type-check
 pytest tests/unit/ -v                                     # unit tests (no browser) + coverage gate
 pytest tests/integration/ -v --no-cov                    # integration (real browser)
-python scripts/check_docs.py                              # Markdown structure + local links
+uv run python scripts/check_docs.py                        # Markdown structure + local links
 ```
 
 All code gates (ruff check, ruff format --check, mypy, pytest) and the documentation
 check must stay green before committing.
 
-The unit suite enforces a branch-coverage gate (`--cov-fail-under=85`, configured in
-`pyproject.toml`); keep coverage at or above 85%. The integration suite exercises only a
+Ruff enforces a maximum cyclomatic complexity of 10 (`C901`) for source, scripts and tests. Split responsibilities rather than raising the threshold or adding suppressions.
+
+The unit suite enforces combined statement/branch coverage of at least 85%
+(`branch=true` and `--cov-fail-under=85`, configured in `pyproject.toml`). This does not
+require branch-only coverage to reach 85%. The integration suite exercises only a
 thin slice of the code with a real browser, so run it with `--no-cov` to skip the gate.
 
 ## Conventions
@@ -27,7 +30,7 @@ thin slice of the code with a real browser, so run it with `--no-cov` to skip th
 - **Layout:** runtime source lives in `src/webagent/`, organized by system domain
   (`core/ agent/ browser/ planner/ parser/ tools/ utils/`); reusable research contracts and
   analyses live in `evaluation/`, while executable environments/suites/studies live in
-  `benchmarks/`. Keep runtime mechanisms separate from external evaluation.
+  `src/webagent/benchmarks/`. Keep runtime mechanisms separate from external evaluation.
 - **Protocols first:** major components implement `typing.Protocol`s in `core/protocols.py`
   (`Planner`, `Tool`, `AgentHook`) — no inheritance required, just matching methods.
 - **Tools** are classes decorated with `@tool("name", "description")` in `tools/builtin/`;

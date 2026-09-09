@@ -2,19 +2,19 @@
 
 ## 3 分钟中文介绍
 
-这个项目是一个基于 Playwright 和视觉语言模型的 Web Agent 运行时。用户输入自然语言任务后，系统重复执行 Observe、Think、Act、Record：Observe 同时截取浏览器截图，并通过 CDP Accessibility Tree 或 JavaScript 把交互元素压缩成 Markdown；Think 将任务、页面、最近历史和按策略过滤后的 67 个工具 schema 发给 OpenAI-compatible planner；Act 对模型生成的 ToolCall 做参数、provenance、风险和墙钟约束，然后执行浏览器、搜索、文件或 PDF 工具；Record 保存结果、checkpoint 和 v8 trace，并检查完成、连续失败、循环、策略切换、步骤和任务时间预算。
+这个项目是一个基于 Playwright 和视觉语言模型的 Web Agent 运行时。用户输入自然语言任务后，系统重复执行 Observe、Think、Act、Record：Observe 截取 viewport screenshot，并把同一渲染状态拆成 viewport context、屏幕外 document supplement 和绑定当前 DOM node 的 compact refs；CDP/AX 与 JS 是投影不可用时的 fallback。Think 将任务、页面、最近历史和按策略过滤的 67 个注册工具 schema 子集发给 OpenAI-compatible planner；Act 对模型生成的 ToolCall 做参数、provenance、风险、ref 新鲜度和墙钟约束，然后执行浏览器、搜索、文件或 PDF 工具；Record 保存结果、checkpoint 和 v8 trace，并检查完成、连续失败、循环、策略切换、步骤和任务时间预算。
 
 项目比较有特点的工程部分是两条可靠性链。第一条是网页侧：CDP/JS 感知 fallback、页面稳定等待、六信号 loop detector、搜索引擎 cascade、planner hard timeout。第二条是论文侧：先用 PyMuPDF 做文档画像，再在 Marker、MinerU、PaddleOCR 之间路由，每次结果经过质量门，最后退到本地 PyMuPDF；图片通过 caption 与 Figure N 关联，减少把 logo 当成目标图的错误。
 
-我不会把它描述成已经完成研究验证的系统。当前还存在关键缺口，例如 AX backend node 到可执行 selector 的映射不可靠，多 provider 原生 SDK 不在主路径，而且确定性 integration 不能替代大规模真实自主任务评测。CAPTCHA 已能 fail closed 或在 headed 模式等待人工清除，但不会自动求解。仓库已有日期化双模型诊断证据，但纵向重复和 BrowserGym 外部层仍不完整；精确数字应从[研究结果索引](../research/results/README.md)读取。我认为最有价值的 RA 方向是补齐两层重复实验，并对页面表征和 grounding 做 ablation。
+我不会把它描述成已经完成研究验证的系统。当前 compact ref 已能绑定原 DOM node 并在执行时复验，但 closed shadow root、复杂 frame transform、非像素级遮挡判断和动态页面覆盖仍需更大规模评测；多 provider 原生 SDK 也不在主路径，而且确定性 integration 不能替代真实自主任务评测。CAPTCHA 已能 fail closed 或在 headed 模式等待人工清除，但不会自动求解。仓库已有日期化双模型诊断证据，但纵向重复和 BrowserGym 外部层仍不完整；精确数字应从[研究结果索引](../research/results/README.md)读取。我认为最有价值的 RA 方向是补齐两层重复实验，并对页面表征和 grounding 做 ablation。
 
 ## 3-minute English introduction
 
-This project is a Playwright-based web-agent runtime controlled by a vision-language planner. Given a natural-language task, it repeatedly executes an Observe–Think–Act–Record loop. During observation, it captures a screenshot and compresses the page into Markdown using either the Chrome accessibility tree or JavaScript-based interactive-element extraction. During planning, it sends the task, browser state, durable controller state, and policy-filtered schemas for 67 tools to an OpenAI-compatible endpoint. The resulting provider-native or schema-constrained tool call passes runtime validation, provenance and risk policy, a wall-clock bound, checkpointing, execution, and a versioned audit trace.
+This project is a Playwright-based web-agent runtime controlled by a vision-language planner. Given a natural-language task, it repeatedly executes an Observe–Think–Act–Record loop. During observation, it captures a viewport screenshot and separates a rendered projection into screenshot-aligned viewport context, an explicitly non-visual document supplement, and compact references bound to the observed DOM nodes. CDP/AX and JavaScript extraction remain fallbacks. During planning, it sends the task, browser state, durable controller state, and a policy-filtered subset of schemas for 67 registered tools to an OpenAI-compatible endpoint. The resulting provider-native or schema-constrained tool call passes runtime validation, provenance and risk policy, reference freshness checks, a wall-clock bound, checkpointing, execution, and a versioned audit trace.
 
 The system has two notable reliability pipelines. On the web side, it combines CDP and JavaScript observation fallbacks, bounded page-stability waits, six-signal loop detection, search-engine fallback, and hard model-request timeouts. On the document side, it profiles a PDF locally, routes it through Marker, MinerU, and PaddleOCR, rejects degraded outputs through a heuristic quality gate, and finally falls back to local PyMuPDF. It also associates extracted images with real Figure-N captions rather than assuming that the first extracted image is the target figure.
 
-I would describe it as a useful research prototype, not as a fully validated research contribution. Important limitations remain: accessibility nodes are not reliably grounded to executable selectors, native provider SDKs are outside the active planner path, and deterministic integration does not establish a general task-success rate. CAPTCHA handling now fails closed or waits for manual clearance in a headed browser, but never solves a challenge. The repository has dated two-model diagnostic evidence, while longitudinal repetition and the BrowserGym external layer remain incomplete; exact results belong to the research-results index. A strong RA project would turn those runs into controlled grounding and robustness experiments.
+I would describe it as a useful research prototype, not as a fully validated research contribution. Compact references now bind actions to the observed DOM node and are revalidated at execution, but closed shadow roots, complex frame transforms, approximate occlusion checks, dynamic-site coverage, and native provider SDK coverage remain limitations. Deterministic integration still does not establish a general task-success rate. CAPTCHA handling fails closed or waits for manual clearance in a headed browser, but never solves a challenge. The repository has dated two-model diagnostic evidence, while longitudinal repetition and the BrowserGym external layer remain incomplete; exact results belong to the research-results index. A strong RA project would turn those runs into controlled grounding and robustness experiments.
 
 ## 30 个项目理解问题及答案
 
@@ -22,12 +22,12 @@ I would describe it as a useful research prototype, not as a fully validated res
 2. **Q：谁创建 BrowserState？** A：`WebAgent._observe()` 从 snapshot dict 构造。
 3. **Q：截图和 DOM 为什么配合使用？** A：截图保留视觉/布局，DOM Markdown 提供文本和可操作 selector；两者互补，但截图按状态自适应发送。
 4. **Q：什么时候不发送截图？** A：截图为空、vision probe 不通过、配置为 `never`、页面结构化文本已足够，或本地 PDF/image 工具已返回路径与证据时。
-5. **Q：DOM 为什么截断 6000 字符？** A：控制上下文；这是固定字符预算，不保证保留最关键尾部信息。
+5. **Q：DOM 如何控制长度？** A：viewport 与 document supplement 默认分别使用 5000/2500 字符预算，只装入完整的 text/control block，并显式报告省略量。
 6. **Q：`done` 如何终止任务？** A：工具先返回成功，Agent 再检查 tool name 并设 completed。
 7. **Q：没有 API key 会怎样？** A：CLI 选择 StubPlanner，通常第一步立即 done。
 8. **Q：Protocol 有何意义？** A：结构化类型允许 mock/替代实现，不要求继承。
 9. **Q：工具怎样被发现？** A：import builtin 触发装饰器写全局类表，registry 实例化。
-10. **Q：工具名在何处规范化？** A：ToolExecutor 转小写；Agent 的 done 比较没有同步规范化。
+10. **Q：工具名在何处规范化？** A：`ToolCall` 构造时统一 `strip().casefold()`，规划、policy、执行、history 与 `done` 终止判断共用规范名。
 11. **Q：参数错了会怎样？** A：validate 的 ValueError 转为失败 ToolResult。
 12. **Q：工具卡住怎样处理？** A：`asyncio.wait_for(tool_timeout)` 取消 coroutine并返回失败。
 13. **Q：Agent 总 timeout 是硬 watchdog 吗？** A：不是，只在步骤边界检查。
@@ -37,24 +37,24 @@ I would describe it as a useful research prototype, not as a fully validated res
 17. **Q：检测到 loop 会停止吗？** A：不会，只给 planner nudge。
 18. **Q：CAPTCHA 会暂停吗？** A：普通 headed 模式可在有界时间内等待人工清除；headless、strict、`fail` 或等待超时会 fail closed，任何模式都不自动求解。
 19. **Q：CDP 的作用是什么？** A：访问 AX/DOM/CSS/Runtime 等 Chromium 内部语义。
-20. **Q：AX Tree 当前最大问题？** A：backendDOMNodeId 没有可靠映射到页面 locator/css path。
-21. **Q：`[e1]` 能点击吗？** A：不能，它是 Markdown 展示编号；工具只认 text/css selector。
+20. **Q：AX Tree 当前最大问题？** A：fallback AX 投影的 backendDOMNodeId 不能可靠生成 CSS/bbox；默认 compact-ref 主路径因此直接保存 rendered DOM node 绑定。
+21. **Q：观察中的方括号引用能点击吗？** A：能；完整的 `[observation_id/fN:eN]` 要作为 `type=ref` 原样复制，旧 observation 或仅复制 `eN` 都会被拒绝。
 22. **Q：为什么用 persistent context？** A：保留 profile/cookie 等浏览器状态。
 23. **Q：搜索为何容易漂移？** A：依赖真实搜索引擎 DOM selectors 和反爬策略。
 24. **Q：PDF 如何选 parser？** A：文档 suffix、文本层、平均字符和扫描画像，加 soft hint。
 25. **Q：Quality gate 测什么？** A：空文本、字符量比例、控制字符、扫描件每页字符或结构资产。
 26. **Q：cloud 全失败怎样？** A：local PyMuPDF 读取 text layer。
-27. **Q：Figure 1 怎样避免命中 logo？** A：保存 image 时关联 alt/附近 caption，再按 figure_number 匹配。
+27. **Q：Figure 1 怎样避免命中 logo？** A：按 figure number/caption 做本地候选检测，只有单一高置信候选走快路径；视觉请求还补充当前页与前一页的有界文本。
 28. **Q：PDF QA 是向量 RAG 吗？** A：不是，是字符 chunk 与规则相关性评分。
 29. **Q：每次 run 的输出目录怎样处理？** A：默认分配新的 run；显式目录必须为空或有匹配的 ownership manifest，follow-up/resume 在各自契约下追加，不能任意递归清空已有目录。
-30. **Q：integration test 证明真实任务吗？** A：不证明；两条 Stub 测生命周期，一条虚构证据测完整控制流。真实 strict blind run 只能作为补充个案。
+30. **Q：integration test 证明真实任务吗？** A：不证明；Stub/预设动作校准链路。日期化 Qwen strict 真模型通过也只是单任务补充个案，不能替代多日期、多模型或外部 benchmark。
 
 ## 20 个 RA 面试问题与参考回答
 
 1. **为什么选择这个项目？** 它把模型、环境、工具和失败恢复放在一条可观测链上，适合研究长程 Agent 的可靠性。
 2. **最重要的设计取舍？** 混合 screenshot/DOM 提高信息覆盖，但增加冲突、token 和 grounding 复杂度。
-3. **最严重的实现风险？** AX 语义节点未可靠落到可执行 locator，感知与动作之间断层。
-4. **你会先修什么？** 先建本地页面测试和 grounding 指标，再改 locator，不先凭直觉重写。
+3. **最严重的实现风险？** 现有 ref 已闭合主路径，但对 closed shadow root、复杂 frame/transform、canvas 和遮挡的覆盖仍不完整，且缺少大规模 grounding 指标。
+4. **你会先修什么？** 先扩展可控扰动页面与 grounding 指标，再针对可复现失败改投影或 locator。
 5. **成功率之外看什么？** action success、恢复率、steps、latency、tokens、cost、fallback 和方差。
 6. **如何定义可靠？** 在明确任务分布和预算下，高成功、低方差、失败可诊断、对扰动稳健且能适当停止/求助。
 7. **如何避免 benchmark leakage？** 固定 task split，隔离 prompt 开发集，报告网站/任务版本，检查静态候选。
@@ -77,7 +77,7 @@ I would describe it as a useful research prototype, not as a fully validated res
 1. 追踪 `stealth_mode=False` 从环境变量到 BrowserController 的完整参数链。
 2. 解释 `run(reset_history=False)` 保留了什么、又删除了什么。
 3. 构造 planner 返回 `Done` 时可能发生的控制流。
-4. 指出 `_extract_from_ax_tree` 为什么可能输出 `unknown` selector。
+4. 对比 rendered compact-ref 主路径与 `_extract_from_ax_tree` fallback，解释后者为何可能缺少可执行 CSS path。
 5. 追踪一个坏 selector 从 ClickTool 到 Agent consecutive failures。
 6. 解释 provider 500、401、429 各自会否同 provider retry。
 7. 证明 parser 的整体 deadline 怎样覆盖 provider polling timeout。

@@ -1,0 +1,208 @@
+{
+  "task_id": "sandbox_checkout",
+  "category": "sandbox_transaction",
+  "goal": "Add exactly one Orbit Notebook in the sandbox shop, continue to sandbox checkout, enter 42 Orbit Road, accept the sandbox terms, and place the order.",
+  "passed": false,
+  "score": 0.375,
+  "agent_reported_success": true,
+  "agent_status": "completed",
+  "error": null,
+  "duration_seconds": 243.93881702423096,
+  "steps": 18,
+  "action_count": 17,
+  "failed_action_count": 2,
+  "planner_attempt_count": 19,
+  "planner_failure_count": 1,
+  "planner_tokens": 181440,
+  "answer_assertion_count": 2,
+  "answer_assertion_passed": 2,
+  "termination_reason": "completed",
+  "timed_out": false,
+  "captcha_encountered": false,
+  "blocked": false,
+  "max_steps_reached": false,
+  "split": "development",
+  "task_family": "sandbox_transaction",
+  "setting_id": "sandbox",
+  "leakage_group": "sandbox_checkout",
+  "target_failure_modes": [],
+  "feedback": {
+    "kind": "unspecified",
+    "delay_steps": 0,
+    "noise_rate": null
+  },
+  "expected_horizon": "unspecified",
+  "scenario": "sandbox_transaction",
+  "environment": "sandbox",
+  "entry_mode": "direct",
+  "risk_scope": "sandbox_mutation",
+  "source_origins": [],
+  "trajectory": {
+    "schema_version": 2,
+    "action_count": 17,
+    "distinct_tool_count": 6,
+    "tool_entropy_bits": 2.1607047528877823,
+    "repeated_action_rate": 0.0,
+    "longest_identical_action_streak": 1,
+    "longest_failure_streak": 1,
+    "recovery_count": 2,
+    "minimum_window_entropy_bits": -0.0,
+    "collapse_onset_step": null,
+    "longest_same_state_streak": 4,
+    "stagnation_onset_step": null,
+    "replan_count": 7,
+    "strategy_switch_count": 6,
+    "replan_rate": 0.4117647058823529,
+    "resume_count": 0,
+    "resumed_from_checkpoint": false
+  },
+  "success_probability": 0.15,
+  "confidence_source": "self_reported",
+  "confidence_elicited_at_step": 18,
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "url_contains",
+        "expected": "/order/complete",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": false,
+      "observed": "http://127.0.0.1:51495/shop",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "element_visible",
+        "expected": true,
+        "selector": "#order-complete",
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": false,
+      "observed": false,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "json_equals",
+        "expected": 1,
+        "selector": null,
+        "attribute": null,
+        "endpoint": "/api/state",
+        "json_path": "cart.orbit",
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": 1,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "json_equals",
+        "expected": "42 Orbit Road",
+        "selector": null,
+        "attribute": null,
+        "endpoint": "/api/state",
+        "json_path": "order.address",
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": false,
+      "observed": "",
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "json_equals",
+        "expected": true,
+        "selector": null,
+        "attribute": null,
+        "endpoint": "/api/state",
+        "json_path": "order.terms",
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": false,
+      "observed": false,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "json_equals",
+        "expected": true,
+        "selector": null,
+        "attribute": null,
+        "endpoint": "/api/state",
+        "json_path": "order.submitted",
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": false,
+      "observed": false,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_origin_observed",
+        "expected": "http://127.0.0.1:51495",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    },
+    {
+      "assertion": {
+        "kind": "history_origin_observed",
+        "expected": "http://127.0.0.1:51496",
+        "selector": null,
+        "attribute": null,
+        "endpoint": null,
+        "json_path": null,
+        "required": true,
+        "weight": 1.0,
+        "description": ""
+      },
+      "passed": true,
+      "observed": true,
+      "error": null,
+      "adjudication_candidate": false,
+      "adjudication_reason": null
+    }
+  ]
+}

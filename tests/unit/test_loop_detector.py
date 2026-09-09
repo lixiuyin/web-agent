@@ -2,7 +2,67 @@
 
 from __future__ import annotations
 
+from types import SimpleNamespace
+
 from webagent.agent.loop_detector import LoopDetector
+from webagent.agent.planning import PlanningCoordinator
+from webagent.core.models import BrowserState, ToolCall
+
+
+def test_capture_nonce_does_not_hide_repeated_observed_action():
+    detector = LoopDetector()
+    coordinator = PlanningCoordinator(SimpleNamespace(loop_detector=detector))
+    for nonce in ("capture-one", "capture-two", "capture-three"):
+        state = BrowserState(
+            url="https://example.test",
+            title="Test",
+            timestamp="now",
+            observation_id=nonce,
+            dom_summary=f"Observation: {nonce}\n[{nonce}/f0:e1] read this paragraph",
+        )
+        coordinator._record_loop_action(
+            ToolCall(
+                tool_name="extract_text",
+                parameters={"selector": {"type": "ref", "value": f"{nonce}/f0:e1"}},
+            ),
+            state,
+        )
+    assert len(set(detector.recent_pages)) == 1
+    assert len(set(detector.recent_actions)) == 1
+    looping, nudge = detector.is_looping()
+    assert looping
+    assert "actual task" in nudge
+    assert "PDF" not in nudge
+    assert "caption" not in nudge
+
+
+def test_distinct_nested_extraction_targets_are_not_identical_actions():
+    detector = LoopDetector()
+    for target in ("#first", "#second", "#third"):
+        detector.add_action(
+            "extract_text",
+            "https://example.test",
+            "same",
+            {"selector": {"type": "css", "value": target}},
+        )
+    assert len(set(detector.recent_actions)) == 3
+    assert not detector.is_looping()[0]
+
+
+def test_distinct_form_entries_do_not_require_page_text_changes():
+    detector = LoopDetector()
+    for index in range(5):
+        detector.add_action(
+            "type",
+            "https://example.test",
+            "same",
+            {
+                "selector": {"type": "css", "value": f"#field-{index}"},
+                "text": "private field value",
+            },
+        )
+    assert not detector.is_looping()[0]
+    assert "private field value" not in str(detector.export_state())
 
 
 class TestLoopDetector:
@@ -96,6 +156,8 @@ class TestLoopDetector:
         assert is_looping is True
         assert detector.loop_type == "search_churn"
         assert "get_search_results" in nudge
+        assert "only when the immediately preceding search succeeded" in nudge
+        assert "residual results" in nudge
 
     def test_three_required_searches_do_not_trigger_search_churn(self):
         detector = LoopDetector(window_size=5, threshold=3)

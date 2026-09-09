@@ -7,11 +7,11 @@ from typing import Any
 from webagent.core.models import ToolResult
 from webagent.tools.builtin._base import BrowserToolBase
 from webagent.tools.builtin.browser_tools import _resolve_selector, _validate_selector
-from webagent.tools.builtin.search_tools import _unwrap_search_redirect
 from webagent.tools.registry import tool
+from webagent.tools.search.support import _result_quality_issue, _unwrap_search_redirect
 
 
-@tool("hover", "Hover over element. params: selector={type:'text'|'css', value:(string)}")
+@tool("hover", "Hover over element. params: selector={type:'ref'|'text'|'css', value:(string)}")
 class HoverTool(BrowserToolBase):
     """Hover over an element to trigger dropdowns, tooltips, or other hover effects.
 
@@ -35,7 +35,7 @@ class HoverTool(BrowserToolBase):
 
 @tool(
     "select_dropdown",
-    "Select from dropdown. params: selector={type:'text'|'css', value:(string)}, value?, label?, index?",
+    "Select from dropdown. params: selector={type:'ref'|'text'|'css', value:(string)}, value?, label?, index?",
 )
 class SelectDropdownTool(BrowserToolBase):
     """Select an option from a <select> dropdown element.
@@ -133,7 +133,7 @@ class WaitForElementTool(BrowserToolBase):
 
 @tool(
     "get_attribute",
-    "Get element attribute. params: selector={type:'text'|'css', value:(string)}, attribute (string)",
+    "Get element attribute. params: selector={type:'ref'|'text'|'css', value:(string)}, attribute (string)",
 )
 class GetAttributeTool(BrowserToolBase):
     """Get the value of an element's attribute (e.g., href, src, data-*, id, class, etc.).
@@ -177,7 +177,7 @@ class GetAttributeTool(BrowserToolBase):
 
 @tool(
     "get_all_links",
-    "Extract all links from page. params: skip_anchors=false, skip_javascript=false, filter_external_only=false, max_results=100",
+    "Extract HTML anchor links, not JavaScript-only menus or cards; use observation references for those. params: offset=0, contains='', max_results=20, skip_anchors=false, skip_javascript=false, filter_external_only=false. Use next_offset to page through results.",
 )
 class GetAllLinksTool(BrowserToolBase):
     """Extract all links (hrefs and text) from the current page with optional filtering.
@@ -186,11 +186,15 @@ class GetAllLinksTool(BrowserToolBase):
     - skip_anchors: Skip anchor links (#)
     - skip_javascript: Skip javascript: links
     - filter_external_only: Only return http/https links
-    - max_results: Maximum number of links to return (default 100)
+    - max_results: Maximum number of links to return (default 20)
     """
 
     def validate_params(self, params: dict[str, Any]) -> None:
         # Validate boolean parameters
+        if not isinstance(params.get("offset", 0), int) or params.get("offset", 0) < 0:
+            raise ValueError("offset must be a non-negative integer")
+        if not isinstance(params.get("contains", ""), str):
+            raise ValueError("contains must be a string")
         for param in ("skip_anchors", "skip_javascript", "filter_external_only"):
             if param in params and not isinstance(params[param], bool):
                 raise ValueError(f"'{param}' must be a boolean")
@@ -202,14 +206,25 @@ class GetAllLinksTool(BrowserToolBase):
                 raise ValueError("'max_results' must be between 0 and 1000")
 
     async def execute(self, params: dict[str, Any]) -> ToolResult:
+        offset = params.get("offset", 0)
+        limit = params.get("max_results", 20)
+        contains = params.get("contains", "").casefold()
         resp = await self.browser.get_all_links(
             skip_anchors=params.get("skip_anchors", False),
             skip_javascript=params.get("skip_javascript", False),
             filter_external_only=params.get("filter_external_only", False),
-            max_results=params.get("max_results", 100),
+            max_results=None if contains else offset + limit,
         )
         if resp.get("success"):
             links = resp.get("links", [])
+            if contains:
+                links = [
+                    link
+                    for link in links
+                    if contains in (link.get("text", "") + " " + link.get("href", "")).casefold()
+                ]
+            available = len(links) if contains else resp.get("total_count", len(links))
+            links = links[offset : offset + limit]
             return ToolResult(
                 success=True,
                 tool_name="get_all_links",
@@ -217,6 +232,10 @@ class GetAllLinksTool(BrowserToolBase):
                     "links": links,
                     "total_count": resp.get("total_count", resp.get("count", 0)),
                     "returned": len(links),
+                    "source_url": str(self.browser.page.url),
+                    "offset": offset,
+                    "filtered_count": available,
+                    "next_offset": offset + len(links) if offset + len(links) < available else None,
                 },
             )
         return ToolResult(
@@ -278,7 +297,7 @@ class RefreshTool(BrowserToolBase):
 
 @tool(
     "scroll_to_element",
-    "Scroll element into view. params: selector={type:'text'|'css', value:(string)}",
+    "Scroll element into view. params: selector={type:'ref'|'text'|'css', value:(string)}",
 )
 class ScrollToElementTool(BrowserToolBase):
     """Scroll a specific element into view.
@@ -348,13 +367,22 @@ class GetSearchResultsTool(BrowserToolBase):
                     "snippet": str(result.get("snippet", "")),
                 }
 
+            query = str(resp.get("query", ""))
+            all_formatted_results = [format_result(result) for result in results]
+            if quality_issue := _result_quality_issue(query, all_formatted_results):
+                return ToolResult(
+                    success=False,
+                    tool_name="get_search_results",
+                    error=f"current search page has irrelevant residual results: {quality_issue}",
+                )
+
             # Format results for LLM consumption
             # By default, show top 5 results with full details, summarize the rest
             # If show_all=True, show all results
             default_shown = 5
             if show_all:
                 # Show all results with full details
-                formatted_results = [format_result(r) for r in results]
+                formatted_results = all_formatted_results
                 data = {
                     "engine": resp.get("engine", ""),
                     "query": resp.get("query", ""),
@@ -365,7 +393,7 @@ class GetSearchResultsTool(BrowserToolBase):
             elif len(results) > default_shown:
                 # Show top N results in detail, summarize the rest
                 top_results = results[:default_shown]
-                formatted_results = [format_result(r) for r in top_results]
+                formatted_results = all_formatted_results[: len(top_results)]
                 remaining_count = len(results) - default_shown
                 data = {
                     "engine": resp.get("engine", ""),
@@ -377,7 +405,7 @@ class GetSearchResultsTool(BrowserToolBase):
                 }
             else:
                 # Show all results (less than default_shown)
-                formatted_results = [format_result(r) for r in results]
+                formatted_results = all_formatted_results
                 data = {
                     "engine": resp.get("engine", ""),
                     "query": resp.get("query", ""),

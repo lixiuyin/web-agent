@@ -6,15 +6,17 @@ import asyncio
 import json
 import os
 import time
+from types import SimpleNamespace
 from typing import Any
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
 from webagent.browser.controller import (
     BrowserController,
-    _mark_profile_clean,
-    _same_navigation_site,
 )
+from webagent.browser.navigation import same_navigation_site as _same_navigation_site
+from webagent.browser.profiles import create_temporary_profile, mark_profile_clean
 
 
 class FakeResponse:
@@ -91,7 +93,16 @@ class FakeLocator:
 
 
 class FakePage:
+    main_frame = object()
+
     """Configurable Page double covering the controller's Playwright surface."""
+
+    def on(self, event, callback):
+        self.listeners = getattr(self, "listeners", {})
+        self.listeners.setdefault(event, []).append(callback)
+
+    def remove_listener(self, event, callback):
+        self.listeners[event].remove(callback)
 
     def __init__(self, *, fail: bool = False) -> None:
         self.url = "https://example.test/page"
@@ -214,6 +225,13 @@ class TestNavigation:
         class RedirectPage(FakePage):
             async def goto(self, url: str, **kwargs: Any) -> FakeResponse:
                 self.url = "https://regional.example.test/results"
+                root = SimpleNamespace(url=url, redirected_from=None)
+                request = SimpleNamespace(
+                    is_navigation_request=lambda: True, frame=self.main_frame, redirected_from=root
+                )
+                response = SimpleNamespace(request=request, url=self.url, status=200)
+                for callback in self.listeners["response"]:
+                    callback(response)
                 raise RuntimeError("Page.goto: net::ERR_ABORTED")
 
         result = await _controller(RedirectPage()).goto("https://example.test/search")
@@ -231,19 +249,22 @@ def test_same_navigation_site_accepts_regional_redirect_but_not_stale_page() -> 
     assert _same_navigation_site("https://www.bing.com/search", "https://cn.bing.com/search")
     assert not _same_navigation_site("https://search.seznam.cz/", "https://cn.bing.com/search")
 
-    async def test_refresh(self) -> None:
-        result = await _controller(FakePage()).refresh()
-        assert result["success"] is True
 
-    async def test_refresh_failure(self) -> None:
-        page = FakePage()
-        page.reload = _raise
-        result = await _controller(page).refresh()
-        assert result["success"] is False
+async def test_refresh() -> None:
+    result = await _controller(FakePage()).refresh()
+    assert result["success"] is True
 
-    async def test_open_local_file_missing(self) -> None:
-        result = await _controller(FakePage()).open_local_file("/nonexistent/file.png")
-        assert result["success"] is False
+
+async def test_refresh_failure() -> None:
+    page = FakePage()
+    page.reload = _raise
+    result = await _controller(page).refresh()
+    assert result["success"] is False
+
+
+async def test_open_local_file_missing() -> None:
+    result = await _controller(FakePage()).open_local_file("/nonexistent/file.png")
+    assert result["success"] is False
 
 
 async def test_close_removes_owned_temporary_profile(tmp_path) -> None:
@@ -266,7 +287,10 @@ async def test_temporary_profile_can_use_configured_root(tmp_path) -> None:
         temporary_profile_root=root,
     )
 
-    profile = controller._create_temporary_profile()
+    profile = create_temporary_profile(
+        controller.temporary_profile_root,
+        stale_max_age_seconds=controller.stale_profile_max_age_seconds,
+    )
     controller._owned_profile_dir = profile
     controller.user_data_dir = str(profile)
 
@@ -298,7 +322,10 @@ async def test_new_profile_removes_only_marked_stale_dead_owner(tmp_path) -> Non
         stale_profile_max_age_seconds=3600,
     )
 
-    current = controller._create_temporary_profile()
+    current = create_temporary_profile(
+        controller.temporary_profile_root,
+        stale_max_age_seconds=controller.stale_profile_max_age_seconds,
+    )
     controller._owned_profile_dir = current
     controller.user_data_dir = str(current)
 
@@ -310,13 +337,14 @@ async def test_new_profile_removes_only_marked_stale_dead_owner(tmp_path) -> Non
     await controller.close()
     assert not current.exists()
 
-    async def test_open_local_file(self, tmp_path: Any) -> None:
-        target = tmp_path / "view.png"
-        target.write_bytes(b"x")
-        page = FakePage()
-        result = await _controller(page).open_local_file(str(target))
-        assert result["success"] is True
-        assert result["url"].startswith("file://")
+
+async def test_open_local_file(tmp_path: Any) -> None:
+    target = tmp_path / "view.png"
+    target.write_bytes(b"x")
+    page = FakePage()
+    result = await _controller(page).open_local_file(str(target))
+    assert result["success"] is True
+    assert result["url"].startswith("file://")
 
 
 class _CheckpointPage:
@@ -330,20 +358,33 @@ class _CheckpointPage:
 
     async def close(self) -> None:
         self.closed = True
+        if hasattr(self, "context"):
+            self.context.pages.remove(self)
 
     async def bring_to_front(self) -> None:
         self.front = True
+
+    async def route(self, *args):
+        pass
+
+    async def evaluate(self, script, entries):
+        self.context.storage_values[self.url] = entries
 
 
 class _CheckpointContext:
     def __init__(self, pages: list[_CheckpointPage]) -> None:
         self.pages = pages
+        for page in pages:
+            page.context = self
+        self.storage_values = {}
         self.cookies: list[dict[str, Any]] = []
         self.scripts: list[str] = []
 
     async def storage_state(self) -> dict[str, Any]:
         return {
-            "cookies": [{"name": "session", "value": "private"}],
+            "cookies": [
+                {"name": "session", "value": "private", "domain": "example.test", "path": "/"}
+            ],
             "origins": [
                 {
                     "origin": "https://example.test",
@@ -358,8 +399,12 @@ class _CheckpointContext:
     async def add_init_script(self, script: str) -> None:
         self.scripts.append(script)
 
+    async def new_cdp_session(self, page):
+        return SimpleNamespace(send=AsyncMock(), detach=AsyncMock())
+
     async def new_page(self) -> _CheckpointPage:
         page = _CheckpointPage("about:blank")
+        page.context = self
         self.pages.append(page)
         return page
 
@@ -381,7 +426,8 @@ async def test_browser_checkpoint_round_trip_restores_tabs_and_optional_storage(
 
     assert restored == {"success": True, "tabs": 2, "active_index": 1}
     assert context.cookies[0]["name"] == "session"
-    assert "localStorage.setItem" in context.scripts[0]
+    assert context.scripts == []
+    assert context.storage_values == {"https://example.test": {"mode": "resume"}}
     assert controller.page.url == "https://example.test/two"
 
 
@@ -679,7 +725,7 @@ class TestLifecycleGuards:
             json.dumps({"user_experience_metrics": {"stability": {"exited_cleanly": False}}})
         )
 
-        _mark_profile_clean(tmp_path)
+        mark_profile_clean(tmp_path)
 
         assert json.loads(preferences.read_text())["profile"]["exit_type"] == "Normal"
         assert (
@@ -693,7 +739,7 @@ class TestLifecycleGuards:
         default = tmp_path / "Default"
         default.mkdir()
         (default / "Preferences").write_text("not json")
-        _mark_profile_clean(tmp_path)
+        mark_profile_clean(tmp_path)
 
 
 class TestHeadlessResolution:
@@ -722,3 +768,146 @@ class TestHeadlessResolution:
         monkeypatch.delenv("DISPLAY", raising=False)
         monkeypatch.setenv("WAYLAND_DISPLAY", "wayland-0")
         assert BrowserController(headless=False).headless is False
+
+
+@pytest.mark.parametrize(
+    ("requested", "current", "expected"),
+    [
+        ("https://alpha.co.uk", "https://beta.co.uk", False),
+        ("https://www.co.uk", "https://unrelated.co.uk", False),
+        ("https://www.github.io", "https://unrelated.github.io", False),
+        ("https://alice.github.io", "https://bob.github.io", False),
+        ("https://example.com", "https://example.com.evil.test", False),
+        ("https://example.com", "https://regional.example.com", True),
+        ("https://www.bing.com", "https://cn.bing.com", True),
+        ("http://127.0.0.1", "http://evil.127.0.0.1", False),
+        ("http://[::1]", "http://[::1]", True),
+        ("https://[invalid", "https://example.com", False),
+        ("about:blank", "https://example.com", False),
+    ],
+)
+def test_navigation_recovery_host_boundaries(requested, current, expected):
+    assert _same_navigation_site(requested, current) is expected
+
+
+@pytest.mark.parametrize(
+    "invalid_storage",
+    [
+        {"origins": [{"origin": "file:///tmp/secret"}]},
+        {"origins": [{"origin": "about:blank"}]},
+        {"origins": [{"origin": "https://example.test/path"}]},
+        {"origins": [{"origin": "https://example.test", "localStorage": [None]}]},
+        {
+            "origins": [
+                {"origin": "https://example.test", "localStorage": [{"name": "x", "value": 1}]}
+            ]
+        },
+        {"cookies": [{"name": "broken", "value": "x"}]},
+    ],
+)
+async def test_invalid_checkpoint_storage_has_no_browser_side_effects(invalid_storage):
+    pages = [_CheckpointPage("https://example.test/original"), _CheckpointPage("about:blank")]
+    context = _CheckpointContext(pages)
+    controller = BrowserController(headless=True)
+    controller._context = context
+    controller._page = pages[0]
+    storage = {
+        "cookies": [{"name": "valid", "value": "x", "domain": "example.test", "path": "/"}],
+        **invalid_storage,
+    }
+    with pytest.raises(ValueError):
+        await controller.restore_checkpoint_state(
+            {
+                "schema_version": 1,
+                "tabs": ["https://example.test/new"],
+                "active_index": 0,
+                "storage_state": storage,
+            }
+        )
+    assert context.cookies == []
+    assert context.scripts == []
+    assert context.pages == pages
+    assert pages[0].url == "https://example.test/original"
+    assert not any(page.closed for page in pages)
+
+
+async def test_err_aborted_on_unrelated_public_suffix_host_stays_failed(monkeypatch):
+    from unittest.mock import AsyncMock
+
+    import webagent.browser.controller as controller_module
+
+    class RedirectPage(FakePage):
+        async def goto(self, url, **kwargs):
+            self.url = "https://beta.co.uk/old-page"
+            raise RuntimeError("Page.goto: net::ERR_ABORTED")
+
+    monkeypatch.setattr(controller_module.asyncio, "sleep", AsyncMock())
+    result = await _controller(RedirectPage()).goto("https://alpha.co.uk/search")
+    assert result["success"] is False
+    assert "ERR_ABORTED" in result["error"]
+    assert "recovered_from" not in result
+
+
+@pytest.mark.parametrize("current", ["https://example.test/old", "https://example.test/new"])
+async def test_abort_without_requested_navigation_response_is_not_recovered(monkeypatch, current):
+    class AbortedPage(FakePage):
+        async def goto(self, url, **kwargs):
+            self.url = current
+            raise RuntimeError("net::ERR_ABORTED")
+
+    monkeypatch.setattr(asyncio, "sleep", AsyncMock())
+    page = AbortedPage()
+    page.url = "https://example.test/old"
+    result = await _controller(page).goto("https://example.test/new")
+    assert result["success"] is False
+    assert page.listeners["response"] == []
+
+
+@pytest.mark.parametrize(
+    ("root_url", "status", "main_frame"),
+    [
+        ("https://example.test/unrelated", 200, True),
+        ("https://example.test/new", 404, True),
+        ("https://example.test/new", 200, False),
+    ],
+)
+def test_navigation_recovery_rejects_unrelated_failed_and_subframe_responses(
+    root_url, status, main_frame
+):
+    from webagent.browser.navigation import NavigationAttempt
+
+    page = FakePage()
+    page.url = "https://example.test/old"
+    attempt = NavigationAttempt(page, "https://example.test/new")
+    request = SimpleNamespace(
+        url=root_url,
+        redirected_from=None,
+        is_navigation_request=lambda: True,
+        frame=page.main_frame if main_frame else object(),
+    )
+    attempt._record_response(
+        SimpleNamespace(request=request, url="https://example.test/new", status=status)
+    )
+    assert not attempt.can_recover("https://example.test/new")
+    attempt.close()
+
+
+async def test_storage_restore_closes_temporary_page_on_failure():
+    from webagent.browser.checkpoint import restore_storage_state
+
+    page = MagicMock(
+        goto=AsyncMock(side_effect=RuntimeError("failed")), close=AsyncMock(), route=AsyncMock()
+    )
+    session = SimpleNamespace(send=AsyncMock(), detach=AsyncMock())
+    context = MagicMock(
+        new_page=AsyncMock(return_value=page),
+        new_cdp_session=AsyncMock(return_value=session),
+        add_init_script=AsyncMock(),
+    )
+    with pytest.raises(RuntimeError, match="failed"):
+        await restore_storage_state(
+            context, {"origins": [{"origin": "https://example.test", "localStorage": []}]}
+        )
+    page.close.assert_awaited_once()
+    session.detach.assert_awaited_once()
+    context.add_init_script.assert_not_called()

@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from webagent.agent.loop import _persist_run_trace
+from webagent.agent.run_outputs import _persist_run_trace
 from webagent.core.config import AgentConfig
 from webagent.core.models import AgentResult
 from webagent.evaluation.artifacts import RunLayout

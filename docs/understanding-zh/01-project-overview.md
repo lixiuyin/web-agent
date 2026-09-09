@@ -24,7 +24,10 @@ Find the most recent Qwen technical report and interpret Figure 1.
 │   ├── trace.json                 # 最新一轮的 schema-v8 审计轨迹
 │   ├── verification.json          # strict eval 时存在
 │   └── turns/turn-NNN.json        # 每轮不可变快照
-├── observations/screenshots/
+├── observations/
+│   ├── step_NNN/pre.json + pre.png   # 动作前成对观察
+│   ├── step_NNN/post.json + post.png # 动作后成对观察
+│   └── screenshots/step_NNN.jpg      # legacy post-action preview
 ├── control/checkpoints/latest.json
 ├── artifacts/
 │   ├── downloads/                 # 下载的 PDF/文件
@@ -98,13 +101,13 @@ agent 模式。日期化诊断结果和 BrowserGym 外部层状态统一由
 文档质量路由与跨模型/跨日期评测。
 
 源码按系统职责留在 `src/webagent/`；可控环境、单套件运行与重复研究分别放在
-`benchmarks/environments/`、`benchmarks/suites/`、`benchmarks/studies/`；研究协议与失败证据规则放在
+`src/webagent/benchmarks/environments/`、`src/webagent/benchmarks/suites/`、`src/webagent/benchmarks/studies/`；研究协议与失败证据规则放在
 `docs/research/`。当前仓库没有给出所有设计相对 baseline 的量化比较，所以应称为
 “研究原型/研究平台”，不应把工程机制本身直接称作已验证的研究贡献。
 
 ## 验证记录边界
 
-测试数量和覆盖率会随源码变化。发布前应直接执行 `AGENTS.md` 的四道 gate 与完整 real-browser
-integration；历史验证只能作为日期化证据读取，不能代替当前运行。验证方法见
+测试数量和覆盖率会随源码变化。发布前应直接执行 `AGENTS.md` 的全部静态、单元、real-browser
+integration 与文档门；历史验证只能作为日期化证据读取，不能代替当前运行。验证方法见
 [11-tests-and-reproducibility.md](11-tests-and-reproducibility.md)，历史记录见
 [研究结果索引](../research/results/README.md)。

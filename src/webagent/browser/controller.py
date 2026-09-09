@@ -4,14 +4,11 @@ from __future__ import annotations
 
 import asyncio
 import base64
-import json
 import logging
 import os
 import random
 import shutil
 import sys
-import tempfile
-import time
 from io import BytesIO
 from pathlib import Path
 from typing import Any, Literal
@@ -30,7 +27,10 @@ from playwright.async_api import (
     TimeoutError as PlaywrightTimeout,
 )
 
+from webagent.browser.checkpoint import export_checkpoint_state, restore_checkpoint_tabs
 from webagent.browser.link_clicking import click_link_by_text_strategies
+from webagent.browser.navigation import NavigationAttempt
+from webagent.browser.profiles import create_temporary_profile, mark_profile_clean
 from webagent.browser.search_parsers import SEARCH_PARSERS, detect_search_engine
 from webagent.browser.stealth import (
     ENHANCED_STEALTH_SCRIPT,
@@ -40,8 +40,6 @@ from webagent.browser.stealth import (
 
 logger = logging.getLogger(__name__)
 
-_TEMPORARY_PROFILE_PREFIX = "webagent-profile-"
-_TEMPORARY_PROFILE_MARKER = ".webagent-owner.json"
 
 _LINK_EVIDENCE_TERMS = (
     "technical report",
@@ -79,61 +77,6 @@ def _link_priority(link: dict[str, str]) -> int:
     return score
 
 
-def _pid_is_running(pid: int) -> bool:
-    if pid <= 0:
-        return False
-    try:
-        os.kill(pid, 0)
-    except ProcessLookupError:
-        return False
-    except PermissionError:
-        return True
-    return True
-
-
-def _mark_profile_clean(user_data_dir: str | Path) -> None:
-    """Repair Chromium's persisted clean-exit flags on a stopped profile.
-
-    Chromium writes crash markers as soon as a profile starts and normally
-    clears them during shutdown. A killed process or a partial Playwright start
-    can leave those markers behind, causing the next headed launch to show the
-    "didn't shut down correctly" restore banner. This best-effort repair runs
-    before launch and after all browser processes have been asked to stop.
-    """
-    profile_root = Path(user_data_dir)
-    updates: tuple[tuple[Path, tuple[str, ...], Any], ...] = (
-        (profile_root / "Default" / "Preferences", ("profile", "exit_type"), "Normal"),
-        (
-            profile_root / "Local State",
-            ("user_experience_metrics", "stability", "exited_cleanly"),
-            True,
-        ),
-    )
-    for path, keys, value in updates:
-        if not path.is_file():
-            continue
-        try:
-            payload = json.loads(path.read_text(encoding="utf-8"))
-            node = payload
-            for key in keys[:-1]:
-                child = node.get(key)
-                if not isinstance(child, dict):
-                    child = {}
-                    node[key] = child
-                node = child
-            if node.get(keys[-1]) == value:
-                continue
-            node[keys[-1]] = value
-            temporary = path.with_name(f".{path.name}.webagent.tmp")
-            temporary.write_text(
-                json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
-                encoding="utf-8",
-            )
-            temporary.replace(path)
-        except (OSError, TypeError, ValueError):
-            logger.warning("Could not repair Chromium clean-exit state in %s", path, exc_info=True)
-
-
 def _effective_headless(requested_headless: bool) -> bool:
     """Resolve whether to run headless.
 
@@ -152,33 +95,6 @@ def _effective_headless(requested_headless: bool) -> bool:
         )
         return True
     return False
-
-
-def _checkpoint_url_allowed(value: str) -> bool:
-    """Confine checkpoint navigation/storage to ordinary web pages or a blank tab."""
-    if value == "about:blank":
-        return True
-    try:
-        parsed = urlparse(value)
-    except ValueError:
-        return False
-    return parsed.scheme.casefold() in {"http", "https"} and bool(parsed.hostname)
-
-
-def _same_navigation_site(requested_url: str, current_url: str) -> bool:
-    """Return whether an aborted navigation reached the requested site's domain."""
-    try:
-        requested = (urlparse(requested_url).hostname or "").casefold().rstrip(".")
-        current = (urlparse(current_url).hostname or "").casefold().rstrip(".")
-    except ValueError:
-        return False
-    if not requested or not current:
-        return False
-    requested_parts = requested.split(".")
-    current_parts = current.split(".")
-    requested_site = ".".join(requested_parts[-2:])
-    current_site = ".".join(current_parts[-2:])
-    return requested_site == current_site
 
 
 class BrowserController:
@@ -241,11 +157,14 @@ class BrowserController:
             raise RuntimeError("Browser already started; call close() before starting again")
 
         if self.temporary_profile:
-            self._owned_profile_dir = self._create_temporary_profile()
+            self._owned_profile_dir = create_temporary_profile(
+                self.temporary_profile_root,
+                stale_max_age_seconds=self.stale_profile_max_age_seconds,
+            )
             self.user_data_dir = str(self._owned_profile_dir)
         else:
             # Suppress Chromium's stale crash-restore banner before launching.
-            _mark_profile_clean(self.user_data_dir)
+            mark_profile_clean(self.user_data_dir)
 
         self._playwright = await async_playwright().start()
 
@@ -305,57 +224,6 @@ class BrowserController:
         if self.humanize_delays:
             await asyncio.sleep(random.uniform(0.5, 1.5))
 
-    def _create_temporary_profile(self) -> Path:
-        root = self.temporary_profile_root or Path(tempfile.gettempdir()).resolve()
-        root.mkdir(parents=True, exist_ok=True)
-        self._cleanup_stale_temporary_profiles(root)
-        profile = Path(
-            tempfile.mkdtemp(
-                prefix=_TEMPORARY_PROFILE_PREFIX,
-                dir=root,
-            )
-        )
-        marker = {
-            "pid": os.getpid(),
-            "created_at": time.time(),
-            "kind": "webagent-temporary-profile",
-        }
-        try:
-            (profile / _TEMPORARY_PROFILE_MARKER).write_text(
-                json.dumps(marker, separators=(",", ":")), encoding="utf-8"
-            )
-        except OSError as exc:
-            logger.warning("Could not mark temporary browser profile %s: %s", profile, exc)
-        return profile
-
-    def _cleanup_stale_temporary_profiles(self, root: Path) -> None:
-        """Remove only marked, old profiles whose creating process is no longer alive."""
-        now = time.time()
-        try:
-            candidates = tuple(root.glob(f"{_TEMPORARY_PROFILE_PREFIX}*"))
-        except OSError as exc:
-            logger.warning("Could not scan temporary browser profiles in %s: %s", root, exc)
-            return
-        for candidate in candidates:
-            marker_path = candidate / _TEMPORARY_PROFILE_MARKER
-            if not candidate.is_dir() or not marker_path.is_file():
-                continue
-            try:
-                marker = json.loads(marker_path.read_text(encoding="utf-8"))
-                pid = int(marker["pid"])
-                created_at = float(marker["created_at"])
-            except (KeyError, OSError, TypeError, ValueError, json.JSONDecodeError):
-                continue
-            if now - created_at < self.stale_profile_max_age_seconds or _pid_is_running(pid):
-                continue
-            try:
-                shutil.rmtree(candidate)
-                logger.info("Removed stale temporary browser profile %s", candidate)
-            except FileNotFoundError:
-                continue
-            except OSError as exc:
-                logger.warning("Failed to remove stale temporary profile %s: %s", candidate, exc)
-
     async def close(self) -> None:
         # Detach CDP session first (non-fatal)
         if self._cdp is not None:
@@ -392,7 +260,7 @@ class BrowserController:
             except OSError as exc:
                 logger.warning("Failed to remove temporary browser profile %s: %s", profile, exc)
         else:
-            _mark_profile_clean(self.user_data_dir)
+            mark_profile_clean(self.user_data_dir)
 
     @property
     def page(self) -> Page:
@@ -426,102 +294,20 @@ class BrowserController:
         return {"success": True, "tabs": len(self._context.pages)}
 
     async def export_checkpoint_state(self, *, include_storage: bool = False) -> dict[str, Any]:
-        """Capture resumable tab state and, when explicitly enabled, cookies/local storage.
-
-        Storage state can contain authenticated session material. Callers must persist
-        it as a private file and must not place it in traces or logs.
-        """
+        """Capture tabs and optionally private authenticated storage for resume."""
         if self._context is None or self._page is None:
             raise RuntimeError("Browser not started")
-        pages = list(self._context.pages)
-        state: dict[str, Any] = {
-            "schema_version": 1,
-            "tabs": [page.url for page in pages],
-            "active_index": pages.index(self._page),
-        }
-        if include_storage:
-            state["storage_state"] = await self._context.storage_state()
-        return state
+        return await export_checkpoint_state(
+            self._context, self._page, include_storage=include_storage
+        )
 
     async def restore_checkpoint_state(self, state: dict[str, Any]) -> dict[str, Any]:
-        """Restore a state produced by :meth:`export_checkpoint_state`.
-
-        Only HTTP(S) and ``about:blank`` tabs are accepted. Cookie and local-storage
-        restoration occurs only when the checkpoint contains the explicit optional
-        ``storage_state`` payload.
-        """
+        """Restore validated checkpoint tabs and select the saved active page."""
         if self._context is None:
             raise RuntimeError("Browser not started")
-        if state.get("schema_version") != 1:
-            raise ValueError("browser checkpoint schema mismatch")
-        raw_tabs = state.get("tabs")
-        active_index = state.get("active_index")
-        if (
-            not isinstance(raw_tabs, list)
-            or not raw_tabs
-            or not all(isinstance(url, str) and _checkpoint_url_allowed(url) for url in raw_tabs)
-            or not isinstance(active_index, int)
-            or isinstance(active_index, bool)
-            or not 0 <= active_index < len(raw_tabs)
-        ):
-            raise ValueError("browser checkpoint tab state is invalid")
-
-        storage = state.get("storage_state")
-        if storage is not None:
-            await self._restore_storage_state(storage)
-
-        pages = list(self._context.pages)
-        for page in pages[1:]:
-            await page.close()
-        pages = [pages[0]] if pages else [await self._context.new_page()]
-        while len(pages) < len(raw_tabs):
-            pages.append(await self._context.new_page())
-        for page, url in zip(pages, raw_tabs, strict=True):
-            await page.goto(url, wait_until="domcontentloaded")
-        self._page = pages[active_index]
+        self._page, tab_count, active_index = await restore_checkpoint_tabs(self._context, state)
         await self._page.bring_to_front()
-        return {"success": True, "tabs": len(pages), "active_index": active_index}
-
-    async def _restore_storage_state(self, value: Any) -> None:
-        if not isinstance(value, dict):
-            raise ValueError("browser checkpoint storage_state must be an object")
-        cookies = value.get("cookies", [])
-        origins = value.get("origins", [])
-        if not isinstance(cookies, list) or not isinstance(origins, list):
-            raise ValueError("browser checkpoint storage_state is invalid")
-        if cookies:
-            await self.context.add_cookies(cookies)
-        local_by_origin: dict[str, dict[str, str]] = {}
-        for item in origins:
-            if not isinstance(item, dict) or not isinstance(item.get("origin"), str):
-                raise ValueError("browser checkpoint contains an invalid storage origin")
-            origin = item["origin"]
-            if not _checkpoint_url_allowed(origin):
-                raise ValueError("browser checkpoint contains an unsafe storage origin")
-            entries = item.get("localStorage", [])
-            if not isinstance(entries, list):
-                raise ValueError("browser checkpoint localStorage must be a list")
-            local_by_origin[origin] = {
-                entry["name"]: entry["value"]
-                for entry in entries
-                if isinstance(entry, dict)
-                and isinstance(entry.get("name"), str)
-                and isinstance(entry.get("value"), str)
-            }
-        if local_by_origin:
-            encoded = json.dumps(local_by_origin, ensure_ascii=False)
-            await self.context.add_init_script(
-                """(() => {
-                    const mapping = """
-                + encoded
-                + """;
-                    const values = mapping[location.origin];
-                    if (!values) return;
-                    for (const [key, value] of Object.entries(values)) {
-                        localStorage.setItem(key, value);
-                    }
-                })()"""
-            )
+        return {"success": True, "tabs": tab_count, "active_index": active_index}
 
     async def list_tabs(self) -> dict[str, Any]:
         """Return all open pages and identify the active tab."""
@@ -599,7 +385,9 @@ class BrowserController:
         wait_until: Literal["load", "domcontentloaded", "networkidle", "commit"] = "load",
         timeout: int | None = None,
     ) -> dict[str, Any]:
+        attempt: NavigationAttempt | None = None
         try:
+            attempt = NavigationAttempt(self.page, url)
             response = await self.page.goto(
                 url, wait_until=wait_until, timeout=timeout or self.default_timeout
             )
@@ -626,35 +414,47 @@ class BrowserController:
             # loading.  Search engines do this frequently for regional routing.
             # Recover only when an ordinary HTTP(S) document is inspectable;
             # downloads and genuinely aborted/blank navigations still fail.
-            if "net::ERR_ABORTED" in error:
-                for attempt in range(3):
-                    try:
-                        await self.page.wait_for_load_state("domcontentloaded", timeout=2000)
-                    except Exception:
-                        pass
-                    try:
-                        current_url = self.page.url
-                        parsed = urlparse(current_url)
-                        title = await self.page.title()
-                        body = await self.page.locator("body").count()
-                        if (
-                            parsed.scheme in {"http", "https"}
-                            and parsed.hostname
-                            and body
-                            and _same_navigation_site(url, current_url)
-                        ):
-                            return {
-                                "success": True,
-                                "url": current_url,
-                                "title": title,
-                                "status": None,
-                                "recovered_from": "net::ERR_ABORTED",
-                            }
-                    except Exception:
-                        pass
-                    if attempt < 2:
-                        await asyncio.sleep(0.5)
+            if "net::ERR_ABORTED" in error and attempt is not None:
+                recovered = await self._recover_aborted_navigation(attempt)
+                if recovered is not None:
+                    return recovered
             return {"success": False, "url": url, "title": None, "error": error}
+        finally:
+            if attempt is not None:
+                attempt.close()
+
+    async def _recover_aborted_navigation(
+        self, attempt: NavigationAttempt
+    ) -> dict[str, Any] | None:
+        """Recover only an inspectable document on the requested host or a subdomain."""
+        for retry_index in range(3):
+            try:
+                await self.page.wait_for_load_state("domcontentloaded", timeout=2000)
+            except Exception:
+                pass
+            try:
+                current_url = self.page.url
+                parsed = urlparse(current_url)
+                title = await self.page.title()
+                body = await self.page.locator("body").count()
+                if (
+                    parsed.scheme in {"http", "https"}
+                    and parsed.hostname
+                    and body
+                    and attempt.can_recover(current_url)
+                ):
+                    return {
+                        "success": True,
+                        "url": current_url,
+                        "title": title,
+                        "status": None,
+                        "recovered_from": "net::ERR_ABORTED",
+                    }
+            except Exception:
+                pass
+            if retry_index < 2:
+                await asyncio.sleep(0.5)
+        return None
 
     async def click(
         self, selector: str, timeout: int | None = None, force: bool = False

@@ -6,7 +6,7 @@ from enum import Enum
 from typing import Any
 
 from PIL import Image
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class TaskStatus(Enum):
@@ -26,6 +26,12 @@ class ToolCall(BaseModel):
     tool_name: str = Field(..., description="Name of the tool to execute")
     parameters: dict[str, Any] = Field(default_factory=dict)
     reasoning: str = Field(default="", description="LLM rationale")
+
+    @field_validator("tool_name")
+    @classmethod
+    def normalize_tool_name(cls, value: str) -> str:
+        """Use one canonical name throughout planning, policy, execution and history."""
+        return value.strip().casefold()
 
 
 class ToolResult(BaseModel):
@@ -47,6 +53,16 @@ class BrowserState(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     screenshot: Image.Image | None = None
+    requires_visual: bool = False
+    full_page_screenshot: Image.Image | None = Field(default=None, exclude=True)
+    observation_metadata: dict[str, Any] = Field(default_factory=dict)
+    elements: list[dict[str, Any]] = Field(default_factory=list)
+    observation_path: str | None = None
+    observation_id: str | None = None
+    viewport_context: str | None = None
+    document_context: str | None = None
+    viewport_blocks: list[str] = Field(default_factory=list)
+    document_blocks: list[str] = Field(default_factory=list)
     dom_summary: str
     url: str
     title: str
@@ -83,6 +99,8 @@ class PlannerAttempt(BaseModel):
     requested_output_mode: str | None = None
     effective_output_mode: str | None = None
     structured_fallbacks: list[str] = Field(default_factory=list)
+    observation_path: str | None = None
+    observation_input: dict[str, Any] = Field(default_factory=dict)
 
 
 class AgentResult(BaseModel):

@@ -6,15 +6,15 @@ import httpx
 import pytest
 
 from webagent.core.models import ToolCall, ToolResult
-from webagent.tools.builtin.search_tools import (
-    SearchTool,
+from webagent.tools.builtin.search_tools import SearchTool
+from webagent.tools.executor import ToolExecutor
+from webagent.tools.registry import ToolRegistry
+from webagent.tools.search.support import (
     _bing_compat_query,
     _classify_search_failure,
     _result_quality_issue,
     _unwrap_search_redirect,
 )
-from webagent.tools.executor import ToolExecutor
-from webagent.tools.registry import ToolRegistry
 
 
 class MockLocator:
@@ -568,6 +568,33 @@ def test_result_quality_does_not_treat_version_or_filename_as_domain() -> None:
     assert _result_quality_issue("Qwen3.8 tech_report.pdf", results) is None
 
 
+def test_named_version_pdf_must_cooccur_with_report_signal_in_one_result() -> None:
+    split_results = [
+        {
+            "title": "GitHub - QwenLM/Qwen3.8",
+            "url": "https://github.com/QwenLM/Qwen3.8",
+        },
+        {
+            "title": "Qwen3 Technical Report",
+            "url": "https://arxiv.org/pdf/2505.09388",
+        },
+    ]
+    useful_results = [
+        *split_results,
+        {
+            "title": "tech_report.pdf - GitHub",
+            "url": ("https://github.com/QwenLM/Qwen3.8-Flash-Next/commits/main/tech_report.pdf"),
+        },
+    ]
+
+    assert _result_quality_issue("qwen3.8 technical report PDF", split_results) == (
+        "results do not expose a requested-version report/PDF in one result; try another engine"
+    )
+    assert _result_quality_issue("qwen3.8 technical report PDF", useful_results) is None
+    # A release-page search remains useful when it did not explicitly request a PDF.
+    assert _result_quality_issue("qwen3.8 technical report", split_results) is None
+
+
 @pytest.mark.asyncio
 async def test_duckduckgo_bot_challenge_marker_rejects_link_heavy_page() -> None:
     page = MockPage(
@@ -818,6 +845,32 @@ async def test_controller_parser_recovers_alternate_results_layout():
     assert result.success is True
     assert result.data["results"][0]["url"] == "https://example.test/recovered"
     assert result.data["search_attempts"] == [{"engine": "bing", "outcome": "success"}]
+
+
+@pytest.mark.asyncio
+async def test_result_extraction_recovers_when_engine_wait_selector_drifts() -> None:
+    tool = SearchTool(browser=MockBrowser())
+
+    async def missing_selector(_config: dict[str, str]) -> bool:
+        return False
+
+    async def extracted_results(_limit: int = 10) -> list[dict[str, str]]:
+        return [{"title": "Relevant topic", "url": "https://example.test/result"}]
+
+    tool._results_present = missing_selector  # type: ignore[method-assign]
+    tool._extract_results = extracted_results  # type: ignore[method-assign]
+    result = await tool._collect_results(
+        "relevant topic",
+        None,
+        None,
+        "yahoo_japan",
+        "relevant topic",
+        tool._engine_config("yahoo_japan"),
+        requested_engine="yahoo_japan",
+    )
+
+    assert result.success is True
+    assert result.data["results"][0]["url"] == "https://example.test/result"
 
 
 @pytest.mark.asyncio

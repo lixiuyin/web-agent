@@ -1,10 +1,10 @@
 import pytest
-from benchmarks.studies.browsergym_matrix import (
+
+from webagent.benchmarks.studies.browsergym_matrix import (
     _aggregate_matrix,
     _mcnemar_exact,
     _paired_comparison,
 )
-
 from webagent.evaluation.external import ExternalTaskResult, new_external_report
 
 

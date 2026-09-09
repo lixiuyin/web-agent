@@ -5,8 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from benchmarks.environments.controlled_web.general_site import benchmark_site
 
+from webagent.benchmarks.environments.controlled_web.general_site import benchmark_site
 from webagent.browser.controller import BrowserController
 from webagent.core.config import AgentConfig
 from webagent.core.models import ToolCall

@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Publish the complete 2026-09-09 GLM/Qwen R7 diagnostic campaign, paired strict Qwen-report
+  validation, and current engineering-gate records with independent judgment and source-hash
+  boundaries.
+- Rebuild the bilingual README animation from all 21 viewport frames of the retained Qwen paired-R5
+  strict trajectory plus its extracted Figure 1, and retire stale links to the removed 2026-09-02
+  local output bundle.
 - Reorganize documentation by ownership: concise bilingual landing pages, task-oriented guides,
   stable configuration/artifact/security references, split benchmark guides, dated research
   results, a dedicated release procedure, and a CI documentation checker for Markdown structure
@@ -20,6 +26,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   prerequisites, calibration-before-full-run sequence, and the remaining three-date readiness gap.
 
 ### Fixed
+- Reconcile the architecture, browser, planner, tool, benchmark, study, and interview guides with
+  the rendered observation/compact-reference implementation, split context budgets, current
+  `webagent.benchmarks` package paths, and the enforced complexity gate.
+- Separate direct, discovery, and long-horizon task timeouts in suite/study/campaign contracts;
+  clarify Playwright installation failures; and accept equivalent official GitHub Docs sources in
+  the Git-versus-GitHub evaluator instead of binding one valid answer URL.
 - Exclude `build-*` and `dist-*` reproducibility outputs from sdists and reject nested build
   artifacts during release inspection. The second build previously captured `build-one/`, making
   the tarball differ even with a fixed `SOURCE_DATE_EPOCH`; wheels were unaffected.

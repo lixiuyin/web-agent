@@ -1,0 +1,9 @@
+All 60 mission stages were completed (transient feedback was retried and each stage advanced through to the final page, which now reads "Mission complete" with the note "The retained cue sequence must be reported from memory.").
+
+The four durable cues, reported in the order they were collected:
+1. Stage 4 — CEDAR
+2. Stage 14 — ORBIT
+3. Stage 24 — LANTERN
+4. Stage 34 — DELTA
+
+Cue sequence in order: CEDAR → ORBIT → LANTERN → DELTA

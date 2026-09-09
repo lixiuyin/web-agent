@@ -128,8 +128,6 @@ def response_text(data: dict[str, Any]) -> str:
     message = _first_message(data)
     if message is not None:
         content = message.get("content") or ""
-        if not content:
-            content = message.get("reasoning_content") or message.get("reasoning") or ""
         return content if isinstance(content, str) else ""
     response = data.get("response", "")
     if not response and isinstance(data.get("data"), dict):

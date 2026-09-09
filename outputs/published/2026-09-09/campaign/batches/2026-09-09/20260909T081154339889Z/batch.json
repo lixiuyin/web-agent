@@ -1,0 +1,39 @@
+{
+  "schema_version": 2,
+  "status": "completed",
+  "finished_at": "2026-09-09T10:20:20.465283+00:00",
+  "batch_id": "20260909T081154339889Z",
+  "collection_date": "2026-09-09",
+  "provider": "openrouter",
+  "campaign_contract_path": "campaign.json",
+  "requested_models": [
+    "z-ai/glm-5.3-flash",
+    "qwen/qwen3.8-flash"
+  ],
+  "evaluated_models": [
+    "z-ai/glm-5.3-flash",
+    "qwen/qwen3.8-flash"
+  ],
+  "available_models": [
+    "z-ai/glm-5.3-flash",
+    "qwen/qwen3.8-flash"
+  ],
+  "execution_model_order": [
+    "z-ai/glm-5.3-flash",
+    "qwen/qwen3.8-flash"
+  ],
+  "model_order_policy": "rotate-by-date",
+  "excluded_models": [],
+  "endpoint_preflight_path": "batches/2026-09-09/20260909T081154339889Z/evidence/endpoint-probes.json",
+  "report_paths": [
+    "studies/long-horizon/executions/2026-09-09/qwen-qwen3-8-flash/agent/081154-339889-20260909t081154339889z/results.json",
+    "studies/long-horizon/executions/2026-09-09/z-ai-glm-5-3-flash/agent/081154-339889-20260909t081154339889z/results.json",
+    "studies/open-web/executions/2026-09-09/qwen-qwen3-8-flash/browser-grounded/081158-175874-20260909t081158175874z-r01/results.json",
+    "studies/open-web/executions/2026-09-09/z-ai-glm-5-3-flash/browser-grounded/081158-175874-20260909t081158175874z-r01/results.json",
+    "studies/sandbox-interaction/executions/2026-09-09/qwen-qwen3-8-flash/agent/081154-339889-20260909t081154339889z/results.json",
+    "studies/sandbox-interaction/executions/2026-09-09/z-ai-glm-5-3-flash/agent/081154-339889-20260909t081154339889z/results.json"
+  ],
+  "portfolio_path": "batches/2026-09-09/20260909T081154339889Z/analysis/portfolio.json",
+  "portfolio_status": "insufficient",
+  "evidence_notice": "This command collects the current UTC date only. Re-run unchanged on two later dates; no date override exists and same-day repetitions do not create dates."
+}

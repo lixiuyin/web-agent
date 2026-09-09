@@ -2,27 +2,35 @@
 
 ## 关键源码定位（本次 checkout）
 
-| 主题 | 路径与起始行 |
-|---|---|
-| CLI planner 选择 | `src/webagent/cli.py:168` |
-| CLI 完整生命周期 | `src/webagent/cli.py:349` |
-| Agent 构造 | `src/webagent/agent/loop.py:132` |
-| Agent 单步执行 | `src/webagent/agent/loop.py:600` |
-| Observe / Think / Act | `src/webagent/agent/loop.py:897`, `:947`, `:1149` |
-| Loop detector | `src/webagent/agent/loop_detector.py:63` |
-| Browser controller | `src/webagent/browser/controller.py:184` |
-| 页面稳定等待 / Snapshot | `src/webagent/browser/snapshot.py:52`, `:99` |
-| AX 提取 | `src/webagent/browser/snapshot.py:180` |
-| JS 元素提取 | `src/webagent/browser/interactive_detector.py:155` |
-| Priority | `src/webagent/browser/priority.py:180` |
-| CAPTCHA | `src/webagent/browser/captcha_detector.py:17` |
-| API planner | `src/webagent/planner/api.py:132` |
-| Prompt/response parser | `src/webagent/planner/base.py:124`, `:239` |
-| Tool decorator/registry | `src/webagent/tools/registry.py:62`, `:98` |
-| Tool exposure/evidence/risk/timeout | `src/webagent/tools/exposure.py`, `policy.py`, `risk.py`, `executor.py:19` |
-| Parser entry/cascade | `src/webagent/parser/cascade.py:84`, `:138` |
-| Parser route/quality | `src/webagent/parser/_router.py:19`, `_quality.py:35` |
-| Parser schema | `src/webagent/parser/models.py:56` |
+| 主题 | 源文件 | 符号 |
+|---|---|---|
+| CLI planner 选择 | [cli.py](../../src/webagent/cli.py) | `_build_planner` |
+| CLI 完整生命周期 | [cli.py](../../src/webagent/cli.py) | `run_task` |
+| Agent 构造与任务入口 | [agent/loop.py](../../src/webagent/agent/loop.py) | `WebAgent.__init__ / run` |
+| Agent 单步执行 | [agent/loop.py](../../src/webagent/agent/loop.py) | `WebAgent._execute_step` |
+| Observe / Think / Act | [agent/loop.py](../../src/webagent/agent/loop.py) | `WebAgent._observe / _think / _act` |
+| Planning coordination | [agent/planning.py](../../src/webagent/agent/planning.py) | `PlanningCoordinator.plan_action / elicit_terminal_confidence` |
+| Search evidence analysis | [tools/policies/discovery.py](../../src/webagent/tools/policies/discovery.py) | `DiscoveryEvidence` |
+| Loop detector | [agent/loop_detector.py](../../src/webagent/agent/loop_detector.py) | `LoopDetector` |
+| Browser 生命周期 | [browser/controller.py](../../src/webagent/browser/controller.py) | `BrowserController.start / close` |
+| Browser profile | [browser/profiles.py](../../src/webagent/browser/profiles.py) | `create_temporary_profile / mark_profile_clean` |
+| Browser checkpoint | [browser/checkpoint.py](../../src/webagent/browser/checkpoint.py) | `export_checkpoint_state / restore_checkpoint_tabs` |
+| 稳定等待与快照 | [browser/snapshot.py](../../src/webagent/browser/snapshot.py) | `wait_for_page_stability / take_snapshot` |
+| Rendered 不可用时的 AX/JS fallback | [browser/snapshot.py](../../src/webagent/browser/snapshot.py) | `_extract_elements_enhanced / _extract_from_ax_tree` |
+| JS 元素提取 | [browser/interactive_detector.py](../../src/webagent/browser/interactive_detector.py) | `extract_interactive_elements` |
+| Priority | [browser/priority.py](../../src/webagent/browser/priority.py) | `sort_elements_by_priority` |
+| CAPTCHA | [browser/captcha_detector.py](../../src/webagent/browser/captcha_detector.py) | `CaptchaDetector` |
+| API planner | [planner/api.py](../../src/webagent/planner/api.py) | `APIPlanner` |
+| Vision routing | [planner/vision.py](../../src/webagent/planner/vision.py) | `VisionSupport` |
+| Provider response | [planner/provider_response.py](../../src/webagent/planner/provider_response.py) | `_strip_thinking_tags / _structured_output_unsupported` |
+| Prompt/response parser | [planner/base.py](../../src/webagent/planner/base.py) | `build_prompt / parse_llm_response` |
+| Tool registry | [tools/registry.py](../../src/webagent/tools/registry.py) | `tool / ToolRegistry` |
+| Tool 执行与授权 | [tools/executor.py](../../src/webagent/tools/executor.py) | `ToolExecutor.execute` |
+| Evidence policy | [tools/policy.py](../../src/webagent/tools/policy.py) | `SearchEngineOnlyPolicy / BrowserGroundedPolicy` |
+| Parser entry/cascade | [parser/cascade.py](../../src/webagent/parser/cascade.py) | `parse_structured_async / _run_cascade` |
+| Parser route | [parser/_router.py](../../src/webagent/parser/_router.py) | `select_parsers` |
+| Parser quality | [parser/_quality.py](../../src/webagent/parser/_quality.py) | `assess_quality` |
+| Parser schema | [parser/models.py](../../src/webagent/parser/models.py) | `PDFParseResult` |
 
 ## 顶层入口
 
@@ -69,25 +77,31 @@ WebAgent.run
 │   │   ├── page.wait_for_load_state (best effort)
 │   │   ├── wait_for_page_stability
 │   │   └── take_snapshot
-│   │       ├── page.content/screenshot/title
-│   │       ├── _extract_elements_enhanced
+│   │       ├── capture_geometry + page.content
+│   │       ├── capture_rendered（主路径：跨 frame viewport/document blocks + bound refs）
+│   │       ├── page.screenshot（viewport；可选额外 full-page audit）
+│   │       ├── assert_rendered_current（主路径 revision/node 一致性）
+│   │       ├── _extract_elements_enhanced（rendered projection 不可用且 use_cdp）
 │   │       │   ├── CDPService.get_ax_tree
-│   │       │   └── extract_interactive_elements (无可定位 AX 元素或异常时 fallback)
+│   │       │   └── extract_interactive_elements（无可定位 AX 元素或异常时 fallback）
+│   │       ├── _extract_elements_basic（禁用 CDP 时的 JS fallback）
 │   │       ├── _filter_and_dedupe
-│   │       ├── sort_elements_by_priority
+│   │       ├── _rank_snapshot_elements
 │   │       ├── _sanitize_html
 │   │       ├── _generate_llm_markdown
-│   │       └── URL generation consistency check
+│   │       ├── _snapshot_contexts（viewport/document 分预算）
+│   │       └── URL + geometry generation consistency check
 │   ├── _handle_captcha -> report / fail / bounded human wait / re-observe
-│   ├── _think
+│   ├── _think -> PlanningCoordinator.plan_action
 │   │   ├── ToolExecutor.get_tool_descriptions
 │   │   ├── SessionHistory.format_for_llm
-│   │   ├── planning/strategy/evidence/transient hints
+│   │   ├── _planning_history + _with_action_budget
+│   │   ├── _loop_recovery_hint（可更新 strategy）
 │   │   ├── LoopDetector.is_looping
-│   │   ├── Planner.plan_action (bounded repair attempts)
+│   │   ├── _plan_validated_action -> Planner.plan_action (bounded repair attempts)
 │   │   ├── ToolExecutor.validate_tool_call
 │   │   └── LoopDetector.add_action
-│   ├── pending_action write-ahead checkpoint
+│   ├── pending_action write-ahead checkpoint (checkpoint_redaction)
 │   ├── _act -> ToolExecutor.execute
 │   │   ├── exposure gate
 │   │   ├── evidence policy
@@ -97,8 +111,8 @@ WebAgent.run
 │   ├── SessionHistory.add
 │   ├── hooks.on_step_complete
 │   ├── strategy update + clear pending_action + checkpoint
-│   └── done -> _select_figure -> _persist_final_outputs
-├── _persist_run_trace -> trajectory/trace.json
+│   └── done -> run_outputs._select_figure -> run_outputs._persist_final_outputs
+├── run_outputs._persist_run_trace -> trajectory/trace.json
 └── finally hooks.on_task_end
 ```
 
@@ -106,8 +120,9 @@ WebAgent.run
 
 ```text
 APIPlanner.load
-├── _probe_vision
-└── optional _probe_vlm
+└── VisionSupport.load
+    ├── _probe_vision
+    └── optional _probe_vlm
 
 APIPlanner.plan_action
 ├── build_prompt
@@ -123,8 +138,9 @@ APIPlanner.plan_action
     └── ToolCall
 
 APIPlanner.analyze_image
-├── _analyze_image_vlm（独立 endpoint 可用）
-└── _analyze_image_chat（chat vision 可用）
+└── VisionSupport.analyze_image
+    ├── _analyze_image_vlm（独立 endpoint 可用）
+    └── _analyze_image_chat（chat vision 可用）
 ```
 
 ## Tool 调用图
@@ -140,7 +156,7 @@ ToolExecutor.execute(ToolCall)
 ├── exposed-tool authorization
 ├── BrowserGroundedPolicy / SearchEngineOnlyPolicy.authorize
 ├── ActionRiskPolicy.authorize
-└── wait_for(ToolRegistry.execute(lower_name, params))
+└── wait_for(ToolRegistry.execute(canonical_name, params))
     ├── lookup + JSON/schema invariants
     ├── validate_params
     └── implementation.execute

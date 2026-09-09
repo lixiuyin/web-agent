@@ -5,20 +5,20 @@ Thank you for your interest in contributing!
 ## Development setup
 
 ```bash
-# Clone and install in editable mode with dev dependencies
+# Clone and sync the environment (uv installs the dev dependency-group by default)
 git clone https://github.com/lixiuyin/web-agent.git
 cd web-agent
-pip install -e ".[dev]"
-playwright install chromium
+uv sync
+uv run playwright install chromium
 
 # Run unit and real-browser integration tests
 pytest tests/unit/ -v
 pytest tests/integration/ -v --no-cov   # requires a browser
 
 # Lint, format, and type-check
-ruff check src/ benchmarks/ scripts/ tests/
-ruff format --check src/ benchmarks/ scripts/ tests/
-mypy src/ benchmarks/ scripts/
+ruff check src/ scripts/ tests/
+ruff format --check src/ scripts/ tests/
+mypy src/ scripts/
 ```
 
 > New to the codebase? See [README.md](README.md) for the architecture overview.
@@ -33,7 +33,7 @@ mypy src/ benchmarks/ scripts/
    [`docs/documentation-style.md`](docs/documentation-style.md) when user behavior,
    configuration, outputs, evaluation, or packaging changes. Keep overview pages concise
    and link to that owner.
-6. Ensure linting passes: `ruff check src/ benchmarks/ scripts/ tests/`
+6. Ensure linting passes: `ruff check src/ scripts/ tests/`
 7. Submit a pull request with a clear description
 
 ## Adding a new tool

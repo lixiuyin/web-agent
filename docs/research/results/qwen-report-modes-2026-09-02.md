@@ -4,6 +4,12 @@ This case study compares four retained executions of the same task with the same
 browser type, temporary state, and action budget. It is a trajectory analysis, not a
 general success-rate benchmark.
 
+> Artifact availability (updated 2026-09-09): the associated local output bundle was
+> removed during output cleanup. The historical measurements and analysis below are
+> retained, but their original trace, animation, and Figure links are no longer active.
+> Use the [current paired strict validation](qwen-strict-search-2026-09-09.zh-CN.md) for
+> retained evidence and the README animation.
+
 > Find the most recent technical report (PDF) about Qwen, then interpret Figure 1 by
 > describing its purpose and key findings.
 
@@ -11,10 +17,10 @@ general success-rate benchmark.
 
 | Run | Direct-source API | Terminal state | Recorded tool actions | Duration | Evidence |
 |---|---|---|---:|---:|---|
-| Hybrid | Yes | Completed | 5 | 75.38 s | [Trace and animation](../../../outputs/runs/qwen-report-figure1-20260902/hybrid/) |
-| Browser-grounded | No | Interrupted | 11 | 390.71 s | [Trace and animation](../../../outputs/runs/qwen-report-figure1-20260902/browser-grounded/) |
-| Browser-grounded retry | No | Interrupted | 21 | 760.92 s | [Trace and animation](../../../outputs/runs/qwen-report-figure1-20260902/browser-grounded-r2/) |
-| Strict | No | Completed and certificate-valid | 17 | 218.96 s | [Trace and animation](../../../outputs/runs/qwen-report-figure1-20260902/strict/) |
+| Hybrid | Yes | Completed | 5 | 75.38 s | Retired local bundle |
+| Browser-grounded | No | Interrupted | 11 | 390.71 s | Retired local bundle |
+| Browser-grounded retry | No | Interrupted | 21 | 760.92 s | Retired local bundle |
+| Strict | No | Completed and certificate-valid | 17 | 218.96 s | Retired local bundle |
 
 `success=false` in the two browser-grounded manifests means the run did not reach a
 successful terminal `done` result. It does not mean every recorded browser action failed.
@@ -29,7 +35,7 @@ fallback, challenge, or replan occurred.
 This was the shortest path, but its first-party source lookup used a direct API and is not
 browser-search benchmark evidence.
 
-![Hybrid trajectory](../../../outputs/runs/qwen-report-figure1-20260902/hybrid/trajectory-demo.gif)
+The original Hybrid animation is no longer retained in this checkout.
 
 ## Browser-grounded first run
 
@@ -42,7 +48,7 @@ The run was manually interrupted after it continued rewriting owner queries desp
 already observing the correct candidate. It did not reach PDF download, Figure 1
 analysis, or `done`; the retained terminal frame explains this `success=false` state.
 
-![First browser-grounded trajectory](../../../outputs/runs/qwen-report-figure1-20260902/browser-grounded/trajectory-demo.gif)
+The original browser-grounded animation is no longer retained in this checkout.
 
 ## Browser-grounded retry
 
@@ -56,7 +62,7 @@ visually inspected the exact report's commit history, but no `download_pdf`,
 `pdf_analyze_figure`, or `done` occurred before the action budget was exhausted and the
 stalled run was interrupted.
 
-![Browser-grounded retry trajectory](../../../outputs/runs/qwen-report-figure1-20260902/browser-grounded-r2/trajectory-demo.gif)
+The original browser-grounded retry animation is no longer retained in this checkout.
 
 ## Strict evaluation
 
@@ -70,7 +76,7 @@ The agent then called `inspect_download_links`, observed the declared raw URL an
 The certificate validates continuity, browser-search-only discovery, visible URL
 provenance, first-action search, producer binding, and schema support.
 
-![Strict trajectory](../../../outputs/runs/qwen-report-figure1-20260902/strict/trajectory-demo.gif)
+The original strict animation is no longer retained in this checkout.
 
 ## Interpretation
 
@@ -94,8 +100,7 @@ expanded residual stream, MoE blocks in both layer types, a layer-2 n-gram embed
 backed by host-memory prefetching, and MTP modules that reuse QSA indices during
 speculative decoding.
 
-![Extracted Figure 1](../../../outputs/runs/qwen-report-figure1-20260902/strict/result/attachments/figure.png)
-
-The full bundle contains manifests, checkpoints, traces, screenshots, downloaded PDFs,
-extracted figures, result text, and animations. Binary media uses Git LFS; JSON and text
-evidence remains ordinary Git content.
+The original extracted Figure 1 is no longer retained in this checkout. The removed
+bundle contained manifests, checkpoints, traces, screenshots, downloaded PDFs, extracted
+figures, result text, and animations; the current report does not treat those unavailable
+files as live evidence.

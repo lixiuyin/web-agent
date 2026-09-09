@@ -33,7 +33,7 @@ def test_default_config(monkeypatch):
     assert cfg.planner_max_tokens == 4096
     assert cfg.planner_reasoning_effort is None
     assert cfg.planner_screenshot_mode == "auto"
-    assert cfg.vision_max_tokens == 2000
+    assert cfg.vision_max_tokens == 8192
     assert cfg.vision_brief_max_tokens == 1200
     assert cfg.vision_max_words == 350
     assert cfg.planner_max_attempts == 2

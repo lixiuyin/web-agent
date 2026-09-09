@@ -11,6 +11,8 @@ from typing import Any
 
 from playwright.async_api import Page
 
+from webagent.browser.url_identity import search_engine_for_url, web_url
+
 logger = logging.getLogger("webagent")
 
 
@@ -91,18 +93,22 @@ class CaptchaDetector:
                 - reason (str): Human-readable explanation
                 - selectors (list[str]): Matching CSS selectors
         """
-        url = page.url.lower()
+        parsed = web_url(page.url)
+        path = parsed.path.casefold() if parsed is not None else ""
+        engine = search_engine_for_url(page.url)
         title = await page.title() if page else ""
         title_lower = title.lower()
 
         # Check URL and title for captcha keywords
         keyword_matches = [
-            keyword for keyword in self.CAPTCHA_KEYWORDS if keyword in url or keyword in title_lower
+            keyword
+            for keyword in self.CAPTCHA_KEYWORDS
+            if keyword in path or keyword in title_lower
         ]
 
         # Google's automated-query challenge uses a stable ``/sorry/`` route
         # whose title does not necessarily mention a captcha or verification.
-        if "google." in url and "/sorry/" in url:
+        if engine == "google" and (path == "/sorry" or path.startswith("/sorry/")):
             return {
                 "detected": True,
                 "type": "google_unusual_traffic",
@@ -114,7 +120,7 @@ class CaptchaDetector:
         # DuckDuckGo returns its bot challenge as an HTTP 202 page whose title
         # resembles an ordinary result page and whose DOM has no standard
         # CAPTCHA widget. Its explicit body message is the reliable signal.
-        if "duckduckgo.com" in url:
+        if engine == "duckduckgo":
             try:
                 body = (await page.inner_text("body")).casefold()
             except Exception:
@@ -129,20 +135,7 @@ class CaptchaDetector:
                 }
 
         # Check DOM for known captcha patterns
-        dom_matches: dict[str, list[str]] = {}
-        for captcha_type, selectors in self.CAPTCHA_PATTERNS.items():
-            matching_selectors = []
-            for selector in selectors:
-                try:
-                    element = await page.query_selector(selector)
-                    if element is not None and await element.is_visible():
-                        matching_selectors.append(selector)
-                except Exception:
-                    # Selector might be invalid, skip it
-                    pass
-
-            if matching_selectors:
-                dom_matches[captcha_type] = matching_selectors
+        dom_matches = await self._detect_dom_patterns(page)
 
         # Determine detection result
         if dom_matches:
@@ -174,6 +167,24 @@ class CaptchaDetector:
             "reason": "No captcha indicators found",
             "selectors": [],
         }
+
+    async def _detect_dom_patterns(self, page: Page) -> dict[str, list[str]]:
+        dom_matches: dict[str, list[str]] = {}
+        for captcha_type, selectors in self.CAPTCHA_PATTERNS.items():
+            matching_selectors = []
+            for selector in selectors:
+                try:
+                    element = await page.query_selector(selector)
+                    if element is not None and await element.is_visible():
+                        matching_selectors.append(selector)
+                except Exception:
+                    # Selector might be invalid, skip it
+                    pass
+
+            if matching_selectors:
+                dom_matches[captcha_type] = matching_selectors
+
+        return dom_matches
 
 
 async def check_captcha(page: Page) -> dict[str, Any]:

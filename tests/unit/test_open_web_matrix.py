@@ -9,14 +9,15 @@ from datetime import date
 from pathlib import Path
 
 import pytest
-from benchmarks.studies.open_web_longitudinal import load_slices
-from benchmarks.studies.open_web_matrix import (
+
+from webagent.benchmarks.studies.open_web_longitudinal import load_slices
+from webagent.benchmarks.studies.open_web_matrix import (
     _ordered_models,
     append_ledger,
     ledger_record_from_report,
     run_matrix,
 )
-from benchmarks.suites.open_web.runner import canonical_sha256
+from webagent.benchmarks.suites.open_web.runner import canonical_sha256
 
 
 def test_model_order_is_deterministically_counterbalanced_by_date() -> None:
@@ -244,7 +245,7 @@ def test_matrix_refuses_a_single_model_before_starting_subprocesses(tmp_path: Pa
     args = argparse.Namespace(
         models=["model-a"],
         provider="openrouter",
-        manifest=Path("benchmarks/manifests/open_web_general.json"),
+        manifest=Path("src/webagent/benchmarks/manifests/open_web_general.json"),
         output=tmp_path,
         shards=1,
         repetitions=1,

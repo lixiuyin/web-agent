@@ -3,6 +3,25 @@
 Start from the first observable failure and retain the run directory. Do not diagnose a
 planner, browser, provider, or evaluator failure from the terminal summary alone.
 
+## Decide whether a failed attempt invalidates the run
+
+A nonzero failed-action count is diagnostic evidence, not an automatic task failure.
+Accept a completed run only when the independent evaluator passes every required
+assertion, any strict certificate and artifact-integrity checks are valid, required
+files/figures exist, and each failed attempt is bounded, retained, and followed by
+observable recovery.
+
+Typical acceptable residuals are a small number of public-search quality/selector
+failures, a transient engine fallback, or an explicit provider capability rejection that
+successfully negotiates a supported output mode. These remain in action-validity and
+planner-failure metrics.
+
+Treat the run as failed or requiring repair when it selects the wrong document, invents
+or loses date/provenance evidence, accepts HTML as PDF, omits Figure analysis, has missing
+or inconsistent pre/post evidence, submits false `done`, leaves a challenge unresolved,
+or repeats recovery until the step/time budget is exhausted. Never delete failed steps
+or hardcode the expected answer to make a trace look clean.
+
 ## No API credentials or `StubPlanner`
 
 **Symptom:** the CLI reports `No API credentials configured` and repeatedly says the
@@ -37,6 +56,12 @@ provider evidence and should not be inferred from local proxy mode alone.
 Some thinking models reject required native tool choice. In `auto` mode, WebAgent first
 retries native tools with `tool_choice=auto`; explicit capability failures can then move
 to JSON Schema and prompt JSON fallbacks.
+
+The initial capability-rejection response remains a visible failed planner attempt. If
+the negotiated call produces a valid action and the task later passes independent
+judgment, that one response is normally a provider compatibility event rather than an
+obvious runtime defect. Repeated negotiation on every repair attempt, fallback on
+authentication/429/5xx, or prose silently accepted as an action is not acceptable.
 
 This can reduce enforcement strength because the model may return prose instead of a
 tool call. The planner's repair attempts and controller failure limits remain active.
@@ -109,7 +134,7 @@ start a new run rather than weakening the checkpoint validation.
 Package installation does not provide WebArena or VisualWebArena sites. Validate every
 required `WA_*` or `VWA_*` URL, authentication state, and reset endpoint from the
 BrowserGym host. Then run one custom task per suite and model before allocating a full
-matrix. See the [BrowserGym guide](../../benchmarks/docs/browsergym.md).
+matrix. See the [BrowserGym guide](../../src/webagent/benchmarks/docs/browsergym.md).
 
 ## Escalation checklist
 

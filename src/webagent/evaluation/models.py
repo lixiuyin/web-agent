@@ -26,6 +26,7 @@ AssertionKind = Literal[
     "json_equals",
     "answer_contains",
     "answer_contains_any",
+    "answer_document_url",
     "answer_date",
     "answer_labeled_date",
     "answer_not_contains",
@@ -33,6 +34,7 @@ AssertionKind = Literal[
     "answer_in_order",
     "history_url_observed",
     "history_url_observed_any",
+    "history_document_url_observed",
     "history_origin_observed",
     "history_tool_succeeded",
     "history_tool_sequence",
@@ -124,6 +126,22 @@ def _validate_artifact_path(value: Any) -> str:
     return value
 
 
+def _validate_url_assertion_fields(kind: AssertionKind, expected: Any) -> None:
+    single_url_kinds = {
+        "answer_document_url",
+        "history_document_url_observed",
+        "history_url_observed",
+    }
+    if kind in single_url_kinds and not isinstance(expected, str):
+        raise ValueError(f"{kind} requires a string expected URL")
+    if kind in {"answer_contains_any", "history_url_observed_any"} and (
+        not isinstance(expected, list)
+        or not expected
+        or not all(isinstance(item, str) and item.strip() for item in expected)
+    ):
+        raise ValueError(f"{kind} requires a non-empty string list")
+
+
 class BenchmarkAssertion(BaseModel):
     """One independently scored condition on browser or server terminal state."""
 
@@ -145,14 +163,7 @@ class BenchmarkAssertion(BaseModel):
             raise ValueError("attribute_equals requires selector and attribute")
         if self.kind == "json_equals" and (not self.endpoint or not self.json_path):
             raise ValueError("json_equals requires endpoint and json_path")
-        if self.kind == "history_url_observed" and not isinstance(self.expected, str):
-            raise ValueError("history_url_observed requires a string expected URL/prefix")
-        if self.kind in {"answer_contains_any", "history_url_observed_any"} and (
-            not isinstance(self.expected, list)
-            or not self.expected
-            or not all(isinstance(item, str) and item.strip() for item in self.expected)
-        ):
-            raise ValueError(f"{self.kind} requires a non-empty string list")
+        _validate_url_assertion_fields(self.kind, self.expected)
         if self.kind == "history_origin_observed" and not isinstance(self.expected, str):
             raise ValueError("history_origin_observed requires a string origin")
         if self.kind == "history_tool_succeeded" and not isinstance(self.expected, str):
@@ -169,6 +180,11 @@ class BenchmarkAssertion(BaseModel):
             or not all(isinstance(item, str) and item.strip() for item in self.expected)
         ):
             raise ValueError("answer_in_order requires a non-empty string list")
+        self._validate_artifact_fields()
+        _validate_answer_date_expectation(self.kind, self.expected)
+        return self
+
+    def _validate_artifact_fields(self) -> None:
         if self.kind == "artifact_exists":
             _validate_artifact_path(self.expected)
         if self.kind == "artifact_sha256":
@@ -178,8 +194,6 @@ class BenchmarkAssertion(BaseModel):
             digest = self.expected.get("sha256")
             if not isinstance(digest, str) or len(digest) != 64:
                 raise ValueError("artifact_sha256 requires a 64-character sha256")
-        _validate_answer_date_expectation(self.kind, self.expected)
-        return self
 
 
 class BenchmarkTask(BaseModel):
@@ -282,7 +296,12 @@ class BenchmarkTask(BaseModel):
             observed_sources = {
                 str(value)
                 for assertion in self.assertions
-                if assertion.kind in {"history_url_observed", "history_url_observed_any"}
+                if assertion.kind
+                in {
+                    "history_url_observed",
+                    "history_url_observed_any",
+                    "history_document_url_observed",
+                }
                 for value in (
                     assertion.expected
                     if isinstance(assertion.expected, list)
@@ -292,7 +311,8 @@ class BenchmarkTask(BaseModel):
             cited_sources = {
                 str(value)
                 for assertion in self.assertions
-                if assertion.kind in {"answer_contains", "answer_contains_any"}
+                if assertion.kind
+                in {"answer_contains", "answer_contains_any", "answer_document_url"}
                 for value in (
                     assertion.expected
                     if isinstance(assertion.expected, list)

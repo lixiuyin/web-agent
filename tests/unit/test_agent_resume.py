@@ -12,16 +12,15 @@ from typing import Any
 import pytest
 
 from webagent.agent.checkpoint import CheckpointStore, PendingAction, checkpoint_fingerprint
+from webagent.agent.checkpoint_redaction import _checkpoint_step, _checkpoint_tab_url
 from webagent.agent.loop import (
     WebAgent,
-    _checkpoint_step,
-    _checkpoint_tab_url,
     _LoopState,
     _made_progress,
-    _planner_repair_hint,
     _policy_was_denied,
     _replay_policy,
 )
+from webagent.agent.planning import _planner_repair_hint
 from webagent.agent.state import PlanningState
 from webagent.agent.strategy import StrategyManager
 from webagent.cli import _apply_resume_arguments, parse_args

@@ -175,3 +175,25 @@ async def test_check_captcha_convenience_function(mock_page):
     assert isinstance(result, dict)
     assert "detected" in result
     assert "type" in result
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "https://example.test/?next=https://www.google.com/sorry/",
+        "https://google.com.example.test/sorry/",
+        "https://example.test/?q=captcha+verification",
+        "https://example.test/#captcha",
+        "https://www.google.com/search?q=captcha",
+        "https://www.google.com@evil.test/sorry/",
+        "https://[invalid",
+    ],
+)
+async def test_url_parameters_and_spoofed_hosts_do_not_signal_captcha(url):
+    page = MagicMock(
+        url=url,
+        title=AsyncMock(return_value="Ordinary page"),
+        query_selector=AsyncMock(return_value=None),
+    )
+    result = await CaptchaDetector().detect_captcha(page)
+    assert result["detected"] is False

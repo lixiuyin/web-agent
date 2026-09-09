@@ -53,10 +53,10 @@ _REQUIRED_SCHEMA_IDS = {
 _REQUIRED_WHEEL_SUFFIXES = (
     "webagent/py.typed",
     *(f"webagent/schemas/{name}" for name in _REQUIRED_SCHEMA_IDS),
-    "benchmarks/README.md",
-    "benchmarks/manifests/open_web_general.json",
-    "benchmarks/manifests/open_web_smoke.json",
-    "benchmarks/manifests/qwen_strict_search.json",
+    "webagent/benchmarks/README.md",
+    "webagent/benchmarks/manifests/open_web_general.json",
+    "webagent/benchmarks/manifests/open_web_smoke.json",
+    "webagent/benchmarks/manifests/qwen_strict_search.json",
 )
 _REQUIRED_SDIST_SUFFIXES = (
     "/PKG-INFO",
@@ -65,10 +65,10 @@ _REQUIRED_SDIST_SUFFIXES = (
     "/pyproject.toml",
     "/src/webagent/py.typed",
     *(f"/src/webagent/schemas/{name}" for name in _REQUIRED_SCHEMA_IDS),
-    "/benchmarks/README.md",
-    "/benchmarks/manifests/open_web_general.json",
-    "/benchmarks/manifests/open_web_smoke.json",
-    "/benchmarks/manifests/qwen_strict_search.json",
+    "/src/webagent/benchmarks/README.md",
+    "/src/webagent/benchmarks/manifests/open_web_general.json",
+    "/src/webagent/benchmarks/manifests/open_web_smoke.json",
+    "/src/webagent/benchmarks/manifests/qwen_strict_search.json",
 )
 
 
@@ -301,22 +301,30 @@ def _check_sdist(path: Path) -> list[str]:
                             expected_id=schema_id,
                         )
                     )
-        metadata_members = [member for member in members if member.name.endswith("/PKG-INFO")]
-        if len(metadata_members) != 1:
-            failures.append("sdist must contain exactly one PKG-INFO file")
+        failures.extend(_check_sdist_metadata(archive, members, path, expected_name))
+    return failures
+
+
+def _check_sdist_metadata(
+    archive: tarfile.TarFile, members: list[tarfile.TarInfo], path: Path, expected_name: str
+) -> list[str]:
+    failures: list[str] = []
+    metadata_members = [member for member in members if member.name.endswith("/PKG-INFO")]
+    if len(metadata_members) != 1:
+        failures.append("sdist must contain exactly one PKG-INFO file")
+    else:
+        metadata_file = archive.extractfile(metadata_members[0])
+        if metadata_file is None:
+            failures.append("sdist PKG-INFO cannot be read")
         else:
-            metadata_file = archive.extractfile(metadata_members[0])
-            if metadata_file is None:
-                failures.append("sdist PKG-INFO cannot be read")
-            else:
-                metadata = BytesParser().parsebytes(metadata_file.read())
-                metadata_name = metadata.get("Name")
-                if not isinstance(metadata_name, str) or (
-                    _normalize_distribution_name(metadata_name) != expected_name
-                ):
-                    failures.append("sdist PKG-INFO name does not match the release distribution")
-                if metadata.get("Version") != _artifact_version(path.name):
-                    failures.append("sdist PKG-INFO version does not match its filename")
+            metadata = BytesParser().parsebytes(metadata_file.read())
+            metadata_name = metadata.get("Name")
+            if not isinstance(metadata_name, str) or (
+                _normalize_distribution_name(metadata_name) != expected_name
+            ):
+                failures.append("sdist PKG-INFO name does not match the release distribution")
+            if metadata.get("Version") != _artifact_version(path.name):
+                failures.append("sdist PKG-INFO version does not match its filename")
     return failures
 
 

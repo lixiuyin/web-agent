@@ -1,15 +1,20 @@
 # 测试与可复现性
 
+覆盖率口径：`branch=true` 启用分支统计，`--cov-fail-under=85` 检查语句与分支合并后的
+综合覆盖率，不代表单独分支覆盖率达到 85%。需要分别报告时运行 `coverage json`，读取
+`totals.covered_lines/num_statements` 与 `totals.covered_branches/num_branches`；百分比必须标明
+统计口径和对应测试运行。benchmarks 按 `pyproject.toml` 中的 omit 配置排除在该门槛之外。
+
 ## 四个质量门
 
 在仓库根目录执行：
 
 ```bash
-ruff check src/ benchmarks/ scripts/ tests/
-ruff format --check src/ benchmarks/ scripts/ tests/
-mypy src/ benchmarks/ scripts/
+ruff check src/ scripts/ tests/
+ruff format --check src/ scripts/ tests/
+mypy src/ scripts/
 pytest tests/unit/ -v
-python scripts/check_docs.py
+uv run python scripts/check_docs.py
 ```
 
 浏览器集成：
@@ -18,7 +23,9 @@ python scripts/check_docs.py
 pytest tests/integration/ -v --no-cov
 ```
 
-本文档生成过程结束时会把实际结果写入下面的“本次验证快照”，不能用 README 徽章替代当前运行。
+实际执行结果应保存在带日期的[验证记录](../research/results/README.md)中；本文只维护命令和
+覆盖范围，不能用 README 徽章替代当前运行。`test_test_discovery.py` 检查测试函数是否误嵌套
+在其他函数内，避免这类测试静默退出 pytest 的收集范围。
 
 ## 单元测试覆盖地图
 
@@ -33,7 +40,7 @@ pytest tests/integration/ -v --no-cov
 | Search | engine cascade、blocked、failure taxonomy/attempt trace | 实时搜索 DOM 与网站改版 |
 | Parser | routing、quality、fallback、caption、三家 provider HTTP contract | 大规模真实文档质量与长期云端兼容性 |
 | PDF | path containment、caption、figure resolve、metadata | 大规模文档质量、复杂表格/公式 |
-| Evaluation | 终态/答案 assertion、JSON state、虚假完成率、动作有效率、typed v8 trace、30 题 dated matrix、BrowserGym/WebArena/VisualWebArena adapter | 内部开放网页尚缺三个共同日期；外部标准层尚缺部署后的 WA/VWA 后端 |
+| Evaluation | 终态/答案 assertion、JSON state、虚假完成率、动作有效率、typed v8 trace、30 题 dated matrix、BrowserGym/WebArena/VisualWebArena adapter | 内部纵向证据尚需另外两个共同日期；外部标准层尚缺部署后的 WA/VWA 后端 |
 
 ## Integration test 的准确解释
 
@@ -52,9 +59,14 @@ search-engine-only policy、strict trace、十一项基础网页交互，以及�
 4. 固定的 self-hosted web tasks：避免真实网站非平稳性，测端到端 success。
 5. 真实网站只做补充 robustness 检查，记录日期、浏览器版本、页面和账号状态。
 
+最新的 Qwen 严格搜索补充验证见
+[2026-09-09 paired R5 记录](../research/results/qwen-strict-search-2026-09-09.zh-CN.md)。Qwen 与
+GLM endpoint 都通过 10/10 assertions 和 6/6 certificate checks；记录同时保留各自 3 个和
+2 个已恢复搜索失败。它证明两个 endpoint 的这一次任务完成，不替代多日期重复。
+
 ## 通用网页交互 benchmark
 
-`python -m benchmarks.suites.controlled_web.general --mode scripted-harness-baseline
+`uv run python -m webagent.benchmarks.suites.controlled_web.general --mode scripted-harness-baseline
 --tool-set browser-only` 会启动确定性本地 HTTP 站点，并通过真实 Chromium 与
 `WebAgent` 循环执行 11 项任务：多页商品导航、跨页人员查找、表单和下拉框、购物车服务端
 状态修改、延迟动态 DOM、HTTP 503 恢复、登录、表格过滤、地点查询、预订与结账。页面终态、
@@ -67,8 +79,8 @@ search-engine-only policy、strict trace、十一项基础网页交互，以及�
 
 ## 带日期的开放网页 benchmark
 
-`python -m benchmarks.suites.open_web.runner --manifest
-benchmarks/manifests/open_web_smoke.json` 使用临时 profile 在多个公共站点运行真实 planner。每个网络任务必须
+`uv run python -m webagent.benchmarks.suites.open_web.runner --manifest
+src/webagent/benchmarks/manifests/open_web_smoke.json` 使用临时 profile 在多个公共站点运行真实 planner。每个网络任务必须
 声明来源 URL、snapshot ID 与期待值有效期；过期清单会拒绝运行。判分同时检查页面、历史中
 实际观察的 URL、答案必要/禁止事实和引用；每次摘要连同 manifest SHA-256 追加到
 `ledger/time-slices.jsonl`。这解决了“无法重复量化开放网页波动”的基础设施缺口，但真正的跨日期证据
@@ -76,8 +88,8 @@ benchmarks/manifests/open_web_smoke.json` 使用临时 profile 在多个公共�
 
 默认 `open-web-general-v2` 有 30 项/10 个公共域；其中 10 项从 `about:blank` 开始并在
 search-engine-only contract 下做真实浏览器搜索，另外 20 项把页面读取与搜索波动分开测量。
-`benchmarks.studies.open_web_matrix` 只写入当前 UTC 日期，要求 2–3 个不同 provider/model endpoint；
-`benchmarks.studies.open_web_longitudinal` 会重读
+`webagent.benchmarks.studies.open_web_matrix` 只写入当前 UTC 日期，要求 2–3 个不同 provider/model endpoint；
+`webagent.benchmarks.studies.open_web_longitudinal` 会重读
 保留的 `results.json`，重算报告、日期、study/task manifest、最终生效 config、task-set 及
 agent/benchmark 源码绑定，并且仅在
 每个模型有三个共同、每次 repetition 都恰好 30 项的日期时返回 ready。同日重复只参与当日均值，
@@ -85,14 +97,14 @@ agent/benchmark 源码绑定，并且仅在
 
 ## 复杂双源沙箱 benchmark
 
-`python -m benchmarks.suites.controlled_web.sandbox --mode scripted-harness-baseline` 启动两个动态 loopback origin，覆盖
+`uv run python -m webagent.benchmarks.suites.controlled_web.sandbox --mode scripted-harness-baseline` 启动两个动态 loopback origin，覆盖
 fetch hydration + client-side route 的 SPA、cookie 登录保护页、跨 origin 多步表单、浏览器下载
 再上传并校验 SHA-256，以及无支付沙箱结账。mutation `allow` 只绑定到启动后验证过的 loopback
 origins。`scripted-harness-baseline` 校准工具/policy/evaluator；必须改用 `--mode agent` 才是模型成绩。
 
 ## PDF Figure 快路径 benchmark
 
-`python -m benchmarks.suites.document_figures.fast_path`
+`uv run python -m webagent.benchmarks.suites.document_figures.fast_path`
 会离线生成 10 份 PDF，覆盖矢量/栅格、caption 上/下、多图、logo 干扰、碎片化 path、
 双栏、横版以及 mention/table 负例。ground truth 同时约束 figure number、page、crop coverage
 （至少 85%）和 purity（至少 55%）。`results.json` 分开报告原始 detector precision/recall 与
@@ -127,7 +139,8 @@ known external-state changes:
 本文只维护验证方法和解释边界，不复制会随 checkout 变化的测试数量、覆盖率和模型分数。
 2026-08-29 至 2026-09-01 的历史工程与外部 provider 探针已归档到
 [工程验证记录](../research/results/engineering-validation-2026-08-29-09-01.zh-CN.md)；模型评测见
-[研究结果索引](../research/results/README.md)。当前代码必须重新执行本页命令。
+[研究结果索引](../research/results/README.md)。本次 checkout 的最新本地门禁见
+[2026-09-09 工程验证记录](../research/results/engineering-validation-2026-09-09.zh-CN.md)；当前代码仍应在环境变化后重新执行本页命令。
 
 ## 解释边界
 

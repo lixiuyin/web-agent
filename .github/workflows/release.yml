@@ -31,16 +31,16 @@ jobs:
         with:
           enable-cache: true
           python-version: "3.13"
-      - run: uv sync --locked --extra dev --python 3.13
+      - run: uv sync --locked --python 3.13
       - id: version
         shell: bash
         run: |
           tag="${{ inputs.tag || github.ref_name }}"
           uv run python -m webagent.release state --root . --tag "$tag" --require-clean
           echo "version=${tag#v}" >> "$GITHUB_OUTPUT"
-      - run: uv run ruff check src/ benchmarks/ tests/
-      - run: uv run ruff format --check src/ benchmarks/ tests/
-      - run: uv run mypy src/ benchmarks/
+      - run: uv run ruff check src/ tests/
+      - run: uv run ruff format --check src/ tests/
+      - run: uv run mypy src/
       - run: uv run pytest tests/unit/ -v
       - run: uv run playwright install --with-deps chromium
       - run: uv run pytest tests/integration/ -v --no-cov
@@ -59,15 +59,15 @@ jobs:
           uv venv .wheel-smoke --python 3.13
           uv pip install --python .wheel-smoke/bin/python dist/*.whl
           cd /tmp
-          "$GITHUB_WORKSPACE/.wheel-smoke/bin/python" -c "from benchmarks.core import packaged_manifest_path; assert packaged_manifest_path('open_web_general.json').is_file()"
-          "$GITHUB_WORKSPACE/.wheel-smoke/bin/python" -m benchmarks.suites.open_web.runner --help
+          "$GITHUB_WORKSPACE/.wheel-smoke/bin/python" -c "from webagent.benchmarks.core import packaged_manifest_path; assert packaged_manifest_path('open_web_general.json').is_file()"
+          "$GITHUB_WORKSPACE/.wheel-smoke/bin/python" -m webagent.benchmarks.suites.open_web.runner --help
           cd "$GITHUB_WORKSPACE"
           .wheel-smoke/bin/webagent --help
           uv venv .sdist-smoke --python 3.13
           uv pip install --python .sdist-smoke/bin/python dist/*.tar.gz
           cd /tmp
-          "$GITHUB_WORKSPACE/.sdist-smoke/bin/python" -c "from benchmarks.core import packaged_manifest_path; assert packaged_manifest_path('open_web_general.json').is_file()"
-          "$GITHUB_WORKSPACE/.sdist-smoke/bin/python" -m benchmarks.suites.open_web.runner --help
+          "$GITHUB_WORKSPACE/.sdist-smoke/bin/python" -c "from webagent.benchmarks.core import packaged_manifest_path; assert packaged_manifest_path('open_web_general.json').is_file()"
+          "$GITHUB_WORKSPACE/.sdist-smoke/bin/python" -m webagent.benchmarks.suites.open_web.runner --help
           cd "$GITHUB_WORKSPACE"
           .sdist-smoke/bin/webagent --help
       - uses: actions/upload-artifact@v7

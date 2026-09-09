@@ -7,7 +7,7 @@
 - Ruff format check：248 个 Python 文件通过。
 - Ruff lint：通过。
 - Mypy：152 个 source files 无问题。
-- Unit：1,202 passed，branch coverage 85.58%，达到 85% 门槛。
+- Unit：1,202 passed，综合覆盖率（含分支统计）85.58%，达到 85% 门槛。
 - Integration：11 passed，使用真实 headless Chromium。
 - Controlled sandbox harness：5/5，通过工具、策略和 evaluator 校准。
 - PDF Figure fast path：10 documents、9 positives；precision/recall 1.0/1.0，7/9

@@ -4,91 +4,21 @@
 
 `core` 定义跨模块共同语言。理解字段的生产者和消费者，比先读具体工具更重要。
 
-## 完整数据模型源码
+## 模型契约与字段生命周期
 
-来源：`src/webagent/core/models.py`。这些 Pydantic 模型被 agent、planner、tools 和 tests 共同使用。
+模型的权威定义是 [core/models.py](../../src/webagent/core/models.py)。下表解释生产者、消费者和容易混淆的字段；完整字段、默认值与校验规则请直接查看源码。
 
-```python
-class TaskStatus(Enum):
-    PENDING = "pending"
-    RUNNING = "running"
-    COMPLETED = "completed"
-    TIMEOUT = "timeout"
-    FAILED = "failed"
-    INTERRUPTED = "interrupted"
-    MAX_STEPS_REACHED = "max_steps_reached"
+| 模型 | 作用与字段边界 |
+| --- | --- |
+| `TaskStatus` | 区分 pending、running、completed、timeout、failed、interrupted、max_steps_reached 和 blocked；工具成功不代表任务完成。 |
+| `ToolCall` | Planner 生成，executor、policy、loop 和 history 消费；`tool_name` 在模型校验时去除首尾空白并统一小写。 |
+| `ToolResult` | 工具返回 success/error/data；`audit` 保存执行策略证据，不进入 planner 可见的工具 data。 |
+| `BrowserState` | `_observe` 产生 URL/title、viewport/document context、observation id、元素、覆盖元数据和可选截图；完整 HTML 不进入该模型，trace 也不保存图像 payload。 |
+| `AgentStep` | 保存观察、调用和结果；`duration_seconds` 是步骤耗时，`tool_duration_seconds` 单独记录工具耗时。 |
+| `PlannerAttempt` | 记录单次规划尝试、token 用量、`transport_retries`、请求/实际输出模式以及 `structured_fallbacks`，用于区分传输重试和格式降级。 |
+| `AgentResult` | 返回状态、最终结果、history、planner_attempts 和 events；events 保留运行事件。 |
 
-class ToolCall(BaseModel):
-    """A planned tool invocation from the LLM."""
-
-    tool_name: str = Field(..., description="Name of the tool to execute")
-    parameters: dict[str, Any] = Field(default_factory=dict)
-    reasoning: str = Field(default="", description="LLM rationale")
-
-class ToolResult(BaseModel):
-    """Result of a tool execution."""
-
-    success: bool
-    tool_name: str
-    error: str | None = None
-    data: dict[str, Any] = Field(default_factory=dict)
-
-class BrowserState(BaseModel):
-    """Observed browser state at a point in time."""
-
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-
-    screenshot: Image.Image | None = None
-    dom_summary: str
-    url: str
-    title: str
-    timestamp: str
-
-class AgentStep(BaseModel):
-    """Record of a single observe-think-act cycle."""
-
-    step_number: int
-    timestamp: str
-    browser_state: BrowserState
-    tool_call: ToolCall
-    tool_result: ToolResult
-    duration_seconds: float
-
-class PlannerAttempt(BaseModel):
-    step_number: int
-    attempt_number: int
-    timestamp: str
-    duration_seconds: float
-    success: bool
-    error: str | None = None
-    response_length: int | None = None
-    finish_reason: str | None = None
-    prompt_tokens: int | None = None
-    completion_tokens: int | None = None
-    total_tokens: int | None = None
-
-class AgentResult(BaseModel):
-    """Final result of an agent task execution."""
-
-    success: bool
-    status: str
-    steps_taken: int
-    total_duration: float
-    final_result: dict[str, Any] = Field(default_factory=dict)
-    history: list[AgentStep] = Field(default_factory=list)
-    planner_attempts: list[PlannerAttempt] = Field(default_factory=list)
-```
-
-## 字段生命周期
-
-| 结构             | 生产者                        | 消费者                                | 是否持久化                                    |
-| -------------- | -------------------------- | ---------------------------------- | ---------------------------------------- |
-| `BrowserState` | `WebAgent._observe`        | Planner、AgentStep                  | screenshot 写 `observations/screenshots/`；trace 排除图像 payload |
-| `ToolCall`     | Planner parser/StubPlanner | ToolExecutor、loop detector、history | 包含在 AgentResult history                  |
-| `ToolResult`   | ToolRegistry/工具实现          | Agent loop、history、hooks           | 包含在 history；`done.data` 另存最终输出           |
-| `AgentStep`    | Agent loop                 | SessionHistory、hooks               | 默认在内存；CLI 不自动写历史 JSON             |
-| `PlannerAttempt` | Agent `_think`           | AgentResult、run trace              | `trajectory/trace.json`                 |
-| `AgentResult`  | `WebAgent.run`             | CLI/调用方                            | 压缩/脱敏形式写入 `trajectory/trace.json`；summary 另写 `result/summary.txt` |
+[run_outputs.py](../../src/webagent/agent/run_outputs.py) 负责把步骤、规划尝试和事件写入经过压缩/脱敏的 `trajectory/trace.json`，把摘要写入 `result/summary.txt`。启用 checkpoint 时，[checkpoint.py](../../src/webagent/agent/checkpoint.py) 另行保存恢复所需的历史与状态。持久化表示不是模型的原样 JSON 副本，文件布局以 [run-artifacts.md](../reference/run-artifacts.md) 为准。
 
 ## 输入输出示例
 
@@ -98,7 +28,7 @@ Planner 的输出格式：
 {
   "tool": "click",
   "parameters": {
-    "selector": {"type": "css", "value": "button.submit"},
+    "selector": {"type": "ref", "value": "obs123/f0:e4"},
     "force": false
   },
   "reasoning": "Submit the completed form"
@@ -111,7 +41,7 @@ Planner 的输出格式：
 ToolCall(
     tool_name="click",
     parameters={
-        "selector": {"type": "css", "value": "button.submit"},
+        "selector": {"type": "ref", "value": "obs123/f0:e4"},
         "force": False,
     },
     reasoning="Submit the completed form",
@@ -124,7 +54,7 @@ ToolCall(
 {
   "success": false,
   "tool_name": "click",
-  "error": "Not found: button.submit",
+  "error": "Execution: Stale observation target; re-observe before acting",
   "data": {}
 }
 ```
@@ -135,68 +65,16 @@ ToolCall(
 
 Protocol 即结构化子类型协议（structural typing protocol）：类不必继承某个父类，只要拥有要求的方法，就能满足接口。运行时可检查的 `Planner` 和 `Tool` 使用了 `@runtime_checkable`。
 
-来源：`src/webagent/core/protocols.py`，完整核心协议：
+权威签名见 [core/protocols.py](../../src/webagent/core/protocols.py)：
 
-```python
-@runtime_checkable
-class Planner(Protocol):
-    """Plans the next agent action given the current state."""
-
-    async def plan_action(
-        self,
-        task: str,
-        browser_state: BrowserState,
-        history_text: str,
-        available_tools: str,
-    ) -> ToolCall | None:
-        """Return the next tool call, or *None* if planning fails."""
-        ...
-
-    async def analyze_image(self, image: Image.Image, question: str) -> str:
-        """Describe / answer a question about an image."""
-        ...
-
-    async def load(self) -> None:
-        """Initialise any heavyweight resources (model weights, connections)."""
-        ...
-
-    async def unload(self) -> None:
-        """Release resources."""
-        ...
-
-@runtime_checkable
-class Tool(Protocol):
-    """A single tool that the agent can invoke."""
-
-    @property
-    def name(self) -> str: ...
-
-    @property
-    def description(self) -> str: ...
-
-    async def execute(self, params: dict[str, Any]) -> ToolResult: ...
-
-    def validate_params(self, params: dict[str, Any]) -> None: ...
-
-class AgentHook(Protocol):
-    """Lifecycle hook for observing / modifying agent behaviour."""
-
-    async def on_task_start(self, task: str) -> None: ...
-
-    async def on_step_complete(
-        self,
-        step_number: int,
-        tool_call: ToolCall,
-        tool_result: ToolResult,
-    ) -> None: ...
-
-    async def on_task_end(self, status: str, steps: int) -> None: ...
-```
+- `Planner`：`plan_action`、`analyze_image`、`load`、`unload`，分别承担规划、图像分析和资源生命周期。
+- `Tool`：通过 `validate_params` 校验参数，异步 `execute` 返回 `ToolResult`。名称、说明和参数 schema 由工具注册元数据管理，不属于此 Protocol 的必需成员。
+- `AgentHook`：`on_task_start`、`on_step_complete`、`on_task_end`，接收任务生命周期通知。
 
 设计收益是测试可以传入轻量 mock；代价是实例构造依赖仍通过 `Any` 和 `**kwargs` 注入，运行时不保证每个工具拿到必需依赖。
 
 ## Hooks
 
-当前生命周期扩展点是 `AgentHook`，CLI 注册 `LoggingHook` 记录任务开始、步骤结果和任务结束。历史通过 `AgentResult.history` 返回给调用方，CLI 不自动写历史 JSON。
+当前生命周期扩展点是 `AgentHook`，CLI 注册 `LoggingHook` 记录任务开始、步骤结果和任务结束。历史通过 `AgentResult.history` 返回给调用方，并由运行输出模块保存为 trace 中的步骤记录。
 
 完整 schema 速查见 [appendix-input-output-schemas.md](appendix-input-output-schemas.md)。

@@ -1,6 +1,6 @@
 # WebAgent
 
-[![CI](https://github.com/lixiuyin/web-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/lixiuyin/web-agent/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) [![Python 3.13+](https://img.shields.io/badge/python-3.13%2B-blue.svg)](pyproject.toml) [![Lint: ruff](https://img.shields.io/badge/lint-ruff-261230.svg)](https://github.com/astral-sh/ruff) [![Typed: mypy](https://img.shields.io/badge/typed-mypy-blue.svg)](https://mypy-lang.org/)
+![CI](https://github.com/lixiuyin/web-agent/actions/workflows/ci.yml/badge.svg) ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg) ![Python 3.13+](https://img.shields.io/badge/python-3.13%2B-blue.svg) ![Lint: ruff](https://img.shields.io/badge/lint-ruff-261230.svg) ![Typed: mypy](https://img.shields.io/badge/typed-mypy-blue.svg)
 
 **English** · [简体中文](README.zh-CN.md)
 
@@ -10,9 +10,10 @@ grounded final report.
 
 ![Strict browser-only run from search to Figure 1 analysis](docs/assets/strict-run-demo.gif)
 
-This animation contains all 17 recorded browser frames from a certificate-valid strict
-trajectory, followed by the extracted Figure 1. Every frame lasts two seconds; captions
-are grounded in `trace.json`, and failed actions include the recorded error.
+This animation contains all 21 viewport screenshots from the 2026-09-09 Qwen paired-R5
+strict trajectory, followed by the extracted Figure 1. Browser frames last two seconds
+and the final figure lasts six seconds. It is a visual preview; independent task
+assertions and the anti-shortcut certificate establish the recorded pass.
 
 ## What is WebAgent?
 
@@ -27,16 +28,17 @@ caption, and analyzing the extracted image with vision.
 
 ## Highlights
 
-| Area | Capability |
-|---|---|
-| Agent runtime | Protocol-based planner, tool, and hook interfaces with checkpointed execution |
-| Multimodal state | DOM-to-Markdown plus adaptive screenshots and automatic vision probing |
-| Structured actions | Native function tools with bounded schema and prompt fallbacks |
+
+| Area                | Capability                                                                                   |
+| ------------------- | -------------------------------------------------------------------------------------------- |
+| Agent runtime       | Protocol-based planner, tool, and hook interfaces with checkpointed execution                |
+| Multimodal state    | DOM-to-Markdown plus adaptive screenshots and automatic vision probing                       |
+| Structured actions  | Native function tools with bounded schema and prompt fallbacks                               |
 | Browser reliability | Stability-aware observations, loop detection, search fallback, and explicit CAPTCHA handling |
-| Evidence | Versioned traces, strict anti-shortcut certificates, and independent task judgment |
-| Documents | Caption-grounded Figure resolution and quality-gated parser cascade |
-| Evaluation | Internal diagnostic suites plus separate BrowserGym WebArena/VWA evidence |
-| Engineering | 67 registered tools, strict typing, Ruff, and an 85% branch-coverage gate |
+| Evidence            | Versioned traces, strict anti-shortcut certificates, and independent task judgment           |
+| Documents           | Caption-grounded Figure resolution and quality-gated parser cascade                          |
+| Evaluation          | Internal diagnostic suites plus separate BrowserGym WebArena/VWA evidence                    |
+| Engineering         | 67 registered tools, strict typing, Ruff, and an 85% combined statement/branch coverage gate                    |
 
 ## Architecture
 
@@ -57,7 +59,7 @@ src/webagent/
 ├── schemas/     packaged stable wire schemas
 └── utils/       path, image, PDF, logging, and runtime helpers
 
-benchmarks/      executable environments, suites, studies, and manifests
+src/webagent/benchmarks/      executable environments, suites, studies, and manifests
 docs/            guides, references, research records, and source study material
 outputs/         ignored by default; selected reviewed evidence may be published
 ```
@@ -74,15 +76,13 @@ logo or cover decoration cannot silently become “Figure 1.”
 ![Caption-grounded PDF Figure resolution using a local fast path or a quality-gated cloud parser cascade with last-resort local fallback](docs/assets/figure-resolution-flow.svg)
 
 Editable Graphviz sources and the reproducible renderer are documented in
-[`docs/diagrams/`](docs/diagrams/README.md).
+[docs/diagrams/](docs/diagrams/README.md).
 
 ## Quick start
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -e ".[dev]"
-playwright install chromium
+uv sync
+uv run playwright install chromium
 cp .env.example .env
 ```
 
@@ -116,76 +116,134 @@ interactive mode, and output inspection. Discovery contracts are documented sepa
 
 ## Recorded effect showcase
 
-The retained 2026-09-02 case study uses the same Qwen-report task and model across four
-runs. It compares ordinary API-augmented discovery with browser-only execution.
+The current visual uses the Qwen endpoint from the 2026-09-09 paired R5 validation. It
+starts at `about:blank`, discovers and compares candidates through browser-visible search,
+opens the official `QwenLM/Qwen3.8-Flash-Next` repository and `tech_report.pdf`, downloads
+the PDF, and interprets Figure 1. The Qwen and GLM endpoints both passed all 10 independent
+assertions and all six certificate checks; recovered search failures remain in their
+metrics instead of being removed.
 
-| Mode | Terminal state | Actions | Animation |
-|---|---|---:|---|
-| Hybrid | Completed | 5 | [View](outputs/runs/qwen-report-figure1-20260902/hybrid/trajectory-demo.gif) |
-| Browser-grounded | Interrupted | 11 | [View](outputs/runs/qwen-report-figure1-20260902/browser-grounded/trajectory-demo.gif) |
-| Browser-grounded retry | Interrupted | 21 | [View](outputs/runs/qwen-report-figure1-20260902/browser-grounded-r2/trajectory-demo.gif) |
-| Strict | Completed; certificate valid | 17 | [View](outputs/runs/qwen-report-figure1-20260902/strict/trajectory-demo.gif) |
+| Model | Task judgment | Certificate | Browser frames | Failed actions |
+|---|---:|---:|---:|---:|
+| Qwen3.8-Flash | 10/10 | 6/6 | 21 | 3 |
+| GLM-5.3-Flash | 10/10 | 6/6 | 16 | 2 |
 
-The two `success=false` runs executed useful browser actions but never reached PDF
-download, Figure analysis, and successful `done`. The strict run converted missing
-identity/scope evidence into explicit next actions, rejected HTML pretending to be a PDF,
-exposed the raw download through `inspect_download_links`, and completed.
+The [paired validation record](docs/research/results/qwen-strict-search-2026-09-09.zh-CN.md)
+documents source hashes, acceptance rules, Figure 1 findings, observation integrity, GIF
+provenance, and limitations. The earlier
+[2026-09-02 mode comparison](docs/research/results/qwen-report-modes-2026-09-02.md) remains
+a historical analysis; its retired local output bundle is not the source of this GIF.
 
-![Official Qwen report PDF observed in GitHub](outputs/runs/qwen-report-figure1-20260902/strict/observations/screenshots/step_014.jpg)
+### Current local evaluation snapshot
 
-The [trace-grounded case study](docs/research/results/qwen-report-modes-2026-09-02.md)
-documents planner attempts, search fallbacks, challenge events, failed actions, and the
-interpretation boundary. The complete Git/LFS evidence bundle is under
-[`outputs/runs/qwen-report-figure1-20260902/`](outputs/runs/qwen-report-figure1-20260902/).
+The following numbers were read from the machine-readable reports on 2026-09-09. The
+complete local R7 campaign is rooted at
+`outputs/campaigns/generality-2026-09-09-rerun-r7/`; its batch is `completed` and contains
+both requested endpoints with no exclusions. The reviewed subset is preserved in the
+[frozen evidence bundle](outputs/published/2026-09-09/README.md).
+
+| Model | Open web | Sandbox | Long horizon | Overall |
+|---|---:|---:|---:|---:|
+| GLM-5.3-Flash | 30/30 | 5/5 | 1/1 | 36/36 |
+| Qwen3.8-Flash | 30/30 | 4/5 | 1/1 | 35/36 |
+| **Combined** | **60/60** | **9/10** | **2/2** | **71/72 (98.61%)** |
+
+The complete local paired strict-search results are rooted at
+`outputs/validation/2026-09-09-qwen-paired-r5/`; their hash-verifiable trace closures are
+included in the frozen bundle. Both models completed the Qwen report task: each passed
+10/10 required assertions and 6/6 trajectory-certificate checks. The campaign portfolio
+remains `insufficient`, not incomplete: it has one common complete date, while the
+preregistered longitudinal gate requires three.
+
+The current directory therefore contains 74 canonical, non-shard task judgments: 72 from
+R7 and two from paired R5, with 73 passes and the single failure analyzed below. They are
+reported separately rather than pooled because paired R5 uses a different task set and
+source fingerprint. Files under `diagnostics/` are operational logs, not scored runs.
+
+Raw generated `outputs/` are gitignored and are not treated as durable documentation. The
+allowlisted bundle uses 58 physical files (about 13 MB) to retain 324 evidence records,
+including aggregate reports, both strict trace-verification closures, the sole failed
+trajectory, and long-horizon recovery evidence. Three deterministic archives contain the
+many small hash-bound files; its [manifest](outputs/published/2026-09-09/MANIFEST.json)
+records every source path, purpose, storage location, byte size, and SHA-256 digest. The
+corresponding narrative records are the
+[R7 campaign record](docs/research/results/generality-campaign-2026-09-09.zh-CN.md) and the
+[paired strict-search record](docs/research/results/qwen-strict-search-2026-09-09.zh-CN.md).
+
+### Failed trajectory analysis
+
+There is one terminally failed task: Qwen's `sandbox_checkout`. It scored 0.375 after 18
+steps and 17 non-terminal actions, with two failed tool actions and one failed planner
+attempt. The cart contained exactly one Orbit Notebook and both required origins were
+visited, but the external state judge found no `/order/complete` URL or completion marker,
+no saved `42 Orbit Road`, no accepted terms, and no submitted order.
+
+The trace supports this causal chain:
+
+1. After adding the item, step 2 was already on the correct checkout page. The current
+   observation exposed the address input, terms checkbox, and submit button as visible,
+   enabled DOM controls, so missing or truncated browser evidence was not the cause.
+2. The planner extracted checkout text instead of typing and clicking those controls. It
+   then guessed an unobserved host-root URL; the browser-grounding policy correctly denied
+   that action.
+3. A multi-step `back` entered `/upload` and `/files` pages retained in browser history from
+   another sandbox flow. The model followed those irrelevant pages instead of returning to
+   the known checkout controls. Retaining cross-task navigation history is a contributing
+   isolation weakness, although it did not force the failure because the required controls
+   were already actionable before the detour.
+4. At the final action budget, the controller required `done`. The final answer explicitly
+   admitted that the order was not verified and reported success probability 0.15.
+
+The aggregate report labels this a `false_completion` because the current evaluator maps a
+successfully executed `done` action to `agent_reported_success=true`. That field does not
+match the semantic content of this particular final answer. The task failure and 0.375
+score are valid; the narrower interpretation that the model confidently claimed success is
+not. The 3 Qwen and 2 GLM failed actions in paired R5 were bounded search failures followed
+by recovery, so they are retained as action-level failures and are not failed trajectories.
 
 ## Evaluation status
 
-| Layer | Scope | Current state |
-|---|---|---|
-| Repository diagnostics | Public web, controlled sandbox, and forced-resume long horizon | One complete common date; longitudinal evidence remains interim |
-| WebArena-Verified Hard | BrowserGym native tasks/evaluator | Not run; official sites and reset calibration required |
-| VisualWebArena | BrowserGym native tasks/evaluator | Not run; official sites, reset calibration, and evaluator assets required |
+
+| Layer                  | Scope                                                          | Current state                                                             |
+| ---------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| Repository diagnostics | Public web, controlled sandbox, and forced-resume long horizon | R7 completed 71/72 (GLM 36/36; Qwen 35/36); one common date plus a separate passed Qwen strict task, so longitudinal evidence remains interim |
+| WebArena-Verified Hard | BrowserGym native tasks/evaluator                              | Not run; official sites and reset calibration required                    |
+| VisualWebArena         | BrowserGym native tasks/evaluator                              | Not run; official sites, reset calibration, and evaluator assets required |
+
 
 Scores are never averaged across these layers. Read exact dated results in the
 [results index](docs/research/results/README.md), the stable methodology in the
 [evaluation protocol](docs/research/evaluation-protocol.md), and executable suites in the
-[benchmark guide](benchmarks/README.md).
+[benchmark guide](src/webagent/benchmarks/README.md).
 
 ## Documentation
 
-| Goal | Entry point |
-|---|---|
-| Install and run the agent | [Getting started](docs/guides/getting-started.md) |
-| Choose Hybrid, browser-grounded, or strict mode | [Discovery modes](docs/guides/discovery-modes.md) |
-| Diagnose provider/browser/runtime failures | [Troubleshooting](docs/guides/troubleshooting.md) |
-| Configure the runtime | [Configuration reference](docs/reference/configuration.md) |
-| Understand outputs and resume state | [Run artifacts](docs/reference/run-artifacts.md) |
-| Review browser and action boundaries | [Browser and security](docs/reference/browser-and-security.md) |
-| Run evaluation suites | [Benchmarks](benchmarks/README.md) |
-| Study source call chains in Chinese | [中文源码理解手册](docs/understanding-zh/README.md) |
-| Navigate everything | [Documentation index](docs/README.md) |
+
+| Goal                                            | Entry point                                                    |
+| ----------------------------------------------- | -------------------------------------------------------------- |
+| Install and run the agent                       | [Getting started](docs/guides/getting-started.md)              |
+| Choose Hybrid, browser-grounded, or strict mode | [Discovery modes](docs/guides/discovery-modes.md)              |
+| Diagnose provider/browser/runtime failures      | [Troubleshooting](docs/guides/troubleshooting.md)              |
+| Configure the runtime                           | [Configuration reference](docs/reference/configuration.md)     |
+| Understand outputs and resume state             | [Run artifacts](docs/reference/run-artifacts.md)               |
+| Review browser and action boundaries            | [Browser and security](docs/reference/browser-and-security.md) |
+| Run evaluation suites                           | [Benchmarks](src/webagent/benchmarks/README.md)                             |
+| Study source call chains in Chinese             | [中文源码理解手册](docs/understanding-zh/README.md)                    |
+| Navigate everything                             | [Documentation index](docs/README.md)                          |
 
 ## Development
 
 ```bash
-ruff check src/ benchmarks/ scripts/ tests/
-ruff format --check src/ benchmarks/ scripts/ tests/
-mypy src/ benchmarks/ scripts/
+ruff check src/ scripts/ tests/
+ruff format --check src/ scripts/ tests/
+mypy src/ scripts/
 pytest tests/unit/ -v
 pytest tests/integration/ -v --no-cov
-python scripts/check_docs.py
+uv run python scripts/check_docs.py
 ```
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for tools, planners, style, and pull requests, and
 the [release guide](docs/operations/release.md) for reproducible packaging.
-
-## Authorship and provenance
-
-The original agent began as a STAT7008A course team project at HKU, where
-[Li Xiuyin](https://github.com/lixiuyin) served as team lead. The original repository is
-[RanJu1122/Web-Agent](https://github.com/RanJu1122/Web-Agent). This repository is Li
-Xiuyin's independently maintained post-course rewrite and retains a detailed contribution
-history in Git and the [changelog](CHANGELOG.md).
 
 ## Acknowledgements
 

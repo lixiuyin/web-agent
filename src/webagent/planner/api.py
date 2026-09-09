@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 import asyncio
-import base64
-import io
 import json
 import logging
 import math
@@ -17,12 +15,17 @@ import httpx
 from PIL import Image
 
 from webagent.core.models import BrowserState, ToolCall
-from webagent.planner._vision_heuristics import has_visual_content, indicates_no_vision
 from webagent.planner.base import (
     STRUCTURED_SYSTEM_PROMPT,
     SYSTEM_PROMPT,
     build_prompt,
     parse_llm_response,
+)
+from webagent.planner.observation_input import input_metadata
+from webagent.planner.provider_response import (
+    _required_tool_choice_unsupported,
+    _strip_thinking_tags,
+    _structured_output_unsupported,
 )
 from webagent.planner.structured import (
     JSON_SCHEMA_SYSTEM_PROMPT,
@@ -34,12 +37,8 @@ from webagent.planner.structured import (
     parse_provider_tool_call,
     response_text,
 )
+from webagent.planner.vision import VisionSupport
 from webagent.tools.registry import ToolSpec
-
-# Matches <think>...</think> blocks produced by reasoning models (DeepSeek, GLM-Z1, etc.)
-_THINK_TAG_RE = re.compile(r"<think>.*?</think>", re.DOTALL | re.IGNORECASE)
-# Matches unclosed <think> tags (model didn't emit </think>)
-_THINK_UNCLOSED_RE = re.compile(r"<think>.*", re.DOTALL | re.IGNORECASE)
 
 logger = logging.getLogger("webagent")
 
@@ -61,72 +60,15 @@ def _local_artifact_history(history_text: str, url: str) -> bool:
 
 def _planning_screenshot_needed(browser_state: BrowserState, history_text: str) -> bool:
     """Use visual tokens only when DOM text is unlikely to ground the next action."""
-    if "visual-grounding" in history_text.casefold():
+    if browser_state.requires_visual or "visual-grounding" in history_text.casefold():
         return True
-    if len(browser_state.dom_summary.strip()) < 400:
+    dom_chars = browser_state.observation_metadata.get(
+        "dom_content_chars", len(browser_state.dom_summary.strip())
+    )
+    if isinstance(dom_chars, int) and dom_chars < 400:
         return True
     path = urlparse(browser_state.url).path.casefold()
     return path.endswith((".png", ".jpg", ".jpeg", ".webp", ".gif"))
-
-
-def _strip_thinking_tags(text: str) -> str:
-    """Remove <think>...</think> reasoning chains from model responses.
-
-    Reasoning models (DeepSeek-R1, GLM-Z1, QwQ, MiniMax-M2.7, etc.) may inline their
-    chain-of-thought inside <think>...</think> tags before the actual answer.
-    Some models omit the closing </think> tag — we handle that too.
-    """
-    # First strip properly closed tags
-    stripped = _THINK_TAG_RE.sub("", text).strip()
-    # Handle unclosed <think> tags (everything from <think> to end)
-    if re.search(r"<think>", stripped, re.IGNORECASE):
-        stripped = _THINK_UNCLOSED_RE.sub("", stripped).strip()
-    # If stripping removed everything, fall back to the original text so we
-    # don't return an empty string to callers that have no other fallback.
-    return stripped if stripped else text.strip()
-
-
-_probe_image_cache: str | None = None
-
-
-def _probe_image_b64() -> str:
-    """Return a base64 JPEG of a solid red square for vision probing.
-
-    Generated at runtime with Pillow so it is always valid base64 — a previously
-    hardcoded constant was malformed and strict providers (e.g. Xiaomi via
-    OpenRouter) rejected it with HTTP 400 "invalid base64 format", causing every
-    vision-capable model to be mis-detected as text-only. A meaningful image
-    (not 1x1) forces the model to actually demonstrate it can see.
-    """
-    global _probe_image_cache
-    if _probe_image_cache is None:
-        import base64
-        import io
-
-        from PIL import Image
-
-        buf = io.BytesIO()
-        Image.new("RGB", (48, 48), (220, 30, 30)).save(buf, format="JPEG")
-        _probe_image_cache = base64.b64encode(buf.getvalue()).decode("ascii")
-    return _probe_image_cache
-
-
-def _detect_vlm_url(api_url: str) -> str | None:
-    """Auto-detect a separate VLM (vision) endpoint from the chat API URL.
-
-    MiniMax exposes vision through ``/v1/coding_plan/vlm`` rather than the
-    chat completions endpoint.  Returns *None* when no separate VLM endpoint
-    is known for the given provider.
-    """
-    lower = api_url.lower()
-    if "minimaxi.com" in lower or "minimax.io" in lower:
-        # Derive base from chat URL, e.g.
-        #   https://api.minimaxi.com/v1/chat/completions → https://api.minimaxi.com
-        from urllib.parse import urlparse
-
-        parsed = urlparse(api_url)
-        return f"{parsed.scheme}://{parsed.netloc}/v1/coding_plan/vlm"
-    return None
 
 
 class APIPlanner:
@@ -140,13 +82,6 @@ class APIPlanner:
     URL and routes ``analyze_image`` calls there.
     """
 
-    # Retries within a single ``analyze_image`` call: flaky vision models
-    # occasionally miss an image they can otherwise read, so retry before giving up.
-    _VISION_RETRY_ATTEMPTS = 2
-    # Consecutive fully-failed ``analyze_image`` calls before chat vision is
-    # latched off for the rest of the session. Keeps one blip from disabling vision.
-    _VISION_FAILURE_LIMIT = 2
-
     def __init__(
         self,
         api_url: str,
@@ -157,7 +92,7 @@ class APIPlanner:
         use_structured_output: bool = False,
         max_tokens: int = 4096,
         reasoning_effort: str | None = None,
-        vision_max_tokens: int = 2000,
+        vision_max_tokens: int = 8192,
         vision_brief_max_tokens: int = 1200,
         vision_max_words: int = 350,
         hard_timeout: int = 300,
@@ -202,12 +137,14 @@ class APIPlanner:
         self.vision_max_tokens = vision_max_tokens
         self.vision_brief_max_tokens = vision_brief_max_tokens
         self.vision_max_words = vision_max_words
-        self._supports_vision: bool | None = None  # chat API accepts images?
-        self._vision_actually_works: bool = True  # chat API vision produces real results?
-        self._vision_failure_count: int = 0  # consecutive analyze_image calls that saw no image
-        self._vlm_url: str | None = _detect_vlm_url(api_url)  # separate VLM endpoint
-        self._vlm_available: bool = False  # probed during load()
+        self._vision = VisionSupport(self)
         self._last_call_metadata: dict[str, Any] = {}
+        self._last_planning_input_metadata: dict[str, Any] = {}
+        self._planning_request_active = False
+
+    @property
+    def last_planning_input_metadata(self) -> dict[str, Any]:
+        return dict(self._last_planning_input_metadata)
 
     @property
     def last_call_metadata(self) -> dict[str, Any]:
@@ -234,35 +171,8 @@ class APIPlanner:
         self._tool_specs = list(unique.values())
 
     async def load(self) -> None:
-        """Probe the API to detect vision support."""
-        self._supports_vision = await self._probe_vision()
-        if self._supports_vision:
-            if self._vision_actually_works:
-                logger.info("Model %s: vision supported (chat API)", self.model_name)
-            else:
-                logger.info(
-                    "Model %s: vision format accepted but model cannot see images",
-                    self.model_name,
-                )
-        else:
-            self._vision_actually_works = False
-            logger.info("Model %s: text-only (chat API)", self.model_name)
-
-        # If chat API vision doesn't work, try a separate VLM endpoint.
-        if not self.vision_actually_works and self._vlm_url:
-            self._vlm_available = await self._probe_vlm()
-            if self._vlm_available:
-                logger.info(
-                    "Model %s: VLM endpoint available at %s",
-                    self.model_name,
-                    self._vlm_url,
-                )
-            else:
-                logger.info(
-                    "Model %s: VLM endpoint probe failed (%s)",
-                    self.model_name,
-                    self._vlm_url,
-                )
+        """Probe available vision routes for this session."""
+        await self._vision.load()
 
     async def unload(self) -> None:
         pass
@@ -274,6 +184,8 @@ class APIPlanner:
         history_text: str,
         available_tools: str,
     ) -> ToolCall | None:
+        self._last_planning_input_metadata = {}
+        self._last_call_metadata = {}
         provider_mode = self._initial_planning_mode()
         response_instruction = (
             "SELECT EXACTLY ONE ACTION USING THE REQUIRED PROVIDER FORMAT:"
@@ -288,85 +200,51 @@ class APIPlanner:
             response_instruction=response_instruction,
         )
 
-        if (
-            not self._supports_vision
-            or self.screenshot_mode == "never"
-            or (
-                self.screenshot_mode == "auto"
-                and not _planning_screenshot_needed(browser_state, history_text)
-            )
-        ):
+        omission_reason = self._screenshot_omission_reason(
+            browser_state, history_text, screenshot_b64
+        )
+        if omission_reason is not None:
             screenshot_b64 = None
-        elif screenshot_b64 and _local_artifact_history(history_text, browser_state.url):
-            # A browser PDF/image preview is redundant once a structured file/PDF
-            # tool has returned the path and evidence. Omitting it avoids an
-            # expensive second visual interpretation during action planning.
-            screenshot_b64 = None
+        self._last_planning_input_metadata = input_metadata(
+            browser_state, screenshot_b64, omission_reason
+        )
         logger.info(
-            "Planner request context: dom_chars=%d screenshot_captured=%s screenshot_sent=%s",
+            "Planner request context: dom_chars=%d screenshot_captured=%s screenshot_included=%s",
             len(browser_state.dom_summary),
             browser_state.screenshot is not None,
             screenshot_b64 is not None,
         )
-        self._last_call_metadata = {}
         self._call_structured_fallbacks = []
-        if provider_mode == "prompt-json":
-            raw = await self._call(prompt, screenshot_b64)
-            self._annotate_output_mode("prompt-json")
-            return parse_llm_response(raw)
-        return await self._call_structured(prompt, screenshot_b64, provider_mode)
+        self._planning_request_active = True
+        try:
+            if provider_mode == "prompt-json":
+                raw = await self._call(prompt, screenshot_b64)
+                self._annotate_output_mode("prompt-json")
+                return parse_llm_response(raw)
+            return await self._call_structured(prompt, screenshot_b64, provider_mode)
+        finally:
+            self._planning_request_active = False
+
+    def _screenshot_omission_reason(
+        self, state: BrowserState, history: str, screenshot_b64: str | None
+    ) -> str | None:
+        if state.screenshot is None:
+            return "not_captured"
+        if screenshot_b64 is None:
+            return "blank_image"
+        if not self._vision.supports_images:
+            return "vision_unsupported"
+        if self.screenshot_mode == "never":
+            return "mode_never"
+        if self.screenshot_mode == "auto" and not _planning_screenshot_needed(state, history):
+            return "auto_dom_sufficient"
+        if _local_artifact_history(history, state.url):
+            return "local_artifact_evidence"
+        return None
 
     async def analyze_image(self, image: Image.Image, question: str) -> str:
-        """Analyze an image using vision capabilities.
-
-        Routes to the separate VLM endpoint when available (e.g. MiniMax),
-        otherwise falls back to the chat completions API with inline images.
-
-        Args:
-            image: PIL Image to analyze
-            question: Question about the image
-
-        Returns:
-            Text description of the image based on the question
-        """
-        # Check if ANY vision path is available
-        can_use_chat_vision = self._supports_vision and self._vision_actually_works
-        can_use_vlm = self._vlm_available and self._vlm_url
-
-        if not can_use_chat_vision and not can_use_vlm:
-            return (
-                "Vision API is not available to analyze the image. "
-                "Use 'pdf_get_figure_info' for figure captions, "
-                "or 'pdf_extract_text'/'pdf_search' to read surrounding text."
-            )
-
-        # Optimize image: resize if too large (max 2048px on longest side)
-        max_size = 2048
-        if max(image.width, image.height) > max_size:
-            ratio = max_size / max(image.width, image.height)
-            new_size = (int(image.width * ratio), int(image.height * ratio))
-            image = image.resize(new_size, Image.Resampling.LANCZOS)
-            logger.info("analyze_image: resized to %dx%d", new_size[0], new_size[1])
-
-        # Convert to base64
-        buf = io.BytesIO()
-        image.save(buf, format="JPEG", quality=80)
-        b64 = base64.b64encode(buf.getvalue()).decode("utf-8")
-
-        logger.info(
-            "analyze_image: image size=%dx%d, base64_len=%d, question_len=%d",
-            image.width,
-            image.height,
-            len(b64),
-            len(question),
-        )
-
-        # Prefer VLM endpoint when available (MiniMax, etc.)
-        if can_use_vlm:
-            return await self._analyze_image_vlm(b64, question)
-
-        # Fall back to chat completions API with inline image
-        return await self._analyze_image_chat(b64, question)
+        """Analyze an image using the available VLM or chat vision route."""
+        return await self._vision.analyze_image(image, question)
 
     async def estimate_task_success(
         self,
@@ -442,156 +320,10 @@ class APIPlanner:
             raise ValueError("provider returned an invalid task-success probability")
         return float(probability)
 
-    async def _analyze_image_vlm(self, b64: str, question: str) -> str:
-        """Analyze an image via a dedicated VLM endpoint (e.g. MiniMax)."""
-        assert self._vlm_url is not None
-        payload = {
-            "prompt": question,
-            "image_url": f"data:image/jpeg;base64,{b64}",
-        }
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {self.api_key}",
-        }
-        logger.debug("analyze_image_vlm: sending request to %s", self._vlm_url)
-        resp = await self._bounded_post(self._vlm_url, payload, headers)
-        if resp.status_code != 200:
-            logger.error("VLM API %d: %s", resp.status_code, resp.text[:500])
-            self._vlm_available = False
-            return (
-                f"VLM API returned error {resp.status_code}. "
-                "Use 'pdf_extract_text' or 'pdf_search' to read text instead."
-            )
-        data = resp.json()
-
-        # Check for API-level errors
-        base_resp = data.get("base_resp", {})
-        if base_resp.get("status_code", 0) != 0:
-            logger.error("VLM API error: %s", base_resp.get("status_msg", ""))
-            return f"VLM API error: {base_resp.get('status_msg', 'unknown')}"
-
-        content = data.get("content", "")
-        content = _strip_thinking_tags(content)
-        logger.info(
-            "analyze_image_vlm: response_len=%d, starts_with=%s",
-            len(content),
-            content[:100] if content else "",
-        )
-        return content if content else "VLM returned empty response."
-
-    async def _analyze_image_chat(self, b64: str, question: str) -> str:
-        """Analyze an image via the chat completions API (inline image).
-
-        Retries within the call on a transient "cannot see image" response, and
-        only latches chat vision off after ``_VISION_FAILURE_LIMIT`` consecutive
-        failed calls, so a single blip does not disable vision for the session.
-        """
-        # Scale the directive and token budget to the question's complexity.
-        # A terse question ("what color?") gets a concise answer so a reasoning
-        # model answers directly; a detailed one ("describe ... in detail") gets
-        # a thorough answer with more headroom so the chain-of-thought doesn't
-        # crowd out the content.
-        q = question.strip().lower()
-        wants_detail = len(question.strip()) > 80 or any(
-            k in q
-            for k in (
-                "in detail",
-                "thorough",
-                "comprehensive",
-                "describe",
-                "explain",
-                "analyze",
-                "purpose",
-                "key finding",
-            )
-        )
-        if wants_detail:
-            directive = (
-                "Provide a thorough, structured answer covering the purpose, key "
-                "components, and findings. Omit meta-commentary and step-by-step reasoning. "
-                f"Keep the answer under {self.vision_max_words} words. "
-            )
-            max_tokens = self.vision_max_tokens
-        else:
-            directive = (
-                "Answer concisely, in a few short paragraphs, without showing your reasoning. "
-            )
-            max_tokens = min(self.vision_max_tokens, self.vision_brief_max_tokens)
-
-        prompt_with_instruction = (
-            "You are an image analysis assistant. Carefully observe the image "
-            "and answer the user's question. If the content cannot be clearly "
-            "seen or determined, state it honestly. "
-            f"{directive}"
-            f"\n\nUser question: {question}"
-        )
-        payload: dict[str, Any] = {
-            "model": self.model_name,
-            "messages": [
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": prompt_with_instruction},
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": f"data:image/jpeg;base64,{b64}",
-                                "detail": "high",
-                            },
-                        },
-                    ],
-                }
-            ],
-            "temperature": max(0.3, self.temperature),
-            "max_tokens": max_tokens,
-        }
-
-        for attempt in range(1, self._VISION_RETRY_ATTEMPTS + 1):
-            response = await self._post(payload, timeout=self.hard_timeout)
-            response = self._clean_vision_response(response, prompt_with_instruction)
-            # A blank response carries no analysis — treat it like a "cannot see
-            # image" answer and retry, rather than returning a useless "" to the
-            # caller (which would surface as an empty `vision_analysis`).
-            if response.strip() and not indicates_no_vision(response):
-                self._vision_failure_count = 0  # success clears the streak
-                return response
-            logger.warning(
-                "Chat vision saw no image (attempt %d/%d): %s",
-                attempt,
-                self._VISION_RETRY_ATTEMPTS,
-                response[:200] or "(empty)",
-            )
-
-        self._vision_failure_count += 1
-        if self._vision_failure_count >= self._VISION_FAILURE_LIMIT:
-            self._vision_actually_works = False
-            logger.warning(
-                "Chat vision disabled after %d consecutive failed calls",
-                self._vision_failure_count,
-            )
-        return (
-            "Vision API could not read the image this time. "
-            "Use 'pdf_get_figure_info' for figure captions, "
-            "or 'pdf_extract_text'/'pdf_search' to read surrounding text."
-        )
-
-    def _clean_vision_response(self, response: str, prompt: str) -> str:
-        """Clean up vision API response by removing echoed prompt prefix."""
-        if not response or not prompt:
-            return response
-
-        # Only strip if the response literally starts with the prompt
-        if response.startswith(prompt):
-            cleaned = response[len(prompt) :].strip()
-            return cleaned if cleaned else response
-
-        return response
-
     @property
     def vision_actually_works(self) -> bool:
-        """Return True if any vision path is available (chat API or VLM)."""
-        chat_vision = bool(self._supports_vision and self._vision_actually_works)
-        return chat_vision or self._vlm_available
+        """Whether at least one vision route is available."""
+        return self._vision.vision_actually_works
 
     # -- internals --------------------------------------------------------
 
@@ -622,32 +354,11 @@ class APIPlanner:
                 self._annotate_output_mode(mode)
                 return parse_llm_response(raw)
 
-            payload = self._structured_payload(prompt, screenshot_b64, mode)
             try:
-                data = await self._post_data(payload)
+                data = await self._post_structured_with_choice_fallback(
+                    prompt, screenshot_b64, mode
+                )
             except httpx.HTTPStatusError as exc:
-                if (
-                    self.output_mode == "auto"
-                    and mode == "native-tools"
-                    and self._native_tool_choice == "required"
-                    and _required_tool_choice_unsupported(exc)
-                ):
-                    self._record_structured_fallback(
-                        "native-tools:required", "native-tools:auto", exc
-                    )
-                    self._native_tool_choice = "auto"
-                    payload = self._structured_payload(prompt, screenshot_b64, mode)
-                    try:
-                        data = await self._post_data(payload)
-                    except httpx.HTTPStatusError as retry_exc:
-                        exc = retry_exc
-                    else:
-                        raw = _strip_thinking_tags(response_text(data))
-                        call = parse_provider_tool_call(data)
-                        self._capture_response_metadata(data, len(raw))
-                        self._effective_output_mode = mode
-                        self._annotate_output_mode(mode)
-                        return call
                 if self.output_mode != "auto" or not _structured_output_unsupported(exc, mode):
                     raise
                 next_mode = modes[index + 1] if index + 1 < len(modes) else None
@@ -671,6 +382,24 @@ class APIPlanner:
                 return None
             return call
         return None
+
+    async def _post_structured_with_choice_fallback(
+        self, prompt: str, screenshot_b64: str | None, mode: PlannerOutputMode
+    ) -> dict[str, Any]:
+        payload = self._structured_payload(prompt, screenshot_b64, mode)
+        try:
+            return await self._post_data(payload)
+        except httpx.HTTPStatusError as exc:
+            if not (
+                self.output_mode == "auto"
+                and mode == "native-tools"
+                and self._native_tool_choice == "required"
+                and _required_tool_choice_unsupported(exc)
+            ):
+                raise
+            self._record_structured_fallback("native-tools:required", "native-tools:auto", exc)
+            self._native_tool_choice = "auto"
+        return await self._post_data(self._structured_payload(prompt, screenshot_b64, mode))
 
     def _structured_mode_ladder(
         self, initial_mode: PlannerOutputMode
@@ -742,129 +471,6 @@ class APIPlanner:
                 "native_tool_choice": self._native_tool_choice,
             }
         )
-
-    async def _probe_vision(self) -> bool:
-        """Send a small image to the chat API; return True if API accepts it."""
-        payload: dict[str, Any] = {
-            "model": self.model_name,
-            "messages": [
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "text",
-                            "text": "What color is the square in this image? "
-                            "Answer with just the color name.",
-                        },
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": f"data:image/jpeg;base64,{_probe_image_b64()}",
-                                "detail": "high",
-                            },
-                        },
-                    ],
-                }
-            ],
-            # Generous budget so reasoning models (which think before answering)
-            # still emit a visible answer rather than spending it all on CoT.
-            "max_tokens": 1500,
-            "temperature": 0.0,
-        }
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {self.api_key}",
-        }
-        try:
-            async with httpx.AsyncClient(timeout=15) as client:
-                resp = await client.post(self.api_url, headers=headers, json=payload)
-                if resp.status_code != 200:
-                    logger.debug("Vision probe got %d: %s", resp.status_code, resp.text[:200])
-                    return False
-                data = resp.json()
-                content = ""
-                if "choices" in data:
-                    msg = data["choices"][0].get("message", {})
-                    content = msg.get("content") or ""
-                    if not content:
-                        content = msg.get("reasoning_content") or msg.get("reasoning") or ""
-                content = _strip_thinking_tags(content)
-
-                # If content is still raw thinking (strip fell back to original
-                # because the answer was empty), the model produced no real
-                # answer — treat as "cannot see".
-                if "<think>" in content.lower():
-                    logger.info(
-                        "Vision probe: chat API — model produced only thinking, "
-                        "no answer. Disabling vision.",
-                    )
-                    self._vision_actually_works = False
-                    return True
-
-                if indicates_no_vision(content):
-                    logger.info(
-                        "Vision probe: chat API — model cannot see images: %s",
-                        content[:100],
-                    )
-                    self._vision_actually_works = False
-                    return True
-                if "red" not in content.lower():
-                    has_visual = has_visual_content(content)
-                    if not has_visual:
-                        logger.info(
-                            "Vision probe: no visual content (expected 'red', "
-                            "got '%s'). Disabling.",
-                            content[:100],
-                        )
-                        self._vision_actually_works = False
-                    else:
-                        logger.info(
-                            "Vision probe: visual indicators present: %s",
-                            content[:100],
-                        )
-                else:
-                    logger.info("Vision probe passed: %s", content[:50])
-                return True
-        except Exception as e:
-            logger.debug("Vision probe failed: %s", e)
-            return False
-
-    async def _probe_vlm(self) -> bool:
-        """Probe a separate VLM endpoint (e.g. MiniMax /v1/coding_plan/vlm)."""
-        if not self._vlm_url:
-            return False
-        # VLM endpoints may reject tiny images; generate a 100×100 red JPEG.
-        probe_img = Image.new("RGB", (100, 100), color=(255, 0, 0))
-        buf = io.BytesIO()
-        probe_img.save(buf, format="JPEG", quality=85)
-        probe_b64 = base64.b64encode(buf.getvalue()).decode("utf-8")
-
-        payload = {
-            "prompt": "What color is this image? Answer in one word.",
-            "image_url": f"data:image/jpeg;base64,{probe_b64}",
-        }
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {self.api_key}",
-        }
-        try:
-            async with httpx.AsyncClient(timeout=60) as client:
-                resp = await client.post(self._vlm_url, headers=headers, json=payload)
-                if resp.status_code != 200:
-                    logger.debug("VLM probe got %d: %s", resp.status_code, resp.text[:200])
-                    return False
-                data = resp.json()
-                base_resp = data.get("base_resp", {})
-                if base_resp.get("status_code", 0) != 0:
-                    logger.debug("VLM probe API error: %s", base_resp)
-                    return False
-                content = data.get("content", "")
-                logger.info("VLM probe response: %s", content[:100])
-                # Any non-empty content means the VLM endpoint works
-                return bool(content)
-        except Exception as e:
-            logger.debug("VLM probe failed: %s", e)
-            return False
 
     async def _call(self, prompt: str, screenshot_b64: str | None) -> str:
         # Choose system prompt based on configuration
@@ -942,6 +548,11 @@ class APIPlanner:
         self, payload: dict[str, Any], timeout: int | None = None
     ) -> dict[str, Any]:
         """Return the raw provider object needed for native tool-call parsing."""
+        if self._planning_request_active:
+            self._last_planning_input_metadata.update(
+                request_dispatched=True,
+                screenshot_sent=self._last_planning_input_metadata["screenshot_included"],
+            )
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self.api_key}",
@@ -1019,68 +630,3 @@ def _retry_after_seconds(response: httpx.Response) -> float | None:
     except ValueError:
         return None
     return max(0.0, parsed)
-
-
-def _structured_output_unsupported(exc: httpx.HTTPStatusError, mode: PlannerOutputMode) -> bool:
-    """Only downgrade on explicit client-side feature incompatibility.
-
-    Authentication, rate limits, timeouts, and server errors must propagate;
-    treating them as capability failures would hide operational incidents.
-    """
-    response = exc.response
-    if response.status_code not in {400, 404, 415, 422}:
-        return False
-    body = response.text.casefold()
-    # Schema/request/model errors are implementation or configuration defects,
-    # not evidence that the provider lacks structured-output support.
-    non_capability_errors = (
-        "invalid schema",
-        "schema validation",
-        "invalid function",
-        "invalid tool definition",
-        "unknown model",
-        "model not found",
-        "invalid request body",
-        "malformed request",
-        "invalid json",
-        "missing required",
-        "required field",
-    )
-    if any(term in body for term in non_capability_errors):
-        return False
-    explicit_capability_errors = (
-        "unsupported",
-        "not supported",
-        "does not support",
-        "unsupported parameter",
-        "unknown parameter",
-        "unrecognized parameter",
-        "unexpected parameter",
-        "extra fields not permitted",
-    )
-    feature_terms = (
-        ("tools", "tool_choice", "function", "parallel_tool_calls")
-        if mode == "native-tools"
-        else ("response_format", "json_schema", "json schema")
-    )
-    return any(term in body for term in explicit_capability_errors) and any(
-        term in body for term in feature_terms
-    )
-
-
-def _required_tool_choice_unsupported(exc: httpx.HTTPStatusError) -> bool:
-    """Detect providers that support tools but reject forced tool selection."""
-    response = exc.response
-    if response.status_code not in {400, 404, 415, 422}:
-        return False
-    body = response.text.casefold()
-    return "tool_choice" in body and any(
-        phrase in body
-        for phrase in (
-            "does not support required",
-            "doesn't support required",
-            "required or object",
-            "required is not supported",
-            "only supports auto",
-        )
-    )

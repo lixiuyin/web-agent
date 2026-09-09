@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import asyncio
 from collections.abc import Collection
+from typing import Any
 
 from webagent.agent.context import planner_result_preview
+from webagent.browser.reference_selectors import is_observed_selector, reference_parts
 from webagent.core.models import ToolCall, ToolResult
 from webagent.tools.policy import PolicyDecision, ToolExecutionPolicy
 from webagent.tools.registry import ToolRegistry, ToolSpec
@@ -19,6 +21,14 @@ _DEFAULT_TOOL_TIMEOUT = 600  # 10 minutes
 class ToolExecutor:
     """Thin wrapper that dispatches ToolCalls to a ToolRegistry."""
 
+    _observation_id: str | None
+
+    def record_observation(self, state: Any) -> None:
+        self._observation_id = state.observation_id
+        recorder = getattr(self._policy, "record_observation", None)
+        if callable(recorder):
+            recorder(state)
+
     def __init__(
         self,
         registry: ToolRegistry,
@@ -29,6 +39,7 @@ class ToolExecutor:
         risk_policy: ActionRiskPolicy | None = None,
     ) -> None:
         self._registry = registry
+        self._observation_id = None
         self._tool_timeout = tool_timeout
         configured_tools = (
             frozenset(name.casefold() for name in allowed_tools)
@@ -85,6 +96,9 @@ class ToolExecutor:
         registry_error = self._registry.validate_call(name, tool_call.parameters or {})
         if registry_error is not None:
             return registry_error
+        reference_error = self._stale_reference(tool_call.parameters)
+        if reference_error is not None:
+            return reference_error
         # Authorization still fails closed during execution. This optional preflight
         # only repairs recoverable evidence formatting/search mistakes within the
         # planner retry budget, so a bad final ``done`` does not consume the last step.
@@ -94,8 +108,22 @@ class ToolExecutor:
         value = validator(tool_call)
         return value if isinstance(value, str) else None
 
+    def _stale_reference(self, params: dict[str, Any]) -> str | None:
+        selector = params.get("selector")
+        if (
+            not self._observation_id
+            or not isinstance(selector, dict)
+            or not is_observed_selector(selector)
+        ):
+            return None
+        observation, _, _ = reference_parts(selector)
+        if observation != self._observation_id:
+            return "Stale observation reference: select the target from the CURRENT PAGE IDs; do not reuse a pre-scroll/pre-navigation ID or merely replace its prefix."
+        return None
+
     def reset_policy(self, task: str) -> None:
         """Reset per-task policy evidence before a new agent run."""
+        self._observation_id = None
         if self._policy is not None:
             self._policy.reset(task)
 
@@ -119,7 +147,7 @@ class ToolExecutor:
         importer(state, task=task)
 
     async def execute(self, tool_call: ToolCall) -> ToolResult:
-        name = (tool_call.tool_name or "").lower()
+        name = tool_call.tool_name
         params = tool_call.parameters or {}
         if self._allowed_tools is not None and name not in self._allowed_tools:
             audit = (
@@ -186,6 +214,16 @@ class ToolExecutor:
                 tool_name=name,
                 error=f"Tool '{name}' exceeded {self._tool_timeout}s timeout and was cancelled",
             )
+        return await self._record_execution_result(tool_call, result, decision, risk_decision)
+
+    async def _record_execution_result(
+        self,
+        tool_call: ToolCall,
+        result: ToolResult,
+        decision: PolicyDecision | None,
+        risk_decision: RiskDecision | None,
+    ) -> ToolResult:
+        name = tool_call.tool_name
         if self._policy is not None and decision is not None:
             visible_result = planner_result_preview(name, result.data, success=result.success)
             try:
@@ -208,4 +246,25 @@ class ToolExecutor:
             audit = dict(result.audit)
             audit["risk"] = risk_decision.as_audit()
             result = result.model_copy(update={"audit": audit})
+        return _qualify_completion(result)
+
+
+def _qualify_completion(result: ToolResult) -> ToolResult:
+    """Preserve useful partial findings without turning missing evidence into success."""
+    ledger = result.audit.get("candidate_ledger", {})
+    if not (
+        result.tool_name == "done" and result.success and ledger.get("partial_completion_allowed")
+    ):
         return result
+    data = dict(result.data)
+    data["completion_status"] = "partial"
+    data["evidence_gaps"] = list(ledger["missing"])
+    data["summary"] = (
+        "INCOMPLETE VERIFICATION: Latestness is not established. The following are partial "
+        "findings about a verified official PDF, not a confirmed latest-report answer. "
+        "Unverified release leads: "
+        + ", ".join(ledger["unverified_release_leads"])
+        + "\n\n"
+        + str(data.get("summary", ""))
+    )
+    return result.model_copy(update={"data": data})

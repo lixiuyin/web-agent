@@ -1,2 +1,0 @@
-case_id,status
-ORBIT-731,ready

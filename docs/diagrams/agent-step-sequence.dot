@@ -3,24 +3,24 @@ digraph WebAgentStep {
     bgcolor="white",
     rankdir=TB,
     splines=polyline,
-    pad=0.22,
-    nodesep=0.38,
+    pad=0.28,
+    nodesep=0.40,
     ranksep=0.38,
     fontname="Arial",
-    fontsize=18,
+    fontsize=20,
     labelloc="t",
-    label="One WebAgent step: challenge handling, write-ahead safety, execution, and commit"
+    label="One WebAgent step: paired observation, write-ahead execution, and durable commit"
   ];
   node [
     shape=box,
     style="rounded,filled",
     fillcolor="#F8FAFC",
-    color="#164E63",
+    color="#155E75",
     fontcolor="#102A43",
     fontname="Arial",
     fontsize=10.5,
-    penwidth=1.35,
-    margin="0.15,0.09"
+    penwidth=1.4,
+    margin="0.16,0.09"
   ];
   edge [
     color="#2563A6",
@@ -28,27 +28,45 @@ digraph WebAgentStep {
     fontname="Arial",
     fontsize=8.5,
     penwidth=1.25,
-    arrowsize=0.7
+    arrowsize=0.72
   ];
 
-  start [label="Begin step N\n(stop immediately if the task already timed out)", shape=oval, fillcolor="#E0F2FE"];
-  observe [label="OBSERVE STABLE PAGE\nURL + DOM snapshot + adaptive screenshot", fillcolor="#E0F2FE"];
+  start [label="Begin step N\n(stop immediately if the task deadline passed)", shape=oval, fillcolor="#E0F2FE"];
+  observe [
+    label="OBSERVE STABLE PAGE\nviewport PNG + rendered viewport/document context + bound refs",
+    fillcolor="#E0F2FE"
+  ];
   captcha [label="CAPTCHA detected?", shape=diamond, fillcolor="#FFF7ED", color="#D97706"];
   challenge [
-    label="CHALLENGE POLICY\nheaded report mode: notify + bounded human wait\nheadless/fail mode: fail closed immediately",
+    label="CHALLENGE POLICY\nheaded: bounded human wait\nheadless or fail mode: fail closed",
     fillcolor="#FFF7ED",
     color="#D97706"
   ];
-  cleared [label="Challenge cleared in time?", shape=diamond, fillcolor="#FFF7ED", color="#D97706"];
-  blocked [label="Blocked\nclose browser unless isolated reset must retain it", shape=oval, fillcolor="#FEE2E2", color="#DC2626"];
+  cleared [label="Cleared in time?", shape=diamond, fillcolor="#FFF7ED", color="#D97706"];
+  reobserve [label="Re-observe stable page after human resolution", fillcolor="#E0F2FE"];
+  blocked [
+    label="BLOCKED + CHECKPOINT\nclose browser, except isolated search-only reset retains it",
+    shape=oval,
+    fillcolor="#FEE2E2",
+    color="#DC2626"
+  ];
+  pre [
+    label="PERSIST PRE EVIDENCE\nstep_NNN/pre.json + pre.png; register observation with policy",
+    fillcolor="#ECFDF5",
+    color="#15803D"
+  ];
 
   plan [
-    label="BUILD CONTEXT + PLAN ONE ACTION\nloop/strategy state + bounded history + exposed tool schemas\nretry invalid planner output with an explicit repair hint",
+    label="PLAN ONE ACTION\nloop/strategy state + bounded history + exposed schemas\nrepair invalid planner output within the attempt budget",
     fillcolor="#EEF2FF",
-    color="#6366F1"
+    color="#4F46E5"
   ];
   valid [label="Validated ToolCall?", shape=diamond, fillcolor="#FFF7ED", color="#D97706"];
-  no_call [label="Record planner failure\nincrement consecutive failures + save checkpoint", fillcolor="#FEE2E2", color="#DC2626"];
+  no_call [
+    label="PLANNING FAILURE\nwrite not-attempted post evidence; update failure count; checkpoint",
+    fillcolor="#FEE2E2",
+    color="#DC2626"
+  ];
 
   write_ahead [
     label="WRITE-AHEAD CHECKPOINT\nassess replay policy -> set pending_action -> persist before execution",
@@ -56,37 +74,52 @@ digraph WebAgentStep {
     color="#D97706",
     penwidth=1.8
   ];
-  execute [label="AUTHORIZE + EXECUTE\nexposure, execution, and risk policies + per-tool timeout", fillcolor="#E0F2FE"];
-  post [label="POST-ACTION STATE\nwait, then re-observe; done reuses the pre-action state"];
-  record [label="RECORD OUTCOME\nfailure tracking + step history + strategy result + hooks", fillcolor="#ECFDF5", color="#15803D"];
+  execute [
+    label="AUTHORIZE + EXECUTE\nexposure -> evidence -> risk -> per-tool timeout",
+    fillcolor="#E0F2FE"
+  ];
+  post_state [
+    label="POST-ACTION STATE\nwait and re-observe; done marks the pre-state as reused"
+  ];
+  post [
+    label="PERSIST POST EVIDENCE\nstep_NNN/post.json + post.png",
+    fillcolor="#ECFDF5",
+    color="#15803D"
+  ];
+  record [
+    label="RECORD OUTCOME\nfailure tracking + AgentStep/history + hooks + strategy update",
+    fillcolor="#ECFDF5",
+    color="#15803D"
+  ];
   commit [
-    label="COMMIT CHECKPOINT\nclear pending_action + persist next_step and evidence",
+    label="COMMIT CHECKPOINT\nclear pending_action + persist next_step and recovery state",
     fillcolor="#DCFCE7",
     color="#15803D",
     penwidth=1.8
   ];
   outcome [label="Outcome after durable record", shape=diamond, fillcolor="#FFF7ED", color="#D97706"];
 
-  complete [label="Completed\nfinal result + attachments + trace", shape=oval, fillcolor="#DCFCE7", color="#15803D", penwidth=1.8];
+  complete [label="Completed\nterminal output; trace is finalized", shape=oval, fillcolor="#DCFCE7", color="#15803D", penwidth=1.8];
   failed [label="Timeout / failed / blocked\nterminal evidence retained", shape=oval, fillcolor="#FEE2E2", color="#DC2626"];
   next [label="Continue to step N+1", shape=oval, fillcolor="#E0F2FE"];
 
   start -> observe -> captcha;
-  captcha -> plan [label="no"];
+  captcha -> pre [label="no"];
   captcha -> challenge [label="yes", color="#D97706", fontcolor="#B45309"];
-  challenge -> cleared [label="headed report/wait", color="#D97706", fontcolor="#B45309"];
-  challenge -> blocked [label="headless or fail", color="#DC2626", fontcolor="#DC2626"];
-  cleared -> observe [label="yes: re-observe", color="#15803D", fontcolor="#15803D", constraint=false];
+  challenge -> cleared [label="headed wait", color="#D97706", fontcolor="#B45309"];
+  challenge -> blocked [label="headless / fail", color="#DC2626", fontcolor="#DC2626"];
+  cleared -> reobserve [label="yes", color="#15803D", fontcolor="#15803D"];
+  reobserve -> pre;
   cleared -> blocked [label="no", color="#DC2626", fontcolor="#DC2626"];
   blocked -> failed;
 
-  plan -> valid;
+  pre -> plan -> valid;
   valid -> write_ahead [label="yes", color="#15803D", fontcolor="#15803D"];
-  valid -> no_call [label="no: attempt budget exhausted", color="#DC2626", fontcolor="#DC2626"];
+  valid -> no_call [label="no", color="#DC2626", fontcolor="#DC2626"];
   no_call -> outcome;
 
-  write_ahead -> execute -> post -> record -> commit -> outcome;
+  write_ahead -> execute -> post_state -> post -> record -> commit -> outcome;
   outcome -> complete [label="successful done", color="#15803D", fontcolor="#15803D"];
-  outcome -> failed [label="timeout / failure limit / step limit", color="#DC2626", fontcolor="#DC2626"];
+  outcome -> failed [label="deadline / failure limit / step limit", color="#DC2626", fontcolor="#DC2626"];
   outcome -> next [label="otherwise"];
 }

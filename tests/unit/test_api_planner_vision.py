@@ -7,7 +7,8 @@ from typing import Any
 import pytest
 
 from webagent.planner._vision_heuristics import has_visual_content, indicates_no_vision
-from webagent.planner.api import APIPlanner, _detect_vlm_url
+from webagent.planner.api import APIPlanner
+from webagent.planner.vision import _detect_vlm_url
 
 
 def _planner(**kw: Any) -> APIPlanner:
@@ -30,20 +31,32 @@ class TestDetectVlmUrl:
         assert _detect_vlm_url("https://api.openai.com/v1/chat/completions") is None
 
     def test_planner_stores_vlm_url(self) -> None:
-        assert _planner(api_url="https://api.minimaxi.com/v1/chat/completions")._vlm_url
+        assert _planner(api_url="https://api.minimaxi.com/v1/chat/completions")._vision._vlm_url
 
 
 class TestVisionRouting:
+    async def test_truncated_analysis_cannot_be_reported_as_success(self) -> None:
+        planner = _planner()
+        planner._vision._supports_vision = True
+
+        async def truncated(payload, timeout=None):
+            planner._last_call_metadata = {"finish_reason": "length"}
+            return "An unfinished answer"
+
+        planner._post = truncated  # type: ignore[method-assign]
+        with pytest.raises(ValueError, match="truncated"):
+            await planner.analyze_image(_image(), "Describe the architecture")
+
     async def test_analyze_image_without_any_vision(self) -> None:
         planner = _planner()
-        planner._supports_vision = False
+        planner._vision._supports_vision = False
         result = await planner.analyze_image(_image(), "what?")
         assert "Vision API is not available" in result
 
     async def test_analyze_image_uses_vlm_endpoint_when_available(self) -> None:
         planner = _planner(api_url="https://api.minimaxi.com/v1/chat/completions")
-        planner._supports_vision = False
-        planner._vlm_available = True
+        planner._vision._supports_vision = False
+        planner._vision._vlm_available = True
 
         calls: list[tuple[str, dict[str, Any]]] = []
 
@@ -61,12 +74,12 @@ class TestVisionRouting:
         planner._bounded_post = fake_bounded_post  # type: ignore[method-assign]
         result = await planner.analyze_image(_image(), "color?")
         assert result == "A red square"
-        assert calls[0][0] == planner._vlm_url
+        assert calls[0][0] == planner._vision._vlm_url
 
     async def test_analyze_image_vlm_error_disables_endpoint(self) -> None:
         planner = _planner(api_url="https://api.minimaxi.com/v1/chat/completions")
-        planner._supports_vision = False
-        planner._vlm_available = True
+        planner._vision._supports_vision = False
+        planner._vision._vlm_available = True
 
         class _Resp:
             status_code = 500
@@ -81,12 +94,12 @@ class TestVisionRouting:
         planner._bounded_post = fake_bounded_post  # type: ignore[method-assign]
         result = await planner.analyze_image(_image(), "color?")
         assert "VLM API returned error 500" in result
-        assert planner._vlm_available is False
+        assert planner._vision._vlm_available is False
 
     async def test_analyze_image_vlm_api_level_error(self) -> None:
         planner = _planner(api_url="https://api.minimaxi.com/v1/chat/completions")
-        planner._supports_vision = False
-        planner._vlm_available = True
+        planner._vision._supports_vision = False
+        planner._vision._vlm_available = True
 
         class _Resp:
             status_code = 200
@@ -103,8 +116,8 @@ class TestVisionRouting:
 
     async def test_analyze_image_vlm_empty_content(self) -> None:
         planner = _planner(api_url="https://api.minimaxi.com/v1/chat/completions")
-        planner._supports_vision = False
-        planner._vlm_available = True
+        planner._vision._supports_vision = False
+        planner._vision._vlm_available = True
 
         class _Resp:
             status_code = 200
@@ -121,18 +134,18 @@ class TestVisionRouting:
 
     async def test_analyze_image_chat_success(self) -> None:
         planner = _planner()
-        planner._supports_vision = True
+        planner._vision._supports_vision = True
 
         async def fake_analyze_chat(b64: str, question: str) -> str:
             return f"chat analysis for: {question}"
 
-        planner._analyze_image_chat = fake_analyze_chat  # type: ignore[method-assign]
+        planner._vision._analyze_image_chat = fake_analyze_chat  # type: ignore[method-assign]
         result = await planner.analyze_image(_image(), "what is shown?")
         assert result == "chat analysis for: what is shown?"
 
     async def test_analyze_image_resizes_large_images(self) -> None:
         planner = _planner()
-        planner._supports_vision = True
+        planner._vision._supports_vision = True
         seen: dict[str, int] = {}
 
         async def fake_analyze_chat(b64: str, question: str) -> str:
@@ -145,7 +158,7 @@ class TestVisionRouting:
             seen["b64_len"] = len(b64)
             return await original(b64, question)
 
-        planner._analyze_image_chat = sized_chat  # type: ignore[method-assign]
+        planner._vision._analyze_image_chat = sized_chat  # type: ignore[method-assign]
         big = _image(4000, 1000)
         await planner.analyze_image(big, "q")
         assert "b64_len" in seen  # routed through chat path
@@ -158,7 +171,7 @@ class TestChatVisionFailure:
             vision_brief_max_tokens=666,
             vision_max_words=321,
         )
-        planner._supports_vision = True
+        planner._vision._supports_vision = True
         payloads: list[dict[str, Any]] = []
 
         async def fake_post(payload: dict[str, Any], timeout: int | None = None) -> str:
@@ -175,7 +188,7 @@ class TestChatVisionFailure:
 
     async def test_brief_request_uses_smaller_budget(self) -> None:
         planner = _planner(vision_max_tokens=1777, vision_brief_max_tokens=666)
-        planner._supports_vision = True
+        planner._vision._supports_vision = True
         payloads: list[dict[str, Any]] = []
 
         async def fake_post(payload: dict[str, Any], timeout: int | None = None) -> str:
@@ -189,7 +202,7 @@ class TestChatVisionFailure:
 
     async def test_single_no_vision_call_keeps_vision_enabled(self) -> None:
         planner = _planner()
-        planner._supports_vision = True
+        planner._vision._supports_vision = True
         calls = 0
 
         async def fake_post(payload: dict[str, Any], timeout: int | None = None) -> str:
@@ -200,13 +213,13 @@ class TestChatVisionFailure:
         planner._post = fake_post  # type: ignore[method-assign]
         result = await planner.analyze_image(_image(), "color?")
         assert "could not read the image" in result
-        assert calls == planner._VISION_RETRY_ATTEMPTS  # retried within the call
+        assert calls == planner._vision._VISION_RETRY_ATTEMPTS  # retried within the call
         assert planner.vision_actually_works is True  # one blip does not disable
 
     async def test_empty_chat_response_retries_and_reports_failure(self) -> None:
         """A blank model response must not be returned as a successful (empty) analysis."""
         planner = _planner()
-        planner._supports_vision = True
+        planner._vision._supports_vision = True
         calls = 0
 
         async def fake_post(payload: dict[str, Any], timeout: int | None = None) -> str:
@@ -217,38 +230,38 @@ class TestChatVisionFailure:
         planner._post = fake_post  # type: ignore[method-assign]
         result = await planner.analyze_image(_image(), "color?")
         assert "could not read the image" in result
-        assert calls == planner._VISION_RETRY_ATTEMPTS  # blank is retried, not returned
+        assert calls == planner._vision._VISION_RETRY_ATTEMPTS  # blank is retried, not returned
         assert planner.vision_actually_works is True  # one blip does not disable
 
     async def test_repeated_empty_chat_responses_disable_vision(self) -> None:
         """Repeated blank responses latch chat vision off, like repeated 'cannot see'."""
         planner = _planner()
-        planner._supports_vision = True
+        planner._vision._supports_vision = True
 
         async def fake_post(payload: dict[str, Any], timeout: int | None = None) -> str:
             return ""
 
         planner._post = fake_post  # type: ignore[method-assign]
-        for _ in range(planner._VISION_FAILURE_LIMIT):
+        for _ in range(planner._vision._VISION_FAILURE_LIMIT):
             await planner.analyze_image(_image(), "color?")
         assert planner.vision_actually_works is False
 
     async def test_repeated_no_vision_calls_disable_chat_vision(self) -> None:
         planner = _planner()
-        planner._supports_vision = True
+        planner._vision._supports_vision = True
 
         async def fake_post(payload: dict[str, Any], timeout: int | None = None) -> str:
             return "I cannot see any image in this request."
 
         planner._post = fake_post  # type: ignore[method-assign]
-        for _ in range(planner._VISION_FAILURE_LIMIT):
+        for _ in range(planner._vision._VISION_FAILURE_LIMIT):
             await planner.analyze_image(_image(), "color?")
         assert planner.vision_actually_works is False
 
     async def test_success_resets_failure_streak(self) -> None:
         planner = _planner()
-        planner._supports_vision = True
-        planner._vision_failure_count = planner._VISION_FAILURE_LIMIT - 1
+        planner._vision._supports_vision = True
+        planner._vision._vision_failure_count = planner._vision._VISION_FAILURE_LIMIT - 1
         responses = iter(["The image shows a red square"])
 
         async def fake_post(payload: dict[str, Any], timeout: int | None = None) -> str:
@@ -257,17 +270,17 @@ class TestChatVisionFailure:
         planner._post = fake_post  # type: ignore[method-assign]
         result = await planner.analyze_image(_image(), "color?")
         assert "red square" in result
-        assert planner._vision_failure_count == 0
+        assert planner._vision._vision_failure_count == 0
         assert planner.vision_actually_works is True
 
     async def test_clean_vision_response_strips_echoed_prompt(self) -> None:
         planner = _planner()
         prompt = "You are an image analysis assistant. Question: color?"
-        assert planner._clean_vision_response(prompt + " Red.", prompt) == "Red."
+        assert planner._vision._clean_vision_response(prompt + " Red.", prompt) == "Red."
         # Response not starting with prompt is untouched
-        assert planner._clean_vision_response("Blue.", prompt) == "Blue."
+        assert planner._vision._clean_vision_response("Blue.", prompt) == "Blue."
         # Echoed-only response falls back to original
-        assert planner._clean_vision_response(prompt, prompt) == prompt
+        assert planner._vision._clean_vision_response(prompt, prompt) == prompt
 
     async def test_indicates_no_vision(self) -> None:
         assert indicates_no_vision("There is no image attached")
@@ -301,9 +314,9 @@ class TestLoad:
         async def fake_probe() -> bool:
             return True
 
-        planner._probe_vision = fake_probe  # type: ignore[method-assign]
+        planner._vision._probe_vision = fake_probe  # type: ignore[method-assign]
         await planner.load()
-        assert planner._supports_vision is True
+        assert planner._vision._supports_vision is True
         assert planner.vision_actually_works
 
     async def test_load_text_only(self) -> None:
@@ -312,25 +325,25 @@ class TestLoad:
         async def fake_probe() -> bool:
             return False
 
-        planner._probe_vision = fake_probe  # type: ignore[method-assign]
+        planner._vision._probe_vision = fake_probe  # type: ignore[method-assign]
         await planner.load()
-        assert planner._supports_vision is False
+        assert planner._vision._supports_vision is False
         assert not planner.vision_actually_works
 
     async def test_load_probes_vlm_when_chat_vision_dead(self) -> None:
         planner = _planner(api_url="https://api.minimaxi.com/v1/chat/completions")
 
         async def fake_probe() -> bool:
-            planner._vision_actually_works = False  # accepted but blind
+            planner._vision._vision_actually_works = False  # accepted but blind
             return True
 
         async def fake_probe_vlm() -> bool:
             return True
 
-        planner._probe_vision = fake_probe  # type: ignore[method-assign]
-        planner._probe_vlm = fake_probe_vlm  # type: ignore[method-assign]
+        planner._vision._probe_vision = fake_probe  # type: ignore[method-assign]
+        planner._vision._probe_vlm = fake_probe_vlm  # type: ignore[method-assign]
         await planner.load()
-        assert planner._vlm_available is True
+        assert planner._vision._vlm_available is True
         assert planner.vision_actually_works  # via VLM endpoint
 
 
@@ -365,9 +378,9 @@ class TestProbeVisionDecisions:
         import webagent.planner.api as api_mod
 
         monkeypatch.setattr(api_mod.httpx, "AsyncClient", _Client)
-        result = await planner._probe_vision()
+        result = await planner._vision._probe_vision()
         assert result is True  # API accepts the format
-        assert planner._vision_actually_works is False  # but the model is blind
+        assert planner._vision._vision_actually_works is False  # but the model is blind
 
     async def test_probe_red_answer_passes(self, monkeypatch: pytest.MonkeyPatch) -> None:
         planner = _planner()
@@ -393,8 +406,8 @@ class TestProbeVisionDecisions:
         import webagent.planner.api as api_mod
 
         monkeypatch.setattr(api_mod.httpx, "AsyncClient", _Client)
-        assert await planner._probe_vision() is True
-        assert planner._vision_actually_works
+        assert await planner._vision._probe_vision() is True
+        assert planner._vision._vision_actually_works
 
     async def test_probe_http_error_returns_false(self, monkeypatch: pytest.MonkeyPatch) -> None:
         planner = _planner()
@@ -413,7 +426,7 @@ class TestProbeVisionDecisions:
         import webagent.planner.api as api_mod
 
         monkeypatch.setattr(api_mod.httpx, "AsyncClient", _Client)
-        assert await planner._probe_vision() is False
+        assert await planner._vision._probe_vision() is False
 
 
 class TestProbeVlm:
@@ -441,7 +454,7 @@ class TestProbeVlm:
         import webagent.planner.api as api_mod
 
         monkeypatch.setattr(api_mod.httpx, "AsyncClient", _Client)
-        assert await planner._probe_vlm() is True
+        assert await planner._vision._probe_vlm() is True
 
     async def test_no_vlm_url(self) -> None:
-        assert await _planner()._probe_vlm() is False
+        assert await _planner()._vision._probe_vlm() is False

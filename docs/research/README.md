@@ -23,7 +23,7 @@ empirical results.
 | [Current-result compatibility link](current-evaluation-results-zh.md) | Stable redirect for earlier documentation links |
 
 Executable suites, environment preparation, and study commands belong in the
-[benchmark guide](../../benchmarks/README.md). Run namespace ownership and checkpoint
+[benchmark guide](../../src/webagent/benchmarks/README.md). Run namespace ownership and checkpoint
 contents belong in the [artifact reference](../reference/run-artifacts.md).
 
 ## Code ownership
@@ -41,7 +41,7 @@ Research mechanisms live in `src/webagent/evaluation/`:
 - `studies.py` defines immutable study manifests and hash-bound run rows.
 - `artifacts.py` owns canonical research filesystem paths.
 
-Executable environments and orchestration remain under `benchmarks/`. This keeps reusable
+Executable environments and orchestration remain under `src/webagent/benchmarks/`. This keeps reusable
 evaluation contracts independent from particular sites and command-line studies.
 
 ## Interpretation boundary
@@ -51,4 +51,17 @@ provides one outcome. A dated diagnostic campaign provides local empirical evide
 ready longitudinal portfolio requires repeated common dates, and external comparison
 requires complete native BrowserGym reports.
 
+For an individual strict public-web task, acceptance requires both independent task
+judgment and a valid anti-shortcut certificate. A small number of bounded, recovered
+external search or provider-capability failures may remain visible in the trace; zero
+failed actions is not itself a success criterion. The dated record must classify them
+and show that they did not cause a missing deliverable, invalid provenance, false
+completion, or exhausted recovery loop.
+
 None of these layers alone establishes general-purpose web-agent maturity.
+
+The latest complete single-date diagnostic is the
+[2026-09-09 R7 generality campaign](results/generality-campaign-2026-09-09.zh-CN.md):
+71/72 tasks passed, while the portfolio correctly remains insufficient for a
+three-date longitudinal claim. The latest Qwen report/PDF/Figure result remains a
+separate strict-task record rather than being merged into that campaign cell.

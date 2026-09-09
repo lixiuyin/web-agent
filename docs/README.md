@@ -14,7 +14,7 @@ separate maintained documents.
 | Look up configuration | [Configuration reference](reference/configuration.md) |
 | Understand run directories and checkpoints | [Run artifacts](reference/run-artifacts.md) |
 | Review profile, proxy, CAPTCHA, upload, and action boundaries | [Browser and security](reference/browser-and-security.md) |
-| Run internal or BrowserGym evaluation | [Benchmark guide](../benchmarks/README.md) |
+| Run internal or BrowserGym evaluation | [Benchmark guide](../src/webagent/benchmarks/README.md) |
 | Read the stable evaluation methodology | [Evaluation protocol](research/evaluation-protocol.md) |
 | Inspect dated empirical claims | [Results index](research/results/README.md) |
 | Study implementation call chains in Chinese | [中文源码理解手册](understanding-zh/README.md) |
@@ -31,18 +31,21 @@ docs/
 ├── research/          methodology, evidence rules, and dated results
 └── understanding-zh/  source-grounded Chinese implementation study
 
-benchmarks/docs/       executable suite, study, infrastructure, and report guides
+src/webagent/benchmarks/docs/       executable suite, study, infrastructure, and report guides
 ```
 
 Runtime behavior belongs in `src/webagent/`; executable environments and suites belong
-in `benchmarks/`; reusable evaluation contracts belong in `src/webagent/evaluation/`.
+in `src/webagent/benchmarks/`; reusable evaluation contracts belong in `src/webagent/evaluation/`.
 Generated output is evidence, not documentation source of truth.
 
 ## Current evidence boundary
 
-The repository has one complete common diagnostic date. The longitudinal portfolio is
-therefore interim, and the official WebArena-Verified Hard and VisualWebArena layers have
-not been run. Exact scores and limitations belong only to the
+The repository has one complete common diagnostic date: the 2026-09-09 R7 campaign
+recorded 71/72 passes across GLM and Qwen. A separate same-day paired strict-search
+validation passed the latest-Qwen-report task on both endpoints; it is one task per
+endpoint, not another complete diagnostic date. The longitudinal portfolio is therefore
+interim, and the official WebArena-Verified Hard and VisualWebArena layers have not been
+run. Exact scores, recovered failures, and limitations belong only to the
 [dated results](research/results/README.md).
 
 The diagnostic and BrowserGym layers use different tasks and evaluators. Their scores are
@@ -63,7 +66,7 @@ never averaged; a two-layer portfolio binds complete reports side by side.
 Validate documentation before merging:
 
 ```bash
-python scripts/check_docs.py
+uv run python scripts/check_docs.py
 git diff --check
 ```
 

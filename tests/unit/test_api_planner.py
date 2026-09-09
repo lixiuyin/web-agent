@@ -10,7 +10,8 @@ from PIL import Image
 
 from webagent.core.models import BrowserState
 from webagent.planner import api as api_module
-from webagent.planner.api import APIPlanner, _strip_thinking_tags
+from webagent.planner.api import APIPlanner
+from webagent.planner.provider_response import _strip_thinking_tags
 
 # ── _strip_thinking_tags (pure) ─────────────────────────────────────────────
 
@@ -24,10 +25,9 @@ def test_strip_unclosed_think_tag():
     assert _strip_thinking_tags("answer<think>still thinking") == "answer"
 
 
-def test_strip_falls_back_to_original_when_all_stripped():
-    # If stripping leaves nothing, return the original (don't hand callers "").
+def test_strip_reasoning_only_response_is_empty():
     text = "<think>only reasoning, no answer</think>"
-    assert _strip_thinking_tags(text) == text.strip()
+    assert _strip_thinking_tags(text) == ""
 
 
 def test_strip_noop_without_tags():
@@ -199,14 +199,13 @@ async def test_post_captures_usage_finish_reason_and_response_length(monkeypatch
     }
 
 
-async def test_post_falls_back_to_reasoning_content(monkeypatch):
-    # DeepSeek-style: content empty, the answer is in reasoning_content.
+async def test_post_does_not_promote_reasoning_to_final_content(monkeypatch):
     _patch_response(
         monkeypatch,
         {"choices": [{"message": {"content": "", "reasoning_content": '{"tool": "click"}'}}]},
     )
     out = await _planner()._post({})
-    assert out == '{"tool": "click"}'
+    assert out == ""
 
 
 async def test_post_empty_choices_does_not_raise(monkeypatch):
@@ -237,7 +236,7 @@ def test_probe_image_is_valid_base64_jpeg():
 
     from PIL import Image
 
-    from webagent.planner.api import _probe_image_b64
+    from webagent.planner.vision import _probe_image_b64
 
     raw = base64.b64decode(_probe_image_b64(), validate=True)  # raises if invalid
     img = Image.open(io.BytesIO(raw))
@@ -248,7 +247,7 @@ def test_probe_image_is_valid_base64_jpeg():
 
 async def test_plan_action_sends_dom_and_screenshot_in_same_model_request():
     planner = _planner()
-    planner._supports_vision = True
+    planner._vision._supports_vision = True
     payloads: list[dict] = []
 
     async def capture_post(payload: dict) -> str:
@@ -282,7 +281,7 @@ async def test_plan_action_sends_dom_and_screenshot_in_same_model_request():
 
 async def test_plan_action_sends_dom_without_blank_screenshot():
     planner = _planner()
-    planner._supports_vision = True
+    planner._vision._supports_vision = True
     payloads: list[dict] = []
 
     async def capture_post(payload: dict) -> str:
@@ -313,7 +312,7 @@ async def test_plan_action_sends_dom_without_blank_screenshot():
 
 async def test_plan_action_auto_omits_screenshot_for_text_rich_page():
     planner = _planner()
-    planner._supports_vision = True
+    planner._vision._supports_vision = True
     payloads: list[dict] = []
 
     async def capture_post(payload: dict) -> str:
@@ -341,7 +340,7 @@ async def test_plan_action_auto_omits_screenshot_for_text_rich_page():
 
 async def test_plan_action_visual_strategy_keeps_text_rich_screenshot():
     planner = _planner()
-    planner._supports_vision = True
+    planner._vision._supports_vision = True
     payloads: list[dict] = []
 
     async def capture_post(payload: dict) -> str:
@@ -374,7 +373,7 @@ async def test_plan_action_sends_configured_reasoning_effort_without_reasoning_c
         model_name="reasoning-model",
         reasoning_effort="low",
     )
-    planner._supports_vision = False
+    planner._vision._supports_vision = False
     payloads: list[dict] = []
 
     async def capture_post(payload: dict) -> str:
@@ -399,7 +398,7 @@ async def test_plan_action_sends_configured_reasoning_effort_without_reasoning_c
 
 async def test_plan_action_omits_redundant_local_pdf_preview():
     planner = _planner()
-    planner._supports_vision = True
+    planner._vision._supports_vision = True
     payloads: list[dict] = []
 
     async def capture_post(payload: dict) -> str:
@@ -427,7 +426,7 @@ async def test_plan_action_omits_redundant_local_pdf_preview():
 
 async def test_plan_action_keeps_local_html_screenshot_without_artifact_history():
     planner = _planner()
-    planner._supports_vision = True
+    planner._vision._supports_vision = True
     payloads: list[dict] = []
 
     async def capture_post(payload: dict) -> str:

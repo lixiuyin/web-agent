@@ -7,7 +7,8 @@ import json
 from pathlib import Path
 
 import pytest
-from benchmarks.suites.controlled_web.general import run_benchmark
+
+from webagent.benchmarks.suites.controlled_web.general import run_benchmark
 
 
 @pytest.mark.integration

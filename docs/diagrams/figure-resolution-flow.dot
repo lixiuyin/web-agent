@@ -3,24 +3,24 @@ digraph FigureResolution {
     bgcolor="white",
     rankdir=TB,
     splines=polyline,
-    pad=0.22,
-    nodesep=0.38,
-    ranksep=0.42,
+    pad=0.28,
+    nodesep=0.40,
+    ranksep=0.40,
     fontname="Arial",
-    fontsize=18,
+    fontsize=20,
     labelloc="t",
-    label="Caption-grounded Figure resolution with a local fast path and quality-gated parsing"
+    label="Caption-grounded Figure resolution: local detection, parsing, and vision"
   ];
   node [
     shape=box,
     style="rounded,filled",
     fillcolor="#F8FAFC",
-    color="#164E63",
+    color="#155E75",
     fontcolor="#102A43",
     fontname="Arial",
     fontsize=10.5,
-    penwidth=1.35,
-    margin="0.15,0.09"
+    penwidth=1.4,
+    margin="0.16,0.09"
   ];
   edge [
     color="#2563A6",
@@ -28,49 +28,67 @@ digraph FigureResolution {
     fontname="Arial",
     fontsize=8.5,
     penwidth=1.25,
-    arrowsize=0.7
+    arrowsize=0.72
   ];
 
   input [label="PDF + requested Figure number or caption", shape=oval, fillcolor="#E0F2FE"];
   fast [label="Exact number and local fast path enabled?", shape=diamond, fillcolor="#FFF7ED", color="#D97706"];
   detector [
-    label="LOCAL VECTOR DETECTOR\nfind numbered caption + nearby visual region\nrender locally with page, bounding box, and confidence",
+    label="LOCAL LAYOUT DETECTOR\nfind the numbered caption and nearby vector/raster region\naccept only above the configured confidence threshold",
     fillcolor="#ECFDF5",
     color="#15803D"
   ];
-  confidence [label="Confidence >= configured threshold?", shape=diamond, fillcolor="#FFF7ED", color="#D97706"];
-  local_figure [label="Exact locally rendered Figure", fillcolor="#DCFCE7", color="#15803D"];
+  local_found [label="High-confidence region found?", shape=diamond, fillcolor="#FFF7ED", color="#D97706"];
+  local_figure [
+    label="Render exact local Figure\nretain page, caption, bbox, confidence, and visual kind",
+    fillcolor="#DCFCE7",
+    color="#15803D"
+  ];
 
-  cache [label="Accepted parse available in run/persistent cache?", shape=diamond, fillcolor="#FFF7ED", color="#D97706"];
+  cache [label="Accepted run/persistent parse cache hit?", shape=diamond, fillcolor="#FFF7ED", color="#D97706"];
   cascade [
-    label="QUALITY-GATED PARSER CASCADE\n1. profile document locally\n2. route Marker / MinerU / PaddleOCR\n3. try providers in order; first quality-passing result wins\n4. only if every cloud provider fails, use local PyMuPDF",
+    label="QUALITY-GATED PARSER CASCADE\nprofile locally -> route Marker / MinerU / PaddleOCR\nretry transient errors within the total budget\nfirst quality-passing cloud result wins\nthen and only then fall back to local PyMuPDF",
     fillcolor="#F5F3FF",
     color="#7C3AED"
   ];
   parsed [label="Accepted PDFParseResult\ntext + tables + captioned figures", fillcolor="#ECFDF5", color="#15803D"];
   parse_error [label="Explicit parse error\nlocal fallback also failed", shape=oval, fillcolor="#FEE2E2", color="#DC2626"];
   resolve [
-    label="RESOLVE FIGURE IDENTITY\nmatch Figure number or caption, never raw extraction order\nkeep logos/decorations in unlabeled_images",
+    label="RESOLVE FIGURE IDENTITY\nmatch Figure number first, then caption keyword\nnever use raw extraction order; exclude unlabeled logos/decorations",
     fillcolor="#E0F2FE"
   ];
 
   found [label="Matching numbered/captioned Figure found?", shape=diamond, fillcolor="#FFF7ED", color="#D97706"];
-  not_found [label="Return found=false\ninclude available Figure count", shape=oval, fillcolor="#FEE2E2", color="#DC2626"];
-  asset [label="Select higher-resolution image\nopen preview; retain page, caption, and related tables", fillcolor="#E0F2FE"];
-  vision [label="Vision analysis available?", shape=diamond, fillcolor="#FFF7ED", color="#D97706"];
-  success [label="Grounded analysis\nFigure identity + page + caption + evidence", shape=oval, fillcolor="#DCFCE7", color="#15803D", penwidth=1.8];
-  recovery [label="Explicit error + textual recovery guidance\nread surrounding pages and report the boundary", shape=oval, fillcolor="#FEE2E2", color="#DC2626"];
+  not_found [label="Return found=false\ninclude available extracted-image count", shape=oval, fillcolor="#FEE2E2", color="#DC2626"];
+  asset [
+    label="Select higher-resolution asset + open local preview\nretain page text, caption, and same-page tables when available",
+    fillcolor="#E0F2FE"
+  ];
+  vision [label="Vision analysis succeeds?", shape=diamond, fillcolor="#FFF7ED", color="#D97706"];
+  success [
+    label="GROUNDED FIGURE RESULT\nidentity + page + caption + image + vision analysis + metadata",
+    shape=oval,
+    fillcolor="#DCFCE7",
+    color="#15803D",
+    penwidth=1.8
+  ];
+  recovery [
+    label="Explicit error + textual recovery guidance\nread the Figure page and following page, then report the boundary",
+    shape=oval,
+    fillcolor="#FEE2E2",
+    color="#DC2626"
+  ];
 
   input -> fast;
   fast -> detector [label="yes", color="#15803D", fontcolor="#15803D"];
-  detector -> confidence;
-  confidence -> local_figure [label="yes", color="#15803D", fontcolor="#15803D"];
+  detector -> local_found;
+  local_found -> local_figure [label="yes", color="#15803D", fontcolor="#15803D"];
   fast -> cache [label="no"];
-  confidence -> cache [label="no: parse fallback", color="#64748B", fontcolor="#64748B"];
+  local_found -> cache [label="no: parse fallback", color="#64748B", fontcolor="#64748B"];
   cache -> resolve [label="yes", color="#15803D", fontcolor="#15803D"];
   cache -> cascade [label="no"];
   cascade -> parsed [label="accepted", color="#15803D", fontcolor="#15803D"];
-  cascade -> parse_error [label="local also fails", color="#DC2626", fontcolor="#DC2626"];
+  cascade -> parse_error [label="all parsers fail", color="#DC2626", fontcolor="#DC2626"];
   parsed -> resolve;
 
   local_figure -> found;

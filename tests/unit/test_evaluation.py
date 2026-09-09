@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import hashlib
 import json
 from pathlib import Path
@@ -159,6 +160,8 @@ def test_assertion_schema_rejects_missing_kind_specific_fields() -> None:
         BenchmarkAssertion(kind="history_url_observed_any", expected=[])
     with pytest.raises(ValidationError, match="below the task artifacts"):
         BenchmarkAssertion(kind="artifact_exists", expected="../secret")
+    with pytest.raises(ValidationError, match="string expected URL"):
+        BenchmarkAssertion(kind="answer_document_url", expected=["https://example.test/a.pdf"])
 
 
 def test_json_path_supports_mapping_and_list_indices() -> None:
@@ -338,6 +341,35 @@ async def test_evaluator_checks_tool_sequence_origin_and_artifact_hash(
     assert evaluation.passed is True
 
 
+async def test_evaluator_matches_one_document_across_github_ref_urls(monkeypatch) -> None:
+    monkeypatch.setattr("webagent.evaluation.evaluator.httpx.AsyncClient", _Client)
+    expected = "https://github.com/QwenLM/Qwen3.8-Flash-Next/blob/main/tech_report.pdf"
+    pinned = (
+        "https://github.com/QwenLM/Qwen3.8-Flash-Next/"
+        "blob/4f58f4ddd855bedaf7eadcd53bbbb1b3362cecff/tech_report.pdf"
+    )
+    result = _agent_result(summary=f"Official PDF: {pinned}")
+    state = BrowserState(dom_summary="page", url=pinned, title="Report", timestamp="now")
+    result = result.model_copy(
+        update={
+            "history": [step.model_copy(update={"browser_state": state}) for step in result.history]
+        }
+    )
+    task = _task(
+        BenchmarkAssertion(kind="answer_document_url", expected=expected),
+        BenchmarkAssertion(kind="history_document_url_observed", expected=expected),
+    )
+
+    evaluation = await TerminalStateEvaluator(_Page()).evaluate(task, result)  # type: ignore[arg-type]
+
+    assert evaluation.passed is True
+    unrelated = BenchmarkAssertion(
+        kind="answer_document_url",
+        expected="https://github.com/Other/Qwen3.8-Flash-Next/blob/main/tech_report.pdf",
+    )
+    assert not TerminalStateEvaluator._matches(unrelated, result.final_result["summary"])
+
+
 @pytest.mark.parametrize(
     "rendered",
     (
@@ -371,6 +403,12 @@ def test_answer_labeled_date_checks_the_first_date_after_the_exact_label() -> No
 
     assert TerminalStateEvaluator._matches(
         assertion, "Selected report date: August 26, 2026 (official file history)"
+    )
+    assert TerminalStateEvaluator._matches(
+        assertion, "**Selected report date:** 2026-08-26 (official file history)"
+    )
+    assert TerminalStateEvaluator._matches(
+        assertion, "__Selected report date__: 2026-08-26 (official file history)"
     )
     assert not TerminalStateEvaluator._matches(
         assertion,
@@ -628,6 +666,10 @@ async def test_runner_persists_report_and_isolates_executor_errors(tmp_path: Pat
         (tmp_path / "runs" / task.id / "evaluation" / "task.json").read_text()
     )
     assert task_evaluation["task_id"] == task.id
+    progress = json.loads((tmp_path / "analysis/progress.json").read_text())
+    assert progress["status"] == "completed"
+    assert progress["remaining_task_ids"] == []
+    assert progress["active_task_id"] is None
 
     with pytest.raises(FileExistsError, match="already contains run evidence"):
         await runner.run("suite", [task])
@@ -659,3 +701,69 @@ async def test_runner_rejects_split_leakage_before_execution(tmp_path: Path) -> 
     with pytest.raises(ValueError, match="leakage_group crosses"):
         await runner.run("leaky", tasks)
     assert called is False
+
+
+@pytest.mark.parametrize("interrupt", [True, False])
+async def test_runner_retains_judgments_when_next_reset_stops(tmp_path: Path, interrupt: bool):
+    first = _task(BenchmarkAssertion(kind="url_contains", expected="/final"))
+    second = first.model_copy(update={"id": "second"})
+    progress_path = tmp_path / "analysis/progress.json"
+
+    async def execute(_task: BenchmarkTask) -> AgentResult:
+        return _agent_result()
+
+    async def reset(task: BenchmarkTask) -> None:
+        progress = json.loads(progress_path.read_text())
+        assert progress["active_task_id"] == task.id
+        if task.id == first.id:
+            assert progress["evaluated_summary"] is None
+            return
+        saved = tmp_path / "runs" / first.id / "evaluation/task.json"
+        assert json.loads(saved.read_text())["task_id"] == first.id
+        assert progress["evaluated_count"] == 1
+        assert not (tmp_path / "results.json").exists()
+        if interrupt:
+            raise asyncio.CancelledError()
+        raise RuntimeError("reset failed")
+
+    runner = BenchmarkRunner(
+        TerminalStateEvaluator(_Page()), execute, output_dir=tmp_path, reset_task=reset
+    )
+    error = asyncio.CancelledError if interrupt else RuntimeError
+    with pytest.raises(error):
+        await runner.run("partial", [first, second])
+    progress = json.loads(progress_path.read_text())
+    assert progress["status"] == ("interrupted" if interrupt else "failed")
+    assert progress["remaining_task_ids"] == [second.id]
+    assert progress["planned_count"] == 2
+    assert progress["evaluated_count"] == 1
+    assert not (tmp_path / "results.json").exists()
+
+
+async def test_runner_propagates_cancellation_swallowed_by_executor(tmp_path: Path):
+    task = _task(BenchmarkAssertion(kind="url_contains", expected="/final"))
+    started = asyncio.Event()
+    calls = []
+
+    async def execute(item: BenchmarkTask) -> AgentResult:
+        calls.append(item.id)
+        started.set()
+        try:
+            await asyncio.Event().wait()
+        except asyncio.CancelledError:
+            return _agent_result().model_copy(update={"status": "interrupted"})
+        raise AssertionError("unreachable")
+
+    runner = BenchmarkRunner(TerminalStateEvaluator(_Page()), execute, output_dir=tmp_path)
+    running = asyncio.create_task(
+        runner.run("cancel", [task, task.model_copy(update={"id": "next"})])
+    )
+    await started.wait()
+    running.cancel()
+    with pytest.raises(asyncio.CancelledError):
+        await running
+    assert calls == [task.id]
+    progress = json.loads((tmp_path / "analysis/progress.json").read_text())
+    assert progress["status"] == "interrupted"
+    assert progress["evaluated_count"] == 0
+    assert not (tmp_path / "results.json").exists()

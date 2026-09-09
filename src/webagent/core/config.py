@@ -119,7 +119,7 @@ class AgentConfig(BaseSettings):
         ),
     )
     vision_max_tokens: int = Field(
-        default=2000,
+        default=8192,
         ge=512,
         le=16000,
         description="Maximum completion tokens for detailed chat-based image analysis",
@@ -249,6 +249,18 @@ class AgentConfig(BaseSettings):
     tool_timeout: int = Field(default=600, description="Max seconds any single tool call may run")
     max_consecutive_failures: int = 5
     post_action_wait_ms: int = Field(default=500, ge=0)
+    observation_capture_timeout_seconds: float = Field(default=20.0, gt=0, le=120)
+    observation_fallback_timeout_seconds: float = Field(default=5.0, gt=0, le=30)
+    observation_full_page_screenshot: bool = Field(
+        default=False,
+        description="Save a supplemental full-page image alongside each viewport observation",
+    )
+    observation_viewport_chars: int = Field(default=5000, ge=500, le=50000)
+    observation_document_chars: int = Field(default=2500, ge=0, le=50000)
+    observation_max_dom_nodes: int = Field(default=5000, ge=100, le=100000)
+    observation_max_text_chars: int = Field(default=80000, ge=1000, le=1000000)
+    observation_text_share: float = Field(default=0.5, ge=0.1, le=0.9)
+    observation_text_block_chars: int = Field(default=400, ge=80, le=2000)
     observation_stability_timeout_ms: int = Field(
         default=3000,
         ge=0,

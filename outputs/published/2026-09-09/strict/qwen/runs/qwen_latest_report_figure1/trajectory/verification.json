@@ -1,0 +1,29 @@
+{
+  "valid": true,
+  "run_id": "250c2fa6-0791-42e8-a743-26e94519e194",
+  "checks": {
+    "single_continuous_run": true,
+    "search_engine_only": true,
+    "first_successful_action_is_search": true,
+    "planner_visible_url_provenance": true,
+    "producer_source_bound": true,
+    "schema_supported": true
+  },
+  "failures": [],
+  "warnings": [],
+  "source_schema_version": 8,
+  "verified_schema_version": 8,
+  "artifact_integrity": {
+    "valid": true,
+    "checked": 63
+  },
+  "answer_correctness": {
+    "evaluated": false,
+    "valid": null,
+    "reason": "No independent answer oracle was run; compliance is not correctness."
+  },
+  "certificate_schema_version": 1,
+  "verifier_source_sha256": "6c1b3109711ca0a3450a0b8ee5ca286a91fee74a673fe9db437bb33ec94601a0",
+  "trace_sha256": "007b56096f8275f9ac556cf0ee455e881845cb5f5c6f13bb6daf66e5c4e597e4",
+  "trace_path": "trace.json"
+}

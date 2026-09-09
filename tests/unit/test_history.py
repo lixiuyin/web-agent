@@ -105,7 +105,7 @@ def test_policy_progress_is_visible_to_planner_history():
 
     text = h.format_for_llm()
 
-    assert "policy still requires" in text
+    assert "current policy hint supersedes it" in text
     assert "official identity" in text
     assert "literal 2026" in text
 
@@ -119,7 +119,8 @@ def test_completed_policy_checklist_is_visible_to_planner_history():
     }
     h.add(step)
 
-    assert "latest-evidence checklist complete" in h.format_for_llm()
+    assert "historical evidence checklist complete" in h.format_for_llm()
+    assert "consult the current candidate ledger" in h.format_for_llm()
 
 
 def test_policy_required_next_action_is_visible_to_planner_history():

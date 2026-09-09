@@ -1,0 +1,3 @@
+# Frozen evaluation evidence: 2026-09-09
+
+This reviewed bundle retains the machine-readable aggregates, the complete strict-certificate evidence closure, the only failed trajectory, and compact long-horizon resume evidence. See `MANIFEST.json` for source paths, purposes, sizes, and SHA-256 digests. High-value records remain directly browsable; archives contain the many small observation and tool-result files. Extract each archive at this directory before re-running artifact verification. Evidence members are byte-identical to the local source runs; bulk successful trajectories and duplicate render trees remain local.

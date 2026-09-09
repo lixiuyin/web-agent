@@ -2,19 +2,34 @@
 
 ## 职责与调用链
 
+`api.py` 保留 `APIPlanner` 入口、动作规划、结构化输出降级和 HTTP 传输；`vision.py` 的
+`VisionSupport` 独立持有当前会话的视觉能力状态，负责探测、图像分析重试及 VLM/chat 路由。
+它通过 `VisionBackend` Protocol 使用 planner 的请求方法与配置。`provider_response.py`
+负责响应文本清理及显式能力不兼容错误的识别。
+
 Planner 负责把当前任务状态变成一项 `ToolCall | None`，以及回答独立的图像问题；它不直接操作浏览器。主路径是：
 
 ```text
 WebAgent._think
-  -> ToolExecutor.get_tool_descriptions()
-  -> APIPlanner.plan_action(task, BrowserState, history_text, available_tools)
-       -> build_prompt()
-       -> _initial_planning_mode()
-       -> _call_structured() / _call()
-       -> parse_provider_tool_call() / parse_llm_response()
-  -> ToolCall
-  -> ToolExecutor.execute()
+  -> PlanningCoordinator.plan_action
+       -> ToolExecutor.get_tool_descriptions()
+       -> history + controller plan/strategy/evidence hints + action budget
+       -> LoopDetector.is_looping()；必要时更新 strategy hint
+       -> bounded planner repair loop
+            -> APIPlanner.plan_action(task, BrowserState, history_text, available_tools)
+                 -> build_prompt()
+                 -> _initial_planning_mode()
+                 -> _call_structured() / _call()
+                 -> parse_provider_tool_call() / parse_llm_response()
+            -> ToolExecutor.validate_tool_call()
+                 -> registry schema/validate_params
+                 -> current observation ref 与 policy planner preflight
+       -> LoopDetector.add_action（仅已验证动作）
+  -> validated ToolCall | None
 ```
+
+`ToolExecutor.execute()` 属于随后的 `_act()` 阶段，不在 `_think()` 或 planner repair loop 内；
+主循环会先为已验证动作写入 pending-action checkpoint，再进入执行时授权。
 
 `WebAgent.__init__` 还会把 `ToolExecutor.get_tool_specs()` 返回的、已经按 exposure policy 过滤过的工具目录交给 `APIPlanner.configure_tools()`。因此 provider 收到的工具集合与运行时允许执行的集合一致；隐藏的 API-augmented 工具不会因为 schema 导出而重新暴露。
 
@@ -43,6 +58,10 @@ native-tools:required
 `native-tools:auto` 仍向 provider 发送完整工具 schema，但模型也可以返回普通文本而不调用工具。
 这比 `required` 的动作约束弱；运行时仍依靠单动作 parser、planner repair、工具暴露门和 execution
 policy 拒绝无效/越权动作。该兼容分支不会把隐藏工具重新暴露。
+
+在真实 provider 运行中，首次 `required` 能力拒绝会保留为失败 attempt，成功协商到 `auto` 后
+才继续。只要次数有界、没有把鉴权/429/5xx 误判为能力问题，且最终动作与独立任务判分有效，
+该 400 属于可接受的兼容性证据，而不是需要从 trace 中删除的“脏数据”。
 
 显式选择某个模式时不会静默降级；配置或 provider 不兼容会直接暴露出来。
 
@@ -79,7 +98,11 @@ JSON Schema fallback 为兼容不同 OpenAI-compatible provider，只严格约�
 - 近期步骤、持久 evidence、active milestone 和当前 strategy hint；
 - policy notice 与当前允许的工具描述。
 
-DOM 最多取 6000 字符。非空截图压成 JPEG；若 vision probe 不通过，或当前 `file://` 预览已经有结构化 PDF/image 工具证据，规划请求不重复发送截图。所有 transport 共享 `TRANSPORT_AGNOSTIC_PLANNING_RULES`，所以 latest/newest、官方来源、显式日期、Figure 排名核对和禁止臆造等规则不会因降级而消失。
+页面文本按完整块分别打包：`viewport_context` 默认 5000 字符并与 viewport screenshot 同范围，
+`document_context` 默认 2500 字符且明确标注为屏幕外补充；省略数量随观察传入。非空截图压成
+JPEG；若 vision probe 不通过，或当前 `file://` 预览已经有结构化 PDF/image 工具证据，规划请求
+不重复发送截图。所有 transport 共享 `TRANSPORT_AGNOSTIC_PLANNING_RULES`，所以 latest/newest、
+官方来源、显式日期、Figure 排名核对和禁止臆造等规则不会因降级而消失。
 
 ## 响应解析
 

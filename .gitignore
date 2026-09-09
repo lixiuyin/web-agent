@@ -34,12 +34,18 @@ htmlcov/
 # Agent run output: screenshots, downloaded PDFs, extracted content, figures.
 browser_profile/
 uploads/
-outputs/
 *.log
 
 # ── Model weights / local symlinks ───────────────────────────────────
 weights/
 *.pdf
+
+# Raw evaluations stay local. Only the reviewed, date-frozen evidence bundle is public.
+outputs/*
+!outputs/published/
+outputs/published/*
+!outputs/published/2026-09-09/
+!outputs/published/2026-09-09/**
 
 # ── IDE / editor ─────────────────────────────────────────────────────
 .obsidian/
@@ -51,3 +57,6 @@ weights/
 # ── OS ───────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
+
+# ── Custom files ───────────────────────────────────────────────────────
+.playwright-mcp

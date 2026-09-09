@@ -58,8 +58,30 @@ For a repository-hosted candidate, the identity search must expose that reposito
 and owner. A vendor homepage alone does not endorse a later GitHub owner, and bare
 `site:github.com` is not sufficient scope evidence.
 
+An official owner's rendered repository index can satisfy the independent owner/scope
+cross-check when it visibly exposes the candidate under that owner. Once that index
+reveals a highest dotted subject version, policy recovery prioritizes the exact frontier
+repository and its report file. An older candidate's PDF does not become downloadable
+merely because it was observed first. A named-version report/PDF match must come from one
+search-result row or the exact first-party repository; tokens combined across unrelated
+rows are not evidence.
+
+A task-matching, non-`site:` search contributes identity evidence through three signals:
+results whose visible text claims to be official, results hosted on a domain whose brand
+label is exactly a subject keyword (`qwen.ai` for a Qwen task, but not `qwen-mirror.*`),
+and, when the query itself asks for the official presence, results on a host the query
+names. Only if none of those signals is present does the whole result set stand in.
+Downloads bind to a target for these owner/host checks: `download_pdf` to its URL,
+`download_file` to the page hosting the clicked control, and `done` to the selected
+candidate. Only PDF-like pages (a `.pdf` blob or an arXiv rendition) become the selected
+candidate when `inspect_download_links` finds no URL; an ordinary HTML page does not.
+
 After each valid search, the planner receives the remaining checklist. A premature
 action is denied with all missing prerequisites; a denied `done` remains a failed step.
+While the selected candidate still lacks binding evidence, the per-step
+`CONTROLLER EVIDENCE RECOVERY` hint repeats the gap. An exact repeat of a denied call is
+rejected before it consumes an action step until some allowed action has run, because
+the outcome cannot have changed.
 
 ## PDF acquisition
 
@@ -69,6 +91,47 @@ HTML, that response is deleted. The planner must open the preview and call
 and file-history links before the raw file can be authorized.
 
 This prevents a failed preview request from silently revealing a hidden retry URL.
+
+Some hosts render a binary-file download only as a JavaScript button without an `href`
+(for example GitHub's "Download raw file" control on a PDF blob page reached by clicking
+through the repository tree). `inspect_download_links` then reports that control under
+`download_controls` instead of inventing a URL, and the planner clicks it with
+`download_file`. A bare "Download" button on an ordinary HTML page is ignored because it
+usually fetches an app or dataset; a control counts only when its label names a document
+artifact (raw, file, PDF, paper, report, ...) or when the page itself is a PDF rendition. A PDF saved this way is registered as an evidence-grounded download, so
+`pdf_analyze_figure` and the other `pdf_*` tools accept its path, `done` treats the PDF
+deliverable as satisfied, and the trace verifier counts it for PDF tasks. For
+latest/newest tasks, `download_file` is subject to the same evidence checklist as
+`download_pdf`; non-PDF downloads are never registered.
+
+## arXiv candidates
+
+arXiv is a paper index, so identity and scope searches can never endorse `arxiv.org`.
+An arXiv PDF becomes admissible only when its `/abs/<id>` link was planner-visible
+(`get_all_links`) on a page that both the identity and the scope evidence endorse: a
+repository under the endorsed host/owner, or the endorsed official website host. When the
+selected candidate is an unendorsed arXiv page or PDF, the denial and the per-step
+`CONTROLLER EVIDENCE RECOVERY` hint name the endorsed official pages already observed and
+the exact route (open that page, enumerate its links, retry). Pages whose path shares a
+name token with the document's observed title (for example `QwenLM/Qwen3` for "Qwen3
+Technical Report") are listed first. A link seen on a third-party site outranks the same
+URL exposed by the arXiv page about itself, so the order in which the pages were visited
+does not matter.
+
+## Subject binding for linked documents
+
+An official page also links to unrelated papers (a blog post may cite a data-selection
+paper its model reproduced), so link context alone does not make a document the task's
+deliverable. The policy keeps the visible text the planner saw beside every URL — search
+result titles, anchor text, download-candidate labels, and the `title` returned by
+`goto`. For latest/newest tasks, a document hosted outside the endorsed official host (an
+arXiv rendition or a third-party PDF) must have at least one observed label or file name
+that names a task subject token before `download_pdf`, `download_file`, or `done` is
+allowed. A badge link with empty anchor text is satisfied by opening the paper's own page
+so its title becomes evidence; a PDF hosted by the official host itself is not subject to
+this check. Opening an arXiv `/abs/` page selects that paper as the candidate, so the
+per-step `CANDIDATE EVIDENCE INCOMPLETE` hint reports the missing subject binding before a
+download step is spent. Labels are checkpointed under `observed_labels`.
 
 ## Search engines and challenges
 
@@ -90,3 +153,12 @@ schemas, missing task-required stages, unresolved challenges, and invalid URL pr
 Passing verification means the recorded run followed the anti-shortcut contract. It
 does not prove that the chosen report is globally latest or that the natural-language
 figure interpretation is correct.
+
+Operational acceptance therefore also requires the manifest evaluator to persist
+`evaluation/task.json` with every required assertion passing. A strict task may still
+contain a small number of bounded failed search actions or planner attempts when their
+raw failures are retained and later recovered. It is not acceptable if they cause an
+invalid certificate, wrong report, missing PDF/Figure, false completion, unresolved
+challenge, or budget-exhausting loop. See the
+[evaluation protocol](../research/evaluation-protocol.md) and the
+[2026-09-09 Qwen validation](../research/results/qwen-strict-search-2026-09-09.zh-CN.md).

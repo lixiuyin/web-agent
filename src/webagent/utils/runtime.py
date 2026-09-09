@@ -7,9 +7,15 @@ from functools import lru_cache
 from pathlib import Path
 
 
-def _python_source_fingerprint(package_root: Path) -> str:
+def _python_source_fingerprint(
+    package_root: Path, *, excluded_directories: tuple[str, ...] = ()
+) -> str:
     """Hash Python paths and bytes below one package root deterministically."""
-    source_paths = sorted(package_root.rglob("*.py"))
+    source_paths = sorted(
+        path
+        for path in package_root.rglob("*.py")
+        if path.relative_to(package_root).parts[0] not in excluded_directories
+    )
     if not source_paths:
         raise RuntimeError(f"no Python sources found below {package_root}")
     digest = hashlib.sha256()
@@ -25,22 +31,17 @@ def _python_source_fingerprint(package_root: Path) -> str:
 
 @lru_cache(maxsize=1)
 def agent_source_fingerprint() -> str:
-    """Hash every Python source file in the active ``webagent`` package."""
+    """Hash runtime and shared evaluation Python sources, excluding benchmarks."""
     package_root = Path(__file__).resolve().parents[1]
-    return _python_source_fingerprint(package_root)
+    return _python_source_fingerprint(package_root, excluded_directories=("benchmarks",))
 
 
 def _benchmarks_package_root() -> Path:
-    """Locate the benchmark package in a source checkout or installed wheel."""
-    webagent_root = Path(__file__).resolve().parents[1]
-    candidates = (
-        webagent_root.parent / "benchmarks",
-        webagent_root.parent.parent / "benchmarks",
-    )
-    for candidate in candidates:
-        if (candidate / "__init__.py").is_file():
-            return candidate
-    raise RuntimeError("installed benchmarks package could not be located beside webagent")
+    """Locate the benchmark subpackage in a source checkout or installed wheel."""
+    benchmarks_root = Path(__file__).resolve().parents[1] / "benchmarks"
+    if not (benchmarks_root / "__init__.py").is_file():
+        raise RuntimeError("benchmarks subpackage could not be located inside webagent")
+    return benchmarks_root
 
 
 @lru_cache(maxsize=1)

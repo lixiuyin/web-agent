@@ -4,6 +4,9 @@ from __future__ import annotations
 
 from typing import Any
 
+from webagent.browser.references import execute_reference
+from webagent.core.models import ToolResult
+
 
 class BrowserToolBase:
     """Stores the injected browser controller and ignores unrelated tool kwargs.
@@ -16,3 +19,6 @@ class BrowserToolBase:
 
     def __init__(self, browser: Any = None, **kw: Any) -> None:
         self.browser = browser
+
+    async def execute_observed(self, name: str, params: dict[str, Any]) -> ToolResult | None:
+        return await execute_reference(self.browser, name, params)

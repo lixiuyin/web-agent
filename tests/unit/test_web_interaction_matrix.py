@@ -3,7 +3,8 @@
 from pathlib import Path
 
 import pytest
-from benchmarks.studies.controlled_web_matrix import _publish_matrix, aggregate_reports
+
+from webagent.benchmarks.studies.controlled_web_matrix import _publish_matrix, aggregate_reports
 
 
 def test_aggregate_reports_uses_task_level_counts() -> None:

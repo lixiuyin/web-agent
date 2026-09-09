@@ -10,6 +10,11 @@ from contextlib import suppress
 from pathlib import Path
 from typing import Any
 
+from webagent.evaluation.evidence_integrity import (
+    artifact_failures,
+    candidate_failures,
+    has_completed_figure,
+)
 from webagent.evaluation.trace_schema import (
     RUN_TRACE_SCHEMA_VERSION,
     TraceSchemaError,
@@ -17,11 +22,12 @@ from webagent.evaluation.trace_schema import (
 )
 from webagent.tools.exposure import DIRECT_SOURCE_DISCOVERY_TOOLS
 from webagent.tools.policy import PLANNER_VISIBLE_URL_PROVENANCE_SOURCES
+from webagent.utils.runtime import package_source_fingerprint
 
 _FORBIDDEN_DISCOVERY_TOOLS = DIRECT_SOURCE_DISCOVERY_TOOLS
 
 
-def verify_trace(trace: dict[str, Any]) -> dict[str, Any]:
+def verify_trace(trace: dict[str, Any], *, evidence_root: Path | None = None) -> dict[str, Any]:
     """Validate a supported trace version, then verify anti-shortcut invariants."""
     source_schema_version = trace.get("schema_version")
     try:
@@ -44,7 +50,7 @@ def verify_trace(trace: dict[str, Any]) -> dict[str, Any]:
             "warnings": [],
         }
 
-    report = _verify_v8(normalized)
+    report = _verify_v8(normalized, evidence_root)
     report["source_schema_version"] = source_schema_version
     report["verified_schema_version"] = RUN_TRACE_SCHEMA_VERSION
     checks = report["checks"]
@@ -57,7 +63,7 @@ def verify_trace(trace: dict[str, Any]) -> dict[str, Any]:
     return report
 
 
-def _verify_v8(trace: dict[str, Any]) -> dict[str, Any]:
+def _verify_v8(trace: dict[str, Any], evidence_root: Path | None = None) -> dict[str, Any]:
     """Verify the normalized v8 anti-shortcut contract."""
     failures: list[str] = []
     warnings: list[str] = []
@@ -84,7 +90,7 @@ def _verify_v8(trace: dict[str, Any]) -> dict[str, Any]:
     _check_workflow(task, successful, failures)
     _check_shortcuts(valid_steps, successful, failures, warnings)
     _check_step_policies(valid_steps, failures)
-    _check_latest_evidence(task, valid_steps, failures)
+    _check_latest_evidence(task, valid_steps, failures, evidence_root)
     _check_runtime_events(trace.get("events"), failures)
     _check_continuation(trace, failures)
 
@@ -173,6 +179,18 @@ def _valid_steps(raw_steps: Any, run_id: Any, failures: list[str]) -> list[dict[
     return steps
 
 
+def _has_pdf_download_file(successful: list[dict[str, Any]]) -> bool:
+    """Return whether a grounded ``download_file`` click saved a PDF artifact."""
+    for step in successful:
+        if str(step.get("tool", "")).casefold() != "download_file":
+            continue
+        result = step.get("result")
+        path = result.get("path") if isinstance(result, dict) else None
+        if isinstance(path, str) and path.casefold().endswith(".pdf"):
+            return True
+    return False
+
+
 def _check_workflow(task: str, successful: list[dict[str, Any]], failures: list[str]) -> None:
     _require(
         bool(successful) and successful[0].get("tool") == "search",
@@ -183,10 +201,14 @@ def _check_workflow(task: str, successful: list[dict[str, Any]], failures: list[
     _require("search" in tools, "no successful browser search", failures)
     _require("done" in tools, "no successful done action", failures)
     if "pdf" in task:
-        _require("download_pdf" in tools, "PDF task has no successful download_pdf", failures)
+        _require(
+            "download_pdf" in tools or _has_pdf_download_file(successful),
+            "PDF task has no successful download_pdf or download_file PDF download",
+            failures,
+        )
     if "figure" in task or "图" in task:
         _require(
-            "pdf_analyze_figure" in tools or "pdf_get_figure_info" in tools,
+            has_completed_figure(successful),
             "figure task has no successful figure analysis",
             failures,
         )
@@ -239,7 +261,10 @@ def _check_step_policies(valid_steps: list[dict[str, Any]], failures: list[str])
 
 
 def _check_latest_evidence(
-    task: str, valid_steps: list[dict[str, Any]], failures: list[str]
+    task: str,
+    valid_steps: list[dict[str, Any]],
+    failures: list[str],
+    evidence_root: Path | None = None,
 ) -> None:
     latest_task = any(term in task for term in ("latest", "newest", "most recent", "最新", "最近"))
     if not latest_task:
@@ -248,7 +273,7 @@ def _check_latest_evidence(
         (
             step.get("policy", {})
             for step in reversed(valid_steps)
-            if step.get("tool") == "done" and step.get("success") is True
+            if "search_completed" in step.get("policy", {})
         ),
         {},
     )
@@ -260,6 +285,7 @@ def _check_latest_evidence(
         "newer_version_leads_resolved",
     ):
         _require(terminal_policy.get(key) is True, f"latest-task evidence missing: {key}", failures)
+    failures.extend(candidate_failures(task, valid_steps, evidence_root))
 
 
 def _check_runtime_events(value: Any, failures: list[str]) -> None:
@@ -292,8 +318,22 @@ def write_verification_certificate(trace_path: Path) -> Path:
     """Write a hash-bound verification report beside the supplied trace JSON."""
     raw = trace_path.read_bytes()
     trace = json.loads(raw)
-    report = verify_trace(trace)
+    root = trace_path.parent.parent if trace_path.parent.name == "trajectory" else trace_path.parent
+    report = verify_trace(trace, evidence_root=root)
+    artifact_errors, checked = artifact_failures(root, trace)
+    report["failures"].extend(artifact_errors)
+    report["valid"] = not report["failures"]
+    report["artifact_integrity"] = {
+        "valid": not artifact_errors if checked or artifact_errors else None,
+        "checked": checked,
+    }
+    report["answer_correctness"] = {
+        "evaluated": False,
+        "valid": None,
+        "reason": "No independent answer oracle was run; compliance is not correctness.",
+    }
     report["certificate_schema_version"] = 1
+    report["verifier_source_sha256"] = package_source_fingerprint()
     report["trace_sha256"] = hashlib.sha256(raw).hexdigest()
     report["trace_path"] = trace_path.name
     certificate_path = trace_path.with_name("verification.json")
