@@ -1,4 +1,4 @@
-"""Tests for default browser-grounded tool exposure."""
+"""Tests for explicit browser-grounded tool exposure."""
 
 from __future__ import annotations
 

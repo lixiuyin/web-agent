@@ -17,6 +17,19 @@ IMAGE_RE = re.compile(r"!\[([^\]]*)\]\(([^)]+)\)")
 FENCE_RE = re.compile(r"^\s*(`{3,}|~{3,})")
 EXCLUDED_TOP_LEVEL = {"outputs", "browser_profile", "uploads"}
 EXCLUDED_PART_PREFIXES = (".venv", "build-", "dist-")
+README_SECTION_PAIRS = (
+    ("What is WebAgent?", "WebAgent 是什么？"),
+    ("Highlights", "技术亮点"),
+    ("Architecture", "架构"),
+    ("Quick start", "快速开始"),
+    ("Recorded effect showcase", "已记录的效果展示"),
+    ("Evaluation status", "评测状态"),
+    ("Documentation", "文档导航"),
+    ("Development", "开发"),
+    ("Authors and project history", "作者与项目沿革"),
+    ("Acknowledgements", "致谢"),
+    ("License", "许可证"),
+)
 
 
 def _is_excluded(path: Path) -> bool:
@@ -234,9 +247,57 @@ def _check_table_row(
     return table_width, problems
 
 
+def _readme_link_targets(text: str) -> set[str]:
+    """Return factual link targets, excluding language switches and badge wrappers."""
+    targets = {_link_target(raw_target) for _label, raw_target in LINK_RE.findall(text)}
+    return {
+        target
+        for target in targets
+        if target
+        and target not in {"README.md", "README.zh-CN.md"}
+        and not (target.startswith("https://img.shields.io/") or target.endswith("badge.svg"))
+    }
+
+
+def _table_row_counts(text: str) -> list[int]:
+    counts: list[int] = []
+    current = 0
+    for line in [*text.splitlines(), ""]:
+        if line.lstrip().startswith("|"):
+            current += 1
+        elif current:
+            counts.append(max(0, current - 2))
+            current = 0
+    return counts
+
+
+def _check_root_readme_parity() -> list[str]:
+    """Keep the two audience-equivalent landing pages structurally synchronized."""
+    english_path = ROOT / "README.md"
+    chinese_path = ROOT / "README.zh-CN.md"
+    if not english_path.is_file() or not chinese_path.is_file():
+        return ["root README bilingual pair is incomplete"]
+
+    english = english_path.read_text(encoding="utf-8")
+    chinese = chinese_path.read_text(encoding="utf-8")
+    problems: list[str] = []
+    for english_heading, chinese_heading in README_SECTION_PAIRS:
+        if f"## {english_heading}" not in english:
+            problems.append(f"README.md: missing bilingual section {english_heading!r}")
+        if f"## {chinese_heading}" not in chinese:
+            problems.append(f"README.zh-CN.md: missing bilingual section {chinese_heading!r}")
+
+    if _table_row_counts(english) != _table_row_counts(chinese):
+        problems.append("root READMEs have different table row structures")
+    if _readme_link_targets(english) != _readme_link_targets(chinese):
+        problems.append("root READMEs have different factual link targets")
+    return problems
+
+
 def main() -> int:
     files = _markdown_files()
     problems = [problem for path in files for problem in _check_file(path)]
+    problems.extend(_check_root_readme_parity())
     if problems:
         print("Documentation check failed:")
         for problem in problems:

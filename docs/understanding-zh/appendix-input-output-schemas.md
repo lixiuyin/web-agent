@@ -271,7 +271,7 @@ config: AgentConfig
 | legacy selector | `{"selector":{"type":"css\|text","value":"..."}}` |
 | URL | `{"url":"https://..."}` |
 | path | `{"path":"relative/to/artifacts"}` |
-| search | `{"query":"...","engine":"google\|bing\|duckduckgo","recency":"..."}` |
+| search | `{"query":"...","engine":"bing\|seznam\|yahoo_japan\|yahoo\|duckduckgo\|google","recency":"week\|month\|year\|latest"}` |
 | official report | `{"subject":"project/model","official_owner":"exact GitHub owner"}` |
 | PDF figure | `{"path":"paper.pdf","figure":"1","question":"..."}` |
 | finish | `{"summary":"actual final answer","attachments":["..."]}` |

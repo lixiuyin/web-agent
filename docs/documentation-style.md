@@ -38,6 +38,16 @@ counts.
 - Use backticks for commands, configuration fields, filenames, module names, and literal
   values. Do not use emphasis as a substitute for a semantic label.
 
+The root English and Chinese READMEs are audience-equivalent landing pages rather than
+literal line-by-line translations. Keep their section order and factual claims aligned:
+product scope, runtime defaults, demo evidence, evaluation boundary, navigation, authorship,
+and limitations must change together. Language-specific source-study material may remain
+Chinese-only when the documentation index labels that scope explicitly.
+
+`scripts/check_docs.py` enforces the paired root sections, corresponding table shapes, and
+factual link targets. It deliberately does not require literal translations or duplicate the
+Chinese-only source-study material.
+
 ## Evidence language
 
 Use these labels consistently:

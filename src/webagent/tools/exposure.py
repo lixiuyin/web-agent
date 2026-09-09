@@ -1,4 +1,4 @@
-"""Tool-exposure profiles for browser-grounded and API-augmented runs."""
+"""Tool-exposure profiles for ordinary Hybrid and restricted browser-grounded runs."""
 
 from __future__ import annotations
 
@@ -20,8 +20,7 @@ def allowed_tools_for_discovery_mode(
 
     ``None`` preserves the executor convention meaning "all registered tools".
     Browser-grounded mode removes direct-source discovery tools from both the
-    planner prompt and runtime dispatch; hybrid mode is the explicit opt-in that
-    exposes them.
+    planner prompt and runtime dispatch; the ordinary Hybrid mode exposes them.
     """
     if discovery_mode == "hybrid":
         return None

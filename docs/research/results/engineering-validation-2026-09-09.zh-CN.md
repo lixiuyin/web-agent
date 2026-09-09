@@ -6,7 +6,7 @@
 和历史 output 删除，因此不把 HEAD 单独称为被测源码。
 
 当前运行时 source SHA-256 为
-`7528f7f8d2a54ed2a9858e4ac89d031737bf02a5d3a00a23976b4f15bf0cfd22`，benchmark source
+`510bbfe8fe71c659c970f8975c1954f78ac5682a6f0fdb560b1e111338270dfa`，benchmark source
 SHA-256 为 `5f42ae4fb634903562c25206f1d754c233a35829280f49e49205a58fdaeb4849`。
 后者包含 campaign 完成后的机械格式化，因此与 R7 保存的 benchmark hash 不同；R7 报告仍以
 自己的运行时 hash 为权威。
@@ -16,14 +16,17 @@ SHA-256 为 `5f42ae4fb634903562c25206f1d754c233a35829280f49e49205a58fdaeb4849`�
 | 门禁 | 结果 |
 |---|---|
 | `ruff check src/ scripts/ tests/` | 通过 |
-| `ruff format --check src/ scripts/ tests/` | 301 个文件已格式化 |
-| `mypy src/ scripts/` | 190 个 source files 无问题 |
+| `ruff format --check src/ scripts/ tests/` | 303 个文件已格式化 |
+| `mypy src/ scripts/` | 191 个 source files 无问题 |
 | `uv run python scripts/check_docs.py` | 53 个 Markdown 文件通过 |
-| `pytest tests/unit/ -v` | 1,445 passed；综合 statement/branch coverage 86.81%，达到 85% 门槛 |
-| `pytest tests/integration/ -v --no-cov` | 37 passed；真实 headless Chromium，128.45 秒 |
+| `pytest tests/unit/ -v` | 1,450 passed；综合 statement/branch coverage 86.80%，达到 85% 门槛 |
+| `pytest tests/integration/ -v --no-cov` | 37 passed；真实 headless Chromium，163.85 秒 |
 | `git diff --check` | 通过 |
 
-运行环境记录为 Python 3.13.0、Playwright 1.58.0、pytest 9.0.2、Mypy 2.1.0。依赖版本只绑定
+运行环境记录为 Python 3.13.0、Playwright 1.58.0、pytest 9.0.2、Mypy 2.1.0、Ruff 0.15.16。
+本轮同时核对了 CLI help、`AgentConfig`、`.env.example` 与指南的默认发现模式，补齐中文
+tool-schema 附录的完整搜索引擎枚举，并新增根目录中英文 README 的章节、表格与事实链接一致性
+检查。依赖版本只绑定
 本次本地运行，不表示远端 CI 已执行。
 
 ## 日期化评测与展示产物

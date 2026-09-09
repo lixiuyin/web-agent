@@ -1,4 +1,4 @@
-"""Default browser-grounded mode binds navigation and downloads to evidence."""
+"""Browser-grounded mode binds navigation and downloads to visible evidence."""
 
 from __future__ import annotations
 

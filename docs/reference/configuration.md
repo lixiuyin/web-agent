@@ -14,7 +14,8 @@ remains the command-line authority.
 |---|---|---|
 | `model_api_url` | unset | OpenAI-compatible chat-completions endpoint |
 | `model_api_key` | unset | Planner credential; never commit it |
-| `model_name` | unset | Provider model identifier |
+| `model_name` | `qwen-vl-plus` | Provider model identifier; `.env.example` overrides this sample value |
+| `endpoint_access_mode` | `unknown` | Non-secret experiment label: `unknown`, `shared`, or `byok` |
 | `api_timeout` | `60` | Per-read planner HTTP timeout in seconds |
 | `api_hard_timeout` | `300` | Hard wall-clock cap for one planner call |
 | `api_transient_retries` | `2` | Bounded retries for HTTP 429 and transient 5xx responses |
@@ -31,7 +32,9 @@ remains the command-line authority.
 | `history_context_length` | `10` | Number of recent actions retained in planner history |
 | `history_full_result_steps` | `2` | Newest tool results replayed without summarization |
 | `use_vllm` | `False` | Use a local OpenAI-compatible vLLM server |
-| `vllm_api_url` | project default | Local vLLM endpoint |
+| `vllm_model_name` | `qwen3_vl` | Model identifier sent to the local server |
+| `vllm_api_url` | `http://127.0.0.1:8000/v1/chat/completions` | Local vLLM endpoint |
+| `vllm_api_key` | `EMPTY` | Local bearer token placeholder; override if the server requires authentication |
 
 If no usable planner is configured, the runtime selects `StubPlanner`. That path is for
 lifecycle calibration and explicit failure reporting, not autonomous task completion.

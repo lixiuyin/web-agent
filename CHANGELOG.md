@@ -26,6 +26,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   prerequisites, calibration-before-full-run sequence, and the remaining three-date readiness gap.
 
 ### Fixed
+- Align current user-facing documentation with the implemented runtime: ordinary discovery
+  defaults to Hybrid, browser-grounded remains an explicit restricted mode, and strict evaluation
+  forces browser-grounded isolation. Document the expanded Bing → Yahoo Japan → Seznam → Yahoo →
+  DuckDuckGo fallback order, with Google available only through explicit browser/API opt-in.
+- Clarify that the active planner uses one OpenAI-compatible HTTP implementation rather than
+  native OpenAI, Azure, Claude, or Gemini SDK adapters; provider-specific compatibility remains an
+  endpoint contract, while MiniMax has only a dedicated optional vision route.
+- Keep the English and Chinese landing pages factually synchronized and move detailed mutable
+  campaign metrics and failure analysis back to their dated research-result owner documents.
+  The documentation checker now detects missing paired sections, divergent table shapes, and
+  factual link-target drift across the two landing pages.
 - Reconcile the architecture, browser, planner, tool, benchmark, study, and interview guides with
   the rendered observation/compact-reference implementation, split context budgets, current
   `webagent.benchmarks` package paths, and the enforced complexity gate.

@@ -219,7 +219,7 @@ TOOL_PARAMETER_SCHEMAS: dict[str, JsonSchema] = {
         {"path": _PATH, "open_browser": _boolean(default=True)}, required=("path",)
     ),
     "analyze_image": _object({"path": _PATH, "question": _string()}, required=("path", "question")),
-    # Browser-grounded and optional API-augmented discovery.
+    # Ordinary Hybrid and restricted browser-grounded discovery.
     "search": _object(
         {
             "query": _string(),

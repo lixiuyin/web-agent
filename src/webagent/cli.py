@@ -148,8 +148,8 @@ def _add_evaluation_arguments(parser: argparse.ArgumentParser) -> None:
         "--discovery-mode",
         choices=("browser-grounded", "hybrid"),
         help=(
-            "Discovery tool exposure (default: browser-grounded; hybrid explicitly enables "
-            "direct arXiv/GitHub API tools)"
+            "Discovery tool exposure (default: hybrid; browser-grounded hides direct "
+            "arXiv/GitHub API tools)"
         ),
     )
     parser.add_argument(

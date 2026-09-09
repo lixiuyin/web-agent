@@ -324,6 +324,16 @@ def test_parse_args_supports_hybrid_discovery(monkeypatch):
     assert parse_args().discovery_mode == "hybrid"
 
 
+def test_cli_help_reports_configured_discovery_default(monkeypatch, capsys):
+    monkeypatch.setattr(sys, "argv", ["webagent", "--help"])
+
+    with pytest.raises(SystemExit) as exc_info:
+        parse_args()
+
+    assert exc_info.value.code == 0
+    assert "default: hybrid" in capsys.readouterr().out
+
+
 def test_parse_args_supports_high_risk_prompt(monkeypatch):
     monkeypatch.setattr(
         sys,

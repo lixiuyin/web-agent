@@ -18,16 +18,16 @@ assertions and the anti-shortcut certificate establish the recorded pass.
 ## What is WebAgent?
 
 WebAgent drives a real Chromium browser through an **Observe → Think → Act → Record**
-loop. It combines a screenshot with a structured DOM snapshot, asks an OpenAI-compatible
-planner for one typed tool call, executes it under runtime policy, and retains an
-auditable trajectory.
+loop. It captures a consistency-checked viewport image and rendered DOM projection, asks
+an OpenAI-compatible planner for one typed tool call, executes it under runtime policy,
+and retains an auditable trajectory. In the default adaptive mode, the observation keeps
+the screenshot while the planner receives it only when visual evidence is needed.
 
 The runtime is model-agnostic, supports local vLLM, and includes document intelligence
 for downloading PDFs, routing across OCR/parsing providers, locating a figure by its real
 caption, and analyzing the extracted image with vision.
 
 ## Highlights
-
 
 | Area                | Capability                                                                                   |
 | ------------------- | -------------------------------------------------------------------------------------------- |
@@ -38,7 +38,7 @@ caption, and analyzing the extracted image with vision.
 | Evidence            | Versioned traces, strict anti-shortcut certificates, and independent task judgment           |
 | Documents           | Caption-grounded Figure resolution and quality-gated parser cascade                          |
 | Evaluation          | Internal diagnostic suites plus separate BrowserGym WebArena/VWA evidence                    |
-| Engineering         | 67 registered tools, strict typing, Ruff, and an 85% combined statement/branch coverage gate                    |
+| Engineering         | 67 registered tools, strict typing, Ruff, and an 85% combined statement/branch coverage gate  |
 
 ## Architecture
 
@@ -134,75 +134,14 @@ provenance, and limitations. The earlier
 [2026-09-02 mode comparison](docs/research/results/qwen-report-modes-2026-09-02.md) remains
 a historical analysis; its retired local output bundle is not the source of this GIF.
 
-### Current local evaluation snapshot
-
-The following numbers were read from the machine-readable reports on 2026-09-09. The
-complete local R7 campaign is rooted at
-`outputs/campaigns/generality-2026-09-09-rerun-r7/`; its batch is `completed` and contains
-both requested endpoints with no exclusions. The reviewed subset is preserved in the
-[frozen evidence bundle](outputs/published/2026-09-09/README.md).
-
-| Model | Open web | Sandbox | Long horizon | Overall |
-|---|---:|---:|---:|---:|
-| GLM-5.3-Flash | 30/30 | 5/5 | 1/1 | 36/36 |
-| Qwen3.8-Flash | 30/30 | 4/5 | 1/1 | 35/36 |
-| **Combined** | **60/60** | **9/10** | **2/2** | **71/72 (98.61%)** |
-
-The complete local paired strict-search results are rooted at
-`outputs/validation/2026-09-09-qwen-paired-r5/`; their hash-verifiable trace closures are
-included in the frozen bundle. Both models completed the Qwen report task: each passed
-10/10 required assertions and 6/6 trajectory-certificate checks. The campaign portfolio
-remains `insufficient`, not incomplete: it has one common complete date, while the
-preregistered longitudinal gate requires three.
-
-The current directory therefore contains 74 canonical, non-shard task judgments: 72 from
-R7 and two from paired R5, with 73 passes and the single failure analyzed below. They are
-reported separately rather than pooled because paired R5 uses a different task set and
-source fingerprint. Files under `diagnostics/` are operational logs, not scored runs.
-
-Raw generated `outputs/` are gitignored and are not treated as durable documentation. The
-allowlisted bundle uses 58 physical files (about 13 MB) to retain 324 evidence records,
-including aggregate reports, both strict trace-verification closures, the sole failed
-trajectory, and long-horizon recovery evidence. Three deterministic archives contain the
-many small hash-bound files; its [manifest](outputs/published/2026-09-09/MANIFEST.json)
-records every source path, purpose, storage location, byte size, and SHA-256 digest. The
-corresponding narrative records are the
-[R7 campaign record](docs/research/results/generality-campaign-2026-09-09.zh-CN.md) and the
-[paired strict-search record](docs/research/results/qwen-strict-search-2026-09-09.zh-CN.md).
-
-### Failed trajectory analysis
-
-There is one terminally failed task: Qwen's `sandbox_checkout`. It scored 0.375 after 18
-steps and 17 non-terminal actions, with two failed tool actions and one failed planner
-attempt. The cart contained exactly one Orbit Notebook and both required origins were
-visited, but the external state judge found no `/order/complete` URL or completion marker,
-no saved `42 Orbit Road`, no accepted terms, and no submitted order.
-
-The trace supports this causal chain:
-
-1. After adding the item, step 2 was already on the correct checkout page. The current
-   observation exposed the address input, terms checkbox, and submit button as visible,
-   enabled DOM controls, so missing or truncated browser evidence was not the cause.
-2. The planner extracted checkout text instead of typing and clicking those controls. It
-   then guessed an unobserved host-root URL; the browser-grounding policy correctly denied
-   that action.
-3. A multi-step `back` entered `/upload` and `/files` pages retained in browser history from
-   another sandbox flow. The model followed those irrelevant pages instead of returning to
-   the known checkout controls. Retaining cross-task navigation history is a contributing
-   isolation weakness, although it did not force the failure because the required controls
-   were already actionable before the detour.
-4. At the final action budget, the controller required `done`. The final answer explicitly
-   admitted that the order was not verified and reported success probability 0.15.
-
-The aggregate report labels this a `false_completion` because the current evaluator maps a
-successfully executed `done` action to `agent_reported_success=true`. That field does not
-match the semantic content of this particular final answer. The task failure and 0.375
-score are valid; the narrower interpretation that the model confidently claimed success is
-not. The 3 Qwen and 2 GLM failed actions in paired R5 were bounded search failures followed
-by recovery, so they are retained as action-level failures and are not failed trajectories.
-
 ## Evaluation status
 
+The latest complete repository diagnostic is the dated 2026-09-09 R7 campaign. Its one
+failed sandbox trajectory, exact metrics, source bindings, and interpretation limits live
+in the [campaign record](docs/research/results/generality-campaign-2026-09-09.zh-CN.md),
+with the reviewed machine-readable subset in the
+[frozen evidence bundle](outputs/published/2026-09-09/README.md). Keeping those volatile
+details in dated records prevents this landing page from becoming a second source of truth.
 
 | Layer                  | Scope                                                          | Current state                                                             |
 | ---------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------- |
@@ -210,14 +149,12 @@ by recovery, so they are retained as action-level failures and are not failed tr
 | WebArena-Verified Hard | BrowserGym native tasks/evaluator                              | Not run; official sites and reset calibration required                    |
 | VisualWebArena         | BrowserGym native tasks/evaluator                              | Not run; official sites, reset calibration, and evaluator assets required |
 
-
 Scores are never averaged across these layers. Read exact dated results in the
 [results index](docs/research/results/README.md), the stable methodology in the
 [evaluation protocol](docs/research/evaluation-protocol.md), and executable suites in the
 [benchmark guide](src/webagent/benchmarks/README.md).
 
 ## Documentation
-
 
 | Goal                                            | Entry point                                                    |
 | ----------------------------------------------- | -------------------------------------------------------------- |
@@ -227,8 +164,8 @@ Scores are never averaged across these layers. Read exact dated results in the
 | Configure the runtime                           | [Configuration reference](docs/reference/configuration.md)     |
 | Understand outputs and resume state             | [Run artifacts](docs/reference/run-artifacts.md)               |
 | Review browser and action boundaries            | [Browser and security](docs/reference/browser-and-security.md) |
-| Run evaluation suites                           | [Benchmarks](src/webagent/benchmarks/README.md)                             |
-| Study source call chains in Chinese             | [中文源码理解手册](docs/understanding-zh/README.md)                    |
+| Run evaluation suites                           | [Benchmarks](src/webagent/benchmarks/README.md)                |
+| Study source call chains in Chinese             | [中文源码理解手册](docs/understanding-zh/README.md)          |
 | Navigate everything                             | [Documentation index](docs/README.md)                          |
 
 ## Development
@@ -244,6 +181,14 @@ uv run python scripts/check_docs.py
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for tools, planners, style, and pull requests, and
 the [release guide](docs/operations/release.md) for reproducible packaging.
+
+## Authors and project history
+
+The project began as a University of Hong Kong STAT7008A team project led by
+[Li Xiuyin](https://github.com/lixiuyin); the original repository is
+[RanJu1122/Web-Agent](https://github.com/RanJu1122/Web-Agent). This repository is Li
+Xiuyin's independently maintained and rewritten continuation after the course. Detailed
+changes remain in Git history and the [changelog](CHANGELOG.md).
 
 ## Acknowledgements
 
