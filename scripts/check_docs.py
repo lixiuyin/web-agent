@@ -254,7 +254,7 @@ def _readme_link_targets(text: str) -> set[str]:
         target
         for target in targets
         if target
-        and target not in {"README.md", "README.en.md", "README.zh-CN.md"}
+        and target not in {"README.md", "README.en.md"}
         and not (target.startswith("https://img.shields.io/") or target.endswith("badge.svg"))
     }
 
