@@ -21,7 +21,7 @@ ruff format --check src/ scripts/ tests/
 mypy src/ scripts/
 ```
 
-> New to the codebase? See [README.md](README.md) for the architecture overview.
+> New to the codebase? See [README.en.md](README.en.md) for the English architecture overview.
 
 ## Pull request process
 

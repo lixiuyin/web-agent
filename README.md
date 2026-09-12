@@ -1,84 +1,78 @@
 # WebAgent
 
-![CI](https://github.com/lixiuyin/web-agent/actions/workflows/ci.yml/badge.svg) ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg) ![Python 3.13+](https://img.shields.io/badge/python-3.13%2B-blue.svg) ![Lint: ruff](https://img.shields.io/badge/lint-ruff-261230.svg) ![Typed: mypy](https://img.shields.io/badge/typed-mypy-blue.svg)
+[![CI](https://github.com/lixiuyin/web-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/lixiuyin/web-agent/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) [![Python 3.13+](https://img.shields.io/badge/python-3.13%2B-blue.svg)](pyproject.toml) [![Lint: ruff](https://img.shields.io/badge/lint-ruff-261230.svg)](https://github.com/astral-sh/ruff) [![Typed: mypy](https://img.shields.io/badge/typed-mypy-blue.svg)](https://mypy-lang.org/)
 
-**English** · [简体中文](README.zh-CN.md)
+[English](README.en.md) · **简体中文**
 
-An autonomous vision-language web agent that turns a natural-language instruction into
-real browser actions: search, navigation, PDF reading, figure interpretation, and a
-grounded final report.
+一个自主视觉语言网页智能体：把自然语言指令转换为真实浏览器搜索、导航、PDF 阅读、图表解读和
+有证据依据的最终报告。
 
-![Strict browser-only run from search to Figure 1 analysis](docs/assets/strict-run-demo.gif)
+![严格浏览器模式从搜索到 Figure 1 解读](docs/assets/strict-run-demo.gif)
 
-This animation contains all 21 viewport screenshots from the 2026-09-09 Qwen paired-R5
-strict trajectory, followed by the extracted Figure 1. Browser frames last two seconds
-and the final figure lasts six seconds. It is a visual preview; independent task
-assertions and the anti-shortcut certificate establish the recorded pass.
+该动图包含 2026-09-09 Qwen paired R5 strict 轨迹的全部 21 张 viewport 截图，末尾为抽取出的
+Figure 1。浏览器帧每张播放两秒，最终 Figure 保留六秒。动图只是视觉预览；独立任务断言和
+反捷径证书共同证明这次运行通过。
 
-## What is WebAgent?
+## WebAgent 是什么？
 
-WebAgent drives a real Chromium browser through an **Observe → Think → Act → Record**
-loop. It captures a consistency-checked viewport image and rendered DOM projection, asks
-an OpenAI-compatible planner for one typed tool call, executes it under runtime policy,
-and retains an auditable trajectory. In the default adaptive mode, the observation keeps
-the screenshot while the planner receives it only when visual evidence is needed.
+WebAgent 通过 **Observe → Think → Act → Record** 循环驱动真实 Chromium 浏览器。系统采集经过
+一致性检查的 viewport 图像与 rendered DOM projection，要求 OpenAI-compatible planner 每次
+产生一个类型化工具调用，在运行时策略约束下执行，并保留可审计轨迹。默认自适应模式会在观察
+产物中保留截图，但只在需要视觉证据时把截图发送给 planner。
 
-The runtime is model-agnostic, supports local vLLM, and includes document intelligence
-for downloading PDFs, routing across OCR/parsing providers, locating a figure by its real
-caption, and analyzing the extracted image with vision.
+运行时不绑定单一模型，支持本地 vLLM，并包含 PDF 下载、OCR/parser 路由、按真实 caption 定位
+Figure，以及用视觉模型解读抽取图片的文档智能管线。
 
-## Highlights
+## 技术亮点
 
-| Area                | Capability                                                                                   |
-| ------------------- | -------------------------------------------------------------------------------------------- |
-| Agent runtime       | Protocol-based planner, tool, and hook interfaces with checkpointed execution                |
-| Multimodal state    | DOM-to-Markdown plus adaptive screenshots and automatic vision probing                       |
-| Structured actions  | Native function tools with bounded schema and prompt fallbacks                               |
-| Browser reliability | Stability-aware observations, loop detection, search fallback, and explicit CAPTCHA handling |
-| Evidence            | Versioned traces, strict anti-shortcut certificates, and independent task judgment           |
-| Documents           | Caption-grounded Figure resolution and quality-gated parser cascade                          |
-| Evaluation          | Internal diagnostic suites plus separate BrowserGym WebArena/VWA evidence                    |
-| Engineering         | 67 registered tools, strict typing, Ruff, and an 85% combined statement/branch coverage gate  |
+| 领域 | 能力 |
+|---|---|
+| Agent 运行时 | 基于 Protocol 的 planner、tool、hook 接口和 checkpoint 执行 |
+| 多模态状态 | DOM→Markdown、自适应截图和自动视觉能力探测 |
+| 结构化动作 | Provider 原生 function tools 与有界 schema/prompt fallback |
+| 浏览器可靠性 | 稳定性等待、循环检测、搜索回退和显式 CAPTCHA 处理 |
+| 证据 | 版本化 trace、strict 反捷径证书和独立终态判分 |
+| 文档智能 | 按 caption 定位 Figure，配合 quality gate parser cascade |
+| 评测 | 仓库诊断套件与独立 BrowserGym WebArena/VWA 证据层 |
+| 工程质量 | 67 个注册工具、严格类型检查、Ruff 和 85% 综合覆盖率门槛（含分支统计） |
 
-## Architecture
+## 架构
 
-Three structural interfaces—`Planner`, `Tool`, and `AgentHook`—separate model planning,
-execution capabilities, and lifecycle observation.
+`Planner`、`Tool` 和 `AgentHook` 三个结构化接口把模型规划、执行能力和生命周期观测分开。
 
-![WebAgent system architecture showing policy-filtered planner tools, browser execution, document parsing, checkpoints, and trace evidence](docs/assets/architecture-overview.svg)
+![WebAgent 系统架构：策略过滤后的规划工具、浏览器执行、文档解析、checkpoint 与轨迹证据](docs/assets/architecture-overview.svg)
 
 ```text
 src/webagent/
-├── core/        protocols, models, and configuration
-├── agent/       loop, history, strategy, hooks, and checkpoints
-├── browser/     Playwright controller, snapshots, CDP, and CAPTCHA detection
-├── planner/     API/local planners, provider modes, and structured parsing
-├── parser/      OCR providers, quality gates, and local PDF recovery
-├── tools/       registry, exposure/risk policy, and built-in tools
-├── evaluation/  trace verification, metrics, studies, and portfolios
-├── schemas/     packaged stable wire schemas
-└── utils/       path, image, PDF, logging, and runtime helpers
+├── core/        Protocol、数据模型和配置
+├── agent/       主循环、历史、策略、hook 和 checkpoint
+├── browser/     Playwright 控制器、snapshot、CDP 和 CAPTCHA 检测
+├── planner/     API/本地 planner、provider 模式和结构化解析
+├── parser/      OCR provider、quality gate 和本地 PDF 恢复
+├── tools/       registry、暴露/风险策略和内置工具
+├── evaluation/  trace 校验、指标、study 和 portfolio
+├── schemas/     随包发布的稳定 wire schema
+└── utils/       路径、图像、PDF、日志和运行时辅助
 
-src/webagent/benchmarks/      executable environments, suites, studies, and manifests
-docs/            guides, references, research records, and source study material
-outputs/         ignored by default; selected reviewed evidence may be published
+src/webagent/benchmarks/      可执行环境、套件、study 和 manifest
+docs/            用户指南、参考、研究记录和源码学习材料
+outputs/         默认忽略；可发布经过审阅的选定证据包
 ```
 
-One step observes stable browser state, builds planner context, selects an allowed tool,
-executes it within time/risk bounds, records the result, and atomically updates ordinary
-recovery state.
+每一步先观察稳定浏览器状态，再构造 planner context、选择被允许的工具、在时间和风险边界内执行、
+记录结果，并原子更新普通运行的恢复状态。
 
-![One WebAgent step from stable observation through CAPTCHA handling, planning, write-ahead checkpoint, tool execution, and committed evidence](docs/assets/agent-step-sequence.svg)
+![WebAgent 单步流程：稳定观察、CAPTCHA 处理、规划、写前 checkpoint、工具执行与证据提交](docs/assets/agent-step-sequence.svg)
 
-Figure requests are resolved by number and caption rather than by extraction order, so a
-logo or cover decoration cannot silently become “Figure 1.”
+Figure 请求按编号和 caption 解析，而不是按抽取顺序，因此 logo 或封面装饰不会被误当成
+“Figure 1”。
 
-![Caption-grounded PDF Figure resolution using a local fast path or a quality-gated cloud parser cascade with last-resort local fallback](docs/assets/figure-resolution-flow.svg)
+![按 caption 定位 PDF Figure：本地快路径或质量门控的云端解析级联，并以本地解析作为最后回退](docs/assets/figure-resolution-flow.svg)
 
-Editable Graphviz sources and the reproducible renderer are documented in
-[docs/diagrams/](docs/diagrams/README.md).
+可编辑的 Graphviz 图源与可复现渲染入口见
+[`docs/diagrams/`](docs/diagrams/README.md)。
 
-## Quick start
+## 快速开始
 
 ```bash
 uv sync
@@ -86,7 +80,8 @@ uv run playwright install chromium
 cp .env.example .env
 ```
 
-Set `AGENT_MODEL_API_URL`, `AGENT_MODEL_API_KEY`, and `AGENT_MODEL_NAME` in `.env`, then:
+在 `.env` 中设置 `AGENT_MODEL_API_URL`、`AGENT_MODEL_API_KEY` 和
+`AGENT_MODEL_NAME`，然后运行：
 
 ```bash
 webagent \
@@ -94,81 +89,74 @@ webagent \
   --headless
 ```
 
-No credentials means `StubPlanner`: the runtime can demonstrate lifecycle behavior, but
-it cannot autonomously solve an open-ended task.
+未配置凭证时会使用 `StubPlanner`：它能展示生命周期行为，但无法自主完成开放式任务。
 
-Common modes:
+常用模式：
 
 ```bash
-# Browser-visible discovery without direct report/GitHub/arXiv tools
+# 隐藏直接报告/GitHub/arXiv 工具，只使用浏览器可见发现
 webagent --task "..." --discovery-mode browser-grounded --headless
 
-# Isolated browser-search execution with a verification certificate
+# 隔离的浏览器搜索评测，并生成校验证书
 webagent --task "..." --strict-eval --headless
 
-# Local OpenAI-compatible vLLM server
+# 本地 OpenAI-compatible vLLM server
 webagent --task "..." --use-vllm --headless
 ```
 
-Use the [getting-started guide](docs/guides/getting-started.md) for resume, verification,
-interactive mode, and output inspection. Discovery contracts are documented separately in
-[discovery modes](docs/guides/discovery-modes.md).
+恢复、校验、交互模式和产物检查见[入门指南](docs/guides/getting-started.md)，三种发现契约见
+[Discovery modes](docs/guides/discovery-modes.md)。
 
-## Recorded effect showcase
+## 已记录的效果展示
 
-The current visual uses the Qwen endpoint from the 2026-09-09 paired R5 validation. It
-starts at `about:blank`, discovers and compares candidates through browser-visible search,
-opens the official `QwenLM/Qwen3.8-Flash-Next` repository and `tech_report.pdf`, downloads
-the PDF, and interprets Figure 1. The Qwen and GLM endpoints both passed all 10 independent
-assertions and all six certificate checks; recovered search failures remain in their
-metrics instead of being removed.
+当前动图来自 2026-09-09 paired R5 验证的 Qwen endpoint。它从 `about:blank` 开始，通过浏览器
+可见搜索发现并比较候选，打开官方 `QwenLM/Qwen3.8-Flash-Next` 仓库与
+`tech_report.pdf`，下载 PDF 后解读 Figure 1。Qwen 与 GLM endpoint 都通过 10/10 独立断言和
+6/6 certificate checks；已恢复的搜索失败仍保留在指标中。
 
-| Model | Task judgment | Certificate | Browser frames | Failed actions |
+| 模型 | 独立判分 | Certificate | 浏览器帧 | 失败动作 |
 |---|---:|---:|---:|---:|
 | Qwen3.8-Flash | 10/10 | 6/6 | 21 | 3 |
 | GLM-5.3-Flash | 10/10 | 6/6 | 16 | 2 |
 
-The [paired validation record](docs/research/results/qwen-strict-search-2026-09-09.zh-CN.md)
-documents source hashes, acceptance rules, Figure 1 findings, observation integrity, GIF
-provenance, and limitations. The earlier
-[2026-09-02 mode comparison](docs/research/results/qwen-report-modes-2026-09-02.md) remains
-a historical analysis; its retired local output bundle is not the source of this GIF.
+[Paired 验证记录](docs/research/results/qwen-strict-search-2026-09-09.zh-CN.md)说明 source hash、
+验收规则、Figure 1 结论、observation 完整性、GIF 来源和外推限制。较早的
+[2026-09-02 模式对比](docs/research/results/qwen-report-modes-2026-09-02.md)只保留为历史分析；
+已清理的本地 output bundle 不是当前 GIF 的来源。
 
-## Evaluation status
+## 评测状态
 
-The latest complete repository diagnostic is the dated 2026-09-09 R7 campaign. Its one
-failed sandbox trajectory, exact metrics, source bindings, and interpretation limits live
-in the [campaign record](docs/research/results/generality-campaign-2026-09-09.zh-CN.md),
-with the reviewed machine-readable subset in the
-[frozen evidence bundle](outputs/published/2026-09-09/README.md). Keeping those volatile
-details in dated records prevents this landing page from becoming a second source of truth.
+当前最新的完整仓库诊断是带日期的 2026-09-09 R7 campaign。唯一失败的 sandbox 轨迹、精确
+指标、source binding 与解释边界统一保存在
+[campaign 记录](docs/research/results/generality-campaign-2026-09-09.zh-CN.md)，经审阅的机器可读
+子集保存在[冻结证据包](outputs/published/2026-09-09/README.md)。把这些易变化的细节只放在日期化
+记录中，可以避免首页成为第二个事实来源。
 
-| Layer                  | Scope                                                          | Current state                                                             |
-| ---------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| Repository diagnostics | Public web, controlled sandbox, and forced-resume long horizon | R7 completed 71/72 (GLM 36/36; Qwen 35/36); one common date plus a separate passed Qwen strict task, so longitudinal evidence remains interim |
-| WebArena-Verified Hard | BrowserGym native tasks/evaluator                              | Not run; official sites and reset calibration required                    |
-| VisualWebArena         | BrowserGym native tasks/evaluator                              | Not run; official sites, reset calibration, and evaluator assets required |
+| 层级 | 范围 | 当前状态 |
+|---|---|---|
+| 仓库诊断层 | 开放网页、受控 sandbox 和强制恢复长程任务 | R7 完成 71/72（GLM 36/36；Qwen 35/36）；已有一个共同日期和一次独立通过的 Qwen strict 任务，纵向证据仍属阶段性 |
+| WebArena-Verified Hard | BrowserGym 原生任务/evaluator | 尚未运行；需要官方站点和 reset 校准 |
+| VisualWebArena | BrowserGym 原生任务/evaluator | 尚未运行；需要官方站点、reset 校准和 evaluator 资源 |
 
-Scores are never averaged across these layers. Read exact dated results in the
-[results index](docs/research/results/README.md), the stable methodology in the
-[evaluation protocol](docs/research/evaluation-protocol.md), and executable suites in the
-[benchmark guide](src/webagent/benchmarks/README.md).
+不同层级的分数不做平均。精确日期结果见[结果索引](docs/research/results/README.md)，稳定方法见
+[Evaluation protocol](docs/research/evaluation-protocol.md)，可执行套件见
+[Benchmark 指南](src/webagent/benchmarks/README.md)。
 
-## Documentation
+## 文档导航
 
-| Goal                                            | Entry point                                                    |
-| ----------------------------------------------- | -------------------------------------------------------------- |
-| Install and run the agent                       | [Getting started](docs/guides/getting-started.md)              |
-| Choose Hybrid, browser-grounded, or strict mode | [Discovery modes](docs/guides/discovery-modes.md)              |
-| Diagnose provider/browser/runtime failures      | [Troubleshooting](docs/guides/troubleshooting.md)              |
-| Configure the runtime                           | [Configuration reference](docs/reference/configuration.md)     |
-| Understand outputs and resume state             | [Run artifacts](docs/reference/run-artifacts.md)               |
-| Review browser and action boundaries            | [Browser and security](docs/reference/browser-and-security.md) |
-| Run evaluation suites                           | [Benchmarks](src/webagent/benchmarks/README.md)                |
-| Study source call chains in Chinese             | [中文源码理解手册](docs/understanding-zh/README.md)          |
-| Navigate everything                             | [Documentation index](docs/README.md)                          |
+| 目标 | 入口 |
+|---|---|
+| 安装并运行 Agent | [Getting started](docs/guides/getting-started.md) |
+| 选择 Hybrid、browser-grounded 或 strict | [Discovery modes](docs/guides/discovery-modes.md) |
+| 排查 provider、浏览器和运行时问题 | [Troubleshooting](docs/guides/troubleshooting.md) |
+| 配置运行时 | [Configuration reference](docs/reference/configuration.md) |
+| 理解输出与恢复状态 | [Run artifacts](docs/reference/run-artifacts.md) |
+| 查看浏览器和动作安全边界 | [Browser and security](docs/reference/browser-and-security.md) |
+| 运行评测套件 | [Benchmarks](src/webagent/benchmarks/README.md) |
+| 精读中文源码调用链 | [中文源码理解手册](docs/understanding-zh/README.md) |
+| 浏览全部文档 | [Documentation index](docs/README.md) |
 
-## Development
+## 开发
 
 ```bash
 ruff check src/ scripts/ tests/
@@ -179,23 +167,21 @@ pytest tests/integration/ -v --no-cov
 uv run python scripts/check_docs.py
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for tools, planners, style, and pull requests, and
-the [release guide](docs/operations/release.md) for reproducible packaging.
+工具、planner、代码风格和 PR 规范见 [CONTRIBUTING.md](CONTRIBUTING.md)，可复现打包见
+[Release procedure](docs/operations/release.md)。
 
-## Authors and project history
+## 作者与项目沿革
 
-The project began as a University of Hong Kong STAT7008A team project led by
-[Li Xiuyin](https://github.com/lixiuyin); the original repository is
-[RanJu1122/Web-Agent](https://github.com/RanJu1122/Web-Agent). This repository is Li
-Xiuyin's independently maintained and rewritten continuation after the course. Detailed
-changes remain in Git history and the [changelog](CHANGELOG.md).
+最初项目来自港大 STAT7008A 团队课程项目，[Li Xiuyin](https://github.com/lixiuyin) 担任组长；
+原仓库为 [RanJu1122/Web-Agent](https://github.com/RanJu1122/Web-Agent)。本仓库是 Li Xiuyin 在
+课程结束后的独立维护与重写版本，详细贡献沿革保留在 Git 历史和
+[CHANGELOG](CHANGELOG.md) 中。
 
-## Acknowledgements
+## 致谢
 
-Built with [Playwright](https://playwright.dev/), [PyMuPDF](https://pymupdf.readthedocs.io/),
-[Pydantic](https://docs.pydantic.dev/), and Marker/MinerU/PaddleOCR-compatible document
-services.
+项目使用 [Playwright](https://playwright.dev/)、[PyMuPDF](https://pymupdf.readthedocs.io/)、
+[Pydantic](https://docs.pydantic.dev/) 以及兼容 Marker/MinerU/PaddleOCR 的文档服务。
 
-## License
+## 许可证
 
 [MIT](LICENSE) © WebAgent contributors

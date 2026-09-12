@@ -254,7 +254,7 @@ def _readme_link_targets(text: str) -> set[str]:
         target
         for target in targets
         if target
-        and target not in {"README.md", "README.zh-CN.md"}
+        and target not in {"README.md", "README.en.md", "README.zh-CN.md"}
         and not (target.startswith("https://img.shields.io/") or target.endswith("badge.svg"))
     }
 
@@ -273,8 +273,8 @@ def _table_row_counts(text: str) -> list[int]:
 
 def _check_root_readme_parity() -> list[str]:
     """Keep the two audience-equivalent landing pages structurally synchronized."""
-    english_path = ROOT / "README.md"
-    chinese_path = ROOT / "README.zh-CN.md"
+    english_path = ROOT / "README.en.md"
+    chinese_path = ROOT / "README.md"
     if not english_path.is_file() or not chinese_path.is_file():
         return ["root README bilingual pair is incomplete"]
 
@@ -283,9 +283,9 @@ def _check_root_readme_parity() -> list[str]:
     problems: list[str] = []
     for english_heading, chinese_heading in README_SECTION_PAIRS:
         if f"## {english_heading}" not in english:
-            problems.append(f"README.md: missing bilingual section {english_heading!r}")
+            problems.append(f"README.en.md: missing bilingual section {english_heading!r}")
         if f"## {chinese_heading}" not in chinese:
-            problems.append(f"README.zh-CN.md: missing bilingual section {chinese_heading!r}")
+            problems.append(f"README.md: missing bilingual section {chinese_heading!r}")
 
     if _table_row_counts(english) != _table_row_counts(chinese):
         problems.append("root READMEs have different table row structures")

@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/lixiuyin/web-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/lixiuyin/web-agent/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) [![Python 3.13+](https://img.shields.io/badge/python-3.13%2B-blue.svg)](pyproject.toml) [![Lint: ruff](https://img.shields.io/badge/lint-ruff-261230.svg)](https://github.com/astral-sh/ruff) [![Typed: mypy](https://img.shields.io/badge/typed-mypy-blue.svg)](https://mypy-lang.org/)
 
-[English](README.md) · **简体中文**
+[English](README.en.md) · **简体中文**
 
 一个自主视觉语言网页智能体：把自然语言指令转换为真实浏览器搜索、导航、PDF 阅读、图表解读和
 有证据依据的最终报告。

@@ -1,7 +1,7 @@
 # AGENTS.md
 
 Guidance for AI coding agents working in this repository. For the architecture
-overview, see [README.md](README.md).
+overview, see [README.en.md](README.en.md).
 
 ## Commands
 

@@ -7,7 +7,7 @@ contributor contract, not a user guide.
 
 | Subject | Canonical owner |
 |---|---|
-| Product purpose, primary demo, five-minute start | Root `README.md` and `README.zh-CN.md` |
+| Product purpose, primary demo, five-minute start | Root `README.md` and `README.en.md` |
 | Installation and first real run | `docs/guides/getting-started.md` |
 | Hybrid, browser-grounded, and strict discovery | `docs/guides/discovery-modes.md` |
 | Operational failures and recovery | `docs/guides/troubleshooting.md` |

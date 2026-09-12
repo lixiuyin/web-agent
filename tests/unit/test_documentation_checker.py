@@ -97,12 +97,12 @@ def test_documentation_checker_accepts_matching_root_readmes(
     monkeypatch.setattr(check_docs, "README_SECTION_PAIRS", (("Overview", "概览"),))
     _write(
         tmp_path,
-        "README.md",
+        "README.en.md",
         "# Product\n\n## Overview\n\n[Guide](docs/guide.md)\n\n| A | B |\n|---|---|\n| 1 | 2 |\n",
     )
     _write(
         tmp_path,
-        "README.zh-CN.md",
+        "README.md",
         "# 产品\n\n## 概览\n\n[指南](docs/guide.md)\n\n| 甲 | 乙 |\n|---|---|\n| 1 | 2 |\n",
     )
 
@@ -114,8 +114,8 @@ def test_documentation_checker_reports_root_readme_parity_drift(
 ) -> None:
     monkeypatch.setattr(check_docs, "ROOT", tmp_path)
     monkeypatch.setattr(check_docs, "README_SECTION_PAIRS", (("Overview", "概览"),))
-    _write(tmp_path, "README.md", "# Product\n\n## Overview\n\n[Guide](guide.md)\n")
-    _write(tmp_path, "README.zh-CN.md", "# 产品\n\n[其他](other.md)\n")
+    _write(tmp_path, "README.en.md", "# Product\n\n## Overview\n\n[Guide](guide.md)\n")
+    _write(tmp_path, "README.md", "# 产品\n\n[其他](other.md)\n")
 
     problems = check_docs._check_root_readme_parity()
 
