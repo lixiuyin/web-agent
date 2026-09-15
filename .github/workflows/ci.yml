@@ -24,7 +24,7 @@ jobs:
             /*
             !/outputs/
           sparse-checkout-cone-mode: false
-      - uses: astral-sh/setup-uv@v10.0.1
+      - uses: astral-sh/setup-uv@v10.1.0
         with:
           enable-cache: true
           python-version: "3.13"
@@ -57,7 +57,7 @@ jobs:
             /*
             !/outputs/
           sparse-checkout-cone-mode: false
-      - uses: astral-sh/setup-uv@v10.0.1
+      - uses: astral-sh/setup-uv@v10.1.0
         with:
           enable-cache: true
           python-version: ${{ matrix.python }}
@@ -80,7 +80,7 @@ jobs:
             /*
             !/outputs/
           sparse-checkout-cone-mode: false
-      - uses: astral-sh/setup-uv@v10.0.1
+      - uses: astral-sh/setup-uv@v10.1.0
         with:
           enable-cache: true
           python-version: "3.13"
